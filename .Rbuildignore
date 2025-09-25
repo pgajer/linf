@@ -12,3 +12,6 @@
 ^scripts$
 ^coverage$
 ^covr\.R$
+^_pkgdown\.yml$
+^doc$
+^Meta$

@@ -58,3 +58,8 @@ dev/
 .Rdata
 .httr-oauth
 .quarto
+
+# Do not track built artefacts
+doc/
+Meta/
+README.html
