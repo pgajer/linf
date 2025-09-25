@@ -1,8 +1,3 @@
-``` markdown
-<!-- badges: start -->
-[![R-CMD-check](https://github.com/pgajer/linf/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/pgajer/linf/actions/workflows/R-CMD-check.yaml)
-<!-- badges: end -->
-
 # linf — L∞ cells & truncated CSTs for compositional data
 
 **linf** provides minimal, dependency-light tools for working with L-infinity representations of compositional data:

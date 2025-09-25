@@ -92,4 +92,3 @@ MIT © 2025 Pawel Gajer. See `LICENSE` / `LICENSE.md`.
 ## Citation
 
 If you use this package, please cite the Linf paper (citation entry will be added here upon publication).
-
