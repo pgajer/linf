@@ -1,10 +1,4 @@
 ``` markdown
----
-output:
-  md_document:
-    variant: gfm
----
-
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/pgajer/linf/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/pgajer/linf/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
