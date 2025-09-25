@@ -8,7 +8,7 @@
 - `filter.asv()` — simple ASV filtering by library size & prevalence (optional helper)
 - `asv.to.linf.csts()` — counts → filter → L∞ relatives → truncated CSTs (convenience pipeline)
 
-This package accompanies the Linf paper.
+This package accompanies: Gajer & Ravel (2025), *A New Approach to Compositional Data Analysis using \(L^{\infty}\)-normalization with Applications to Vaginal Microbiome* (https://doi.org/10.48550/arXiv.2503.21543).
 
 ## Installation
 
