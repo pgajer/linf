@@ -86,5 +86,21 @@ MIT © 2025 Pawel Gajer. See `LICENSE` / `LICENSE.md`.
 
 ## Citation
 
-If you use this package, please cite the Linf paper (citation entry will
-be added here upon publication).
+If you use this package, please cite:
+
+Gajer, P., & Ravel, J. (2025). *A New Approach to Compositional Data Analysis using \(L^{\infty}\)-normalization with Applications to Vaginal Microbiome*. arXiv:2503.21543 [stat.CO]. https://doi.org/10.48550/arXiv.2503.21543
+
+**BibTeX**
+```bibtex
+@article{gajer2025linf,
+  title   = {A New Approach to Compositional Data Analysis using {$L^{\infty}$}-normalization with Applications to Vaginal Microbiome},
+  author  = {Gajer, Pawel and Ravel, Jacques},
+  year    = {2025},
+  eprint  = {2503.21543},
+  archivePrefix = {arXiv},
+  primaryClass  = {stat.CO},
+  journal = {arXiv preprint arXiv:2503.21543},
+  doi     = {10.48550/arXiv.2503.21543},
+  url     = {https://arxiv.org/abs/2503.21543}
+}
+
