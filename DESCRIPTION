@@ -1,0 +1,22 @@
+Package: linf
+Type: Package
+Title: L-infinity Cells and Truncated CSTs for Compositional Data
+Version: 0.0.1
+Authors@R:
+    c(
+      person("Pawel", "Gajer", email = "pgajer@gmail.com", role = c("aut", "cre"))
+    )
+Description: Utilities for L-infinity normalization, dominant-feature (L-infinity cell)
+    assignment, and truncated L-infinity CSTs for compositional data analyses.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
+Depends:
+    R (>= 4.0)
+Suggests:
+    testthat (>= 3.2.0),
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
+Config/testthat/edition: 3

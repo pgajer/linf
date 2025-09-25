@@ -1,0 +1,14 @@
+# pkgdown.yml
+destination: docs
+
+template:
+  bootstrap: 5
+
+navbar:
+  structure:
+    left:  [reference, articles]
+    right: [pdf]
+  components:
+    pdf:
+      text: "Download PDF"
+      href: articles/linf-intro.pdf

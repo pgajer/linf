@@ -1,0 +1,14 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^\.git$
+^\.github$
+^README\.Rmd$
+^LICENSE\.md$
+^docs$           # pkgdown site; not needed in the tarball
+^vignettes/.*\.Rmd$   # optional: CRAN will build from Rmd; omit this line if you want Rmds included
+^pkgdown\.yml$
+^revdep$
+^dev$
+^scripts$
+^coverage$
+^covr\.R$

@@ -1,0 +1,56 @@
+# R session files
+.Rhistory
+.RData
+.Ruserdata
+.Rapp.history
+
+# RStudio project files
+.Rproj.user/
+*.Rproj
+
+# macOS files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# CRAN build/check artefacts
+*.tar.gz
+*.Rcheck/
+
+# Compiled objects
+src/**/*.o
+src/**/*.so
+src/**/*.dll
+src/**/*.a
+*.bc
+
+# Vignette build outputs installed under inst/doc (we commit vignettes/*.Rmd, not built PDFs/HTMLs)
+inst/doc/
+
+# Test artefacts
+tests/testthat.Rout*
+.Rout
+
+# Coverage artefacts
+coverage/
+covr.R
+
+# Revdep checks
+revdep/
+
+# Local or temporary files
+*.swp
+*.tmp
+*.bak
+*~
+.claude/
+
+# Developer scratch (keep if you use these; optional)
+build/
+libs/
+libsonly/
+rchk_remote_out/
+cran_docs/
+scripts/
+rchk_reports/
+dev/

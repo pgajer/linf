@@ -1,0 +1,132 @@
+```markdown
+---
+title: "L∞ Cells and Truncated CSTs: A Quick Introduction"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 2
+vignette: >
+  %\VignetteIndexEntry{L∞ Cells and Truncated CSTs: A Quick Introduction}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+library(linf)
+set.seed(1)
+```
+
+## Overview
+
+This vignette demonstrates the core steps for working with **L∞ cells** (dominant
+features by row) and **truncated L∞ CSTs** (keeping large cells and reassigning
+samples from small cells by restricted argmax).
+
+We’ll use tiny synthetic matrices for clarity; in practice you can feed
+ASV/feature tables (counts or relatives).
+
+## \eqn{L^\infty} normalization
+
+```{r}
+S.counts <- matrix(rpois(30, lambda = 5), nrow = 10, ncol = 3,
+                   dimnames = list(paste0("s",1:10), paste0("t",1:3)))
+Z <- normalize.linf(S.counts)
+apply(Z, 1, max)  # nonzero rows => 1; zero rows => 0
+```
+
+## \eqn{L^\infty} cells (indices & labels)
+
+```{r}
+# Give columns meaningful names
+colnames(Z) <- c("Lactobacillus", "Gardnerella", "Anaerobes")
+
+cells <- linf.cells(Z)
+str(cells)
+
+# Index vs label views
+head(cells$index)
+head(cells$label)
+
+# Observed levels (subset of full levels, in column order)
+cells$observed.levels
+```
+
+### Handling ties and all-zero rows
+
+```{r}
+T <- rbind(c(0.7, 0.3, 0.0),
+           c(0.0, 0.0, 0.0),
+           c(0.5, 0.5, 0.0))  # tie -> first max
+colnames(T) <- c("A","B","C")
+linf.cells(T)
+```
+
+## Truncated \eqn{L^\infty} CSTs
+
+We keep cells (labels) with at least `n0` samples; others are reassigned to the
+kept set by **restricted argmax**.
+
+```{r}
+# Build a toy matrix with an obvious dominant cell
+A <- matrix(c(5, 1, 0), nrow = 6, ncol = 3, byrow = TRUE)
+B <- matrix(c(1, 5, 0), nrow = 2, ncol = 3, byrow = TRUE)
+C <- matrix(c(1, 0, 5), nrow = 2, ncol = 3, byrow = TRUE)
+S <- rbind(A, B, C)
+S <- sweep(S, 1, rowSums(S), "/")
+colnames(S) <- c("Dom1", "Dom2", "Dom3")
+
+res <- linf.csts(S, n0 = 5)
+names(res)
+
+# Kept cells (by index and label)
+res$kept.cells.idx
+res$kept.cells.lbl
+
+# Final (truncated) assignments
+table(res$cell.label, useNA = "ifany")
+```
+
+### No kept cells edge case
+
+```{r}
+S2 <- diag(1, 3) # three singletons
+colnames(S2) <- c("A","B","C")
+res2 <- linf.csts(S2, n0 = 2)
+res2$kept.cells.lbl
+res2$cell.label
+```
+
+## Recommended pipeline
+
+If you start from counts and use an external filter:
+
+```{r, eval=FALSE}
+filt <- filter.asv(S.counts, min.lib = 10, prev.prop = 0.1, min.count = 1)
+M <- normalize.linf(filt$counts)
+cst <- linf.csts(M, n0 = 50)
+```
+
+Replace `filter.asv()` with your preferred filtering step or use
+`asv.to.linf.csts()` if it’s available in your environment.
+
+## Reproducibility notes
+
+* `linf.cells()` is invariant to positive row scaling (counts vs relatives).
+* Ties are broken by first maximum (`max.col(..., ties.method = "first")`).
+* All-zero rows return `NA` for index and label.
+
+````
+
+Quick checks to avoid build hiccups:
+
+- Ensure `DESCRIPTION` has:
+  - `Suggests: knitr, rmarkdown, testthat (>= 3.2.0)`
+  - `VignetteBuilder: knitr`
+- Rebuild vignettes:
+  ```r
+  devtools::document()
+  devtools::build_vignettes()
+  devtools::check()
+````
+
