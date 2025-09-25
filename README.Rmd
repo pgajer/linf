@@ -1,8 +1,6 @@
 ```markdown
 ---
-output:
-  md_document:
-    variant: gfm
+output: github_document
 ---
 
 <!-- badges: start -->
