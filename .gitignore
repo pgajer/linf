@@ -54,3 +54,7 @@ cran_docs/
 scripts/
 rchk_reports/
 dev/
+.Rproj.user
+.Rdata
+.httr-oauth
+.quarto
