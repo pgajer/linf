@@ -486,7 +486,18 @@ refine.linf.csts <- function(M,
         drop.idx <- match(parent.features, colnames(M))
         drop.idx <- drop.idx[!is.na(drop.idx)]
 
-        M.sub <- M[idx, -drop.idx, drop = FALSE]
+        ## If no parent features match columns (e.g., cell is a rare bucket), do not drop any columns.
+        ## Note: x[, -integer(0)] selects *zero* columns, so we must handle this explicitly.
+        if (length(drop.idx) == 0L) {
+            M.sub <- M[idx, , drop = FALSE]
+        } else if (length(drop.idx) >= ncol(M)) {
+            ## Dropping all columns would yield an empty matrix; nothing to refine.
+            next
+        } else {
+            M.sub <- M[idx, -drop.idx, drop = FALSE]
+        }
+
+        if (nrow(M.sub) == 0L || ncol(M.sub) == 0L) next
 
         sub.csts <- linf.csts(M.sub,
                              n0 = n0,
@@ -613,7 +624,18 @@ refine.linf.csts.iter <- function(M,
         drop.idx <- match(parents, colnames(M))
         drop.idx <- drop.idx[!is.na(drop.idx)]
 
-        M.sub <- M[idx, -drop.idx, drop = FALSE]
+        ## If no parent features match columns (e.g., cell is a rare bucket), do not drop any columns.
+        ## Note: x[, -integer(0)] selects *zero* columns, so we must handle this explicitly.
+        if (length(drop.idx) == 0L) {
+            M.sub <- M[idx, , drop = FALSE]
+        } else if (length(drop.idx) >= ncol(M)) {
+            ## Dropping all columns would yield an empty matrix; nothing to refine.
+            next
+        } else {
+            M.sub <- M[idx, -drop.idx, drop = FALSE]
+        }
+
+        if (nrow(M.sub) == 0L || ncol(M.sub) == 0L) next
 
         sub.csts <- linf.csts(M.sub,
                              n0 = n0,
@@ -793,13 +815,10 @@ print.linf.csts <- function(csts) {
   cat("Total samples: ", length(csts$cell.label), "\n")
   cat("Max depth:     ", max.depth, "\n")
 
-  ## Low-frequency policy stamp
-  if (!is.null(csts$low.freq.policy)) {
-    cat("Low-freq policy: ", csts$low.freq.policy, sep = "")
-    if (!is.null(csts$rare.label)) {
-      cat(" (rare.label: ", csts$rare.label, ")", sep = "")
-    }
-    cat("\n")
+  ## Policy stamp (if available)
+  if (!is.null(csts$low.freq.policy) && !is.null(csts$rare.label)) {
+    cat("Low-freq policy: ", csts$low.freq.policy,
+        " (rare.label: ", csts$rare.label, ")\n", sep = "")
   }
 
   cat("--------------------------------------------------------------------------------\n\n")
