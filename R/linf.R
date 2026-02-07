@@ -792,6 +792,16 @@ print.linf.csts <- function(csts) {
   cat("================================================================================\n")
   cat("Total samples: ", length(csts$cell.label), "\n")
   cat("Max depth:     ", max.depth, "\n")
+
+  ## Low-frequency policy stamp
+  if (!is.null(csts$low.freq.policy)) {
+    cat("Low-freq policy: ", csts$low.freq.policy, sep = "")
+    if (!is.null(csts$rare.label)) {
+      cat(" (rare.label: ", csts$rare.label, ")", sep = "")
+    }
+    cat("\n")
+  }
+
   cat("--------------------------------------------------------------------------------\n\n")
 
   for (d in seq_along(levels)) {
