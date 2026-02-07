@@ -148,37 +148,56 @@ linf.cells <- function(S,
   out
 }
 
-#' Truncated L-infinity CSTs (label-aware)
+#' Truncated L-infinity CSTs with configurable low-frequency handling
 #'
-#' Keeps L-infinity cells with at least n0 samples; samples from smaller cells
-#' are reassigned to the L-infinity maximum among the kept set.
+#' @description
+#' Computes L-infinity cells (dominant feature per sample) and then applies a
+#' minimum size threshold \code{n0}. Cells with fewer than \code{n0} samples are
+#' handled according to \code{low.freq.policy}:
+#' \itemize{
+#'   \item \code{"rare"}: collapse all low-frequency cells into \code{rare.label}.
+#'   \item \code{"absorb"}: reassign each low-frequency sample to the kept cell
+#'     with the largest value among the kept set (ties handled by \code{tie.method}).
+#' }
 #'
 #' @param S Numeric matrix (samples x features), typically L-infinity relatives.
 #' @param n0 Integer >= 1. Minimum size for a cell to be kept.
-#' @param tie.method Character. Tie handling passed to linf.cells() and used
-#'   during reassignment ("first", "random", "error").
+#' @param low.freq.policy Character. One of \code{"rare"} or \code{"absorb"}.
+#'   Default: \code{"rare"}.
+#' @param rare.label Character scalar used when \code{low.freq.policy = "rare"}.
+#'   Default: \code{"RARE_DOMINANT"}.
+#' @param tie.method Character. Tie handling passed to \code{linf.cells()} and used
+#'   during absorb reassignment ("first", "random", "error").
 #' @param return.diagnostics Logical. If TRUE, return reassignment diagnostics.
 #'
 #' @return List with:
-#'   - cell.index
-#'   - cell.label
-#'   - kept.cells.idx
-#'   - kept.cells.lbl
-#'   - raw.index
-#'   - raw.label
-#'   - size.table
-#'   - diagnostics (if return.diagnostics = TRUE)
+#'   \itemize{
+#'     \item \code{cell.index}, \code{cell.label}: active labeling per \code{low.freq.policy}
+#'     \item \code{cell.index.rare}, \code{cell.label.rare}
+#'     \item \code{cell.index.absorb}, \code{cell.label.absorb}
+#'     \item \code{kept.cells.idx}, \code{kept.cells.lbl}
+#'     \item \code{raw.index}, \code{raw.label}
+#'     \item \code{size.table}
+#'     \item \code{n0}, \code{low.freq.policy}, \code{rare.label}
+#'     \item \code{diagnostics} (if \code{return.diagnostics = TRUE})
+#'   }
 #'
 #' @export
 linf.csts <- function(S,
                       n0 = 50,
+                      low.freq.policy = c("rare", "absorb"),
+                      rare.label = "RARE_DOMINANT",
                       tie.method = c("first", "random", "error"),
                       return.diagnostics = FALSE) {
 
+    low.freq.policy <- match.arg(low.freq.policy)
     tie.method <- match.arg(tie.method)
 
     if (!is.numeric(n0) || length(n0) != 1L || n0 < 1 || n0 %% 1 != 0) {
         stop("linf.csts: n0 must be integer >= 1")
+    }
+    if (!is.character(rare.label) || length(rare.label) != 1L || !nzchar(rare.label)) {
+        stop("linf.csts: rare.label must be a non-empty character scalar")
     }
 
     X <- as.matrix(S)
@@ -199,65 +218,97 @@ linf.csts <- function(S,
     kept.idx <- match(kept.lbl, lev)
 
     n <- nrow(X)
-    cell.idx <- raw$index
-    cell.lbl <- raw$label
+
+    ## Rare-policy labels: keep only cells with size >= n0; everything else -> rare.label
+    is.kept <- !is.na(raw$label) & (raw$label %in% kept.lbl)
+
+    cell.idx.rare <- raw$index
+    cell.lbl.rare <- raw$label
+    cell.idx.rare[!is.kept] <- NA_integer_
+    cell.lbl.rare[!is.kept] <- rare.label
+
+    ## Absorb-policy labels: reassign low-frequency (and zero-row) samples into kept cells
+    cell.idx.absorb <- raw$index
+    cell.lbl.absorb <- raw$label
 
     reassigned <- logical(n)
     reassigned.from <- rep(NA_character_, n)
     reassigned.to   <- rep(NA_character_, n)
 
-    if (length(kept.idx) == 0L) {
-        out <- list(
-            cell.index     = rep(NA_integer_, n),
-            cell.label     = rep(NA_character_, n),
-            kept.cells.idx = integer(0L),
-            kept.cells.lbl = character(0L),
-            raw.index      = raw$index,
-            raw.label      = raw$label,
-            size.table     = tab
-        )
-        if (return.diagnostics) {
-            out$diagnostics <- list(
-                reassigned      = reassigned,
-                reassigned.from = reassigned.from,
-                reassigned.to   = reassigned.to
-            )
+    if (length(kept.idx) > 0L) {
+
+        ## Fallback target for degenerate cases (e.g., all kept values are zero)
+        fallback.idx <- kept.idx[1L]
+        fallback.lbl <- lev[fallback.idx]
+
+        ## Absorb: (i) low-frequency raw labels, (ii) raw NA labels (e.g., all-zero rows)
+        to.absorb <- which(!is.kept)
+
+        if (length(to.absorb)) {
+            new.idx <- apply(X[to.absorb, , drop = FALSE], 1, function(r) {
+                kvals <- r[kept.idx]
+                m <- max(kvals)
+
+                ## If there is no positive evidence among kept taxa, avoid arbitrary ties
+                if (!is.finite(m) || m <= 0) return(fallback.idx)
+
+                j <- kept.idx[kvals == m]
+                if (length(j) == 1L) return(j)
+                if (tie.method == "first") return(j[1L])
+                if (tie.method == "random") return(sample(j, 1L))
+                stop("linf.csts: tie during reassignment and tie.method = 'error'")
+            })
+
+            reassigned[to.absorb] <- TRUE
+            reassigned.from[to.absorb] <- raw$label[to.absorb]
+            reassigned.to[to.absorb]   <- lev[new.idx]
+
+            cell.idx.absorb[to.absorb] <- new.idx
+            cell.lbl.absorb[to.absorb] <- lev[new.idx]
         }
-        return(out)
+
+    } else {
+
+        ## No kept cells at this n0:
+        ## - rare-policy: everyone is rare.label (already set above)
+        ## - absorb-policy: undefined; keep NA labels
+        cell.idx.absorb[] <- NA_integer_
+        cell.lbl.absorb[] <- NA_character_
     }
 
-    small <- which(!is.na(raw$label) & !(raw$label %in% kept.lbl))
-
-    if (length(small)) {
-        new.idx <- apply(X[small, , drop = FALSE], 1, function(r) {
-            kvals <- r[kept.idx]
-            m <- max(kvals)
-            j <- kept.idx[kvals == m]
-            if (length(j) == 1L) return(j)
-            if (tie.method == "first") return(j[1L])
-            if (tie.method == "random") return(sample(j, 1L))
-            stop("linf.csts: tie during reassignment and tie.method = 'error'")
-        })
-
-        reassigned[small] <- TRUE
-        reassigned.from[small] <- raw$label[small]
-        reassigned.to[small]   <- lev[new.idx]
-
-        cell.idx[small] <- new.idx
-        cell.lbl[small] <- lev[new.idx]
+    ## Select active labeling
+    if (low.freq.policy == "rare") {
+        cell.idx <- cell.idx.rare
+        cell.lbl <- cell.lbl.rare
+    } else {
+        cell.idx <- cell.idx.absorb
+        cell.lbl <- cell.lbl.absorb
     }
 
     names(cell.idx) <- rownames(X)
     names(cell.lbl) <- rownames(X)
 
+    names(cell.idx.rare) <- rownames(X)
+    names(cell.lbl.rare) <- rownames(X)
+
+    names(cell.idx.absorb) <- rownames(X)
+    names(cell.lbl.absorb) <- rownames(X)
+
     out <- list(
-        cell.index     = cell.idx,
-        cell.label     = cell.lbl,
-        kept.cells.idx = kept.idx,
-        kept.cells.lbl = kept.lbl,
-        raw.index      = raw$index,
-        raw.label      = raw$label,
-        size.table     = tab
+        cell.index       = cell.idx,
+        cell.label       = cell.lbl,
+        cell.index.rare  = cell.idx.rare,
+        cell.label.rare  = cell.lbl.rare,
+        cell.index.absorb = cell.idx.absorb,
+        cell.label.absorb = cell.lbl.absorb,
+        kept.cells.idx   = kept.idx,
+        kept.cells.lbl   = kept.lbl,
+        raw.index        = raw$index,
+        raw.label        = raw$label,
+        size.table       = tab,
+        n0               = as.integer(n0),
+        low.freq.policy  = low.freq.policy,
+        rare.label       = rare.label
     )
 
     if (return.diagnostics) {
@@ -330,241 +381,31 @@ validate.linf.csts <- function(obj) {
   return(invisible(TRUE))
 }
 
-#' Refine L-infinity CSTs by subdividing large cells
+#' Refine L-infinity CST hierarchy by one level
 #'
 #' @description
-#' Subdivides one or more L-infinity cells into finer sub-cells by:
-#' \enumerate{
-#'   \item Restricting to samples in the target parent cell
-#'   \item Removing the dominant feature column (the one defining the parent cell)
-#'   \item Re-applying L-infinity CST assignment to find secondary dominance patterns
-#'   \item Creating hierarchical labels like \code{"ParentCell_SubCell"}
-#'   \item Post-processing: reassigning any sub-cells with < n0 samples (including
-#'         NA assignments) to their nearest sibling cell within the same parent group
-#' }
+#' Selects large leaf cells and refines them by dropping the dominant feature(s)
+#' encoded in the parent label path and re-applying \code{\link{linf.csts}} to
+#' the remaining features. The resulting child labels are appended to the parent
+#' label using \code{sep}.
 #'
-#' When \code{cells.to.refine = NULL}, automatically identifies cells for
-#' refinement based on sample size thresholds, making exploratory analysis
-#' more streamlined.
+#' Low-frequency child cells are handled by \code{low.freq.policy}. When
+#' \code{low.freq.policy = "rare"}, rare buckets at depth >= 2 become
+#' parent-prefixed automatically via the hierarchical \code{paste(parent, child, sep = sep)}.
 #'
-#' This is useful when a cell contains many samples and you want to explore
-#' internal structure based on which feature is second-most dominant after
-#' removing the cell-defining dominant feature.
+#' @param M Numeric matrix (samples x features) used for refinement. Column names
+#'   should match feature labels used in CST names.
+#' @param csts A \code{"linf.csts"} object.
+#' @param n0 Integer >= 1. Minimum size for a child cell to be kept (passed to \code{linf.csts}).
+#' @param refinement.factor Numeric > 0. Auto-refine parent cells with size >= \code{refinement.factor * n0}.
+#' @param sep Character scalar used to concatenate hierarchical labels.
+#' @param low.freq.policy Character. One of \code{"rare"} or \code{"absorb"}. Default: \code{"rare"}.
+#' @param rare.label Character scalar for rare buckets when \code{low.freq.policy = "rare"}.
+#' @param verbose Logical. If TRUE, print progress information.
 #'
-#' @param M Numeric matrix (samples x features), typically L-infinity-normalized.
-#'   Must be the same matrix used to generate \code{csts}. Should have column
-#'   names that match cell labels.
-#' @param csts List returned by \code{\link{linf.csts}}, containing at minimum
-#'   \code{cell.label} (character vector of cell assignments) and optionally
-#'   \code{cell.index}.
-#' @param n0 Integer >= 1. Minimum sample size for a sub-cell to be retained
-#'   (passed to \code{linf.csts} during refinement). Also used to compute
-#'   auto-refinement threshold when \code{cells.to.refine = NULL}. Any sub-cells
-#'   (including NA assignments) with fewer than \code{n0} samples are automatically
-#'   reassigned to their nearest sibling cell. Default: 50.
-#' @param refinement.factor Numeric >= 1. When \code{cells.to.refine = NULL},
-#'   automatically refine cells with at least \code{refinement.factor * n0}
-#'   samples. For example, with \code{n0 = 50} and \code{refinement.factor = 2},
-#'   cells with >= 100 samples are refined. Ignored when \code{cells.to.refine}
-#'   is specified manually. Default: 2.
-#' @param sep Character string. Separator for hierarchical labels. Default: \code{"_"}.
-#' @param verbose Logical. Print progress messages during refinement. Default: \code{TRUE}.
-#'
-#' @return An updated CST object with \code{cst.depth} increased by one.
-#'
-#' @details
-#' \strong{Auto-Refinement Algorithm:}
-#'
-#' When \code{cells.to.refine = NULL}, the function:
-#' \enumerate{
-#'   \item Computes the size of each cell from \code{table(csts$cell.label)}
-#'   \item Calculates threshold = \code{max(refinement.factor * n0, min.cell.size)}
-#'   \item Selects all cells with sample count >= threshold
-#'   \item Proceeds with refinement on selected cells
-#' }
-#'
-#' If no cells meet the threshold, the original CST assignments are returned
-#' unchanged (with appropriate notifications if \code{verbose = TRUE}).
-#'
-#' \strong{Manual Refinement:}
-#'
-#' When \code{cells.to.refine} is explicitly provided, only those cells are
-#' refined regardless of their size. The \code{refinement.factor} and
-#' \code{min.cell.size} parameters are ignored in this mode.
-#'
-#' \strong{Refinement Procedure (for each selected cell):}
-#'
-#' \enumerate{
-#'   \item Identifies all samples assigned to that parent cell
-#'   \item Extracts the submatrix containing only those samples
-#'   \item Identifies and removes the column corresponding to the parent cell's
-#'     dominant feature (by matching \code{parent.cell} to column names)
-#'   \item Re-normalizes the reduced matrix with \code{normalize.linf}
-#'   \item Applies \code{linf.csts(n0 = n0)} to identify secondary dominance
-#'     patterns
-#'   \item Creates hierarchical labels: \code{paste(parent, subcell, sep = sep)}
-#'   \item Maps sub-cell indices back to original matrix column indices
-#' }
-#'
-#' \strong{Handling Edge Cases:}
-#' \itemize{
-#'   \item If a sample's sub-cell assignment is \code{NA} (e.g., all remaining
-#'     features are zero after removing the dominant one), it receives the label
-#'     \code{paste(parent, "NA", sep = sep)}.
-#'   \item If the parent cell name doesn't match any column name in \code{M},
-#'     refinement is skipped with a warning.
-#'   \item If removing the dominant feature leaves no columns, refinement is
-#'     skipped with a warning.
-#'   \item Zero-sample cells are skipped with a warning.
-#' }
-#'
-#' \strong{Index Mapping:}
-#'
-#' The \code{refined.index} values for refined cells are carefully mapped back
-#' to the original matrix indices. If the sub-cell index in the reduced matrix
-#' is \code{j}, and the removed parent feature was at index \code{k}, the
-#' original index is computed as: \code{ifelse(j < k, j, j + 1)}.
-#'
-#' @section Requirements:
-#' \itemize{
-#'   \item \code{M} must have column names (either original or auto-generated).
-#'   \item Column names should be unique after \code{make.unique}.
-#'   \item Parent cell labels must match column names for successful refinement.
-#'   \item \code{csts$cell.label} must have the same length as \code{nrow(M)}.
-#' }
-#'
-#' @section Choosing Refinement Parameters:
-#'
-#' \strong{refinement.factor:}
-#' \itemize{
-#'   \item \code{refinement.factor = 1.5}: Aggressive refinement (cells with >= 1.5Ã—n0 samples)
-#'   \item \code{refinement.factor = 2}: Balanced default (cells with >= 2Ã—n0 samples)
-#'   \item \code{refinement.factor = 3}: Conservative (cells with >= 3Ã—n0 samples)
-#'   \item \code{refinement.factor = 4}: Very conservative (cells with >= 4Ã—n0 samples)
-#' }
-#'
-#' \strong{min.cell.size:}
-#' Use when you want an absolute threshold independent of \code{n0}. For example,
-#' \code{min.cell.size = 200} ensures only cells with 200+ samples are refined,
-#' regardless of the \code{n0} value used for sub-cell filtering.
-#'
-#' @section Typical Workflows:
-#'
-#' \strong{Workflow 1: Fully Automatic}
-#' \preformatted{
-#' # Filter and normalize
-#' filt <- filter.asv(counts, min.lib = 1000, prev.prop = 0.05)
-#' M <- normalize.linf(filt$counts)
-#'
-#' # Initial CST assignment
-#' csts <- linf.csts(M, n0 = 50)
-#'
-#' # Automatic refinement (refines cells with >= 100 samples)
-#' refined <- refine.linf.csts(M, csts, n0 = 50, refinement.factor = 2)
-#' table(refined$refined.label)
-#' }
-#'
-#' \strong{Workflow 2: Inspect Then Decide}
-#' \preformatted{
-#' # Initial CSTs
-#' csts <- linf.csts(M, n0 = 50)
-#' cell.sizes <- sort(table(csts$cell.label), decreasing = TRUE)
-#' print(cell.sizes)
-#'
-#' # Manual selection of specific cells
-#' refined <- refine.linf.csts(
-#'   M, csts,
-#'   cells.to.refine = c("Lactobacillus_iners", "Gardnerella_vaginalis"),
-#'   n0 = 50
-#' )
-#' }
-#'
-#' \strong{Workflow 3: Conservative Auto-refinement}
-#' \preformatted{
-#' # Only refine very large cells
-#' refined <- refine.linf.csts(
-#'   M, csts,
-#'   n0 = 50,
-#'   refinement.factor = 4,      # >= 200 samples
-#'   min.cell.size = 250,        # or >= 250 samples (whichever is larger)
-#'   verbose = TRUE
-#' )
-#' }
-#'
-#' @examples
-#' \dontrun{
-#' # === Real-world vaginal microbiome example ===
-#' library(linf)
-#'
-#' # Assume X is your filtered count matrix
-#' M <- normalize.linf(X)
-#' csts <- linf.csts(M, n0 = 50)
-#'
-#' # Check initial distribution
-#' table(csts$cell.label)
-#' #   Lactobacillus_iners: 1060
-#' #   Gardnerella_vaginalis: 426
-#' #   Lactobacillus_crispatus: 352
-#' #   Ca_Lachnocurva_vaginae: 279
-#'
-#' # Automatic refinement with default settings
-#' refined <- refine.linf.csts(M, csts, n0 = 50, refinement.factor = 2)
-#' # Refines cells with >= 100 samples (Li, Gv, Lc, Clv)
-#'
-#' # Examine refined structure
-#' table(refined$refined.label)
-#' print(refined$refinement.summary)
-#' print(refined$cells.considered)
-#'
-#' # More conservative: only refine very large cells
-#' refined2 <- refine.linf.csts(
-#'   M, csts,
-#'   n0 = 50,
-#'   refinement.factor = 3,
-#'   verbose = TRUE
-#' )
-#' # Refines cells with >= 150 samples (only Li, Gv, Lc)
-#'
-#' # Manual override for specific cells
-#' refined3 <- refine.linf.csts(
-#'   M, csts,
-#'   cells.to.refine = "Lactobacillus_iners",
-#'   n0 = 50
-#' )
-#'
-#' # Access detailed sub-CST info
-#' li.subcsts <- refined$sub.csts[["Lactobacillus_iners"]]
-#' print(li.subcsts$size.table)
-#' print(li.subcsts$kept.cells.lbl)
-#' }
-#'
-#' # === Synthetic example ===
-#' set.seed(123)
-#' S <- matrix(rpois(500, lambda = 10), nrow = 100, ncol = 5)
-#' colnames(S) <- paste0("Feature", LETTERS[1:5])
-#'
-#' # Create situation where FeatureA dominates many samples
-#' S[1:60, 1] <- S[1:60, 1] + rpois(60, 50)
-#' # FeatureB dominates some samples
-#' S[61:75, 2] <- S[61:75, 2] + rpois(15, 50)
-#'
-#' M <- normalize.linf(S)
-#' csts <- linf.csts(M, n0 = 5)
-#' table(csts$cell.label)
-#'
-#' # Auto-refine with low threshold
-#' refined <- refine.linf.csts(M, csts, n0 = 5, refinement.factor = 2)
-#' table(refined$refined.label)
-#' refined$refinement.summary
-#'
-#' # Manual refinement of just FeatureA
-#' refined2 <- refine.linf.csts(M, csts, cells.to.refine = "FeatureA", n0 = 3)
-#' table(refined2$refined.label)
-#'
-#' @seealso
-#' \code{\link{linf.csts}} for initial L-infinity CST assignment,
-#' \code{\link{normalize.linf}} for L-infinity normalization,
-#' \code{\link{filter.asv}} for preprocessing count matrices.
+#' @return Updated \code{"linf.csts"} object with \code{cst.depth} increased by one and
+#'   updated \code{cell.label}. Policy-specific views are stored in
+#'   \code{cell.label.rare} and \code{cell.label.absorb}.
 #'
 #' @export
 refine.linf.csts <- function(M,
@@ -572,21 +413,59 @@ refine.linf.csts <- function(M,
                              n0 = 50,
                              refinement.factor = 2,
                              sep = "__",
+                             low.freq.policy = c("rare", "absorb"),
+                             rare.label = "RARE_DOMINANT",
                              verbose = TRUE) {
 
     validate.linf.csts(csts)
+
+    low.freq.policy <- match.arg(low.freq.policy)
+
+    if (!is.numeric(n0) || length(n0) != 1L || n0 < 1 || n0 %% 1 != 0) {
+        stop("refine.linf.csts: n0 must be integer >= 1")
+    }
+    if (!is.numeric(refinement.factor) || length(refinement.factor) != 1L ||
+        !is.finite(refinement.factor) || refinement.factor <= 0) {
+        stop("refine.linf.csts: refinement.factor must be a finite numeric > 0")
+    }
+    if (!is.character(sep) || length(sep) != 1L || !nzchar(sep)) {
+        stop("refine.linf.csts: sep must be a non-empty character scalar")
+    }
+    if (!is.character(rare.label) || length(rare.label) != 1L || !nzchar(rare.label)) {
+        stop("refine.linf.csts: rare.label must be a non-empty character scalar")
+    }
 
     ## Initialize hierarchy if missing
     if (is.null(csts$cst.levels)) {
         csts$cst.levels <- list(level1 = csts$cell.label)
         csts$cst.depth <- 1L
         csts$sep <- sep
+
+        ## Ensure both policy-specific views exist at depth 1
+        if (is.null(csts$cell.label.rare)) {
+            csts$cell.label.rare <- csts$cell.label
+        }
+        if (is.null(csts$cell.label.absorb)) {
+            csts$cell.label.absorb <- csts$cell.label
+        }
+
+        csts$cst.levels.rare <- list(level1 = csts$cell.label.rare)
+        csts$cst.levels.absorb <- list(level1 = csts$cell.label.absorb)
     }
+
+    ## Backward-compatible defaults if stored views are missing
+    if (is.null(csts$cst.levels.rare)) csts$cst.levels.rare <- csts$cst.levels
+    if (is.null(csts$cst.levels.absorb)) csts$cst.levels.absorb <- csts$cst.levels
 
     depth <- csts$cst.depth + 1L
     parent.labels <- csts$cst.levels[[depth - 1L]]
 
-    refined.labels <- parent.labels
+    parent.labels.rare <- csts$cst.levels.rare[[depth - 1L]]
+    parent.labels.absorb <- csts$cst.levels.absorb[[depth - 1L]]
+
+    refined.labels.rare <- parent.labels.rare
+    refined.labels.absorb <- parent.labels.absorb
+
     cell.sizes <- sort(table(parent.labels), decreasing = TRUE)
 
     threshold <- refinement.factor * n0
@@ -609,60 +488,66 @@ refine.linf.csts <- function(M,
 
         M.sub <- M[idx, -drop.idx, drop = FALSE]
 
-        sub.csts <- linf.csts(M.sub, n0 = n0)
-        sub.labels <- sub.csts$cell.label
+        sub.csts <- linf.csts(M.sub,
+                             n0 = n0,
+                             low.freq.policy = low.freq.policy,
+                             rare.label = rare.label)
 
-        ## sub.labels can contain NA when rows become all-zero after dropping parent taxa.
-        ## If we paste those, we create tiny "...__NA" CSTs. Instead, merge NA rows into a
-        ## real child label (the most frequent non-NA sublabel) when possible.
+        sub.labels.rare <- sub.csts$cell.label.rare
+        sub.labels.absorb <- sub.csts$cell.label.absorb
 
-        na.sub <- is.na(sub.labels)
+        ## If refinement yields no kept sub-cells (all samples go to rare), skip
+        if (all(sub.labels.rare == rare.label)) next
 
-        if (any(na.sub)) {
-            ok.sub <- !na.sub
-
-            if (any(ok.sub)) {
-                ## linf.csts() guarantees non-NA sublabels are from kept cells (>= n0)
-                fallback <- names(sort(table(sub.labels[ok.sub]), decreasing = TRUE))[1L]
-                sub.labels[na.sub] <- fallback
-            } else {
-                ## All rows are NA in this parent after dropping columns -> nothing to refine
-                next
-            }
-        }
-
-        refined.labels[idx] <- paste(cell, sub.labels, sep = sep)
+        refined.labels.rare[idx] <- paste(cell, sub.labels.rare, sep = sep)
+        refined.labels.absorb[idx] <- paste(cell, sub.labels.absorb, sep = sep)
     }
 
-    ## Update CST object
+    ## Update CST object (store both views; active view chosen by low.freq.policy)
+    csts$cst.levels.rare[[depth]] <- refined.labels.rare
+    csts$cst.levels.absorb[[depth]] <- refined.labels.absorb
+
+    if (low.freq.policy == "rare") {
+        refined.labels <- refined.labels.rare
+    } else {
+        refined.labels <- refined.labels.absorb
+    }
+
     csts$cst.levels[[depth]] <- refined.labels
     csts$cst.depth <- depth
+    csts$sep <- sep
+
+    csts$cell.label.rare <- refined.labels.rare
+    csts$cell.label.absorb <- refined.labels.absorb
     csts$cell.label <- refined.labels
+
+    csts$low.freq.policy <- low.freq.policy
+    csts$rare.label <- rare.label
 
     class(csts) <- "linf.csts"
 
     csts
 }
 
-#' Iteratively refine L-infinity CSTs
+#' Iteratively refine L-infinity CSTs by one additional level
 #'
 #' @description
-#' Applies iterative CST refinement to selected leaf CSTs, appending additional
-#' hierarchy levels until refinement criteria are no longer met.
+#' Appends one refinement level to an existing CST hierarchy produced by
+#' \code{\link{refine.linf.csts}} or \code{\link{refine.linf.csts.iter}}.
+#' Cells to refine can be provided explicitly or selected automatically based on
+#' \code{refinement.factor * n0}.
 #'
-#' @param M Numeric matrix used for CST assignment.
-#' @param refined A CST object produced by \code{refine.linf.csts()}.
-#' @param cells.to.refine Character vector or NULL. CSTs to refine.
-#' @param n0 Integer. Minimum CST size.
-#' @param refinement.factor Numeric. Refinement threshold multiplier.
-#' @param sep Character. CST label separator.
-#' @param verbose Logical. Print progress messages.
+#' @param M Numeric matrix used for refinement.
+#' @param refined A \code{"linf.csts"} object with an existing hierarchy.
+#' @param cells.to.refine Character vector of leaf cells to refine, or NULL for auto-selection.
+#' @param n0 Integer >= 1. Minimum size for a child cell to be kept.
+#' @param refinement.factor Numeric > 0. Auto-selection threshold multiplier.
+#' @param sep Character scalar used to concatenate hierarchical labels.
+#' @param low.freq.policy Character. One of \code{"rare"} or \code{"absorb"}. Default: \code{"rare"}.
+#' @param rare.label Character scalar for rare buckets when \code{low.freq.policy = "rare"}.
+#' @param verbose Logical. If TRUE, print progress information.
 #'
-#' @return An updated CST object with increased \code{cst.depth}.
-#'
-#' @details
-#' Each iteration appends a new CST level to \code{cst.levels}.
-#' Leaf CST labels are always stored in \code{cell.label}.
+#' @return Updated \code{"linf.csts"} object with \code{cst.depth} increased by one.
 #'
 #' @export
 refine.linf.csts.iter <- function(M,
@@ -671,12 +556,37 @@ refine.linf.csts.iter <- function(M,
                                   n0 = 50,
                                   refinement.factor = 5,
                                   sep = "__",
+                                  low.freq.policy = c("rare", "absorb"),
+                                  rare.label = "RARE_DOMINANT",
                                   verbose = TRUE) {
 
     validate.linf.csts(refined)
 
+    low.freq.policy <- match.arg(low.freq.policy)
+
+    if (!is.numeric(n0) || length(n0) != 1L || n0 < 1 || n0 %% 1 != 0) {
+        stop("refine.linf.csts.iter: n0 must be integer >= 1")
+    }
+    if (!is.numeric(refinement.factor) || length(refinement.factor) != 1L ||
+        !is.finite(refinement.factor) || refinement.factor <= 0) {
+        stop("refine.linf.csts.iter: refinement.factor must be a finite numeric > 0")
+    }
+    if (!is.character(sep) || length(sep) != 1L || !nzchar(sep)) {
+        stop("refine.linf.csts.iter: sep must be a non-empty character scalar")
+    }
+    if (!is.character(rare.label) || length(rare.label) != 1L || !nzchar(rare.label)) {
+        stop("refine.linf.csts.iter: rare.label must be a non-empty character scalar")
+    }
+
+    ## Ensure stored views exist (backward compatible)
+    if (is.null(refined$cst.levels.rare)) refined$cst.levels.rare <- refined$cst.levels
+    if (is.null(refined$cst.levels.absorb)) refined$cst.levels.absorb <- refined$cst.levels
+
     depth <- refined$cst.depth
+
     parent.labels <- refined$cst.levels[[depth]]
+    parent.labels.rare <- refined$cst.levels.rare[[depth]]
+    parent.labels.absorb <- refined$cst.levels.absorb[[depth]]
 
     cell.sizes <- sort(table(parent.labels), decreasing = TRUE)
     threshold <- refinement.factor * n0
@@ -693,7 +603,8 @@ refine.linf.csts.iter <- function(M,
         cat("\n")
     }
 
-    new.labels <- parent.labels
+    new.labels.rare <- parent.labels.rare
+    new.labels.absorb <- parent.labels.absorb
 
     for (cell in cells.to.refine) {
         idx <- which(parent.labels == cell)
@@ -704,34 +615,40 @@ refine.linf.csts.iter <- function(M,
 
         M.sub <- M[idx, -drop.idx, drop = FALSE]
 
-        sub.csts <- linf.csts(M.sub, n0 = n0)
-        sub.labels <- sub.csts$cell.label
+        sub.csts <- linf.csts(M.sub,
+                             n0 = n0,
+                             low.freq.policy = low.freq.policy,
+                             rare.label = rare.label)
 
-        ## sub.labels can contain NA when rows become all-zero after dropping parent taxa.
-        ## If we paste those, we create tiny "...__NA" CSTs. Instead, merge NA rows into a
-        ## real child label (the most frequent non-NA sublabel) when possible.
+        sub.labels.rare <- sub.csts$cell.label.rare
+        sub.labels.absorb <- sub.csts$cell.label.absorb
 
-        na.sub <- is.na(sub.labels)
+        ## If refinement yields no kept sub-cells (all samples go to rare), skip
+        if (all(sub.labels.rare == rare.label)) next
 
-        if (any(na.sub)) {
-            ok.sub <- !na.sub
+        new.labels.rare[idx] <- paste(cell, sub.labels.rare, sep = sep)
+        new.labels.absorb[idx] <- paste(cell, sub.labels.absorb, sep = sep)
+    }
 
-            if (any(ok.sub)) {
-                ## linf.csts() guarantees non-NA sublabels are from kept cells (>= n0)
-                fallback <- names(sort(table(sub.labels[ok.sub]), decreasing = TRUE))[1L]
-                sub.labels[na.sub] <- fallback
-            } else {
-                ## All rows are NA in this parent after dropping columns -> nothing to refine
-                next
-            }
-        }
+    refined$cst.levels.rare[[depth + 1L]] <- new.labels.rare
+    refined$cst.levels.absorb[[depth + 1L]] <- new.labels.absorb
 
-        new.labels[idx] <- paste(cell, sub.labels, sep = sep)
+    if (low.freq.policy == "rare") {
+        new.labels <- new.labels.rare
+    } else {
+        new.labels <- new.labels.absorb
     }
 
     refined$cst.levels[[depth + 1L]] <- new.labels
     refined$cst.depth <- depth + 1L
+
+    refined$cell.label.rare <- new.labels.rare
+    refined$cell.label.absorb <- new.labels.absorb
     refined$cell.label <- new.labels
+
+    refined$low.freq.policy <- low.freq.policy
+    refined$rare.label <- rare.label
+    refined$sep <- sep
 
     class(refined) <- "linf.csts"
 
@@ -776,6 +693,87 @@ refine.linf.csts.iter <- function(M,
 #' show.linf.csts(refined2, style = "flat")
 #'
 #' @export
+
+#' Switch a CST hierarchy to the "absorb" view (collapse rare buckets)
+#'
+#' @description
+#' Returns a copy of a \code{"linf.csts"} object with \code{cell.label} (and, if
+#' present, \code{cst.levels}) replaced by the precomputed "absorb" labeling.
+#' This does not recompute CSTs; it only switches between labelings already
+#' stored in the object.
+#'
+#' @param csts A \code{"linf.csts"} object produced by \code{\link{linf.csts}}
+#'   and optionally refined by \code{\link{refine.linf.csts}} /
+#'   \code{\link{refine.linf.csts.iter}}.
+#'
+#' @return A \code{"linf.csts"} object using the "absorb" view.
+#'
+#' @export
+collapse.rare <- function(csts) {
+
+  validate.linf.csts(csts)
+
+  if (is.null(csts$cell.label.absorb)) {
+    stop("collapse.rare: no precomputed absorb labels found in object")
+  }
+
+  csts$cell.label <- csts$cell.label.absorb
+  csts$low.freq.policy <- "absorb"
+
+  if (!is.null(csts$cst.levels)) {
+    if (is.null(csts$cst.levels.absorb)) {
+      ## Fall back to updating only the leaf level
+      depth <- csts$cst.depth
+      csts$cst.levels[[depth]] <- csts$cell.label.absorb
+    } else {
+      csts$cst.levels <- csts$cst.levels.absorb
+    }
+  }
+
+  class(csts) <- "linf.csts"
+  csts
+}
+
+#' Switch a CST hierarchy to the "rare" view (explicit rare buckets)
+#'
+#' @description
+#' Returns a copy of a \code{"linf.csts"} object with \code{cell.label} (and, if
+#' present, \code{cst.levels}) replaced by the precomputed "rare" labeling.
+#' This does not recompute CSTs; it only switches between labelings already
+#' stored in the object.
+#'
+#' @param csts A \code{"linf.csts"} object produced by \code{\link{linf.csts}}
+#'   and optionally refined by \code{\link{refine.linf.csts}} /
+#'   \code{\link{refine.linf.csts.iter}}.
+#'
+#' @return A \code{"linf.csts"} object using the "rare" view.
+#'
+#' @export
+expand.rare <- function(csts) {
+
+  validate.linf.csts(csts)
+
+  if (is.null(csts$cell.label.rare)) {
+    stop("expand.rare: no precomputed rare labels found in object")
+  }
+
+  csts$cell.label <- csts$cell.label.rare
+  csts$low.freq.policy <- "rare"
+
+  if (!is.null(csts$cst.levels)) {
+    if (is.null(csts$cst.levels.rare)) {
+      ## Fall back to updating only the leaf level
+      depth <- csts$cst.depth
+      csts$cst.levels[[depth]] <- csts$cell.label.rare
+    } else {
+      csts$cst.levels <- csts$cst.levels.rare
+    }
+  }
+
+  class(csts) <- "linf.csts"
+  csts
+}
+
 print.linf.csts <- function(csts) {
 
   validate.linf.csts(csts)
