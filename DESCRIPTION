@@ -1,11 +1,11 @@
 Package: linf
 Type: Package
-Title: L-infinity Cells and Truncated CSTs for Compositional Data
-Version: 0.0.1
+Title: L-Infinity Cells and Truncated CSTs for Compositional Data
+Version: 0.1.0
 Authors@R:
-    c(
-      person("Pawel", "Gajer", email = "pgajer@gmail.com", role = c("aut", "cre"))
-    )
+    person("Pawel", "Gajer", , "pgajer@gmail.com", role = c("aut", "cre"))
+Author: Pawel Gajer [aut, cre]
+Maintainer: Pawel Gajer <pgajer@gmail.com>
 Description: Utilities for L-infinity normalization, dominant-feature (L-infinity cell)
     assignment, and truncated L-infinity CSTs for compositional data analyses.
 License: MIT + file LICENSE
@@ -20,5 +20,5 @@ Suggests:
     rmarkdown
 VignetteBuilder: knitr
 Config/testthat/edition: 3
-URL: https://pgajer.github.io/linf/, https://arxiv.org/abs/2503.21543
+URL: https://github.com/pgajer/linf, https://arxiv.org/abs/2503.21543
 BugReports: https://github.com/pgajer/linf/issues

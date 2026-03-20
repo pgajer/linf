@@ -3,10 +3,9 @@
 ^\.git$
 ^\.github$
 ^README\.Rmd$
-^README.html$
+^README\.html$
 ^LICENSE\.md$
-^docs$           # pkgdown site; not needed in the tarball
-^vignettes/.*\.Rmd$   # optional: CRAN will build from Rmd; omit this line if you want Rmds included
+^docs$
 ^pkgdown\.yml$
 ^revdep$
 ^dev$
@@ -16,3 +15,4 @@
 ^_pkgdown\.yml$
 ^doc$
 ^Meta$
+^\.\.Rcheck$

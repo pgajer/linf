@@ -34,7 +34,7 @@ normalize.linf <- function(X, tol = 0) {
 
   m <- apply(X, 1, max)
 
-  ## Identify rows with meaningful L∞ norm
+  ## Identify rows with meaningful L-infinity norm
   keep <- m > tol
 
   if (any(keep)) {
@@ -44,7 +44,7 @@ normalize.linf <- function(X, tol = 0) {
   X
 }
 
-#' Truncated L-infinity CSTs (hierarchy-aware)
+#' L-infinity cell assignment
 #'
 #' @description
 #' Assigns each row to the column achieving its maximum (L-infinity cell).
@@ -54,28 +54,31 @@ normalize.linf <- function(X, tol = 0) {
 #' maximum (as in \code{max.col(..., ties.method = "first")}). Rows that are all
 #' zero are assigned \code{NA}.
 #'
-#' Column labels are taken from \code{colnames(S)}; if absent, synthetic labels
-#' \code{"V1", "V2", ..., "Vp"} are generated. To guarantee a 1–1 mapping between
-#' columns and labels, duplicate column names are disambiguated via
-#' \code{make.unique()}.
+#' Feature IDs default to \code{colnames(S)}; if absent, synthetic IDs
+#' \code{"V1", "V2", ..., "Vp"} are generated. Display labels default to the
+#' feature IDs unless \code{feature.labels} is supplied. To guarantee a 1-1
+#' mapping between columns and both IDs and labels, duplicates are
+#' disambiguated via \code{make.unique()}.
 #'
 #' @param S Numeric matrix (samples x features), typically L-infinity-normalized.
-#' @param n0 Integer >= 1. Minimum size for a CST to be retained.
+#' @param feature.ids Optional character vector of stable feature identifiers,
+#'   length \code{ncol(S)}.
+#' @param feature.labels Optional character vector of display labels, length
+#'   \code{ncol(S)}.
 #' @param tie.method Character. How to resolve ties when assigning L-infinity cells.
-#' @param return.diagnostics Logical. If TRUE, return reassignment diagnostics.
+#' @param return.value Logical. If `TRUE`, include a `value` vector with row maxima.
 #'
-#' @return A CST object with components:
+#' @return A list with components:
 #' \itemize{
-#'   \item \code{cell.label}: leaf CST labels for each sample
-#'   \item \code{cst.levels}: list of CST label vectors by depth
-#'   \item \code{cst.depth}: maximum CST depth
-#'   \item \code{size.table}: CST sizes at depth 1
+#'   \item \code{index}: integer index of the dominant column per sample (`NA` for all-zero rows)
+#'   \item \code{id}: dominant feature ID per sample (`NA` for all-zero rows)
+#'   \item \code{label}: dominant column label per sample (`NA` for all-zero rows)
+#'   \item \code{id.levels}: full feature ID set after `make.unique(..., sep = "_")`
+#'   \item \code{levels}: full column label set after `make.unique(..., sep = "_")`
+#'   \item \code{observed.id.levels}: subset of \code{id.levels} that appear in \code{id}
+#'   \item \code{observed.levels}: subset of \code{levels} that appear in \code{label}
+#'   \item \code{value}: row maxima (only when \code{return.value = TRUE})
 #' }
-#'
-#' @details
-#' The returned object represents a hierarchical CST structure.
-#' \code{cell.label} always refers to the leaf (deepest) CST labels.
-#' The full hierarchy is stored explicitly in \code{cst.levels}.
 #'
 #' @examples
 #' # Basic example with named columns
@@ -102,6 +105,8 @@ normalize.linf <- function(X, tol = 0) {
 #' @seealso \code{\link{normalize.linf}}, \code{\link{linf.csts}}
 #' @export
 linf.cells <- function(S,
+                       feature.ids = NULL,
+                       feature.labels = NULL,
                        tie.method = c("first", "random", "error"),
                        return.value = FALSE) {
 
@@ -115,8 +120,9 @@ linf.cells <- function(S,
   if (nrow(X) == 0L || ncol(X) == 0L)
     stop("linf.cells: matrix has zero rows or columns")
 
-  lev <- colnames(X)
-  if (is.null(lev)) lev <- paste0("V", seq_len(ncol(X)))
+  meta <- resolve.linf.feature.meta(X, feature.ids = feature.ids, feature.labels = feature.labels)
+  id.lev <- meta$feature.ids
+  lev <- meta$feature.labels
 
   idx <- rep(NA_integer_, nrow(X))
   val <- apply(X, 1, max)
@@ -133,12 +139,20 @@ linf.cells <- function(S,
     })
   }
 
+  id <- ifelse(is.na(idx), NA_character_, id.lev[idx])
   lbl <- ifelse(is.na(idx), NA_character_, lev[idx])
 
+  observed.id.levels <- id.lev[id.lev %in% id[!is.na(id)]]
+  observed.levels <- lev[lev %in% lbl[!is.na(lbl)]]
+
   out <- list(
-    index  = idx,
-    label  = lbl,
-    levels = lev
+    index = idx,
+    id = id,
+    label = lbl,
+    id.levels = id.lev,
+    levels = lev,
+    observed.id.levels = observed.id.levels,
+    observed.levels = observed.levels
   )
 
   if (return.value) {
@@ -161,6 +175,10 @@ linf.cells <- function(S,
 #' }
 #'
 #' @param S Numeric matrix (samples x features), typically L-infinity relatives.
+#' @param feature.ids Optional character vector of stable feature identifiers,
+#'   length \code{ncol(S)}.
+#' @param feature.labels Optional character vector of display labels, length
+#'   \code{ncol(S)}.
 #' @param n0 Integer >= 1. Minimum size for a cell to be kept.
 #' @param low.freq.policy Character. One of \code{"rare"} or \code{"absorb"}.
 #'   Default: \code{"rare"}.
@@ -169,29 +187,43 @@ linf.cells <- function(S,
 #' @param tie.method Character. Tie handling passed to \code{linf.cells()} and used
 #'   during absorb reassignment ("first", "random", "error").
 #' @param return.diagnostics Logical. If TRUE, return reassignment diagnostics.
+#' @param return.landmarks Logical. If TRUE, attach a depth-1 landmark summary
+#'   computed by \code{\link{linf.landmarks}}.
+#' @param landmark.types Character vector of landmark types passed to
+#'   \code{\link{linf.landmarks}} when \code{return.landmarks = TRUE}.
+#' @param landmark.view Character. Landmark view passed to
+#'   \code{\link{linf.landmarks}} when \code{return.landmarks = TRUE}.
 #'
 #' @return List with:
 #'   \itemize{
-#'     \item \code{cell.index}, \code{cell.label}: active labeling per \code{low.freq.policy}
-#'     \item \code{cell.index.rare}, \code{cell.label.rare}
-#'     \item \code{cell.index.absorb}, \code{cell.label.absorb}
-#'     \item \code{kept.cells.idx}, \code{kept.cells.lbl}
-#'     \item \code{raw.index}, \code{raw.label}
-#'     \item \code{size.table}
+#'     \item \code{cell.index}, \code{cell.id}, \code{cell.label}: active labeling per \code{low.freq.policy}
+#'     \item \code{cell.index.rare}, \code{cell.id.rare}, \code{cell.label.rare}
+#'     \item \code{cell.index.absorb}, \code{cell.id.absorb}, \code{cell.label.absorb}
+#'     \item \code{kept.cells.idx}, \code{kept.cells.id}, \code{kept.cells.lbl}
+#'     \item \code{raw.index}, \code{raw.id}, \code{raw.label}
+#'     \item \code{feature.ids}, \code{feature.labels}
+#'     \item \code{size.table}, \code{size.table.id}
 #'     \item \code{n0}, \code{low.freq.policy}, \code{rare.label}
 #'     \item \code{diagnostics} (if \code{return.diagnostics = TRUE})
+#'     \item \code{landmarks} (if \code{return.landmarks = TRUE})
 #'   }
 #'
 #' @export
 linf.csts <- function(S,
+                      feature.ids = NULL,
+                      feature.labels = NULL,
                       n0 = 50,
                       low.freq.policy = c("rare", "absorb"),
                       rare.label = "RARE_DOMINANT",
                       tie.method = c("first", "random", "error"),
-                      return.diagnostics = FALSE) {
+                      return.diagnostics = FALSE,
+                      return.landmarks = FALSE,
+                      landmark.types = c("endpoint.max", "endpoint.min"),
+                      landmark.view = c("active", "rare", "absorb")) {
 
     low.freq.policy <- match.arg(low.freq.policy)
     tie.method <- match.arg(tie.method)
+    landmark.view <- match.arg(landmark.view)
 
     if (!is.numeric(n0) || length(n0) != 1L || n0 < 1 || n0 %% 1 != 0) {
         stop("linf.csts: n0 must be integer >= 1")
@@ -208,14 +240,20 @@ linf.csts <- function(S,
     if (nrow(X) == 0L || ncol(X) == 0L)
         stop("linf.csts: matrix has zero rows or columns")
 
-    lev <- colnames(X)
-    if (is.null(lev)) lev <- paste0("V", seq_len(ncol(X)))
+    meta <- resolve.linf.feature.meta(X, feature.ids = feature.ids, feature.labels = feature.labels)
+    fid <- meta$feature.ids
+    lev <- meta$feature.labels
 
-    raw <- linf.cells(X, tie.method = tie.method)
+    raw <- linf.cells(X,
+                      feature.ids = fid,
+                      feature.labels = lev,
+                      tie.method = tie.method)
     tab <- sort(table(raw$label[!is.na(raw$label)]), decreasing = TRUE)
+    tab.id <- sort(table(raw$id[!is.na(raw$id)]), decreasing = TRUE)
 
     kept.lbl <- names(tab[tab >= n0])
     kept.idx <- match(kept.lbl, lev)
+    kept.id <- fid[kept.idx]
 
     n <- nrow(X)
 
@@ -223,12 +261,15 @@ linf.csts <- function(S,
     is.kept <- !is.na(raw$label) & (raw$label %in% kept.lbl)
 
     cell.idx.rare <- raw$index
+    cell.id.rare <- raw$id
     cell.lbl.rare <- raw$label
     cell.idx.rare[!is.kept] <- NA_integer_
+    cell.id.rare[!is.kept] <- rare.label
     cell.lbl.rare[!is.kept] <- rare.label
 
     ## Absorb-policy labels: reassign low-frequency (and zero-row) samples into kept cells
     cell.idx.absorb <- raw$index
+    cell.id.absorb <- raw$id
     cell.lbl.absorb <- raw$label
 
     reassigned <- logical(n)
@@ -264,6 +305,7 @@ linf.csts <- function(S,
             reassigned.to[to.absorb]   <- lev[new.idx]
 
             cell.idx.absorb[to.absorb] <- new.idx
+            cell.id.absorb[to.absorb] <- fid[new.idx]
             cell.lbl.absorb[to.absorb] <- lev[new.idx]
         }
 
@@ -273,39 +315,53 @@ linf.csts <- function(S,
         ## - rare-policy: everyone is rare.label (already set above)
         ## - absorb-policy: undefined; keep NA labels
         cell.idx.absorb[] <- NA_integer_
+        cell.id.absorb[] <- NA_character_
         cell.lbl.absorb[] <- NA_character_
     }
 
     ## Select active labeling
     if (low.freq.policy == "rare") {
         cell.idx <- cell.idx.rare
+        cell.id <- cell.id.rare
         cell.lbl <- cell.lbl.rare
     } else {
         cell.idx <- cell.idx.absorb
+        cell.id <- cell.id.absorb
         cell.lbl <- cell.lbl.absorb
     }
 
     names(cell.idx) <- rownames(X)
+    names(cell.id) <- rownames(X)
     names(cell.lbl) <- rownames(X)
 
     names(cell.idx.rare) <- rownames(X)
+    names(cell.id.rare) <- rownames(X)
     names(cell.lbl.rare) <- rownames(X)
 
     names(cell.idx.absorb) <- rownames(X)
+    names(cell.id.absorb) <- rownames(X)
     names(cell.lbl.absorb) <- rownames(X)
 
     out <- list(
         cell.index       = cell.idx,
+        cell.id          = cell.id,
         cell.label       = cell.lbl,
         cell.index.rare  = cell.idx.rare,
+        cell.id.rare     = cell.id.rare,
         cell.label.rare  = cell.lbl.rare,
         cell.index.absorb = cell.idx.absorb,
+        cell.id.absorb   = cell.id.absorb,
         cell.label.absorb = cell.lbl.absorb,
         kept.cells.idx   = kept.idx,
+        kept.cells.id    = kept.id,
         kept.cells.lbl   = kept.lbl,
         raw.index        = raw$index,
+        raw.id           = raw$id,
         raw.label        = raw$label,
         size.table       = tab,
+        size.table.id    = tab.id,
+        feature.ids      = fid,
+        feature.labels   = lev,
         n0               = as.integer(n0),
         low.freq.policy  = low.freq.policy,
         rare.label       = rare.label
@@ -319,7 +375,26 @@ linf.csts <- function(S,
         )
     }
 
+    out$cst.id.levels <- list(level1 = out$cell.id)
+    out$cst.id.levels.rare <- list(level1 = out$cell.id.rare)
+    out$cst.id.levels.absorb <- list(level1 = out$cell.id.absorb)
+    out$cst.levels <- list(level1 = out$cell.label)
+    out$cst.levels.rare <- list(level1 = out$cell.label.rare)
+    out$cst.levels.absorb <- list(level1 = out$cell.label.absorb)
+    out$cst.depth <- 1L
+
     class(out) <- "linf.csts"
+
+    if (isTRUE(return.landmarks)) {
+        out$landmarks <- linf.landmarks(
+            X,
+            out,
+            depth = 1L,
+            view = landmark.view,
+            landmark.types = landmark.types,
+            tie.method = tie.method
+        )
+    }
 
     out
 }
@@ -453,20 +528,38 @@ refine.linf.csts <- function(M,
         csts$cst.levels.absorb <- list(level1 = csts$cell.label.absorb)
     }
 
+    if (is.null(csts$cst.id.levels)) {
+        csts$cst.id.levels <- list(level1 = csts$cell.id %||% csts$cell.label)
+    }
+
+    if (is.null(csts$feature.ids)) {
+        csts$feature.ids <- colnames(M)
+    }
+    if (is.null(csts$feature.labels)) {
+        csts$feature.labels <- csts$feature.ids
+    }
+
     ## Backward-compatible defaults if stored views are missing
     if (is.null(csts$cst.levels.rare)) csts$cst.levels.rare <- csts$cst.levels
     if (is.null(csts$cst.levels.absorb)) csts$cst.levels.absorb <- csts$cst.levels
+    if (is.null(csts$cst.id.levels.rare)) csts$cst.id.levels.rare <- csts$cst.id.levels
+    if (is.null(csts$cst.id.levels.absorb)) csts$cst.id.levels.absorb <- csts$cst.id.levels
 
     depth <- csts$cst.depth + 1L
+    parent.ids <- csts$cst.id.levels[[depth - 1L]]
+    parent.ids.rare <- csts$cst.id.levels.rare[[depth - 1L]]
+    parent.ids.absorb <- csts$cst.id.levels.absorb[[depth - 1L]]
     parent.labels <- csts$cst.levels[[depth - 1L]]
 
     parent.labels.rare <- csts$cst.levels.rare[[depth - 1L]]
     parent.labels.absorb <- csts$cst.levels.absorb[[depth - 1L]]
 
+    refined.ids.rare <- parent.ids.rare
+    refined.ids.absorb <- parent.ids.absorb
     refined.labels.rare <- parent.labels.rare
     refined.labels.absorb <- parent.labels.absorb
 
-    cell.sizes <- sort(table(parent.labels), decreasing = TRUE)
+    cell.sizes <- sort(table(parent.ids), decreasing = TRUE)
 
     threshold <- refinement.factor * n0
     refine.cells <- names(cell.sizes[cell.sizes >= threshold])
@@ -480,10 +573,14 @@ refine.linf.csts <- function(M,
     }
 
     for (cell in refine.cells) {
-        idx <- which(parent.labels == cell)
+        idx <- which(parent.ids == cell)
+        parent.id.rare <- parent.ids.rare[idx[1L]]
+        parent.id.absorb <- parent.ids.absorb[idx[1L]]
+        parent.label.rare <- parent.labels.rare[idx[1L]]
+        parent.label.absorb <- parent.labels.absorb[idx[1L]]
 
         parent.features <- strsplit(cell, sep, fixed = TRUE)[[1]]
-        drop.idx <- match(parent.features, colnames(M))
+        drop.idx <- match(parent.features, csts$feature.ids)
         drop.idx <- drop.idx[!is.na(drop.idx)]
 
         ## If no parent features match columns (e.g., cell is a rare bucket), do not drop any columns.
@@ -500,21 +597,30 @@ refine.linf.csts <- function(M,
         if (nrow(M.sub) == 0L || ncol(M.sub) == 0L) next
 
         sub.csts <- linf.csts(M.sub,
+                             feature.ids = csts$feature.ids[-drop.idx],
+                             feature.labels = csts$feature.labels[-drop.idx],
                              n0 = n0,
                              low.freq.policy = low.freq.policy,
                              rare.label = rare.label)
 
+        sub.ids.rare <- sub.csts$cell.id.rare %||% sub.csts$cell.label.rare
+        sub.ids.absorb <- sub.csts$cell.id.absorb %||% sub.csts$cell.label.absorb
         sub.labels.rare <- sub.csts$cell.label.rare
         sub.labels.absorb <- sub.csts$cell.label.absorb
 
         ## If refinement yields no kept sub-cells (all samples go to rare), skip
         if (all(sub.labels.rare == rare.label)) next
 
-        refined.labels.rare[idx] <- paste(cell, sub.labels.rare, sep = sep)
-        refined.labels.absorb[idx] <- paste(cell, sub.labels.absorb, sep = sep)
+        refined.ids.rare[idx] <- paste(parent.id.rare, sub.ids.rare, sep = sep)
+        refined.ids.absorb[idx] <- paste(parent.id.absorb, sub.ids.absorb, sep = sep)
+        refined.labels.rare[idx] <- paste(parent.label.rare, sub.labels.rare, sep = sep)
+        refined.labels.absorb[idx] <- paste(parent.label.absorb, sub.labels.absorb, sep = sep)
     }
 
     ## Update CST object (store both views; active view chosen by low.freq.policy)
+    csts$cst.id.levels[[depth]] <- if (low.freq.policy == "rare") refined.ids.rare else refined.ids.absorb
+    csts$cst.id.levels.rare[[depth]] <- refined.ids.rare
+    csts$cst.id.levels.absorb[[depth]] <- refined.ids.absorb
     csts$cst.levels.rare[[depth]] <- refined.labels.rare
     csts$cst.levels.absorb[[depth]] <- refined.labels.absorb
 
@@ -528,12 +634,16 @@ refine.linf.csts <- function(M,
     csts$cst.depth <- depth
     csts$sep <- sep
 
+    csts$cell.id.rare <- refined.ids.rare
+    csts$cell.id.absorb <- refined.ids.absorb
+    csts$cell.id <- csts$cst.id.levels[[depth]]
     csts$cell.label.rare <- refined.labels.rare
     csts$cell.label.absorb <- refined.labels.absorb
     csts$cell.label <- refined.labels
 
     csts$low.freq.policy <- low.freq.policy
     csts$rare.label <- rare.label
+    csts$landmarks <- NULL
 
     class(csts) <- "linf.csts"
 
@@ -592,14 +702,22 @@ refine.linf.csts.iter <- function(M,
     ## Ensure stored views exist (backward compatible)
     if (is.null(refined$cst.levels.rare)) refined$cst.levels.rare <- refined$cst.levels
     if (is.null(refined$cst.levels.absorb)) refined$cst.levels.absorb <- refined$cst.levels
+    if (is.null(refined$cst.id.levels)) refined$cst.id.levels <- list(level1 = refined$cell.id %||% refined$cell.label)
+    if (is.null(refined$cst.id.levels.rare)) refined$cst.id.levels.rare <- refined$cst.id.levels
+    if (is.null(refined$cst.id.levels.absorb)) refined$cst.id.levels.absorb <- refined$cst.id.levels
+    if (is.null(refined$feature.ids)) refined$feature.ids <- colnames(M)
+    if (is.null(refined$feature.labels)) refined$feature.labels <- refined$feature.ids
 
     depth <- refined$cst.depth
 
+    parent.ids <- refined$cst.id.levels[[depth]]
+    parent.ids.rare <- refined$cst.id.levels.rare[[depth]]
+    parent.ids.absorb <- refined$cst.id.levels.absorb[[depth]]
     parent.labels <- refined$cst.levels[[depth]]
     parent.labels.rare <- refined$cst.levels.rare[[depth]]
     parent.labels.absorb <- refined$cst.levels.absorb[[depth]]
 
-    cell.sizes <- sort(table(parent.labels), decreasing = TRUE)
+    cell.sizes <- sort(table(parent.ids), decreasing = TRUE)
     threshold <- refinement.factor * n0
 
     if (is.null(cells.to.refine)) {
@@ -609,19 +727,25 @@ refine.linf.csts.iter <- function(M,
     if (verbose) {
         cat("Auto-selecting cells for iterative refinement (threshold =", threshold, "):\n")
         for (c in cells.to.refine) {
-            cat(" •", c, ":", cell.sizes[c], "samples\n")
+            cat(" -", c, ":", cell.sizes[c], "samples\n")
         }
         cat("\n")
     }
 
+    new.ids.rare <- parent.ids.rare
+    new.ids.absorb <- parent.ids.absorb
     new.labels.rare <- parent.labels.rare
     new.labels.absorb <- parent.labels.absorb
 
     for (cell in cells.to.refine) {
-        idx <- which(parent.labels == cell)
+        idx <- which(parent.ids == cell)
+        parent.id.rare <- parent.ids.rare[idx[1L]]
+        parent.id.absorb <- parent.ids.absorb[idx[1L]]
+        parent.label.rare <- parent.labels.rare[idx[1L]]
+        parent.label.absorb <- parent.labels.absorb[idx[1L]]
 
         parents <- strsplit(cell, sep, fixed = TRUE)[[1]]
-        drop.idx <- match(parents, colnames(M))
+        drop.idx <- match(parents, refined$feature.ids)
         drop.idx <- drop.idx[!is.na(drop.idx)]
 
         ## If no parent features match columns (e.g., cell is a rare bucket), do not drop any columns.
@@ -638,20 +762,29 @@ refine.linf.csts.iter <- function(M,
         if (nrow(M.sub) == 0L || ncol(M.sub) == 0L) next
 
         sub.csts <- linf.csts(M.sub,
+                             feature.ids = refined$feature.ids[-drop.idx],
+                             feature.labels = refined$feature.labels[-drop.idx],
                              n0 = n0,
                              low.freq.policy = low.freq.policy,
                              rare.label = rare.label)
 
+        sub.ids.rare <- sub.csts$cell.id.rare %||% sub.csts$cell.label.rare
+        sub.ids.absorb <- sub.csts$cell.id.absorb %||% sub.csts$cell.label.absorb
         sub.labels.rare <- sub.csts$cell.label.rare
         sub.labels.absorb <- sub.csts$cell.label.absorb
 
         ## If refinement yields no kept sub-cells (all samples go to rare), skip
         if (all(sub.labels.rare == rare.label)) next
 
-        new.labels.rare[idx] <- paste(cell, sub.labels.rare, sep = sep)
-        new.labels.absorb[idx] <- paste(cell, sub.labels.absorb, sep = sep)
+        new.ids.rare[idx] <- paste(parent.id.rare, sub.ids.rare, sep = sep)
+        new.ids.absorb[idx] <- paste(parent.id.absorb, sub.ids.absorb, sep = sep)
+        new.labels.rare[idx] <- paste(parent.label.rare, sub.labels.rare, sep = sep)
+        new.labels.absorb[idx] <- paste(parent.label.absorb, sub.labels.absorb, sep = sep)
     }
 
+    refined$cst.id.levels[[depth + 1L]] <- if (low.freq.policy == "rare") new.ids.rare else new.ids.absorb
+    refined$cst.id.levels.rare[[depth + 1L]] <- new.ids.rare
+    refined$cst.id.levels.absorb[[depth + 1L]] <- new.ids.absorb
     refined$cst.levels.rare[[depth + 1L]] <- new.labels.rare
     refined$cst.levels.absorb[[depth + 1L]] <- new.labels.absorb
 
@@ -664,6 +797,9 @@ refine.linf.csts.iter <- function(M,
     refined$cst.levels[[depth + 1L]] <- new.labels
     refined$cst.depth <- depth + 1L
 
+    refined$cell.id.rare <- new.ids.rare
+    refined$cell.id.absorb <- new.ids.absorb
+    refined$cell.id <- refined$cst.id.levels[[depth + 1L]]
     refined$cell.label.rare <- new.labels.rare
     refined$cell.label.absorb <- new.labels.absorb
     refined$cell.label <- new.labels
@@ -671,50 +807,12 @@ refine.linf.csts.iter <- function(M,
     refined$low.freq.policy <- low.freq.policy
     refined$rare.label <- rare.label
     refined$sep <- sep
+    refined$landmarks <- NULL
 
     class(refined) <- "linf.csts"
 
     refined
 }
-
-
-#' Show L-infinity CSTs in hierarchical format
-#'
-#' @description
-#' Displays CST labels organized hierarchically, grouping sub-cells under their
-#' parents with optional indentation, tree characters, and summary statistics.
-#'
-#' @param csts Either a refined CST object (list from \code{refine.linf.csts})
-#'   or a character vector of CST labels.
-#' @param sep Character separator used in hierarchical labels. Default: \code{"__"}.
-#' @param style Character. Display style: \code{"tree"} (with tree characters),
-#'   \code{"indent"} (indentation only), or \code{"flat"} (sorted alphabetically).
-#'   Default: \code{"tree"}.
-#' @param show.counts Logical. Show sample counts. Default: \code{TRUE}.
-#' @param show.pct Logical. Show percentages. Default: \code{TRUE}.
-#' @param show.cumulative Logical. Show cumulative percentages for each parent
-#'   group. Default: \code{FALSE}.
-#' @param min.count Integer. Only show cells with at least this many samples.
-#'   Default: \code{0} (show all).
-#' @param max.depth Integer or NULL. Maximum hierarchy depth to display.
-#'   Default: \code{NULL} (show all depths).
-#'
-#' @return Invisibly returns a data frame with the hierarchical structure.
-#'
-#' @examples
-#' # Basic tree view
-#' show.linf.csts(refined2)
-#'
-#' # Indented view without tree characters
-#' show.linf.csts(refined2, style = "indent")
-#'
-#' # Show only cells with 100+ samples
-#' show.linf.csts(refined2, min.count = 100)
-#'
-#' # Flat alphabetical list
-#' show.linf.csts(refined2, style = "flat")
-#'
-#' @export
 
 #' Switch a CST hierarchy to the "absorb" view (collapse rare buckets)
 #'
@@ -739,8 +837,23 @@ collapse.rare <- function(csts) {
     stop("collapse.rare: no precomputed absorb labels found in object")
   }
 
+  if (!is.null(csts$cell.index.absorb)) {
+    csts$cell.index <- csts$cell.index.absorb
+  }
+  if (!is.null(csts$cell.id.absorb)) {
+    csts$cell.id <- csts$cell.id.absorb
+  }
   csts$cell.label <- csts$cell.label.absorb
   csts$low.freq.policy <- "absorb"
+
+  if (!is.null(csts$cst.id.levels)) {
+    if (is.null(csts$cst.id.levels.absorb)) {
+      depth <- csts$cst.depth
+      csts$cst.id.levels[[depth]] <- csts$cell.id %||% csts$cell.label
+    } else {
+      csts$cst.id.levels <- csts$cst.id.levels.absorb
+    }
+  }
 
   if (!is.null(csts$cst.levels)) {
     if (is.null(csts$cst.levels.absorb)) {
@@ -752,6 +865,7 @@ collapse.rare <- function(csts) {
     }
   }
 
+  csts$landmarks <- NULL
   class(csts) <- "linf.csts"
   csts
 }
@@ -779,8 +893,23 @@ expand.rare <- function(csts) {
     stop("expand.rare: no precomputed rare labels found in object")
   }
 
+  if (!is.null(csts$cell.index.rare)) {
+    csts$cell.index <- csts$cell.index.rare
+  }
+  if (!is.null(csts$cell.id.rare)) {
+    csts$cell.id <- csts$cell.id.rare
+  }
   csts$cell.label <- csts$cell.label.rare
   csts$low.freq.policy <- "rare"
+
+  if (!is.null(csts$cst.id.levels)) {
+    if (is.null(csts$cst.id.levels.rare)) {
+      depth <- csts$cst.depth
+      csts$cst.id.levels[[depth]] <- csts$cell.id %||% csts$cell.label
+    } else {
+      csts$cst.id.levels <- csts$cst.id.levels.rare
+    }
+  }
 
   if (!is.null(csts$cst.levels)) {
     if (is.null(csts$cst.levels.rare)) {
@@ -792,33 +921,40 @@ expand.rare <- function(csts) {
     }
   }
 
+  csts$landmarks <- NULL
   class(csts) <- "linf.csts"
   csts
 }
 
-print.linf.csts <- function(csts) {
+#' Print method for \code{"linf.csts"}
+#'
+#' @param x A \code{"linf.csts"} object.
+#' @param ... Unused.
+#' @return The input object, invisibly.
+#' @export
+print.linf.csts <- function(x, ...) {
 
-  validate.linf.csts(csts)
+  validate.linf.csts(x)
 
   ## Determine hierarchy
-  if (is.null(csts$cst.levels)) {
-    levels <- list(level1 = csts$cell.label)
+  if (is.null(x$cst.levels)) {
+    levels <- list(level1 = x$cell.label)
     max.depth <- 1L
   } else {
-    levels <- csts$cst.levels
-    max.depth <- csts$cst.depth
+    levels <- x$cst.levels
+    max.depth <- x$cst.depth
   }
 
   cat("\n================================================================================\n")
   cat("L-infinity CST Hierarchy\n")
   cat("================================================================================\n")
-  cat("Total samples: ", length(csts$cell.label), "\n")
+  cat("Total samples: ", length(x$cell.label), "\n")
   cat("Max depth:     ", max.depth, "\n")
 
   ## Policy stamp (if available)
-  if (!is.null(csts$low.freq.policy) && !is.null(csts$rare.label)) {
-    cat("Low-freq policy: ", csts$low.freq.policy,
-        " (rare.label: ", csts$rare.label, ")\n", sep = "")
+  if (!is.null(x$low.freq.policy) && !is.null(x$rare.label)) {
+    cat("Low-freq policy: ", x$low.freq.policy,
+        " (rare.label: ", x$rare.label, ")\n", sep = "")
   }
 
   cat("--------------------------------------------------------------------------------\n\n")
@@ -832,24 +968,24 @@ print.linf.csts <- function(csts) {
     cat("\n")
   }
 
-  invisible(NULL)
+  invisible(x)
 }
 
 #' Summarize CST hierarchy statistics
 #'
-#' @param csts Refined CST object or character vector
-#' @param sep Separator. Default: \code{"__"}
+#' @param object A \code{"linf.csts"} object.
+#' @param ... Unused.
 #' @return Data frame with depth-wise statistics
 #' @export
-summary.linf.csts <- function(csts) {
+summary.linf.csts <- function(object, ...) {
 
-  validate.linf.csts(csts)
+  validate.linf.csts(object)
 
   ## Determine hierarchy
-  if (is.null(csts$cst.levels)) {
-    levels <- list(level1 = csts$cell.label)
+  if (is.null(object$cst.levels)) {
+    levels <- list(level1 = object$cell.label)
   } else {
-    levels <- csts$cst.levels
+    levels <- object$cst.levels
   }
 
   out <- data.frame(
@@ -871,13 +1007,74 @@ summary.linf.csts <- function(csts) {
       n.cells = length(tab),
       total.samples = sum(tab),
       mean.size = mean(tab),
-      median.size = median(tab),
+      median.size = stats::median(tab),
       min.size = min(tab),
       max.size = max(tab)
     ))
   }
 
   out
+}
+
+escape.latex <- function(x) {
+  x <- gsub("\\\\", "\\\\textbackslash{}", x, fixed = TRUE)
+  x <- gsub("([#$%&_{}])", "\\\\\\1", x, perl = TRUE)
+  x <- gsub("~", "\\\\textasciitilde{}", x, fixed = TRUE)
+  x <- gsub("\\^", "\\\\textasciicircum{}", x, perl = TRUE)
+  x
+}
+
+df.to.latex <- function(df,
+                        caption = NULL,
+                        label = NULL,
+                        digits = 1,
+                        include.rownames = FALSE,
+                        booktabs = TRUE,
+                        use.float = TRUE,
+                        print = FALSE) {
+  if (!is.data.frame(df)) stop("df.to.latex: df must be a data.frame")
+
+  if (!include.rownames) {
+    row_spec <- "l"
+  } else {
+    row_spec <- "l"
+    df <- cbind(Row = rownames(df), df, stringsAsFactors = FALSE)
+  }
+
+  col_spec <- paste0(row_spec, paste(rep("r", ncol(df) - 1L), collapse = ""))
+  if (ncol(df) == 1L) col_spec <- "l"
+
+  tab_top <- if (booktabs) "\\toprule" else "\\hline"
+  tab_mid <- if (booktabs) "\\midrule" else "\\hline"
+  tab_bot <- if (booktabs) "\\bottomrule" else "\\hline"
+
+  lines <- character(0)
+  if (use.float) lines <- c(lines, "\\begin{table}[htbp]", "\\centering")
+  if (!is.null(caption)) lines <- c(lines, paste0("\\caption{", escape.latex(caption), "}"))
+  if (!is.null(label)) lines <- c(lines, paste0("\\label{", escape.latex(label), "}"))
+
+  lines <- c(lines, paste0("\\begin{tabular}{", col_spec, "}"), tab_top)
+
+  header <- paste(escape.latex(colnames(df)), collapse = " & ")
+  lines <- c(lines, paste0(header, " \\\\"), tab_mid)
+
+  for (i in seq_len(nrow(df))) {
+    vals <- vapply(df[i, , drop = FALSE], function(v) {
+      if (is.numeric(v)) {
+        format(round(v, digits), trim = TRUE, scientific = FALSE)
+      } else {
+        as.character(v)
+      }
+    }, character(1))
+    vals <- escape.latex(vals)
+    lines <- c(lines, paste0(paste(vals, collapse = " & "), " \\\\"))
+  }
+
+  lines <- c(lines, tab_bot, "\\end{tabular}")
+  if (use.float) lines <- c(lines, "\\end{table}")
+
+  if (isTRUE(print)) cat(paste(lines, collapse = "\n"), "\n")
+  lines
 }
 
 #' Render L-infinity CSTs as a LaTeX table

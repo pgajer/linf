@@ -57,7 +57,7 @@ test_that("linf.csts keeps big cells and reassigns small ones", {
   S <- sweep(S, 1, rowSums(S), "/")
   colnames(S) <- c("Dom1", "Dom2", "Dom3")
 
-  out <- linf.csts(S, n0 = 5)
+  out <- linf.csts(S, n0 = 5, low.freq.policy = "absorb")
 
   # only col1 kept
   expect_identical(out$kept.cells.idx, 1L)
@@ -82,7 +82,7 @@ test_that("linf.csts returns all-NA when no cells meet threshold", {
   out <- linf.csts(S, n0 = 2)
 
   expect_true(all(is.na(out$cell.index)))
-  expect_true(all(is.na(out$cell.label)))
+  expect_true(all(out$cell.label == out$rare.label))
   expect_length(out$kept.cells.idx, 0)
   expect_length(out$kept.cells.lbl, 0)
 
