@@ -1,16 +1,12 @@
-citHeader("To cite linf in publications, please use:")
-
-citEntry(
-  entry    = "article",
-  title    = "A New Approach to Compositional Data Analysis using L^\\infty-normalization with Applications to Vaginal Microbiome",
-  author   = as.person(c(
-    "Pawel Gajer",
-    "Jacques Ravel"
-  )),
-  year     = "2025",
-  journal  = "arXiv preprint arXiv:2503.21543",
-  doi      = "10.48550/arXiv.2503.21543",
-  url      = "https://arxiv.org/abs/2503.21543",
-  textVersion =
-    "Gajer, P., & Ravel, J. (2025). A New Approach to Compositional Data Analysis using L^∞-normalization with Applications to Vaginal Microbiome. arXiv:2503.21543 [stat.CO]. https://doi.org/10.48550/arXiv.2503.21543"
+bibentry(
+  bibtype = "Article",
+  title = "A New Approach to Compositional Data Analysis using L^\\infty-normalization with Applications to Vaginal Microbiome",
+  author = c(
+    person("Pawel", "Gajer"),
+    person("Jacques", "Ravel")
+  ),
+  year = "2025",
+  journal = "arXiv preprint arXiv:2503.21543",
+  doi = "10.48550/arXiv.2503.21543",
+  url = "https://arxiv.org/abs/2503.21543"
 )
