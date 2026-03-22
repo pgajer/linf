@@ -4,11 +4,14 @@
 ^\.github$
 ^README\.Rmd$
 ^README\.html$
+^cran-comments\.md$
 ^LICENSE\.md$
+^Makefile$
 ^docs$
 ^pkgdown\.yml$
 ^revdep$
 ^dev$
+^tools$
 ^scripts$
 ^coverage$
 ^covr\.R$
