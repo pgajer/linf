@@ -41,18 +41,18 @@
 #'   "Ca. Lachnocurva vaginae" = "BVAB1",
 #'   "Ca_Lachnocurva_vaginae" = "BVAB1"
 #' )
-#' format.linf.feature.labels(ids, tax, abbreviations = abbr, aliases = aliases)
+#' linf.feature.labels(ids, tax, abbreviations = abbr, aliases = aliases)
 #' @export
-format.linf.feature.labels <- function(feature.ids,
-                                       taxonomy,
-                                       abbreviations = NULL,
-                                       aliases = NULL,
-                                       duplicate.index = c("global", "within_taxon", "none"),
-                                       fallback.to.id = TRUE) {
+linf.feature.labels <- function(feature.ids,
+                                taxonomy,
+                                abbreviations = NULL,
+                                aliases = NULL,
+                                duplicate.index = c("global", "within_taxon", "none"),
+                                fallback.to.id = TRUE) {
   duplicate.index <- match.arg(duplicate.index)
 
   if (length(feature.ids) != length(taxonomy)) {
-    stop("format.linf.feature.labels: feature.ids and taxonomy must have the same length")
+    stop("linf.feature.labels: feature.ids and taxonomy must have the same length")
   }
 
   ids <- as.character(feature.ids)
@@ -66,7 +66,7 @@ format.linf.feature.labels <- function(feature.ids,
 
   if (!is.null(aliases)) {
     if (is.null(names(aliases)) || any(!nzchar(names(aliases)))) {
-      stop("format.linf.feature.labels: aliases must be a named character vector")
+      stop("linf.feature.labels: aliases must be a named character vector")
     }
     alias_lookup <- aliases
     original_tax <- as.character(taxonomy)
@@ -83,7 +83,7 @@ format.linf.feature.labels <- function(feature.ids,
 
   if (!is.null(abbreviations)) {
     if (is.null(names(abbreviations)) || any(!nzchar(names(abbreviations)))) {
-      stop("format.linf.feature.labels: abbreviations must be a named character vector")
+      stop("linf.feature.labels: abbreviations must be a named character vector")
     }
     for (ii in seq_along(base)) {
       parts <- strsplit(base[[ii]], "\\s+", perl = TRUE)[[1L]]

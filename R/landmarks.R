@@ -229,7 +229,8 @@ linf.landmarks <- function(M,
   for (cell in unique.cells) {
     members <- which(cell.ids == cell)
     cell.label <- cell.labels[members[1L]]
-    leaf.id <- tail(strsplit(cell, sep, fixed = TRUE)[[1L]], 1L)
+    parts <- strsplit(cell, sep, fixed = TRUE)[[1L]]
+    leaf.id <- parts[[length(parts)]]
     target <- resolve.linf.landmark.feature(
       leaf.id,
       feature.ids = meta$feature.ids,
