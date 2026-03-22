@@ -1,4 +1,4 @@
-test_that("format.linf.feature.labels applies abbreviations and global indices", {
+test_that("linf.feature.labels applies abbreviations and global indices", {
   ids <- c("asv_1", "asv_4", "asv_5", "asv_6")
   tax <- c(
     "Lactobacillus iners",
@@ -19,7 +19,7 @@ test_that("format.linf.feature.labels applies abbreviations and global indices",
     "Ca_Lachnocurva_vaginae" = "BVAB1"
   )
 
-  out <- format.linf.feature.labels(
+  out <- linf.feature.labels(
     feature.ids = ids,
     taxonomy = tax,
     abbreviations = abbr,
