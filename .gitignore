@@ -46,7 +46,6 @@ revdep/
 .claude/
 
 # Developer scratch (keep if you use these; optional)
-man/
 build/
 libs/
 libsonly/
