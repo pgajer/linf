@@ -83,13 +83,13 @@ def main():
     box_ec = "#b08968"
     text_color = "#2f2f2f"
 
-    left = Rectangle((0.04, 0.52), 0.36, 0.26, facecolor=box_fc, edgecolor=box_ec, linewidth=1.5)
-    right = Rectangle((0.60, 0.52), 0.32, 0.26, facecolor="#edf6f9", edgecolor="#4d908e", linewidth=1.5)
+    left = Rectangle((0.03, 0.52), 0.40, 0.26, facecolor=box_fc, edgecolor=box_ec, linewidth=1.5)
+    right = Rectangle((0.56, 0.52), 0.37, 0.26, facecolor="#edf6f9", edgecolor="#4d908e", linewidth=1.5)
     ax3.add_patch(left)
     ax3.add_patch(right)
-    ax3.text(0.22, 0.65, "Largest coordinate\nTaxon A", ha="center", va="center", fontsize=12, color=text_color)
-    ax3.text(0.76, 0.65, "Depth-1 DCST\nA", ha="center", va="center", fontsize=13, weight="bold", color="#1d3557")
-    arrow = FancyArrowPatch((0.40, 0.65), (0.60, 0.65), arrowstyle="simple", mutation_scale=18, color="#6c757d")
+    ax3.text(0.23, 0.65, "Largest coordinate\nTaxon A", ha="center", va="center", fontsize=12, color=text_color)
+    ax3.text(0.745, 0.65, "Depth-1 DCST\nA", ha="center", va="center", fontsize=13, weight="bold", color="#1d3557")
+    arrow = FancyArrowPatch((0.43, 0.65), (0.56, 0.65), arrowstyle="simple", mutation_scale=18, color="#6c757d")
     ax3.add_patch(arrow)
     ax3.text(
         0.5,
@@ -104,16 +104,16 @@ def main():
     ax4 = fig.add_subplot(gs[1, 1])
     ax4.axis("off")
     add_panel_label(ax4, "D")
-    box1 = Rectangle((0.03, 0.57), 0.23, 0.22, facecolor=box_fc, edgecolor=box_ec, linewidth=1.5)
-    box2 = Rectangle((0.31, 0.57), 0.23, 0.22, facecolor="#e9f5db", edgecolor="#6a994e", linewidth=1.5)
-    box3 = Rectangle((0.65, 0.57), 0.28, 0.22, facecolor="#edf6f9", edgecolor="#4d908e", linewidth=1.5)
+    box1 = Rectangle((0.03, 0.57), 0.25, 0.22, facecolor=box_fc, edgecolor=box_ec, linewidth=1.5)
+    box2 = Rectangle((0.32, 0.57), 0.25, 0.22, facecolor="#e9f5db", edgecolor="#6a994e", linewidth=1.5)
+    box3 = Rectangle((0.62, 0.57), 0.32, 0.22, facecolor="#edf6f9", edgecolor="#4d908e", linewidth=1.5)
     for patch in (box1, box2, box3):
         ax4.add_patch(patch)
-    ax4.text(0.145, 0.68, "Top rank\nTaxon A", ha="center", va="center", fontsize=11.5, color=text_color)
-    ax4.text(0.425, 0.68, "Second rank\nTaxon B", ha="center", va="center", fontsize=11.5, color=text_color)
-    ax4.text(0.79, 0.68, "Depth-2 DCST\nA__B", ha="center", va="center", fontsize=13, weight="bold", color="#1d3557")
-    ax4.add_patch(FancyArrowPatch((0.26, 0.68), (0.31, 0.68), arrowstyle="-|>", mutation_scale=16, color="#6c757d"))
-    ax4.add_patch(FancyArrowPatch((0.54, 0.68), (0.65, 0.68), arrowstyle="-|>", mutation_scale=16, color="#6c757d"))
+    ax4.text(0.155, 0.68, "Top rank\nTaxon A", ha="center", va="center", fontsize=11.5, color=text_color)
+    ax4.text(0.445, 0.68, "Second rank\nTaxon B", ha="center", va="center", fontsize=11.5, color=text_color)
+    ax4.text(0.78, 0.68, "Depth-2 DCST\nA__B", ha="center", va="center", fontsize=13, weight="bold", color="#1d3557")
+    ax4.add_patch(FancyArrowPatch((0.28, 0.68), (0.32, 0.68), arrowstyle="-|>", mutation_scale=16, color="#6c757d"))
+    ax4.add_patch(FancyArrowPatch((0.57, 0.68), (0.62, 0.68), arrowstyle="-|>", mutation_scale=16, color="#6c757d"))
     ax4.text(
         0.48,
         0.27,

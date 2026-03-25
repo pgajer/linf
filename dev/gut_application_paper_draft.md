@@ -14,10 +14,12 @@ header-includes:
   - \usepackage{booktabs}
   - \usepackage{longtable}
   - \usepackage{array}
+  - \usepackage{tabularx}
   - \usepackage{float}
   - \usepackage{titling}
   - \usepackage{caption}
   - \captionsetup{font=small,labelfont=bf}
+  - \newcolumntype{Y}{>{\raggedright\arraybackslash}X}
   - \setlength{\droptitle}{-2.6em}
   - \pretitle{\begin{center}\Large}
   - \posttitle{\par\end{center}\vspace{0.55em}}
@@ -103,11 +105,12 @@ validation.
 ## 2.1 Cohort and preprocessing
 
 The discovery analysis used AGP gut samples from the PRIME-derived SILVA
-species-level abundance table. The starting table contained 34,711 samples, of
-which 30,290 passed quality-control filters and were retained for analysis. The
-retained matrix contained 274 taxa. Age was available for 27,372 samples
-(90.4\%), sex for 25,598 (84.5\%), and BMI for 26,541 (87.6\%), producing
-22,632 complete cases for adjusted modeling.
+species-level abundance table [@McDonald2018_AGP; @Quast2013_SILVA]. The
+starting table contained 34,711 samples, of which 30,290 passed
+quality-control filters and were retained for analysis. The retained matrix
+contained 274 taxa. Age was available for 27,372 samples (90.4\%), sex for
+25,598 (84.5\%), and BMI for 26,541 (87.6\%), producing 22,632 complete cases
+for adjusted modeling.
 
 ## 2.2 DCST construction
 
@@ -127,16 +130,16 @@ with available covariates. For a mathematically oriented reader, the odds ratio
 may be read as follows: an odds ratio above 1 means the DCST is enriched in the
 given phenotype relative to the reference group, while an odds ratio below 1
 means depletion. Multiple testing was handled by the Benjamini-Hochberg
-procedure, and q-values below 0.05 were treated as statistically notable rather
-than as proof of mechanism.
+procedure [@BenjaminiHochberg1995], and q-values below 0.05 were treated as
+statistically notable rather than as proof of mechanism.
 
 ## 2.4 Sensitivity analysis and taxonomy comparison
 
 Because some nominal gut signals can be driven by oral- or skin-associated
 contaminants, we repeated the adjusted analysis after excluding samples
-dominated by a prespecified contaminant set. We also ran a parallel dominant-type
-analysis under GG2 taxonomy and compared dominant-genus assignments between
-SILVA and GG2 on the overlapping sample set.
+dominated by a prespecified contaminant set. We also ran a parallel
+dominant-type analysis under GG2 taxonomy [@McDonald2024_GG2] and compared
+dominant-genus assignments between SILVA and GG2 on the overlapping sample set.
 
 ## 2.5 External validation
 
@@ -167,11 +170,60 @@ associations across 452 tests, and 23 of those remained significant in the
 contamination-aware sensitivity analysis. Depth 2 added 23 adjusted-significant
 subtype associations across 1,340 tests. This common overview is useful because
 the disease-wise sections below should be read against this shared statistical
-background rather than as isolated anecdotes.
+background rather than as isolated anecdotes. The twelve most common depth-1
+states already cover 87.6\% of the retained cohort, so the dominant-state
+picture is concentrated rather than diffusely fragmented (Table 1).
+
+**Table 1. Top depth-1 DCSTs in the full AGP cohort.**
+
+\begingroup\small
+
+| Rank | DCST | n | Share (%) | Cumulative (%) |
+| --- | --- | --- | --- | --- |
+| 1 | Bacteroides | 10358 | 34.2 | 34.2 |
+| 2 | Escherichia-Shigella | 6857 | 22.6 | 56.8 |
+| 3 | Prevotella_9 | 1870 | 6.2 | 63.0 |
+| 4 | Enterobacteriaceae | 1564 | 5.2 | 68.2 |
+| 5 | Faecalibacterium | 1320 | 4.4 | 72.5 |
+| 6 | Rare dominant | 1162 | 3.8 | 76.4 |
+| 7 | Streptococcus | 827 | 2.7 | 79.1 |
+| 8 | Pseudomonas | 664 | 2.2 | 81.3 |
+| 9 | Staphylococcus | 583 | 1.9 | 83.2 |
+| 10 | Prevotella_7 | 476 | 1.6 | 84.8 |
+| 11 | Unassigned | 444 | 1.5 | 86.2 |
+| 12 | Lachnospiraceae | 416 | 1.4 | 87.6 |
+
+\endgroup
 
 ![Full-cohort AGP landscape. Panel A shows the leading depth-1 DCSTs after truncation at n0 = 50, while Panel B shows the empirical dominance strength before $L_\infty$ normalization.](/Users/pgajer/current_projects/linf/dev/FIGURE_2_full_cohort_landscape.png){ width=92% }
 
 ![Adjusted depth-1 association overview. Panel A shows all taxa that survive adjustment at least once across the disease screen, with colored cells annotated by adjusted odds ratio and blank cells indicating no surviving adjusted signal. Panel B shows the strongest adjusted associations with 95% confidence intervals.](/Users/pgajer/current_projects/linf/dev/FIGURE_3_adjusted_association_overview.png){ width=98% }
+
+Table 2 collects the single strongest adjusted depth-1 signal for each
+phenotype with at least one surviving adjusted association. This is not meant
+to replace the full association screen; it is meant to keep the shared overview
+legible before the disease-wise sections unpack the same results in context.
+
+\begin{table}[H]
+\footnotesize
+\caption{Headline adjusted depth-1 associations by phenotype. Here $C$ indicates whether the same association remains significant with $q < 0.05$ in the contamination-aware clean analysis.}
+\centering
+\begin{tabularx}{\textwidth}{@{} l l Y c >{\raggedright\arraybackslash}p{3.2cm} c c @{}}
+\toprule
+Phenotype & Direction & DCST & $n$ & Adjusted OR (95\% CI) & adj $q$ & $C$ \\
+\midrule
+IBS & Enriched & Escherichia-Shigella & 6857 & 1.23 (1.12-1.35) & 6.8e-04 & Yes \\
+IBD & Enriched & Morganella & 53 & 16.94 (8.88-32.31) & 4.0e-15 & Yes \\
+Autoimmune & Enriched & Bacteroides & 10358 & 1.39 (1.28-1.52) & 2.1e-11 & Yes \\
+Acid reflux & Enriched & Bacteroides & 10358 & 1.28 (1.17-1.40) & 6.9e-06 & Yes \\
+Seasonal allergies & Depleted & Prevotella\_9 & 1870 & 0.67 (0.59-0.76) & 3.3e-08 & Yes \\
+CDI & Enriched & Escherichia-Shigella & 6857 & 1.48 (1.19-1.84) & 0.0112 & Yes \\
+Lung disease & Enriched & Staphylococcus & 583 & 1.55 (1.17-2.05) & 0.0386 & No \\
+Migraine & Enriched & Bacteroides & 10358 & 1.16 (1.05-1.26) & 0.034 & No \\
+Kidney disease & Enriched & Lactobacillus & 117 & 5.85 (2.26-15.14) & 0.00779 & Yes \\
+\bottomrule
+\end{tabularx}
+\end{table}
 
 Looking only at the counts, the sensitivity analysis reduces the number of
 adjusted-significant depth-1 associations from 28 to 23. A more informative
@@ -181,9 +233,34 @@ adjusted-significant associations are retained, eight are lost, and three
 become significant only in the clean analysis. The lost signals are concentrated
 in `Staphylococcus`- and `Streptococcus`-linked contrasts, while the strongest
 IBD, allergy, and several `Bacteroides` / `Prevotella_9` associations remain in
-place.
+place. Table 3 shows how this transition looks phenotype by phenotype rather
+than only in aggregate.
 
 ![Contamination-aware robustness summary. The clean analysis removes several oral-associated contrasts but preserves the strongest inflammatory and allergy-linked signals.](/Users/pgajer/current_projects/linf/dev/FIGURE_4_contamination_robustness.png){ width=98% }
+
+\begin{table}[H]
+\footnotesize
+\caption{Disease-wise comparison of univariate, adjusted, and clean results. Here $n_F$, $n_A$, and $n_C$ denote the numbers of depth-1 associations with Fisher $q < 0.05$, adjusted $q < 0.05$, and clean-analysis $q < 0.05$, respectively.}
+\centering
+\begin{tabularx}{\textwidth}{l c c c Y Y}
+\toprule
+Phenotype & $n_F$ & $n_A$ & $n_C$ & Representative retained & Representative Fisher-only \\
+\midrule
+IBS & 7 & 4 & 3 & Escherichia-Shigella (1.29 -> 1.23) & Corynebacterium (0.29 -> 0.41) \\
+IBD & 9 & 7 & 8 & Morganella (18.05 -> 16.94) & Prevotella\_7 (0.10 -> 0.44) \\
+Autoimmune & 9 & 6 & 4 & Bacteroides (1.34 -> 1.39) & Escherichia-Shigella (1.19 -> 0.99) \\
+Acid reflux & 10 & 3 & 1 & Bacteroides (1.29 -> 1.28) & Prevotella\_7 (0.12 -> 0.55) \\
+CVD & 6 & 0 & 0 & -- & Pasteurellaceae (8.77 -> 1.74) \\
+Obesity & 3 & 0 & 0 & -- & Prevotella\_7 (2.75 -> not estimable) \\
+Seasonal allergies & 6 & 3 & 3 & Prevotella\_9 (0.75 -> 0.67) & Prevotella\_7 (0.22 -> 1.11) \\
+Diabetes & 2 & 0 & 0 & -- & Streptococcus (0.28 -> 0.44) \\
+CDI & 2 & 1 & 2 & Escherichia-Shigella (1.45 -> 1.48) & Prevotella\_9 (0.47 -> 0.35) \\
+Lung disease & 3 & 1 & 0 & Staphylococcus (1.26 -> 1.55) & Prevotella\_7 (0.23 -> 0.89) \\
+Migraine & 2 & 1 & 0 & Bacteroides (1.19 -> 1.16) & Corynebacteriaceae (0.20 -> 0.30) \\
+Kidney disease & 0 & 2 & 2 & Lactobacillus (3.50 -> 5.85) & -- \\
+\bottomrule
+\end{tabularx}
+\end{table}
 
 Depth 2 matters most when a broad parent state hides materially different
 substructures. The depth-2 case-study figure makes that concrete for the depth-1 `Bacteroides`
@@ -209,8 +286,38 @@ new concordance figure makes an important distinction explicit: harmonized
 genus-level agreement is high, but exact short-label equality is much lower
 because GG2 splits some large SILVA states, especially `Bacteroides`, into
 multiple named groups and leaves `Escherichia-Shigella` largely unresolved.
+Table 4A summarizes the headline concordance metrics, while Table 4B gives a
+few representative remappings that matter biologically and interpretively.
 
 ![Cross-taxonomy concordance summary. Harmonized agreement between SILVA and GG2 is high, while exact short-label equality is much lower because a few large dominant states are reclassified rather than contradicted.](/Users/pgajer/current_projects/linf/dev/FIGURE_6_taxonomy_concordance.png){ width=95% }
+
+**Table 4A. Agreement metrics for SILVA versus GG2 depth-1 DCST assignments.**
+
+\begingroup\small
+
+| Metric | Value | Interpretation |
+| --- | --- | --- |
+| Overlapping samples | 30,290 | Common sample set available for direct SILVA-GG2 comparison. |
+| Harmonized dominant-genus agreement | 27,739 / 30,290 (91.6%) | Broad depth-1 landscape is stable after genus-level harmonization. |
+| Exact short-label equality | 4,566 / 30,290 (15.1%) | Most disagreements are relabelings or taxonomic splits rather than ecological contradictions. |
+| Named depth-1 states | SILVA: 40 + rare; GG2: 59 + rare | GG2 resolves some large SILVA states into more named groups. |
+
+\endgroup
+
+**Table 4B. Representative SILVA-to-GG2 remappings.**
+
+\begingroup\small
+
+| SILVA state | Main GG2 destination(s) | Row share | Reading |
+| --- | --- | --- | --- |
+| Akkermansia | Akkermansia | 99.1% | Near one-to-one mapping. |
+| Faecalibacterium | Faecalibacterium | 81.7% | Mostly preserved with modest spillover. |
+| Prevotella_9 | Prevotella | 90.5% | High genus-level concordance despite label change. |
+| Bacteroides | Phocaeicola_A; Bacteroides_H_857956; unresolved | 46.6%; 17.4%; 8.4% | Large SILVA state is split across multiple GG2 labels. |
+| Escherichia-Shigella | Unresolved | 99.7% | GG2 leaves this dominant state largely unresolved. |
+| Enterobacteriaceae | Enterobacteriaceae_A_725029; Enterobacterales_737866 | 92.6%; 4.3% | Mostly preserved at family/order level with minor split. |
+
+\endgroup
 
 \clearpage
 
@@ -221,7 +328,11 @@ brief literature frame, then summarizes the AGP signal across SILVA, GG2, depth
 2, and sensitivity analysis, and finally interprets the result at a level that
 matches the strength of the evidence. This repeated structure is intentional: it
 lets the reader compare diseases without losing track of which claims are
-strong, which are tentative, and which are mainly useful for context.
+strong, which are tentative, and which are mainly useful for context. Several
+AGP phenotypes, especially autoimmune disease, seasonal allergies, and lung
+disease, are best understood as discovery-screen labels rather than harmonized
+clinical diagnoses, so their discussion leans more on ecological interpretation
+than on disease-specific inference.
 
 ## 4.1 Irritable bowel syndrome (IBS)
 
@@ -256,7 +367,7 @@ expansion and loss of anti-inflammatory commensals to symptom burden
 particularly interpretable for a mechanistic reader, because it points toward
 loss of butyrate-associated ecological stability rather than toward one
 IBS-specific pathogen. The oral-associated taxa should still be treated
-cautiously.
+cautiously, and the overall effect sizes are modest compared with IBD.
 
 ## 4.2 Inflammatory bowel disease (IBD)
 
@@ -283,14 +394,20 @@ Eight IBD associations survived sensitivity analysis.
 
 ### Discussion
 
-IBD is the clearest case in the current paper where depth 2 matters scientifically and
-mathematically. At depth 1, `Bacteroides` is a broad parent label. At depth 2,
-that parent is split into subtype structure with materially different disease
-behavior. The rare but very strong `Morganella` signal is also consistent with
-an inflammatory oxygenation story in which facultative Enterobacteriaceae gain
-ecological advantage in the inflamed gut [@Sartor2008_IBD; @Frank2007_IBD].
-Section 5 returns to IBD with external validation, because this is the disease
-family for which the validation cohorts are most informative.
+IBD is the clearest case here where depth 2 matters both scientifically and
+mathematically. The established IBD literature emphasizes depletion of obligate
+anaerobes and butyrate-associated commensals, especially
+*Faecalibacterium prausnitzii*, together with expansion of inflammatory
+facultative taxa [@Frank2007_IBD; @Gevers2014_CD; @LloydPrice2019_IBD;
+@Sokol2008_Fprausnitzii; @Sartor2008_IBD]. The present DCST results fit that
+picture in a compressed rank-based language: a rare `Morganella` state marks
+severe enterobacterial dysbiosis, whereas the broad `Bacteroides` parent
+resolves into subtypes with materially different odds ratios. That matters for
+interpretation because the enriched depth-1 `Bacteroides` label is not the
+opposite of the classic `Faecalibacterium`-depletion story; rather, it partly
+reflects loss of protective second-rank partners inside Bacteroides-dominant
+samples. Section 5 strengthens this reading by showing directional depletion of
+a `Bacteroides__Faecalibacterium` subtype in the external IBD cohorts.
 
 ## 4.3 Autoimmune diseases
 
@@ -318,12 +435,16 @@ survived sensitivity analysis.
 ### Discussion
 
 Because this AGP label pools multiple autoimmune conditions, the safest reading
-is ecological rather than disease-specific. Even so, the `Bacteroides` /
-`Prevotella` / `Faecalibacterium` pattern fits an immune-regulation narrative in
-which SCFA-associated commensals help maintain tolerance while inflammatory
-states favor more dysbiotic community structures. The parallel with IBD is
-notable and may reflect shared inflammatory mechanisms rather than identical
-etiology.
+is an inflammatory umbrella rather than a disease-specific microbiome
+signature. The observed `Bacteroides` / `Morganella` enrichment and
+`Faecalibacterium` / `Prevotella_9` depletion are broadly compatible with
+disease-specific literature in RA and T1D, but the component mechanisms differ:
+`Prevotella` expansion in RA is not the same biological claim as early-life
+dysbiosis in T1D, even though both can be placed within a broader Treg/Th17 or
+immune-education framework [@Scher2013_Prevotella_RA; @Vatanen2018_T1D;
+@Atarashi2013_Clostridia_Treg; @DeLuca2019_autoimmune]. The parallel with IBD
+is therefore informative at the level of shared inflammatory ecology, not at
+the level of one causal autoimmune taxon.
 
 ## 4.4 Acid reflux / GERD
 
@@ -347,12 +468,15 @@ remained.
 
 ### Discussion
 
-The reflux results are interesting but should be handled conservatively. The
-surviving `Bacteroides` signal suggests a real gut-side association, whereas the
-protective oral-associated taxa may partly reflect shared sampling or ecological
-confounding. This is exactly the sort of setting where the sensitivity analysis
-helps distinguish potentially robust gut patterns from signals that may be
-driven by translocated oral structure.
+The reflux results are best interpreted as gut-side correlates of a literature
+that is itself centered on esophageal and oral compartments
+[@Deshpande2018_esophageal; @DeSouza2021_GERD]. The surviving `Bacteroides`
+signal therefore suggests a modest reflux-spectrum association rather than a
+direct esophageal mechanism, whereas the oral-associated taxa are more exposed
+to compartment choice, PPI effects, and ecological confounding
+[@Wang2024_GERD_MR]. The clean analysis is useful here because it narrows the
+claim to one stool-side association rather than leaving a mixed oral-plus-gut
+story on the table.
 
 ## 4.5 Cardiovascular disease
 
@@ -375,9 +499,8 @@ sensitivity analysis.
 
 CVD illustrates why the covariate-adjusted pass matters. Without adjustment,
 one could easily overstate the oral-associated signals. After adjustment and
-contaminant-aware filtering, the evidence is much weaker. In the manuscript,
-this section should therefore read as hypothesis-generating rather than as a
-primary biological claim.
+contaminant-aware filtering, the evidence is much weaker, so this section is
+best read as hypothesis-generating rather than as a primary biological claim.
 
 ## 4.6 Obesity
 
@@ -402,8 +525,8 @@ sensitivity analysis.
 These results suggest that dominant-state typing captures some obesity-related
 structure, but that the signal is either confounded by demographic variables or
 too diffuse to stabilize at the level of top-taxon dominance. That is itself
-useful: it tells us where the DCST framework is modest rather than pretending
-every phenotype produces a clean result.
+useful: it shows where the DCST framework should remain modest rather than
+forcing every phenotype into a clean association story.
 
 ## 4.7 Seasonal allergies
 
@@ -426,13 +549,17 @@ associations survived sensitivity analysis.
 
 ### Discussion
 
-Among the non-IBD outcomes, seasonal allergy is one of the cleaner signals in
-the AGP screen. The protective
-`Prevotella` pattern fits well with the allergy literature, while the
-Proteobacteria-side enrichment is consistent with a more dysbiotic, less
-tolerogenic gut ecosystem. Because the signal survives sensitivity analysis and
-replicates qualitatively in GG2, it deserves a prominent but still cautious
-place in the paper.
+Among the non-IBD outcomes, seasonal allergy is one of the cleaner
+screen-level signals in the AGP scan. The protective `Prevotella` pattern fits
+well with the broader allergy literature, which links allergic phenotypes to
+lower richness, delayed microbiota maturation, and weaker SCFA-associated
+immune education [@Hua2016_AGP_allergy; @Hoskinson2023_allergy;
+@Strachan1989_hygiene]. The Proteobacteria-side enrichment is likewise
+compatible with a more dysbiotic, less tolerogenic gut ecosystem. Because the
+signal survives sensitivity analysis and replicates qualitatively in GG2, it is
+one of the stronger non-IBD findings. Even so, it is best read as an ecological
+bridge between adult AGP allergy phenotypes and the early-life maturation
+story, not as a definitive allergic-rhinitis-specific signature.
 
 ## 4.8 Diabetes
 
@@ -457,8 +584,14 @@ sensitivity analysis.
 The `Akkermansia` depth-2 result is biologically interesting precisely because
 it is paradoxical if interpreted naively. Since metformin can enrich
 `Akkermansia`, the cross-sectional signal may encode medication rather than
-disease mechanism. It is therefore a useful reminder that the disease-wise
-narrative must separate association from etiology.
+disease mechanism. The broader diabetes literature is dominated by T2D,
+glucose-tolerance gradients, and treatment confounding, so a clean disease-only
+signal is not expected in a cross-sectional screen of this kind
+[@Qin2012_T2D; @Karlsson2013_T2D_women; @Forslund2015_metformin]. The present
+pattern therefore reads sensibly: no stable adjusted depth-1 signal, but one
+striking `Akkermansia`-associated depth-2 lead that likely mixes disease
+status, treatment, and carbohydrate-metabolic ecology
+[@Forslund2015_metformin; @Takeuchi2023_carbohydrate; @Cani2007_endotoxemia].
 
 ## 4.9 *Clostridioides difficile* infection (CDI)
 
@@ -479,11 +612,15 @@ sensitivity analysis, `Escherichia-Shigella` remained enriched and
 
 ### Discussion
 
-CDI is one of the stronger non-umbrella disease sections in the current paper. The
-enterobacterial enrichment is in line with the CDI literature, and the
-protective `Prevotella_9` direction is at least ecologically compatible with the
-idea that diverse anaerobic states support colonization resistance. The
-`Sutterella` depth-2 signal is novel and should be presented as exploratory.
+CDI is one of the stronger non-umbrella disease sections because the disease
+itself is defined by collapse and recovery of colonization resistance
+[@Schubert2014_CDI; @Seekatz2014_FMT; @Sehgal2021_CDI]. The
+enterobacterial enrichment is in line with recurrent-CDI dysbiosis, and the
+protective `Prevotella_9` direction is at least ecologically compatible with
+restoration of anaerobic fermentation and bile-acid-converting community
+structure after FMT. The `Sutterella` depth-2 signal is interesting, but it is
+best treated as exploratory until it can be tied more directly to recurrence,
+bile acids, or treatment status.
 
 ## 4.10 Lung disease
 
@@ -505,10 +642,15 @@ the signals survived sensitivity analysis.
 
 ### Discussion
 
-This phenotype is too broad to support a strong disease-specific claim. The signal
-is interesting as a gut-lung-axis hint, but because the phenotype is umbrella
-level and the sensitivity analysis removes the depth-1 association, it belongs
-in the paper as secondary evidence rather than as a central discovery.
+This phenotype is too broad to support a strong disease-specific claim, and the
+comparison literature itself is split between gut-origin asthma studies, airway
+COPD studies, and respiratory-infection models [@Budden2017_gutlung;
+@Trompette2014_fiber_asthma; @Horn2022_Prevotella_lung]. The surviving
+`Staphylococcus` signal is therefore difficult to interpret as a gut-lung-axis
+result per se, especially because it disappears in the clean analysis. The most
+defensible reading is that the AGP screen detects a weak, partly
+compartment-mixed respiratory signal rather than a coherent lung-disease
+microbiome signature.
 
 ## 4.11 Migraine
 
@@ -529,11 +671,13 @@ analysis.
 
 ### Discussion
 
-This is a modest result, but still a usable one. The safest framing
-is that migraine contributes to the cross-disease pattern in which
-`Bacteroides`-dominant states tend to align with inflammatory or
-neuroinflammatory phenotypes, while the mechanistic interpretation remains
-speculative.
+This remains exploratory. The direct migraine microbiome literature is still
+small and heterogeneous, with current reviews emphasizing dysbiosis, SCFA and
+barrier pathways, and gut-brain-axis signaling more than any one reproducible
+taxon [@Gorenshtein2025_migraine; @Kappeter2023_migraine_FMT;
+@Cryan2012_gutbrain]. The present `Bacteroides` enrichment is therefore best
+read as a weak cross-disease inflammatory echo rather than as
+migraine-specific evidence.
 
 ## 4.12 Kidney disease
 
@@ -554,11 +698,15 @@ associations survived sensitivity analysis.
 
 ### Discussion
 
-Kidney disease offers a useful example of a signal that is statistically stronger than
-its immediate biological interpretation. `Lactobacillus` is not an obvious CKD
-pathogen, so the enrichment could reflect probiotic use, compensatory ecology,
-or disease-associated treatment behavior. The most honest presentation is that the
-result is robust and interesting, but mechanistically unresolved.
+Kidney disease offers a useful example of a signal that is statistically
+stronger than its immediate biological label. The CKD literature emphasizes
+TMAO, uremic toxins, and depletion of saccharolytic commensals more than it
+emphasizes `Lactobacillus` as a universal pathogenic signal
+[@Tang2015_TMAO_CKD; @Vaziri2013_CKD]. The observed `Lactobacillus` and
+`Prevotella_7` enrichments may therefore encode treatment behavior, probiotic
+use, or compensatory ecology superimposed on a true gut-kidney-axis signal.
+What keeps this section prominent is robustness: unlike several weaker
+phenotypes, the adjusted depth-1 associations survive the clean analysis.
 
 # 5. External Validation Across Two Complementary Cohorts
 
@@ -584,6 +732,17 @@ AGP stool than HMP2, but it is smaller and phenotype-mixed. Its strongest
 signals were therefore more modest and cohort-specific: `RARE_DOMINANT` was
 enriched in `OFG_vs_Healthy` at depth 1 (OR = 4.93, q = 0.062) and in the
 combined inflammatory-vs-healthy comparison at depth 2 (OR = 4.94, q = 0.084).
+
+**Table 5. External validation cohort summary.**
+
+\begingroup\small
+
+| Cohort | n | Phenotype split | Main caveat | Main signal | Interpretation |
+| --- | --- | --- | --- | --- | --- |
+| HMP2 / IBDMDB | 166 | 45 Healthy / 81 Crohn / 40 UC | Mucosal gut sites; repeated measures | No depth-1 q<0.05; depth-2 depletion of a Bacteroides/Faecalibacterium subtype | Directional / structural replication |
+| PRJEB84421 / OFGCD-FI-2025 | 73 | 20 Healthy / 24 Crohn / 29 OFG | Stool-based but pediatric and phenotype-mixed | Rare-dominant enrichment in OFG vs healthy and inflammatory vs healthy | Stool-based complement with cohort-specific signal |
+
+\endgroup
 
 ## 5.3 Interpretation
 
@@ -624,6 +783,25 @@ top-dominant label into an ordered ecological pair. For a mathematically
 oriented reader, this is important: the refinement is explicit and interpretable
 rather than latent.
 
+Those broad patterns also line up with the stronger disease-specific literatures
+in recognizable ways. In IBD, the combination of enterobacterial rare states,
+`Prevotella_9` depletion, and depth-2 `Bacteroides` heterogeneity matches the
+treatment-naive and multi-omics literature that emphasizes loss of butyrate-
+associated anaerobes together with inflammatory expansion of facultative taxa
+[@Gevers2014_CD; @LloydPrice2019_IBD; @Sokol2008_Fprausnitzii]. IBS shows a
+weaker but directionally similar ecology, with Enterobacteriaceae-side
+enrichment and `Faecalibacterium` depletion rather than a dramatic dysbiosis
+collapse [@Pittayanon2019_IBS; @Tap2017_IBS]. Seasonal allergy aligns with the
+microbiota-maturation and immune-education literature, in which reduced
+tolerogenic fermentation and delayed ecological maturation accompany allergic
+phenotypes [@Hua2016_AGP_allergy; @Hoskinson2023_allergy; @Strachan1989_hygiene].
+CDI fits the colonization-resistance framework of bile acids, donor-like
+recovery, and Proteobacteria blooms [@Schubert2014_CDI; @Seekatz2014_FMT;
+@Sehgal2021_CDI]. Kidney disease is the least mechanistically settled of these
+stronger signals, but it still sits plausibly within the broader gut-kidney
+axis defined by TMAO and uremic-toxin biology [@Tang2015_TMAO_CKD;
+@Vaziri2013_CKD].
+
 The paper should still be careful about overclaiming. AGP phenotypes are
 self-reported. Some disease bins are umbrella categories. The analysis is
 cross-sectional, so reverse causation, medication effects, and residual
@@ -632,7 +810,11 @@ signals rely on taxa that are plausibly oral or skin associated. And the
 validation cohorts, while valuable, are intentionally heterogeneous rather than
 perfect one-to-one replicas of AGP stool. Those limitations argue for a
 measured conclusion: DCSTs organize the data in a biologically useful way, but
-they do not by themselves establish mechanism or causality.
+they do not by themselves establish mechanism or causality. For the same
+reason, the disease-specific literature cited in Section 4 should be read as
+mechanistic context for the discovery-screen phenotypes rather than as proof
+that the AGP labels are clinically identical to those literature-defined
+entities.
 
 # 7. Conclusion
 
@@ -646,4 +828,30 @@ part is now supported by two complementary external validation cohorts. This is
 already enough to justify DCSTs as a useful analytical language for future gut
 microbiome studies and for the broader `linf` application paper.
 
-# References
+# 8. Data and Code Availability
+
+The manuscript source, manuscript figures, and manuscript table builders used
+for this draft are maintained in the public `linf` repository:
+<https://github.com/pgajer/linf>. The discovery analysis is based on the
+American Gut Project stool cohort (`PRJEB11419`) through PRIME-derived
+species-level abundance tables, and the external validation analyses use
+`PRJNA398089` (HMP2 / IBDMDB) and `PRJEB84421`. The specific processed result
+tables used to generate the figures and Tables 1-4 are those analyzed in the
+companion gut-microbiome working tree during manuscript preparation.
+
+# 9. Funding
+
+Research reported in this publication was supported by grant number
+`INV-048956` from the Gates Foundation.
+
+# 10. Competing Interests
+
+The authors declare no competing interests.
+
+# 11. Acknowledgments
+
+We thank the participants and investigators of the American Gut Project, HMP2 /
+IBDMDB, and PRJEB84421 for making these cohort resources available, and we
+thank the PRIME project context that made the large-scale gut screen feasible.
+
+# 12. References

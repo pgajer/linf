@@ -1,0 +1,5 @@
+Metric	Value	Interpretation
+Overlapping samples	30,290	Common sample set available for direct SILVA-GG2 comparison.
+Harmonized dominant-genus agreement	27,739 / 30,290 (91.6%)	Broad depth-1 landscape is stable after genus-level harmonization.
+Exact short-label equality	4,566 / 30,290 (15.1%)	Most disagreements are relabelings or taxonomic splits rather than ecological contradictions.
+Named depth-1 states	SILVA: 40 + rare; GG2: 59 + rare	GG2 resolves some large SILVA states into more named groups.
