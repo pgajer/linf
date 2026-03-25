@@ -8,8 +8,11 @@ Author: Pawel Gajer [aut, cre]
 Maintainer: Pawel Gajer <pgajer@gmail.com>
 Description: Utilities for L-infinity normalization, dominant-feature (L-infinity cell)
     assignment, and truncated L-infinity CSTs for compositional data analyses.
+    Includes bundled vaginal (Valencia 2k) and gut (American Gut Project)
+    microbiome datasets for demonstrations.
 License: MIT + file LICENSE
 Encoding: UTF-8
+LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
 Depends:
