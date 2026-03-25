@@ -26,6 +26,7 @@ src/**/*.a
 
 # Vignette build outputs installed under inst/doc (we commit vignettes/*.Rmd, not built PDFs/HTMLs)
 inst/doc/
+/vignettes/*.html
 
 # Test artefacts
 tests/testthat.Rout*
