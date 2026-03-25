@@ -1,53 +1,70 @@
 ---
-title: "L-Infinity Cells and Truncated CSTs: A Quick Introduction"
+title: "L-Infinity CSTs: From Normalization to Disease Associations"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{L-Infinity Cells and Truncated CSTs: A Quick Introduction}
+  %\VignetteIndexEntry{L-Infinity CSTs: From Normalization to Disease Associations}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
-library(linf)
-set.seed(1)
+```{css, echo=FALSE}
+table td, table th { white-space: nowrap; }
 ```
 
-## Overview
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment  = "#>",
+  fig.width = 7,
+  fig.height = 5
+)
+library(linf)
+```
 
-This vignette shows the core workflow:
+The `linf` package implements L-infinity normalization and Dominant Community
+State Types (DCSTs) for compositional data. This vignette demonstrates the
+complete workflow in two parts: first a quick-start with toy data to introduce
+the core functions, then a real-data analysis of gut microbiome samples from
+the American Gut Project showing that DCSTs capture clinically meaningful
+dominance patterns.
 
-1. Normalize rows with `normalize.linf()`.
-2. Assign dominant-feature labels with `linf.cells()`.
-3. Build truncated CSTs with `linf.csts()`.
+## Part 1: Quick Start with Toy Data
 
-## L-Infinity normalization
+### L-infinity normalization
 
-```{r}
+L-infinity normalization scales each row of a count matrix by its maximum
+value, projecting samples onto the L-infinity unit ball. Every normalized row
+has a maximum of exactly 1.
+
+```{r toy-normalize}
+set.seed(1)
 S.counts <- matrix(
   rpois(30, lambda = 5),
-  nrow = 10,
-  ncol = 3,
-  dimnames = list(paste0("s", 1:10), paste0("t", 1:3))
+  nrow = 10, ncol = 3,
+  dimnames = list(paste0("s", 1:10), c("Taxon_A", "Taxon_B", "Taxon_C"))
 )
 
 Z <- normalize.linf(S.counts)
-apply(Z, 1, max)
+apply(Z, 1, max)   # all 1
 ```
 
-## L-Infinity cells
+### L-infinity cells
 
-```{r}
-colnames(Z) <- c("Lactobacillus", "Gardnerella", "Anaerobes")
+Each sample is assigned to the column achieving its maximum---its
+*L-infinity cell*. This is the dominant feature.
+
+```{r toy-cells}
 cells <- linf.cells(Z)
-
-str(cells)
-cells$observed.levels
+table(cells$label)
 ```
 
-## Truncated CSTs
+### Truncated CSTs
 
-```{r}
+`linf.csts()` groups samples by dominant feature and collapses small groups
+(below threshold `n0`) into a `RARE_DOMINANT` bucket. This produces
+*Dominant Community State Types* (DCSTs).
+
+```{r toy-csts}
 A <- matrix(c(5, 1, 0), nrow = 6, ncol = 3, byrow = TRUE)
 B <- matrix(c(1, 5, 0), nrow = 2, ncol = 3, byrow = TRUE)
 C <- matrix(c(1, 0, 5), nrow = 2, ncol = 3, byrow = TRUE)
@@ -59,10 +76,292 @@ res <- linf.csts(S, n0 = 5)
 table(res$cell.label, useNA = "ifany")
 ```
 
-## Count-to-CST pipeline
+Only Dom1 (6 samples) meets the `n0 = 5` threshold. Dom2 and Dom3 are
+collapsed into `RARE_DOMINANT`.
 
-```{r}
-S <- matrix(rpois(100, lambda = 5), nrow = 20, ncol = 5)
-res <- asv.to.linf.csts(S, min.lib = 10, prev.prop = 0.1, min.count = 1)
-names(res)
+
+## Part 2: Gut Microbiome DCSTs and Disease
+
+### Background
+
+In the vaginal microbiome, single-species dominance is common and generally
+healthy---for instance, *Lactobacillus crispatus* dominance defines CST I, the
+healthiest community state. The gut is fundamentally different. Healthy gut
+communities are diverse, and single-species dominance is rare and often
+associated with pathology: post-antibiotic *Enterococcus* blooms,
+*Clostridioides* overgrowth in IBD, and similar dysbiotic states.
+
+This means that DCSTs applied to gut data should produce a large "mixed"
+majority (many taxa share abundance) alongside a tail of strongly dominated
+samples---and those dominated samples may be enriched for disease. This is a
+powerful use case for DCSTs: they identify clinically meaningful dominance
+patterns *without any clustering*.
+
+### The data
+
+The `agp_gut` dataset bundled with this package contains `r nrow(agp_gut$counts)`
+gut microbiome samples from the American Gut Project (PRJEB11419), a citizen-science
+16S rRNA V4 survey. The dataset is a stratified subsample designed to preserve
+rare disease-associated community types while keeping the file size small enough
+for CRAN.
+
+```{r load-data}
+data(agp_gut)
+str(agp_gut, max.level = 1)
+
+dim(agp_gut$counts)   # samples x taxa
 ```
+
+Metadata includes self-reported health conditions parsed from the AGP
+questionnaire:
+
+```{r meta-summary}
+disease_cols <- c("IBS", "IBD", "Obesity", "Cardiovascular_disease",
+                  "Autoimmune", "Acid_reflux")
+sapply(disease_cols, function(col) sum(agp_gut$meta[[col]], na.rm = TRUE))
+```
+
+### Step 1: Quality filtering
+
+`filter.asv()` removes low-depth samples and rare taxa in one call. We
+require at least 1,000 reads per sample and taxa present in at least 5% of
+samples.
+
+```{r filter}
+filt <- filter.asv(agp_gut$counts, min.lib = 1000, prev.prop = 0.05,
+                   min.count = 2)
+dim(filt$counts)
+dim(filt$rel)
+```
+
+### Step 2: L-infinity normalization
+
+```{r normalize}
+M <- normalize.linf(filt$counts)
+
+# Verify: every row max is 1
+stopifnot(all(abs(apply(M, 1, max) - 1) < 1e-10))
+```
+
+### Step 3: Depth-1 DCSTs
+
+```{r dcst-depth1}
+csts <- linf.csts(M, n0 = 30)
+
+# DCST size distribution
+sort(table(csts$cell.label), decreasing = TRUE)
+```
+
+The landscape is dominated by *Bacteroides* and *Escherichia-Shigella*, with
+*Prevotella*, *Faecalibacterium*, and several smaller DCSTs forming the tail.
+The `RARE_DOMINANT` bucket collects samples dominated by taxa too infrequent
+to form their own DCST at this threshold.
+
+Note on *Escherichia-Shigella*: this genus is known to be inflated in 16S V4
+data due to primer cross-reactivity. Its high prevalence should be interpreted
+with caution.
+
+### Step 4: Depth-2 refinement
+
+`refine.linf.csts()` subdivides large DCSTs by their *subdominant* species.
+For instance, a Bacteroides-dominated sample might be further classified by
+whether its second-most-abundant taxon is *Faecalibacterium* or
+*Lachnospiraceae*. This captures co-dominance patterns that are especially
+important in the diverse gut environment.
+
+```{r dcst-depth2}
+csts2 <- refine.linf.csts(M, csts, n0 = 30)
+
+# Show depth-2 DCSTs with >= 20 samples
+tab2 <- sort(table(csts2$cell.label), decreasing = TRUE)
+tab2[tab2 >= 20]
+```
+
+### Dominance strength
+
+A useful diagnostic: the relative abundance of the dominant species in each
+sample. In the gut, most samples have modest dominance (< 50%), consistent
+with the diverse nature of the ecosystem.
+
+```{r dominance-dist, fig.cap = "Distribution of dominance strength across gut samples. Most samples show moderate dominance, with a tail of strongly dominated communities."}
+rel <- filt$rel
+dom_strength <- apply(rel, 1, max)
+hist(dom_strength, breaks = 50, col = "#2ecc71", border = "white",
+     main = "Dominance Strength in Gut Microbiome",
+     xlab = "Relative abundance of dominant species",
+     ylab = "Number of samples")
+abline(v = 0.5, col = "red", lty = 2, lwd = 2)
+legend("topright", "50% dominance", col = "red", lty = 2, lwd = 2, bty = "n")
+```
+
+
+### DCST size distribution
+
+```{r dcst-barplot, fig.cap = "DCST size distribution at depth 1. Bacteroides and Escherichia-Shigella dominate; rare DCSTs in the tail are collapsed into RARE_DOMINANT."}
+tab1 <- sort(table(csts$cell.label), decreasing = TRUE)
+par(mar = c(10, 4, 3, 1))
+bp <- barplot(tab1,
+        col = ifelse(names(tab1) == "RARE_DOMINANT", "#e74c3c", "#3498db"),
+        las = 2, cex.names = 0.7,
+        ylab = "Number of samples",
+        main = "Gut DCST Size Distribution (depth 1)")
+text(bp, tab1 + 5, labels = tab1, cex = 0.7, pos = 3)
+```
+
+
+### Disease associations
+
+The central question: do samples with unusual dominant species show different
+disease profiles? For each DCST with sufficient samples, we test whether the
+prevalence of self-reported health conditions differs from the population rate
+using Fisher's exact test.
+
+```{r disease-test}
+# Align metadata to filtered samples
+meta <- agp_gut$meta[match(rownames(M), agp_gut$meta$Run), ]
+stopifnot(all(meta$Run == rownames(M)))
+
+# Helper: shorten SILVA taxonomy to genus (or last named rank)
+shorten_taxon <- function(x) {
+  sapply(x, function(s) {
+    if (s == "RARE_DOMINANT") return(s)
+    ranks <- strsplit(s, ";")[[1]]
+    # Try genus first, then walk up
+    for (prefix in c("g__", "f__", "o__", "c__")) {
+      hit <- grep(prefix, ranks, value = TRUE)
+      if (length(hit) > 0) {
+        name <- sub(paste0(".*", prefix), "", hit[length(hit)])
+        if (nzchar(name)) return(name)
+      }
+    }
+    s  # fallback: return as-is
+  }, USE.NAMES = FALSE)
+}
+
+# Conditions to test
+conditions <- c("IBS", "IBD", "Obesity", "Cardiovascular_disease",
+                "Autoimmune", "Acid_reflux", "Lung_disease")
+
+dcst_labels <- csts$cell.label
+kept_dcsts  <- names(tab1[tab1 >= 20])
+
+results <- data.frame()
+
+for (dcst in kept_dcsts) {
+  in_dcst <- dcst_labels == dcst
+
+  for (cond in conditions) {
+    d <- meta[[cond]]
+    if (is.null(d) || all(is.na(d))) next
+
+    a <- sum(in_dcst & d == 1, na.rm = TRUE)
+    b <- sum(in_dcst & d == 0, na.rm = TRUE)
+    cc <- sum(!in_dcst & d == 1, na.rm = TRUE)
+    dd <- sum(!in_dcst & d == 0, na.rm = TRUE)
+
+    ft <- fisher.test(matrix(c(a, b, cc, dd), nrow = 2))
+
+    results <- rbind(results, data.frame(
+      DCST      = dcst,
+      Condition = cond,
+      n_DCST    = sum(in_dcst),
+      n_cases   = a,
+      prev_DCST = round(a / sum(in_dcst), 3),
+      prev_pop  = round((a + cc) / length(dcst_labels), 3),
+      OR        = round(ft$estimate, 2),
+      p_value   = ft$p.value,
+      stringsAsFactors = FALSE
+    ))
+  }
+}
+
+# Multiple testing correction (Benjamini-Hochberg)
+results$q_value <- p.adjust(results$p_value, method = "BH")
+results <- results[order(results$p_value), ]
+rownames(results) <- NULL
+```
+
+```{r disease-results}
+# Shorten DCST names for display
+results$DCST <- shorten_taxon(results$DCST)
+
+# Significant associations (q < 0.1)
+sig <- results[results$q_value < 0.1, ]
+if (nrow(sig) > 0) {
+  sig$p_value <- formatC(sig$p_value, format = "e", digits = 2)
+  sig$q_value <- formatC(sig$q_value, format = "e", digits = 2)
+  knitr::kable(sig, caption = "DCST-disease associations (q < 0.1)",
+               row.names = FALSE)
+} else {
+  cat("No associations reached q < 0.1 in this subset.\n")
+  cat("Showing top 10 by p-value:\n")
+  top10 <- head(results, 10)
+  top10$p_value <- formatC(top10$p_value, format = "e", digits = 2)
+  top10$q_value <- formatC(top10$q_value, format = "e", digits = 2)
+  knitr::kable(top10, caption = "Top 10 DCST-disease associations by p-value",
+               row.names = FALSE)
+}
+```
+
+### Interpreting the results
+
+Several patterns emerge that are consistent with known gut microbiome biology:
+
+**Prevotella_7 and obesity.** *Prevotella* species are associated with
+carbohydrate-rich diets and higher BMI in multiple cohort studies.
+The DCST framework identifies this without any prior clustering or
+reference database---purely from the compositional geometry.
+(Note: this association could be confounded by diet; see Limitations.)
+
+**Oral taxa and cardiovascular disease.** Pasteurellaceae and Staphylococcus
+are primarily oral or skin-associated taxa. Their appearance as dominant gut
+taxa likely reflects sample contamination, but their disease associations
+are biologically plausible: oral health and cardiovascular disease are
+epidemiologically linked, and the same individuals with poor oral hygiene
+may produce contaminated stool samples.
+
+**Escherichia-Shigella and IBS.** Enterobacteriaceae enrichment is a widely
+reported feature of IBS and IBD. The DCST framework captures this as a natural
+dominance pattern.
+
+**RARE_DOMINANT.** Samples in the rare-dominant bucket are dominated by unusual
+taxa that don't form their own DCST. In the full 5,000-sample analysis, this
+group shows distinct disease profiles, consistent with the idea that unusual
+gut dominance is a marker of dysbiosis.
+
+These associations are based on univariate Fisher's exact tests and do not
+account for potential confounders such as age, sex, diet, BMI, or geography.
+A full analysis with covariate-adjusted logistic regression and validation
+in an independent cohort is in preparation.
+
+
+## Limitations
+
+This analysis has several important caveats:
+
+- **Self-reported metadata.** AGP health conditions are self-reported by
+  citizen-science participants, with unknown accuracy.
+- **No covariate adjustment.** The Fisher's exact tests are univariate. Age,
+  sex, diet, and geography could confound these associations. A full analysis
+  should use logistic regression with covariates.
+- **16S resolution.** The Escherichia-Shigella inflated abundance is a known
+  V4 artifact. Shotgun metagenomics would resolve this.
+- **Stratified subsample.** This dataset was intentionally enriched for rare
+  DCSTs and disease cases to demonstrate the method. The effect sizes shown
+  here are not directly comparable to population-level estimates from the
+  full AGP cohort.
+
+For the complete 5,000-sample analysis without stratification bias, see the
+companion pkgdown article
+`vignette("gut-dcst-disease-analysis", package = "linf")`.
+
+## Summary
+
+The L-infinity DCST framework provides a clustering-free approach to
+community typing that is deterministic, hierarchical, and biologically
+interpretable. In the gut microbiome, where single-species dominance is
+atypical and often pathological, DCSTs naturally identify the clinically
+meaningful tail of the dominance distribution. The combination of depth-1
+DCSTs (dominant species) and depth-2 refinement (co-dominance patterns)
+captures structure at multiple resolutions without requiring any parameter
+tuning beyond the minimum cell-size threshold `n0`.

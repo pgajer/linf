@@ -1,0 +1,292 @@
+---
+title: "DCSTs for Vaginal Microbiome Data"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{DCSTs for Vaginal Microbiome Data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", fig.width = 7, fig.height = 5)
+library(linf)
+```
+
+## Introduction
+
+Community state types (CSTs) are the standard way to describe the structure of
+vaginal microbial communities. They were originally defined by hierarchical
+clustering of 16S rRNA data (Ravel et al. 2011) and later standardized by the
+VALENCIA nearest-centroid classifier (France et al. 2020).
+
+**Dominant Community State Types (DCSTs)** offer an alternative that requires no
+clustering and no training data. A DCST is defined by
+$L^\infty$-normalization: divide each sample's abundance vector by its maximum
+value, then group samples by which taxon achieves that maximum. This is a
+purely geometric operation on compositional data --- it identifies the dominant
+species in each sample and groups samples accordingly.
+
+This vignette demonstrates the DCST workflow on a real vaginal 16S dataset and
+shows that DCSTs recover the established CST structure with high concordance.
+
+**Reference:** Gajer, P. & Ravel, J. (2025). A New Approach to Compositional
+Data Analysis using $L^\infty$-normalization with Applications to Vaginal
+Microbiome. arXiv:2503.21543.
+
+## The Valencia 2k dataset
+
+The `valencia2k` dataset is a stratified subsample of 2,000 vaginal samples from
+the Valencia CST-classifier training set (France et al. 2020). It contains
+species-level relative abundances for 178 taxa along with the original Valencia
+CST and sub-CST assignments.
+
+```{r load-data}
+data(valencia2k)
+
+## Compositional matrix: 2000 samples x 178 taxa
+dim(valencia2k$rel)
+
+## Valencia CST assignments
+table(valencia2k$cst$Val_CST)
+
+## Top 10 most abundant taxa (by mean relative abundance)
+means <- sort(colMeans(valencia2k$rel), decreasing = TRUE)
+head(round(means, 4), 10)
+```
+
+The dominant taxa are familiar vaginal species: *Lactobacillus iners*,
+*L. crispatus*, *Gardnerella vaginalis*, and others. This is exactly the kind
+of data where $L^\infty$-cells are most intuitive: most samples are dominated
+by a single species, and the identity of that species is biologically meaningful.
+
+## Reconstructing counts
+
+The bundled matrix is compositional (rows sum to 1). For workflows that require
+count-like input (e.g., `filter.asv()`), we can reconstruct approximate counts
+using the per-sample read depths:
+
+```{r reconstruct-counts}
+count_mat <- sweep(valencia2k$rel, 1, valencia2k$reads, "*")
+count_mat <- round(count_mat)
+storage.mode(count_mat) <- "integer"
+
+## Check: library sizes
+summary(rowSums(count_mat))
+```
+
+Since the Valencia 13k data was already filtered (min 3,000 reads, taxa present
+in $\ge$ 1% of samples), we skip `filter.asv()` here and work directly with
+the compositional matrix.
+
+## $L^\infty$ normalization
+
+$L^\infty$-normalization divides each row by its maximum value. After
+normalization, every sample has at least one coordinate equal to 1, and all
+other coordinates lie in $[0, 1]$.
+
+```{r linf-normalize}
+Z <- normalize.linf(valencia2k$rel)
+
+## Every row max should be 1
+summary(apply(Z, 1, max))
+```
+
+## $L^\infty$-cells: dominant species assignment
+
+An $L^\infty$-cell is simply the column that achieves the maximum in each row.
+This is a deterministic, sample-independent assignment: a sample's cell
+membership depends only on its own abundance profile, never on other samples.
+
+```{r linf-cells}
+cells <- linf.cells(Z)
+
+## How many distinct dominant taxa?
+cat("Distinct L-inf cells:", length(cells$observed.levels), "\n")
+
+## Cell size distribution (top 15)
+cell_tab <- sort(table(cells$label), decreasing = TRUE)
+head(cell_tab, 15)
+```
+
+We see the expected vaginal community structure: a few large cells (the
+*Lactobacillus* species, *Gardnerella*, BVAB1) and a long tail of rarer
+dominant taxa.
+
+## Depth-1 DCSTs
+
+In practice, many $L^\infty$-cells contain very few samples. **Truncated
+$L^\infty$-CSTs (DCSTs)** keep only cells above a minimum size threshold
+($n_0$) and reassign small-cell samples to the nearest large cell.
+
+The package supports two policies for handling small cells:
+
+- **"rare"**: small-cell samples are labeled `RARE_DOMINANT`
+- **"absorb"**: small-cell samples are reassigned to the nearest kept cell by
+  restricted argmax
+
+```{r depth1-dcsts}
+dcst1 <- linf.csts(Z, n0 = 30, low.freq.policy = "rare")
+
+## Kept cells
+dcst1$kept.cells.lbl
+
+## DCST assignment (rare policy)
+dcst1_tab <- sort(table(dcst1$cell.label), decreasing = TRUE)
+dcst1_tab
+```
+
+### Concordance with Valencia CSTs
+
+The key test: do DCSTs correspond to the established Valencia CSTs? Let's
+build a cross-tabulation:
+
+```{r concordance-depth1}
+## Build concordance table: rows = DCSTs, columns = Valencia CSTs
+dcst_labels <- dcst1$cell.label.absorb  # use absorb view for clean comparison
+val_cst     <- valencia2k$cst$Val_CST
+
+concordance <- table(DCST = dcst_labels, Valencia = val_cst)
+
+## Show as percentage: what fraction of each DCST falls in each Valencia CST?
+pct <- round(100 * prop.table(concordance, margin = 1), 1)
+pct
+```
+
+The concordance is striking. Each DCST maps predominantly to a single Valencia
+CST:
+
+- *Lactobacillus crispatus* DCST $\to$ CST I (dominated by *L. crispatus*)
+- *Lactobacillus iners* DCST $\to$ CST III (dominated by *L. iners*)
+- *Gardnerella vaginalis* DCST $\to$ CST IV-B
+- BVAB1 DCST $\to$ CST IV-A
+- *Lactobacillus gasseri* DCST $\to$ CST II
+- *Lactobacillus jensenii* DCST $\to$ CST V
+
+```{r concordance-reverse}
+## Reverse view: what fraction of each Valencia CST falls in each DCST?
+pct_rev <- round(100 * prop.table(concordance, margin = 2), 1)
+pct_rev
+```
+
+This two-way concordance confirms that DCSTs are an alternative construct of
+CSTs: they recover the same groupings without any clustering algorithm or
+training data.
+
+## Depth-2 refinement
+
+Large DCSTs can be refined by dropping the dominant species and repeating the
+procedure on the remaining taxa. This produces a two-level hierarchy that
+reveals sub-community structure.
+
+```{r depth2-refine}
+dcst2 <- refine.linf.csts(Z, dcst1, n0 = 15, refinement.factor = 2,
+                           low.freq.policy = "rare", verbose = FALSE)
+
+## Depth-2 DCST table
+dcst2_tab <- sort(table(dcst2$cell.label), decreasing = TRUE)
+dcst2_tab
+```
+
+### Concordance with Valencia sub-CSTs
+
+```{r concordance-depth2}
+dcst2_labels <- dcst2$cell.label.absorb
+val_subcst   <- valencia2k$cst$Val_subCST
+
+concordance2 <- table(DCST = dcst2_labels, Valencia = val_subcst)
+
+## Percentage by DCST (row-wise)
+pct2 <- round(100 * prop.table(concordance2, margin = 1), 1)
+
+## Show only DCSTs with at least 20 samples for readability
+dcst2_sizes <- rowSums(concordance2)
+pct2[dcst2_sizes >= 20, , drop = FALSE]
+```
+
+The depth-2 refinement recovers sub-CST structure. For example, the
+*Lactobacillus crispatus* DCST splits based on the second-most-abundant taxon,
+and these sub-DCSTs align with Valencia sub-CSTs I-A and I-B.
+
+## The full pipeline
+
+For convenience, `linf.dcst.landmark.pipeline()` runs the entire workflow in
+one call: normalization, depth-1 DCSTs, depth-2 refinement, and landmark
+computation.
+
+```{r full-pipeline}
+out <- linf.dcst.landmark.pipeline(
+  count_mat,
+  feature.ids    = colnames(count_mat),
+  feature.labels = colnames(count_mat),
+  n0.depth1      = 30,
+  n0.depth2      = 15,
+  refinement.factor = 2,
+  low.freq.policy   = "rare",
+  landmark.view     = "absorb",
+  verbose           = FALSE
+)
+
+names(out)
+```
+
+## Landmark points
+
+Each DCST cell has characteristic landmark points: the most extreme sample
+(highest value of the dominant taxon), the least extreme (lowest value while
+still dominant), and mean/median representatives. These help characterize what
+a "typical" or "extreme" member of each community type looks like.
+
+```{r landmarks}
+## Depth-1 landmarks
+lm1 <- out$landmarks.depth1$landmarks
+
+## Show landmarks for a few key DCSTs
+key_cells <- c("Lactobacillus_crispatus", "Lactobacillus_iners",
+               "Gardnerella_vaginalis")
+key_lm <- lm1[lm1$cell.id %in% key_cells, ]
+
+## For each DCST, show the endpoint.max landmark's target value
+## (how dominant is the dominant species in the most extreme sample?)
+ep_max <- key_lm[key_lm$landmark.type == "endpoint.max",
+                 c("cell.label", "point.name", "target.value")]
+ep_max
+
+## And the endpoint.min (least dominant while still assigned to this cell)
+ep_min <- key_lm[key_lm$landmark.type == "endpoint.min",
+                 c("cell.label", "point.name", "target.value")]
+ep_min
+```
+
+The endpoint.max landmarks show samples where the dominant species comprises
+nearly the entire community, while endpoint.min landmarks show the boundary
+cases --- samples where dominance is marginal.
+
+## Summary
+
+This vignette demonstrated the DCST workflow on real vaginal 16S data:
+
+1. **$L^\infty$-normalization** maps compositional data to the $L^\infty$-simplex
+2. **$L^\infty$-cells** assign each sample to its dominant taxon
+3. **Truncated DCSTs** keep frequent cells and handle rare dominance patterns
+4. **Depth-2 refinement** reveals sub-community structure
+5. **Landmark points** characterize extreme and typical community members
+
+The concordance with established Valencia CSTs is high, validating DCSTs as a
+principled, deterministic alternative to clustering-based community typing. Key
+advantages:
+
+- **No clustering algorithm:** assignment depends only on the sample itself
+- **No training data:** new samples can be assigned without a reference database
+- **Interpretable:** DCST labels directly name the dominant species
+- **Hierarchical:** refinement naturally produces sub-types
+
+## References
+
+- France, M. T., Ma, B., Gajer, P., et al. (2020). VALENCIA: a nearest
+  centroid classification method for vaginal microbial communities based on
+  composition. *Microbiome*, 8(1), 166.
+- Gajer, P. & Ravel, J. (2025). A New Approach to Compositional Data Analysis
+  using $L^\infty$-normalization with Applications to Vaginal Microbiome.
+  arXiv:2503.21543.
+- Ravel, J., Gajer, P., Abdo, Z., et al. (2011). Vaginal microbiome of
+  reproductive-age women. *PNAS*, 108(Suppl 1), 4680--4687.

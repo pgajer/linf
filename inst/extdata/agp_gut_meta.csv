@@ -1,0 +1,767 @@
+Run,dcst_depth1,dcst_depth2,IBS,IBD,Diabetes,Autoimmune,Seasonal_allergies,Migraine,Acid_reflux,Lung_disease,Cardiovascular_disease,Skin_condition,Obesity,BMI
+ERR10360171,Bacteroides sp.,Bacteroides sp.__Faecalibacterium sp.,0,0,0,0,0,0,0,0,0,0,0,
+ERR1072742,Bacteroides sp.,Bacteroides sp.__RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,1,44.8118
+ERR1072753,Akkermansia sp.,Akkermansia sp.,0,0,0,0,1,0,0,0,0,0,1,3727.81
+ERR1072779,Bacteroides sp.,Bacteroides sp.__Escherichia-Shigella sp.,0,0,0,0,0,0,0,0,0,0,0,20.6541
+ERR1072800,Akkermansia sp.,Akkermansia sp.,0,0,0,0,0,0,0,0,0,0,0,23.1405
+ERR1072810,Bacteroides sp.,Bacteroides sp.__RARE_DOMINANT,0,0,0,0,1,0,0,0,0,0,1,37.591
+ERR1072853,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,1,0,0,0,0,0,0,26.5759
+ERR1072904,Bacteroides sp.,Bacteroides sp.__Faecalibacterium sp.,0,0,0,0,0,0,0,0,0,0,1,31.0204
+ERR1072956,Enterobacteriaceae,Enterobacteriaceae__RARE_DOMINANT,0,0,0,0,1,0,0,0,0,0,0,21.7181
+ERR1073033,Enterobacteriaceae,Enterobacteriaceae__Bacteroides sp.,0,0,0,0,0,0,0,0,0,0,0,19.1001
+ERR1073113,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,0,0,0,1,1,1,0,0,0,0,0,26.9896
+ERR1073154,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,0,0,0,0,0,0,0,0,0,0,0,20.9042
+ERR1073205,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,1,0,0,0,0,0,0,20.9366
+ERR1073241,Faecalibacterium sp.,Faecalibacterium sp.__RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,18.9292
+ERR1073396,Prevotella_9 sp.,Prevotella_9 sp.__Bacteroides sp.,0,0,0,0,0,0,0,0,0,0,0,21.6128
+ERR1073457,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,22.9926
+ERR1073482,Pasteurellaceae,Pasteurellaceae,0,0,0,0,0,0,0,0,0,0,1,23200.0
+ERR1073518,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,1,0,0,0,0,0,0,27.7323
+ERR1073548,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Enterobacteriaceae,0,0,0,0,1,0,0,0,0,0,0,
+ERR1073570,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,0,0,0,0,0,0,1,30.0838
+ERR1073610,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,1,0,0,0,0,0,0,18.6122
+ERR1073612,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,1,0,0,0,0,0,0,18.6122
+ERR1073626,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,0,0,0,0,0,0,0,29.2625
+ERR1073642,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,21.7877
+ERR1073669,Bacteroides sp.,Bacteroides sp.__Faecalibacterium sp.,0,0,0,0,0,0,0,0,0,0,0,21.6713
+ERR1073770,Streptococcus sp.,Streptococcus sp.__RARE_DOMINANT,0,0,0,0,1,0,0,0,0,0,0,19.313
+ERR1073793,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,26.3958
+ERR1073819,Streptococcus sp.,Streptococcus sp.__RARE_DOMINANT,0,0,0,0,1,0,0,0,0,0,0,
+ERR1073987,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Pseudomonas sp.,0,0,0,0,1,0,0,0,0,0,1,39.5556
+ERR1074013,Escherichia-Shigella sp.,Escherichia-Shigella sp.__RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,21.3839
+ERR1074276,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,1,0,0,0,0,0,0,28.3447
+ERR1074302,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,15.5817
+ERR1074309,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,20.7451
+ERR1074347,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,0,0,0,0,0,0,1,49.5868
+ERR1074599,Pasteurellaceae,Pasteurellaceae,0,0,0,0,1,0,0,0,0,0,1,185000.0
+ERR1074624,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,23.1834
+ERR1074666,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,
+ERR1074800,Bacteroides sp.,Bacteroides sp.__RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,
+ERR1074818,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,0,0,0,0,1,0,0,0,0,0,1,3727.81
+ERR1075047,Bacteroides sp.,Bacteroides sp.__Agathobacter sp.,0,0,0,0,0,0,0,0,0,0,0,25.7959
+ERR1075105,Bacteroides sp.,Bacteroides sp.__RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,20.4152
+ERR1075301,Lachnospiraceae,Lachnospiraceae,0,0,0,0,1,0,0,0,0,0,1,30.0781
+ERR1075465,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,0,0,0,0,0,0,0,22.206
+ERR1075489,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,0,0,0,0,0,0,0,29.0367
+ERR1075504,Faecalibacterium sp.,Faecalibacterium sp.__Bacteroides sp.,0,0,0,0,0,0,0,0,0,0,0,25.9787
+ERR1075571,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,0,0,0,0,0,0,0,0,0,0,0,
+ERR1075687,Akkermansia sp.,Akkermansia sp.,0,0,0,0,0,0,0,0,0,0,1,36875.0
+ERR1075709,Bacteroides sp.,Bacteroides sp.__Faecalibacterium sp.,0,1,0,0,0,0,0,0,0,0,0,18.7109
+ERR1075827,Bacteroides sp.,Bacteroides sp.__Escherichia-Shigella sp.,0,0,0,0,1,0,0,0,0,0,1,32.9507
+ERR1075913,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,0,20.3244
+ERR1076649,Bacteroides sp.,Bacteroides sp.__Escherichia-Shigella sp.,0,0,0,0,1,0,0,0,0,0,0,22.6757
+ERR1076651,Bacteroides sp.,Bacteroides sp.__Alistipes sp.,0,0,0,0,0,0,0,0,0,0,0,
+ERR1076744,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,0,26.6436
+ERR1076785,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,0,0,0,0,0,0,0,22.8395
+ERR1076811,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,0,0,0,0,0,0,1,31.2461
+ERR1076818,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,0,0,0,0,0,0,0,26.8745
+ERR1076866,Prevotella_9 sp.,Prevotella_9 sp.__RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,19.8413
+ERR1076964,Bacteroides sp.,Bacteroides sp.__RARE_DOMINANT,0,0,0,0,1,0,0,0,0,0,1,41.778
+ERR1076969,Bacteroides sp.,Bacteroides sp.__Lachnospiraceae,0,0,0,0,0,0,0,0,0,0,0,23.1481
+ERR1077062,Bacteroides sp.,Bacteroides sp.__Faecalibacterium sp.,0,0,0,0,0,0,0,0,0,0,0,18.5901
+ERR1077079,Bacteroides sp.,Bacteroides sp.__Escherichia-Shigella sp.,0,0,0,0,0,0,0,0,0,0,0,23.7387
+ERR1077100,Bacteroides sp.,Bacteroides sp.__Faecalibacterium sp.,0,0,0,0,0,0,0,0,0,0,0,20.3244
+ERR1077171,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,1,0,0,0,0,0,0,25.0
+ERR1077324,Bacteroides sp.,Bacteroides sp.__RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,15.3787
+ERR1077378,Bacteroides sp.,Bacteroides sp.__Escherichia-Shigella sp.,0,0,0,0,1,0,0,0,0,0,1,64444.4
+ERR1077423,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Faecalibacterium sp.,1,0,0,0,0,0,0,0,0,0,0,25.1559
+ERR1077492,Pasteurellaceae,Pasteurellaceae,0,0,0,0,0,0,0,0,0,0,0,25.9787
+ERR1077536,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,12.5
+ERR1077539,Pasteurellaceae,Pasteurellaceae,0,0,0,0,0,0,0,0,0,0,0,16.276
+ERR1077706,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,
+ERR1077822,Bacteroides sp.,Bacteroides sp.__Lachnospiraceae,0,0,0,0,1,0,0,0,0,0,1,42.1875
+ERR1077871,Pseudomonas sp.,Pseudomonas sp.__RARE_DOMINANT,0,0,0,0,1,0,0,0,0,0,0,24.3323
+ERR1077892,Streptococcus sp.,Streptococcus sp.__RARE_DOMINANT,0,0,0,0,1,0,0,0,0,0,0,23.7387
+ERR1077906,Streptococcus sp.,Streptococcus sp.__RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,21.6551
+ERR1077916,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,28.6661
+ERR1078027,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,1,0,0,0,0,0,0,27.143
+ERR1078038,Bacteroides sp.,Bacteroides sp.__RARE_DOMINANT,0,0,0,0,1,0,0,1,0,0,1,30.863
+ERR1078170,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,0,0,0,0,0,0,0,0,0,0,1,37.8072
+ERR1078183,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,24.093
+ERR1078218,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,0,20.7008
+ERR1078220,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,1,0,0,0,0,0,0,25.2174
+ERR1078670,Pasteurellaceae,Pasteurellaceae,0,0,0,0,1,0,0,0,0,0,0,22.7244
+ERR1078676,Pasteurellaceae,Pasteurellaceae,0,0,0,0,1,0,0,0,0,0,0,26.4463
+ERR1079976,Lachnospiraceae,Lachnospiraceae,1,0,0,1,1,0,0,0,0,0,0,21.5029
+ERR1080004,Akkermansia sp.,Akkermansia sp.,0,0,0,0,1,0,0,0,0,0,1,41.778
+ERR1080039,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,1,0,0,0,0,0,0,26.7759
+ERR1080097,Enterobacteriaceae,Enterobacteriaceae__Bacteroides sp.,0,0,0,0,0,0,0,0,0,0,0,6.12724
+ERR1080195,Prevotella_9 sp.,Prevotella_9 sp.__RARE_DOMINANT,0,0,0,0,1,0,0,0,0,0,0,25.1024
+ERR1080262,Bacteroides sp.,Bacteroides sp.__Faecalibacterium sp.,0,0,0,0,0,0,0,0,0,0,1,62.6298
+ERR1080405,Escherichia-Shigella sp.,Escherichia-Shigella sp.__RARE_DOMINANT,0,0,0,0,1,1,0,0,0,0,0,21.4346
+ERR1089677,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Enterobacteriaceae,0,0,0,0,1,0,0,0,0,0,0,19.6052
+ERR1089781,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,25.565
+ERR1089828,Bacteroides sp.,Bacteroides sp.__Faecalibacterium sp.,0,0,0,0,1,0,0,0,0,0,0,16.3496
+ERR1089887,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,17.301
+ERR1089891,Akkermansia sp.,Akkermansia sp.,0,0,0,0,1,0,0,0,0,0,0,27.3356
+ERR1089893,RARE_DOMINANT,RARE_DOMINANT,0,0,1,0,1,0,0,0,0,0,1,34.718
+ERR1089900,Akkermansia sp.,Akkermansia sp.,1,0,0,1,1,1,0,0,0,0,0,24.6914
+ERR1090096,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,25.0574
+ERR1090120,Faecalibacterium sp.,Faecalibacterium sp.__RARE_DOMINANT,0,0,0,0,1,0,0,0,0,0,0,27.4286
+ERR1090215,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,1,0,0,0,0,0,0,20.9042
+ERR1090225,Enterobacteriaceae,Enterobacteriaceae__RARE_DOMINANT,0,0,0,0,1,1,0,0,1,0,0,25.5588
+ERR1090399,Escherichia-Shigella sp.,Escherichia-Shigella sp.__RARE_DOMINANT,0,0,0,1,1,0,0,0,0,0,0,23.8751
+ERR1090456,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Pseudomonas sp.,0,0,0,1,1,1,0,0,0,0,0,24.9135
+ERR1090464,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,0,0,0,0,1,0,0,0,1,0,1,31.4815
+ERR1090479,RARE_DOMINANT,RARE_DOMINANT,0,0,0,1,1,0,0,0,0,0,0,15.7779
+ERR1090505,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,1,0,0,0,0,0,0,22.2041
+ERR1090506,RARE_DOMINANT,RARE_DOMINANT,1,1,0,0,0,0,0,0,0,0,0,18.6453
+ERR1090631,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,1,0,0,1,0,0,0,1,0,0,0,20.0796
+ERR1090682,Faecalibacterium sp.,Faecalibacterium sp.__Bacteroides sp.,0,0,0,0,0,0,0,0,0,0,1,30.7306
+ERR1090702,Akkermansia sp.,Akkermansia sp.,1,0,0,0,1,1,0,0,0,0,1,31.2452
+ERR1090830,Escherichia-Shigella sp.,Escherichia-Shigella sp.__RARE_DOMINANT,0,0,0,0,1,0,0,1,0,0,0,0.389393
+ERR1090860,Faecalibacterium sp.,Faecalibacterium sp.__Bacteroides sp.,0,0,0,0,0,0,0,0,0,0,1,30.8365
+ERR1090930,Streptococcus sp.,Streptococcus sp.__RARE_DOMINANT,0,0,0,0,1,1,0,1,0,0,0,29.8028
+ERR1090970,Escherichia-Shigella sp.,Escherichia-Shigella sp.__RARE_DOMINANT,1,0,0,0,1,1,0,0,0,0,0,21.2953
+ERR1091001,Akkermansia sp.,Akkermansia sp.,0,0,0,0,0,0,0,0,0,0,0,24.6914
+ERR1091021,Enterobacteriaceae,Enterobacteriaceae__Bacteroides sp.,0,0,0,1,0,0,0,0,0,0,1,34.9481
+ERR1091138,Bacteroides sp.,Bacteroides sp.__RARE_DOMINANT,0,0,0,1,0,1,0,0,0,0,1,34.4753
+ERR11274499,Bacteroides sp.,Bacteroides sp.__Faecalibacterium sp.,0,0,0,1,0,0,0,0,0,0,0,
+ERR1160306,Enterobacteriaceae,Enterobacteriaceae__Bacteroides sp.,0,0,0,0,0,0,0,0,0,0,0,23.0825
+ERR1160336,Enterobacteriaceae,Enterobacteriaceae__Bacteroides sp.,0,1,0,0,1,0,0,0,0,0,0,17.4268
+ERR1160341,Lachnospiraceae,Lachnospiraceae,0,0,0,0,1,0,0,0,0,0,0,27.3797
+ERR1160408,Pasteurellaceae,Pasteurellaceae,0,0,0,0,0,1,0,0,0,0,0,25.5354
+ERR1160497,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,29.8028
+ERR1160534,Bacteroides sp.,Bacteroides sp.__RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,1,31.6242
+ERR1160545,Bacteroides sp.,Bacteroides sp.__Agathobacter sp.,0,0,0,0,0,0,0,0,0,0,1,30.2737
+ERR1160558,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,21.5559
+ERR1160600,Bacteroides sp.,Bacteroides sp.__Lachnospiraceae,1,0,0,0,0,0,0,0,0,0,0,23.5102
+ERR1160658,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Enterobacteriaceae,0,0,1,0,1,0,0,1,1,0,0,24.4418
+ERR1160675,Bacteroides sp.,Bacteroides sp.__Alistipes sp.,1,0,0,0,0,0,0,0,0,0,0,23.3234
+ERR1160703,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Enterobacteriaceae,0,0,0,0,0,0,0,0,0,0,1,30.7934
+ERR1160726,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,1,1,0,0,1,1,0,0,0,0,0,26.8136
+ERR1160800,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,1,0,0,0,0,0,25.9107
+ERR1160839,Akkermansia sp.,Akkermansia sp.,0,0,0,0,0,0,0,0,0,0,0,
+ERR1249658,Faecalibacterium sp.,Faecalibacterium sp.__Bacteroides sp.,1,0,0,0,0,0,0,0,0,0,0,19.7133
+ERR1249711,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,0,0,0,0,1,0,0,0,0,0,0,29.0606
+ERR1249722,Prevotella_9 sp.,Prevotella_9 sp.__Bacteroides sp.,1,0,0,0,1,0,0,0,0,0,0,24.4857
+ERR1249729,Faecalibacterium sp.,Faecalibacterium sp.__Bacteroides sp.,0,0,0,0,1,0,0,0,0,0,0,26.7036
+ERR1249831,Akkermansia sp.,Akkermansia sp.,0,0,0,0,0,0,0,0,0,0,0,21.2953
+ERR1249951,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,1,31.0204
+ERR1249966,Enterobacteriaceae,Enterobacteriaceae__Bacteroides sp.,0,0,0,1,0,0,0,0,0,0,0,21.5139
+ERR1249970,Akkermansia sp.,Akkermansia sp.,0,0,0,0,1,0,0,0,0,0,0,21.0962
+ERR1249989,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,1,0,0,0,0,0,0,28.7197
+ERR1250035,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,1,0,0,0,0,0,18.2531
+ERR1250092,RARE_DOMINANT,RARE_DOMINANT,0,0,0,1,0,0,0,0,0,0,0,20.6193
+ERR1250401,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Enterobacteriaceae,1,0,0,0,0,1,0,0,0,0,0,20.5693
+ERR1250461,Bacteroides sp.,Bacteroides sp.__Lachnospiraceae,0,0,0,0,1,0,0,0,0,0,1,30.8642
+ERR1250543,Bacteroides sp.,Bacteroides sp.__Alistipes sp.,0,0,0,0,0,0,0,0,1,0,0,20.8308
+ERR1250572,Bacteroides sp.,Bacteroides sp.__RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,1,35.4304
+ERR1250589,Bacteroides sp.,Bacteroides sp.__Faecalibacterium sp.,0,0,0,1,0,1,0,1,1,0,0,26.7036
+ERR1250595,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,0,0,0,0,0,0,0,0,0,0,0,22.0243
+ERR1250616,Bacteroides sp.,Bacteroides sp.__Faecalibacterium sp.,1,0,0,0,1,0,0,0,0,0,0,21.8724
+ERR1315808,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,
+ERR1315847,Bacteroides sp.,Bacteroides sp.__Akkermansia sp.,0,1,0,0,0,1,0,0,0,0,0,20.5714
+ERR1315946,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,24.0882
+ERR1315953,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,1,0,0,1,0,0,0,19.9481
+ERR1315955,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,20.3125
+ERR1315981,Bacteroides sp.,Bacteroides sp.__RARE_DOMINANT,0,0,0,0,0,0,0,0,1,0,0,19.9446
+ERR1316038,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,1,0,0,0,0,0,0,27.3438
+ERR1316201,Akkermansia sp.,Akkermansia sp.,0,0,0,0,1,0,1,1,0,0,0,24.2513
+ERR1389724,Akkermansia sp.,Akkermansia sp.,0,0,0,0,0,0,0,0,0,0,0,22.9819
+ERR1389812,Bacteroides sp.,Bacteroides sp.__Escherichia-Shigella sp.,1,0,0,0,0,0,0,0,0,0,0,22.9854
+ERR1389844,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Prevotella_9 sp.,1,0,0,1,1,0,0,0,0,0,0,28.306
+ERR1389882,Akkermansia sp.,Akkermansia sp.,0,0,0,0,0,0,0,0,0,0,0,22.2041
+ERR1389898,Bacteroides sp.,Bacteroides sp.__Escherichia-Shigella sp.,1,0,0,0,1,0,1,0,0,0,0,22.8624
+ERR1389955,Bacteroides sp.,Bacteroides sp.__Lachnospiraceae,0,0,0,0,0,0,0,1,0,0,0,29.7608
+ERR1389994,Enterobacteriaceae,Enterobacteriaceae__Bacteroides sp.,1,0,0,0,0,1,0,0,0,0,0,23.8751
+ERR1390022,Pasteurellaceae,Pasteurellaceae,0,1,0,1,1,0,1,1,0,0,0,19.433
+ERR1417420,Bacteroides sp.,Bacteroides sp.__Lachnospiraceae,1,0,0,0,1,1,0,0,0,0,0,25.3934
+ERR1417495,Prevotella_9 sp.,Prevotella_9 sp.__Bacteroides sp.,0,0,0,0,1,0,1,0,1,0,0,28.8827
+ERR1417510,Bacteroides sp.,Bacteroides sp.__RARE_DOMINANT,1,0,0,0,0,0,0,0,0,0,0,20.9366
+ERR1417533,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,17.3283
+ERR1417538,Bacteroides sp.,Bacteroides sp.__RARE_DOMINANT,0,0,0,0,1,0,0,0,0,0,1,31.1227
+ERR1417572,Enterobacteriaceae,Enterobacteriaceae__RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,1,33.3276
+ERR1417589,Akkermansia sp.,Akkermansia sp.,0,0,0,0,0,1,0,0,0,0,1,36.2275
+ERR1417609,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,27.1706
+ERR1458731,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,0,0,0,0,0,0,0,0,0,0,0,29.8606
+ERR1458796,Bacteroides sp.,Bacteroides sp.__Escherichia-Shigella sp.,1,1,0,0,0,0,0,1,0,0,0,18.3655
+ERR1458806,Lachnospiraceae,Lachnospiraceae,0,0,0,0,1,0,0,0,0,0,0,21.1389
+ERR1458838,Bacteroides sp.,Bacteroides sp.__Lachnospiraceae,0,0,0,0,0,0,0,0,0,0,1,33.5315
+ERR1458846,Pasteurellaceae,Pasteurellaceae,0,0,0,0,0,0,0,1,0,0,0,16.0156
+ERR1458876,Bacteroides sp.,Bacteroides sp.__Faecalibacterium sp.,0,0,0,0,0,0,0,0,0,0,0,22.206
+ERR1458903,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,21.4533
+ERR1458993,Bacteroides sp.,Bacteroides sp.__Faecalibacterium sp.,1,0,0,1,0,0,0,0,1,0,0,17.9089
+ERR1459043,Pasteurellaceae,Pasteurellaceae,0,0,0,1,0,0,0,0,0,0,0,21.83
+ERR1459120,Bacteroides sp.,Bacteroides sp.__Faecalibacterium sp.,0,0,0,0,0,0,0,0,0,0,1,34.4842
+ERR1459148,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,0,0,0,0,1,0,0,0,0,0,0,28.3951
+ERR1459189,Enterobacteriaceae,Enterobacteriaceae__Escherichia-Shigella sp.,1,0,0,0,1,1,1,1,0,0,0,20.202
+ERR1545681,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,1,0,0,0,0,0,0,19.0311
+ERR1545690,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,1,49.5868
+ERR1545700,RARE_DOMINANT,RARE_DOMINANT,1,0,1,1,1,0,0,0,0,0,0,17.6309
+ERR1545748,Pasteurellaceae,Pasteurellaceae,0,0,0,0,1,0,0,0,0,0,0,26.493
+ERR1545760,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,0,27.4717
+ERR1545790,Pasteurellaceae,Pasteurellaceae,0,0,0,0,1,0,0,1,0,0,0,20.5191
+ERR1545930,RARE_DOMINANT,RARE_DOMINANT,1,0,0,0,0,0,0,0,0,0,0,28.0277
+ERR1545947,Pasteurellaceae,Pasteurellaceae,0,0,0,0,1,0,0,1,0,0,0,28.1969
+ERR1546030,Pasteurellaceae,Pasteurellaceae,0,0,0,0,0,0,1,1,0,0,0,21.7192
+ERR1546038,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,1,30.8642
+ERR1546049,Pasteurellaceae,Pasteurellaceae,0,0,0,0,0,0,0,0,0,0,0,26.5338
+ERR1546052,Pasteurellaceae,Pasteurellaceae,0,0,0,1,0,1,0,1,0,0,0,17.2635
+ERR1546073,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,
+ERR1551435,Bacteroides sp.,Bacteroides sp.__Faecalibacterium sp.,0,0,0,0,0,0,0,0,0,0,0,14.7161
+ERR1551514,Bacteroides sp.,Bacteroides sp.__Faecalibacterium sp.,1,1,0,1,0,1,0,0,0,0,0,25.1039
+ERR1551640,Akkermansia sp.,Akkermansia sp.,0,0,0,0,1,0,0,0,0,0,0,23.6203
+ERR1597026,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,0,26.8745
+ERR1597072,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,1,0,0,0,0,0,0,0,28.1969
+ERR1597115,Prevotella_9 sp.,Prevotella_9 sp.__Bacteroides sp.,1,0,0,0,1,0,0,1,0,0,0,21.9713
+ERR1597160,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,1,0,0,0,0,0,0,18.5911
+ERR1597161,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,20.202
+ERR1597162,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,0,0,0,0,0,0,0,20.202
+ERR1597169,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,0,0,0,0,1,0,0,26.5668
+ERR1597183,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,0,0,1,0,0,0,0,24.5675
+ERR1678345,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,0,0,0,0,0,0,0,22.0968
+ERR1678349,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,1,0,0,0,0,0,0,27.1731
+ERR1678371,RARE_DOMINANT,RARE_DOMINANT,0,0,1,0,1,0,0,0,0,0,0,26.493
+ERR1678373,Staphylococcus sp.,Staphylococcus sp.,1,0,0,0,0,0,0,0,0,0,0,23.3011
+ERR1678378,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,1,0,0,0,0,0,0,22.2222
+ERR1678393,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,1,0,0,0,0,0,0,27.8852
+ERR1678400,Staphylococcus sp.,Staphylococcus sp.,0,0,0,1,0,0,0,0,0,0,0,24.6755
+ERR1678428,Bacteroides sp.,Bacteroides sp.__Escherichia-Shigella sp.,0,0,0,0,0,0,0,0,0,0,0,21.7192
+ERR1678484,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Enterobacteriaceae,0,0,0,1,0,0,1,1,0,0,1,37.7229
+ERR1841464,Bacteroides sp.,Bacteroides sp.__Lachnospiraceae,0,0,0,0,0,0,0,1,0,0,1,30.9617
+ERR1841514,Prevotella_9 sp.,Prevotella_9 sp.__Bacteroides sp.,1,0,0,0,1,0,0,0,0,0,1,32.4619
+ERR1841607,Akkermansia sp.,Akkermansia sp.,0,0,0,0,1,0,0,0,0,0,0,19.0039
+ERR1841628,Prevotella_9 sp.,Prevotella_9 sp.__RARE_DOMINANT,0,0,0,0,1,0,0,1,0,0,0,22.3403
+ERR1841632,Bacteroides sp.,Bacteroides sp.__Faecalibacterium sp.,0,0,0,0,1,0,1,0,0,0,0,22.546
+ERR1841651,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Pseudomonas sp.,1,0,0,0,1,0,1,0,0,0,1,35.1562
+ERR1841699,Bacteroides sp.,Bacteroides sp.__Faecalibacterium sp.,1,0,0,0,0,0,1,1,0,0,0,24.7555
+ERR1841709,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,1,0,0,0,1,1,0,1,0,0,0,19.9184
+ERR1841769,Bacteroides sp.,Bacteroides sp.__RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,22.4059
+ERR1841785,Faecalibacterium sp.,Faecalibacterium sp.__Bacteroides sp.,0,0,0,0,0,0,1,0,0,0,1,35.0621
+ERR1841832,Faecalibacterium sp.,Faecalibacterium sp.__RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,
+ERR1842222,Bacteroides sp.,Bacteroides sp.__Lachnospiraceae,0,0,0,0,0,0,0,0,0,0,0,25.2595
+ERR1842239,Bacteroides sp.,Bacteroides sp.__RARE_DOMINANT,1,0,0,1,0,0,0,0,0,0,0,20.5191
+ERR1842615,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,0,0,0,0,1,0,0,0,0,0,0,23.3726
+ERR1842679,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,28.0557
+ERR1842749,RARE_DOMINANT,RARE_DOMINANT,0,0,0,1,1,0,0,0,0,0,0,18.2531
+ERR1842792,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,1,0,0,0,0,0,0,0,0,0,0,15.6735
+ERR1842799,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,1,0,0,1,0,0,1,0,0,0,0,25.1486
+ERR1842826,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,1,0,0,1,0,0,0,0,0,0,0,19.8177
+ERR1842841,Enterobacteriaceae,Enterobacteriaceae__Escherichia-Shigella sp.,1,0,0,0,0,1,0,0,0,0,0,2.9205
+ERR1842851,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Pseudomonas sp.,0,0,0,0,1,1,1,1,0,0,1,37.0356
+ERR1842895,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,0,0,0,0,1,0,0,0,0,0,0,18.6122
+ERR1842908,Akkermansia sp.,Akkermansia sp.,0,0,0,0,1,0,0,0,0,0,1,263.298
+ERR1842909,Lachnospiraceae,Lachnospiraceae,0,0,0,0,0,0,0,1,0,0,0,0.511362
+ERR1843564,Akkermansia sp.,Akkermansia sp.,0,0,0,0,0,0,0,0,0,0,0,16.5289
+ERR1843568,Akkermansia sp.,Akkermansia sp.,1,0,0,0,0,1,0,0,0,0,0,24.3375
+ERR1843737,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,0,0,0,0,0,0,0,0,0,0,0,23.3067
+ERR1843744,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,0,0,0,0,1,1,0,0,0,0,1,32.112
+ERR1843825,Bacteroides sp.,Bacteroides sp.__Faecalibacterium sp.,0,0,0,0,0,0,1,0,0,0,0,28.6851
+ERR1843832,Enterobacteriaceae,Enterobacteriaceae__Escherichia-Shigella sp.,0,0,0,0,0,0,0,0,0,0,0,23.1837
+ERR1844589,Faecalibacterium sp.,Faecalibacterium sp.__Bacteroides sp.,1,0,0,0,0,0,1,0,0,0,0,26.2188
+ERR1844602,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,1,0,0,20.4152
+ERR1844615,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,0,24.0346
+ERR1845184,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,1,0,0,0,0,0,0,22.7516
+ERR1845207,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,0,0,0,0,0,0,0,22.0522
+ERR1845260,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,1,0,0,0,0,0,0,20.6193
+ERR1845279,Pasteurellaceae,Pasteurellaceae,0,0,0,0,0,0,0,0,0,0,0,27.1374
+ERR1845280,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,27.1374
+ERR1845310,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,0,24.6914
+ERR1845313,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,1,0,0,0,0,0,0,23.5739
+ERR1845336,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,0,0,0,1,0,0,0,22.9481
+ERR1845346,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,1,0,0,0,0,0,0,23.5739
+ERR1845381,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,1,0,0,0,0,0,0,27.0993
+ERR1845383,Bacteroides sp.,Bacteroides sp.__Faecalibacterium sp.,0,0,0,0,1,0,0,0,0,0,0,27.0993
+ERR1845385,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,1,0,0,0,0,0,0,27.0993
+ERR1845772,Bacteroides sp.,Bacteroides sp.__Escherichia-Shigella sp.,0,0,1,0,1,0,0,0,0,0,1,50.9695
+ERR1845781,Akkermansia sp.,Akkermansia sp.,0,0,0,0,0,0,0,0,0,0,0,29.0437
+ERR1845881,Akkermansia sp.,Akkermansia sp.,0,0,0,0,1,0,0,0,0,0,0,21.8724
+ERR1845917,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,0,0,0,0,0,0,0,0,0,0,0,
+ERR1845974,Akkermansia sp.,Akkermansia sp.,0,0,0,1,1,1,0,0,0,0,0,21.1463
+ERR1846035,Enterobacteriaceae,Enterobacteriaceae__Escherichia-Shigella sp.,1,1,0,0,0,1,0,0,0,0,0,24.2215
+ERR1852407,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,0,0,0,1,0,0,0,22.9481
+ERR1852416,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,1,0,0,0,0,0,0,26.3465
+ERR1852422,Akkermansia sp.,Akkermansia sp.,0,0,0,0,0,0,0,0,0,0,0,29.321
+ERR1852441,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,1,0,0,0,0,0,0,20.3816
+ERR1854666,Lachnospiraceae,Lachnospiraceae,0,0,0,0,0,0,0,0,0,0,0,28.0816
+ERR1854698,Akkermansia sp.,Akkermansia sp.,0,0,0,1,0,1,0,0,1,0,0,22.4914
+ERR2032334,Prevotella_9 sp.,Prevotella_9 sp.__RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,19.9184
+ERR2032364,Prevotella_9 sp.,Prevotella_9 sp.__Bacteroides sp.,0,0,0,0,0,0,0,0,0,0,0,22.8395
+ERR2032395,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,1,0,0,0,0,0,0,29.685
+ERR2032471,Bacteroides sp.,Bacteroides sp.__RARE_DOMINANT,0,0,0,0,1,0,0,1,0,0,0,21.9713
+ERR2032555,Bacteroides sp.,Bacteroides sp.__Akkermansia sp.,0,0,0,0,0,0,0,0,0,0,0,21.3382
+ERR2032577,Bacteroides sp.,Bacteroides sp.__Lachnospiraceae,0,0,0,0,0,0,0,0,0,0,1,35.8302
+ERR2032633,Bacteroides sp.,Bacteroides sp.__Agathobacter sp.,0,0,0,0,0,0,0,1,1,0,0,29.1687
+ERR2032638,Bacteroides sp.,Bacteroides sp.__Agathobacter sp.,0,0,0,0,0,0,0,1,1,0,0,29.1687
+ERR2032683,Akkermansia sp.,Akkermansia sp.,0,0,0,0,0,0,0,0,0,0,0,20.2395
+ERR2032748,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Pseudomonas sp.,0,0,0,0,1,0,0,0,0,0,0,20.7967
+ERR2032822,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Pseudomonas sp.,0,0,0,0,1,0,0,0,0,0,0,24.0569
+ERR2032860,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,0,0,0,0,1,0,0,0,0,0,0,24.0055
+ERR2032877,Bacteroides sp.,Bacteroides sp.__Lachnospiraceae,0,0,0,0,0,0,0,0,0,0,0,23.9591
+ERR2033225,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,0,0,0,0,0,0,0,22.2041
+ERR2033245,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,1,0,1,0,0,0,19.1406
+ERR2033258,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,1,0,0,0,23.0825
+ERR2033263,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,1,0,0,0,0,0,0,22.2222
+ERR2033280,Staphylococcus sp.,Staphylococcus sp.,1,0,0,0,0,0,0,0,0,0,0,21.3294
+ERR2033284,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,0,0,0,0,0,0,0,20.7612
+ERR2033294,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,0,0,0,0,0,0,0,24.8163
+ERR2033323,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,0,0,0,0,0,0,0,21.9713
+ERR2033339,Pseudomonas sp.,Pseudomonas sp.__RARE_DOMINANT,0,0,0,0,0,0,0,1,0,0,0,25.9516
+ERR2033411,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,0,0,0,0,0,0,0,23.1405
+ERR2033413,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,0,0,0,0,0,0,0,23.1405
+ERR2033446,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,1,0,0,1,0,0,0,24.6914
+ERR2033475,Faecalibacterium sp.,Faecalibacterium sp.__Bacteroides sp.,1,0,0,1,1,0,0,0,0,0,0,19.8347
+ERR2033478,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,25.1278
+ERR2033500,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,0,0,0,1,0,0,0,23.0825
+ERR2033520,Pasteurellaceae,Pasteurellaceae,0,0,0,0,0,0,0,0,0,0,0,22.9819
+ERR2033542,Streptococcus sp.,Streptococcus sp.__RARE_DOMINANT,0,0,0,0,0,0,0,1,0,0,0,27.1314
+ERR2033549,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,1,0,0,0,0,0,0,24.1617
+ERR2033557,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,0,0,0,0,0,0,0,25.7959
+ERR2033591,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,0,0,0,0,0,0,0,28.0277
+ERR2033592,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,0,0,0,0,0,0,0,28.0277
+ERR2033612,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,0,0,0,1,0,0,0,23.0825
+ERR2056763,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,1,0,0,1,0,0,0,21.2953
+ERR2056796,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,1,0,0,0,21.2953
+ERR2056927,RARE_DOMINANT,RARE_DOMINANT,1,0,0,0,0,0,0,0,0,0,0,21.2953
+ERR2056933,Staphylococcus sp.,Staphylococcus sp.,0,0,0,1,1,1,0,1,0,0,0,21.1553
+ERR2056934,RARE_DOMINANT,RARE_DOMINANT,0,0,0,1,1,1,0,1,0,0,0,21.1553
+ERR2056949,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,26.3702
+ERR2056957,Akkermansia sp.,Akkermansia sp.,0,0,0,0,0,1,1,1,0,0,0,21.3839
+ERR2056983,Streptococcus sp.,Streptococcus sp.__RARE_DOMINANT,0,0,0,0,1,0,0,0,0,0,0,25.963
+ERR2056988,Pseudomonas sp.,Pseudomonas sp.__RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,20.83
+ERR2057040,Akkermansia sp.,Akkermansia sp.,0,0,0,1,0,0,1,0,0,0,0,23.8281
+ERR2057082,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,0,0,0,0,0,0,0,0,0,0,1,33.3333
+ERR2057104,Escherichia-Shigella sp.,Escherichia-Shigella sp.__RARE_DOMINANT,0,0,0,0,1,0,0,0,1,0,1,38.098
+ERR2057180,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,0,0,0,0,0,0,0,0,0,0,1,34.2561
+ERR2091880,Prevotella_9 sp.,Prevotella_9 sp.__Faecalibacterium sp.,0,0,0,0,0,0,1,0,0,0,1,35.1852
+ERR2092068,Pseudomonas sp.,Pseudomonas sp.__RARE_DOMINANT,0,0,0,1,0,0,0,0,0,0,0,24.2215
+ERR2092143,Enterobacteriaceae,Enterobacteriaceae__Bacteroides sp.,1,0,0,0,0,0,0,0,0,0,0,22.1003
+ERR2092178,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,22.3435
+ERR2092286,Akkermansia sp.,Akkermansia sp.,0,0,0,0,0,0,1,0,0,0,0,20.7967
+ERR2092305,Akkermansia sp.,Akkermansia sp.,0,0,0,0,0,1,0,0,0,0,0,20.9366
+ERR2092316,Bacteroides sp.,Bacteroides sp.__RARE_DOMINANT,0,0,0,0,1,0,0,1,0,0,0,22.7732
+ERR2092322,Bacteroides sp.,Bacteroides sp.__RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,25.7959
+ERR2092354,Akkermansia sp.,Akkermansia sp.,0,0,0,0,1,0,0,0,0,0,0,21.2953
+ERR2092355,Akkermansia sp.,Akkermansia sp.,0,0,0,0,1,0,0,0,0,0,0,21.2953
+ERR2092371,Bacteroides sp.,Bacteroides sp.__Agathobacter sp.,0,0,0,1,1,0,0,1,0,0,1,30.0781
+ERR2092515,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,1,0,0,0,0,0,0,20.3816
+ERR2092516,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,1,0,0,0,0,0,0,20.3816
+ERR2092528,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,1,0,0,0,0,0,1,92222.2
+ERR2092549,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,0,1,0,0,0,0,0,21.3039
+ERR2092568,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,1,1,0,0,0,0,0,20.3052
+ERR2092570,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,1,1,0,0,0,0,0,20.3052
+ERR2092583,Pasteurellaceae,Pasteurellaceae,0,0,0,0,0,0,0,0,0,0,0,25.5588
+ERR2092613,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,1,0,0,0,0,0,0,22.7516
+ERR2092623,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,1,0,0,0,0,0,0,20.6193
+ERR2092630,Bacteroides sp.,Bacteroides sp.__Faecalibacterium sp.,0,0,0,0,1,0,0,0,0,0,0,20.6193
+ERR2092643,Pasteurellaceae,Pasteurellaceae,0,0,0,0,0,0,0,0,0,0,0,27.1374
+ERR2092651,Pasteurellaceae,Pasteurellaceae,0,0,0,0,0,0,0,0,0,0,0,27.1374
+ERR2092656,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,1,0,0,0,22.9481
+ERR2092692,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,18.6851
+ERR2092697,Pseudomonas sp.,Pseudomonas sp.__RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,27.1374
+ERR2092735,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,1,0,0,0,0,0,0,27.0993
+ERR2092743,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,0,0,0,0,0,0,1,31.6522
+ERR2303838,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,1,0,0,0,0,0,0,23.6614
+ERR2303861,Bacteroides sp.,Bacteroides sp.__Faecalibacterium sp.,0,0,0,0,0,0,0,0,0,0,0,22.3133
+ERR2303877,RARE_DOMINANT,RARE_DOMINANT,0,1,0,1,1,0,0,0,0,0,0,25.0135
+ERR2303946,Staphylococcus sp.,Staphylococcus sp.,1,0,0,0,1,0,1,0,0,0,0,23.8227
+ERR2303972,Bacteroides sp.,Bacteroides sp.__Alistipes sp.,0,0,0,0,0,0,0,0,0,0,1,30.7306
+ERR2303984,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,22.6422
+ERR2304018,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,0,0,0,0,0,0,0,0,0,0,0,12.4082
+ERR2304097,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,1,0,0,0,0,0,0,26.6667
+ERR2304140,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,1,0,0,0,0,23.4131
+ERR2304175,Bacteroides sp.,Bacteroides sp.__Akkermansia sp.,1,0,0,0,1,0,0,0,0,0,0,19.3962
+ERR2306137,Akkermansia sp.,Akkermansia sp.,0,0,0,0,0,0,0,0,0,0,0,
+ERR2306215,Faecalibacterium sp.,Faecalibacterium sp.__RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,21.2953
+ERR2306230,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,1,0,0,1,0,0,0,28.3447
+ERR2306260,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,0,0,0,0,1,0,0,0,0,0,0,24.1633
+ERR2308606,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Enterobacteriaceae,0,0,0,0,1,0,0,0,0,0,0,27.8852
+ERR2308635,Akkermansia sp.,Akkermansia sp.,0,0,0,0,0,0,0,0,0,0,0,25.3906
+ERR2308749,Faecalibacterium sp.,Faecalibacterium sp.__Bacteroides sp.,0,0,0,0,1,0,0,0,0,0,0,20.0692
+ERR2308800,Bacteroides sp.,Bacteroides sp.__Lachnospiraceae,0,0,0,0,1,0,0,0,0,0,1,31.2213
+ERR2308807,Prevotella_9 sp.,Prevotella_9 sp.__RARE_DOMINANT,0,0,0,0,1,0,0,0,0,0,1,32.0988
+ERR2308823,Prevotella_9 sp.,Prevotella_9 sp.__RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,1,30.4219
+ERR2308837,Bacteroides sp.,Bacteroides sp.__Escherichia-Shigella sp.,1,0,0,1,1,0,0,0,0,0,0,29.0698
+ERR2308840,Prevotella_9 sp.,Prevotella_9 sp.__Bacteroides sp.,0,0,0,0,0,0,1,0,1,0,0,23.1911
+ERR2308849,Bacteroides sp.,Bacteroides sp.__RARE_DOMINANT,0,0,0,0,1,0,0,0,0,0,0,21.2953
+ERR2308874,Akkermansia sp.,Akkermansia sp.,0,0,0,0,1,0,0,0,0,0,0,23.246
+ERR2308878,Bacteroides sp.,Bacteroides sp.__Faecalibacterium sp.,0,0,0,0,1,0,0,0,0,0,1,35.4979
+ERR2308927,Bacteroides sp.,Bacteroides sp.__Parabacteroides sp.,1,0,0,0,1,0,0,0,0,0,1,31.1951
+ERR2308928,Bacteroides sp.,Bacteroides sp.__Alistipes sp.,0,0,0,0,1,0,0,0,0,0,0,28.125
+ERR2309203,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,0,0,0,0,1,0,1,1,0,0,0,25.3444
+ERR2309301,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,0,0,0,0,0,0,0,24.5779
+ERR2309303,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,0,0,0,0,0,0,0,24.5779
+ERR2309334,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,0,0,0,1,0,0,0,0,0,0,0,19.8791
+ERR2309390,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,0,0,0,0,1,0,0,1,0,0,0,22.7904
+ERR2309410,Bacteroides sp.,Bacteroides sp.__Lachnospiraceae,0,0,0,0,0,0,0,0,0,0,0,20.7967
+ERR2313955,Bacteroides sp.,Bacteroides sp.__Lachnospiraceae,0,0,0,0,0,0,0,0,0,0,0,26.5338
+ERR2313967,RARE_DOMINANT,RARE_DOMINANT,1,0,0,0,0,0,0,0,0,0,0,19.3625
+ERR2313999,Akkermansia sp.,Akkermansia sp.,0,0,0,0,0,0,0,0,0,0,0,
+ERR2314020,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,0,0,0,0,0,0,0,0,0,0,0,24.3827
+ERR2314026,Enterobacteriaceae,Enterobacteriaceae__RARE_DOMINANT,0,0,0,0,0,1,0,0,0,0,0,22.0968
+ERR2314061,Akkermansia sp.,Akkermansia sp.,0,0,0,0,0,0,0,0,0,0,0,24.3911
+ERR2314083,Escherichia-Shigella sp.,Escherichia-Shigella sp.__RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,21.7051
+ERR2314216,Prevotella_9 sp.,Prevotella_9 sp.__RARE_DOMINANT,0,0,0,0,1,0,0,0,0,0,0,24.2322
+ERR2314252,Akkermansia sp.,Akkermansia sp.,0,0,0,0,0,0,0,0,0,0,0,22.5914
+ERR2314257,Bacteroides sp.,Bacteroides sp.__Escherichia-Shigella sp.,1,0,0,0,1,0,1,0,0,0,1,32.4219
+ERR2314296,Lachnospiraceae,Lachnospiraceae,0,1,0,1,0,0,0,0,0,0,0,25.42
+ERR2318054,RARE_DOMINANT,RARE_DOMINANT,1,0,0,0,1,1,1,1,0,0,0,15.2552
+ERR2318093,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,0,0,0,0,0,0,0,
+ERR2318107,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,24.7409
+ERR2318108,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,0,0,0,0,0,0,0,24.7409
+ERR2318116,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,0,0,0,0,0,0,0,
+ERR2318137,Bacteroides sp.,Bacteroides sp.__Agathobacter sp.,0,0,0,0,0,1,1,0,0,0,1,31.6263
+ERR2318227,Bacteroides sp.,Bacteroides sp.__Lachnospiraceae,0,1,0,1,0,0,0,0,0,0,0,25.42
+ERR2318233,Bacteroides sp.,Bacteroides sp.__Alistipes sp.,0,1,0,1,0,0,0,0,0,0,0,25.42
+ERR2318256,Bacteroides sp.,Bacteroides sp.__RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,14.7028
+ERR2318289,Akkermansia sp.,Akkermansia sp.,0,0,0,0,1,0,0,0,0,0,0,18.5911
+ERR2318303,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Enterobacteriaceae,0,0,0,0,1,0,0,0,0,0,1,32.05
+ERR2319267,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,1,0,0,0,0,0,1,0,0,0,1,30.6793
+ERR2319321,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,1,0,0,0,0,0,0,26.8923
+ERR2319327,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,0,0,0,0,0,0,0,21.7365
+ERR2319466,Bacteroides sp.,Bacteroides sp.__Faecalibacterium sp.,0,0,0,0,1,0,0,0,0,0,0,25.4511
+ERR2319586,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,1,0,0,0,0,0,0,19.8347
+ERR2319602,Lachnospiraceae,Lachnospiraceae,1,0,0,0,0,0,0,0,0,0,1,31.6242
+ERR2319717,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,0,0,0,0,0,0,0,21.7365
+ERR2319787,Pasteurellaceae,Pasteurellaceae,0,0,0,0,1,0,0,0,0,0,0,19.3772
+ERR2319792,Streptococcus sp.,Streptococcus sp.__RARE_DOMINANT,0,0,0,0,0,0,0,0,1,0,0,24.3375
+ERR2319801,Prevotella_7 sp.,Prevotella_7 sp.,0,0,1,0,1,0,0,0,0,0,1,34.7807
+ERR2319826,Pasteurellaceae,Pasteurellaceae,0,0,0,0,1,0,0,0,0,0,0,19.3772
+ERR2319844,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,1,0,0,0,0,0,20.0692
+ERR2319887,Bacteroides sp.,Bacteroides sp.__RARE_DOMINANT,0,0,0,0,1,0,0,0,0,0,0,
+ERR2319930,Pasteurellaceae,Pasteurellaceae,0,0,0,0,0,1,0,0,0,0,0,17.9592
+ERR2319934,RARE_DOMINANT,RARE_DOMINANT,0,0,0,1,1,1,0,0,0,0,0,29.9376
+ERR2319937,Staphylococcus sp.,Staphylococcus sp.,0,0,0,1,1,1,0,0,0,0,0,29.9376
+ERR2357671,Streptococcus sp.,Streptococcus sp.__RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,
+ERR2404906,Akkermansia sp.,Akkermansia sp.,1,0,0,1,1,0,1,0,0,0,0,21.1073
+ERR2404940,Escherichia-Shigella sp.,Escherichia-Shigella sp.__RARE_DOMINANT,0,0,0,1,0,1,0,0,0,0,1,34.5271
+ERR2404961,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,0,0,0,0,0,0,0,0,0,0,0,27.1605
+ERR2404982,Akkermansia sp.,Akkermansia sp.,0,0,0,1,1,1,1,0,0,0,0,24.0055
+ERR2405172,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,0,0,0,0,1,0,0,0,0,0,1,30.4219
+ERR2405244,Bacteroides sp.,Bacteroides sp.__Escherichia-Shigella sp.,1,1,0,1,1,0,1,1,0,0,0,21.875
+ERR2405401,Akkermansia sp.,Akkermansia sp.,1,0,0,1,1,0,1,0,0,0,0,21.1073
+ERR2523877,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,1,30.1162
+ERR2523912,Bacteroides sp.,Bacteroides sp.__Lachnospiraceae,0,0,0,0,0,0,0,0,0,0,0,23.6652
+ERR2523965,Akkermansia sp.,Akkermansia sp.,1,0,0,0,0,0,0,0,0,0,0,22.1453
+ERR2523995,Bacteroides sp.,Bacteroides sp.__Lachnospiraceae,0,1,0,1,0,0,0,0,0,0,0,25.42
+ERR2524041,RARE_DOMINANT,RARE_DOMINANT,0,1,0,1,0,0,0,0,0,0,0,25.42
+ERR2524049,Akkermansia sp.,Akkermansia sp.,0,1,0,1,0,0,0,0,0,0,0,25.42
+ERR2524110,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,0,0,0,0,0,0,1,0,0,0,0,25.0
+ERR2524176,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,0,0,0,0,1,1,0,0,0,0,1,34.8765
+ERR2524177,Escherichia-Shigella sp.,Escherichia-Shigella sp.__RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,1,52.3932
+ERR2524208,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,0,0,0,0,0,0,0,0,0,0,0,21.5019
+ERR2579401,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,1,0,0,0,0,0,0,27.2509
+ERR2579439,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,1,0,0,0,0,0,0,16.937
+ERR2579458,Bacteroides sp.,Bacteroides sp.__Parabacteroides sp.,0,0,0,0,1,0,1,0,1,0,1,32.2708
+ERR2579479,Pasteurellaceae,Pasteurellaceae,0,0,0,0,0,0,0,0,0,0,0,
+ERR2579558,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Enterobacteriaceae,0,0,0,0,1,0,0,0,0,0,0,22.7732
+ERR2579563,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,0,0,1,1,0,0,0,1,0,0,1,30.1021
+ERR2579659,Akkermansia sp.,Akkermansia sp.,0,0,0,0,0,0,0,0,0,0,0,25.8166
+ERR2579688,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,1,0,0,0,0,0,0,25.0298
+ERR2579743,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,0,0,0,0,0,0,0,24.0997
+ERR2579778,Bacteroides sp.,Bacteroides sp.__Lachnospiraceae,0,0,0,1,0,1,0,0,0,0,0,18.2899
+ERR2579792,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,1,30.2469
+ERR2579795,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,0,0,0,0,1,0,0,0,0,0,0,26.5779
+ERR2579806,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,1,30.854
+ERR2579811,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,1,0,0,0,1,1,1,1,0,0,0,23.6128
+ERR2579812,Akkermansia sp.,Akkermansia sp.,0,0,0,0,1,1,0,0,1,0,0,25.6896
+ERR2579830,Akkermansia sp.,Akkermansia sp.,0,0,0,0,0,0,0,0,0,0,0,18.8272
+ERR2579839,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,0,1,0,0,0,1,1,0,0,0,0,29.3962
+ERR2579872,RARE_DOMINANT,RARE_DOMINANT,1,0,0,0,1,0,1,0,0,0,0,23.5304
+ERR2579873,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,28.5156
+ERR2580035,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Pseudomonas sp.,0,0,0,0,0,0,0,1,0,0,0,15.1299
+ERR2580036,Akkermansia sp.,Akkermansia sp.,0,0,0,0,0,0,0,0,0,0,0,17.343
+ERR2580085,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,0,0,0,1,1,0,1,1,0,0,0,20.5761
+ERR2587836,Bacteroides sp.,Bacteroides sp.__RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,1,30.3871
+ERR2696439,Prevotella_9 sp.,Prevotella_9 sp.__Bacteroides sp.,0,1,0,1,0,0,0,0,0,0,0,25.9259
+ERR2696574,Prevotella_9 sp.,Prevotella_9 sp.__RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,1,35.1393
+ERR2696577,Lachnospiraceae,Lachnospiraceae,0,0,0,1,0,0,0,1,0,0,0,22.7615
+ERR2696599,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,0,0,0,0,1,0,0,1,0,0,1,39.8438
+ERR2696620,Akkermansia sp.,Akkermansia sp.,0,0,0,0,0,0,0,0,0,0,1,33.5153
+ERR2696645,Pseudomonas sp.,Pseudomonas sp.__RARE_DOMINANT,0,0,0,0,1,0,0,1,0,0,0,19.7232
+ERR2696848,Akkermansia sp.,Akkermansia sp.,0,0,0,0,0,0,0,1,0,0,0,17.3589
+ERR2697033,Escherichia-Shigella sp.,Escherichia-Shigella sp.__RARE_DOMINANT,0,0,0,1,0,0,0,0,0,0,0,22.8571
+ERR2697565,Pasteurellaceae,Pasteurellaceae,0,0,0,0,1,0,0,0,0,0,0,19.3685
+ERR2697579,Staphylococcus sp.,Staphylococcus sp.,1,0,0,0,1,0,1,0,0,0,0,23.8227
+ERR2697631,Bacteroides sp.,Bacteroides sp.__Escherichia-Shigella sp.,0,0,0,1,0,0,0,0,0,0,1,30.4832
+ERR2697661,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,0,0,0,0,1,0,0,0,0,0,0,21.9671
+ERR2697714,Akkermansia sp.,Akkermansia sp.,0,0,0,0,0,0,0,0,0,0,0,21.3382
+ERR2697745,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Prevotella_9 sp.,0,0,0,0,0,0,0,0,0,0,0,19.8177
+ERR2697754,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,1,0,0,0,0,0,0,26.2917
+ERR2697832,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,1,0,0,0,0,1,0,0,0,0,0,17.5781
+ERR2697845,Pseudomonas sp.,Pseudomonas sp.__RARE_DOMINANT,0,0,0,0,1,0,0,0,0,0,1,32.2708
+ERR2697851,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Prevotella_9 sp.,1,0,0,1,1,1,1,1,0,0,0,21.1553
+ERR2697959,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,0,0,0,0,0,0,0,0,0,0,0,25.721
+ERR2698003,Akkermansia sp.,Akkermansia sp.,1,0,0,0,1,1,0,0,0,0,0,19.6052
+ERR2698023,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,0,1,0,0,0,0,0,0,0,0,0,20.7031
+ERR2698039,Bacteroides sp.,Bacteroides sp.__RARE_DOMINANT,0,1,0,0,1,0,0,0,0,0,0,25.0574
+ERR4018901,Bacteroides sp.,Bacteroides sp.__RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,17.2176
+ERR4018947,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,1,0,0,0,0,0,0,0,0,0,0,26.7755
+ERR4019019,Akkermansia sp.,Akkermansia sp.,0,0,0,1,1,0,0,0,0,0,1,36.5126
+ERR4019039,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Pseudomonas sp.,0,0,0,0,1,0,1,0,0,0,0,14.7044
+ERR4019180,Akkermansia sp.,Akkermansia sp.,0,0,0,0,1,1,0,0,0,0,0,19.0039
+ERR4019236,Pseudomonas sp.,Pseudomonas sp.__RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,23.1837
+ERR4019255,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,0,0,0,0,0,0,0,0,0,0,1,4533.33
+ERR4019408,Pasteurellaceae,Pasteurellaceae,0,0,0,0,0,0,0,0,1,0,0,
+ERR4019411,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,0,0,0,0,0,0,0,
+ERR4019414,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,0,0,0,0,1,0,0,
+ERR4019423,Pasteurellaceae,Pasteurellaceae,0,0,0,0,0,0,0,0,1,0,0,
+ERR4019429,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,0,0,0,0,1,0,0,
+ERR4019434,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,0,0,0,0,0,0,0,
+ERR4019438,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,0,0,0,0,1,0,0,
+ERR4019450,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,1,0,0,
+ERR4019467,Pasteurellaceae,Pasteurellaceae,0,0,0,0,0,0,0,0,1,0,0,
+ERR4019469,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,0,0,0,0,1,0,0,
+ERR4019476,Pasteurellaceae,Pasteurellaceae,0,0,0,0,0,0,0,0,1,0,0,
+ERR4019490,Pasteurellaceae,Pasteurellaceae,0,0,0,0,0,0,0,0,1,0,0,
+ERR4019491,Bacteroides sp.,Bacteroides sp.__RARE_DOMINANT,0,0,0,0,0,0,0,0,1,0,0,
+ERR4019499,Pasteurellaceae,Pasteurellaceae,0,0,0,0,0,0,0,0,1,0,0,
+ERR4019521,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,0,0,0,0,0,0,0,
+ERR4019526,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,0,0,0,0,0,0,0,
+ERR4019528,Pasteurellaceae,Pasteurellaceae,0,0,0,0,0,0,0,0,1,0,0,
+ERR4019534,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,0,0,0,0,0,0,0,
+ERR4019538,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,0,0,0,0,0,0,0,
+ERR4019546,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,0,0,0,0,1,0,0,
+ERR4019555,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,0,0,0,0,1,0,0,
+ERR4019560,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,0,0,0,0,1,0,0,
+ERR4019569,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,0,0,0,0,1,0,0,
+ERR4019595,Pasteurellaceae,Pasteurellaceae,0,0,0,0,0,0,0,0,1,0,0,
+ERR4019610,Pasteurellaceae,Pasteurellaceae,0,0,0,0,0,0,0,0,1,0,0,
+ERR4019624,Pasteurellaceae,Pasteurellaceae,0,0,0,0,0,0,0,0,1,0,0,
+ERR4019631,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,0,0,0,0,1,0,0,
+ERR4019637,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,0,0,0,0,0,0,0,
+ERR4019654,Pseudomonas sp.,Pseudomonas sp.__RARE_DOMINANT,0,0,0,0,0,0,0,0,1,0,0,
+ERR4019667,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,1,0,0,
+ERR4019726,Bacteroides sp.,Bacteroides sp.__Faecalibacterium sp.,0,0,0,0,0,0,0,0,0,0,0,20.7031
+ERR4019766,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,1,1,0,0,1,0,0,0,0,0,0,27.4506
+ERR4019773,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,0,0,1,0,1,0,0,0,0,0,0,23.5304
+ERR4020415,Escherichia-Shigella sp.,Escherichia-Shigella sp.__RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,20.202
+ERR4020657,Bacteroides sp.,Bacteroides sp.__Faecalibacterium sp.,0,0,0,0,0,0,1,0,0,0,1,34.1142
+ERR4020696,Faecalibacterium sp.,Faecalibacterium sp.__RARE_DOMINANT,1,0,0,0,1,0,0,0,0,0,0,26.5338
+ERR4371674,Lachnospiraceae,Lachnospiraceae,0,0,0,0,1,0,1,0,0,0,0,
+ERR4371694,Bacteroides sp.,Bacteroides sp.__Escherichia-Shigella sp.,0,0,0,1,1,0,0,0,0,0,0,
+ERR4371735,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,
+ERR4914443,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,29.685
+ERR4914493,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,1,0,1,0,0,0,25.1953
+ERR4914508,Bacteroides sp.,Bacteroides sp.__Faecalibacterium sp.,0,0,0,1,0,0,0,0,1,0,0,19.1953
+ERR4914553,Bacteroides sp.,Bacteroides sp.__Alistipes sp.,0,0,0,0,0,1,0,0,0,0,0,24.3824
+ERR4914619,Akkermansia sp.,Akkermansia sp.,0,0,0,0,0,0,0,0,0,0,0,19.3539
+ERR5320954,Bacteroides sp.,Bacteroides sp.__Parabacteroides sp.,0,0,1,0,0,0,0,0,0,0,1,33.0578
+ERR5321003,Akkermansia sp.,Akkermansia sp.,0,1,0,1,0,0,0,0,0,0,0,25.42
+ERR5321027,Bacteroides sp.,Bacteroides sp.__RARE_DOMINANT,0,1,0,0,0,0,0,0,0,0,1,33.4554
+ERR5321098,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Enterobacteriaceae,0,0,0,1,0,0,0,0,0,0,1,33.3108
+ERR5321131,Enterobacteriaceae,Enterobacteriaceae__Escherichia-Shigella sp.,0,0,0,0,0,0,0,0,0,0,0,22.8374
+ERR5321144,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,0,0,0,0,0,0,0,0,0,0,1,30.4219
+ERR5325499,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Pseudomonas sp.,1,0,0,0,0,1,0,0,0,0,0,24.2215
+ERR5325514,Akkermansia sp.,Akkermansia sp.,0,0,0,0,1,0,0,0,0,0,0,21.7365
+ERR5325526,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Enterobacteriaceae,1,0,1,0,0,0,0,0,0,0,0,21.7051
+ERR5325636,Escherichia-Shigella sp.,Escherichia-Shigella sp.__RARE_DOMINANT,0,1,0,0,0,0,0,0,0,0,0,22.6474
+ERR5325664,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,1,1,0,0,0,0,0,0,0,0,0,25.6055
+ERR5325679,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Enterobacteriaceae,1,0,0,0,0,0,1,0,0,0,0,25.8166
+ERR5325689,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,1,0,1,0,0,0,0,23.2687
+ERR5325789,Bacteroides sp.,Bacteroides sp.__RARE_DOMINANT,1,0,1,0,0,0,0,0,0,0,0,24.7676
+ERR5325798,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,1,0,0,0,1,0,1,1,0,0,0,21.875
+ERR5325799,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Enterobacteriaceae,0,0,0,0,0,0,1,0,1,0,0,23.0825
+ERR5326153,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,19.3502
+ERR5326193,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,0,0,0,0,0,0,0,0,0,0,0,
+ERR5326203,Escherichia-Shigella sp.,Escherichia-Shigella sp.__RARE_DOMINANT,1,0,0,0,0,0,0,0,0,0,0,24.4352
+ERR5326241,RARE_DOMINANT,RARE_DOMINANT,1,0,0,0,0,1,1,0,0,0,0,25.5588
+ERR5326340,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,0,0,0,0,0,0,0,0,0,0,0,25.1486
+ERR5326341,RARE_DOMINANT,RARE_DOMINANT,1,0,0,0,0,0,1,1,0,0,1,197.742
+ERR5326347,Akkermansia sp.,Akkermansia sp.,0,0,0,0,0,0,0,0,0,0,0,
+ERR5326398,Bacteroides sp.,Bacteroides sp.__Lachnospiraceae,1,1,0,0,0,0,0,0,0,0,1,33.7778
+ERR5326475,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,24.9135
+ERR5326550,Escherichia-Shigella sp.,Escherichia-Shigella sp.__RARE_DOMINANT,1,0,0,0,1,1,1,1,0,0,0,26.079
+ERR5327716,Escherichia-Shigella sp.,Escherichia-Shigella sp.__RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,16.5406
+ERR5327948,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,20.7756
+ERR5328049,Faecalibacterium sp.,Faecalibacterium sp.__Bacteroides sp.,0,0,0,0,0,0,0,0,0,0,1,34.0636
+ERR5328082,Bacteroides sp.,Bacteroides sp.__Akkermansia sp.,0,0,0,0,0,0,0,0,0,0,1,31.0204
+ERR5328089,Pseudomonas sp.,Pseudomonas sp.__RARE_DOMINANT,0,1,0,0,0,1,0,0,0,0,0,23.8054
+ERR5328091,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,1,0,0,0,0,0,0,0,0,0,0,23.7654
+ERR5328647,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,1,0,0,0,0,0,29.0688
+ERR5328681,RARE_DOMINANT,RARE_DOMINANT,0,1,0,1,0,0,0,0,0,0,0,25.42
+ERR5328693,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,1,31.0204
+ERR5328724,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,
+ERR5328737,RARE_DOMINANT,RARE_DOMINANT,0,0,0,1,0,0,0,1,0,0,0,19.5354
+ERR5328746,RARE_DOMINANT,RARE_DOMINANT,0,1,0,1,0,0,0,0,0,0,0,19.7531
+ERR5328836,RARE_DOMINANT,RARE_DOMINANT,0,0,0,1,0,0,1,0,0,0,0,22.8571
+ERR5328867,Escherichia-Shigella sp.,Escherichia-Shigella sp.__RARE_DOMINANT,1,0,0,0,0,0,1,0,0,0,0,18.026
+ERR5328885,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,1,34.4729
+ERR5328891,Bacteroides sp.,Bacteroides sp.__Escherichia-Shigella sp.,0,0,0,1,0,0,1,1,0,0,0,22.0604
+ERR5328918,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Pseudomonas sp.,1,0,0,0,0,1,0,0,0,0,0,18.5135
+ERR5328951,Pasteurellaceae,Pasteurellaceae,0,0,0,0,0,0,0,0,0,0,0,25.0574
+ERR5328971,Streptococcus sp.,Streptococcus sp.__RARE_DOMINANT,1,0,0,0,0,0,0,0,0,0,0,21.7365
+ERR5329002,Lachnospiraceae,Lachnospiraceae,1,0,0,0,0,0,0,0,0,0,0,27.268
+ERR5329075,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,1,1,0,0,0,0,25.0995
+ERR5329095,RARE_DOMINANT,RARE_DOMINANT,0,0,0,1,0,0,0,0,0,0,0,23.1405
+ERR5332033,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,1,0,0,0,19.6052
+ERR5332035,Enterobacteriaceae,Enterobacteriaceae__Escherichia-Shigella sp.,0,1,0,0,1,0,0,0,0,0,0,27.6134
+ERR5332124,Faecalibacterium sp.,Faecalibacterium sp.__RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,29.8606
+ERR5332163,Faecalibacterium sp.,Faecalibacterium sp.__RARE_DOMINANT,1,1,0,0,0,0,0,0,0,0,0,21.6333
+ERR5332191,Bacteroides sp.,Bacteroides sp.__Faecalibacterium sp.,0,0,0,1,0,0,1,0,0,0,0,20.0796
+ERR5332342,Escherichia-Shigella sp.,Escherichia-Shigella sp.__RARE_DOMINANT,0,0,0,0,1,0,0,1,0,0,0,29.4023
+ERR5332399,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,1,0,0,0,0,24.4536
+ERR5332431,Pasteurellaceae,Pasteurellaceae,0,0,0,0,0,0,0,0,0,0,0,
+ERR5332432,Enterobacteriaceae,Enterobacteriaceae__Bacteroides sp.,0,1,0,1,1,0,0,0,0,0,0,22.2222
+ERR5332639,Bacteroides sp.,Bacteroides sp.__Faecalibacterium sp.,0,0,0,0,0,0,0,0,0,0,0,
+ERR5332817,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,22.4914
+ERR5332885,Akkermansia sp.,Akkermansia sp.,1,0,0,0,1,0,1,1,0,0,0,23.8751
+ERR5332912,Faecalibacterium sp.,Faecalibacterium sp.__Bacteroides sp.,0,0,0,0,1,1,0,1,0,0,0,21.9713
+ERR5332919,Bacteroides sp.,Bacteroides sp.__Faecalibacterium sp.,0,0,0,1,1,0,0,0,0,0,1,30.2343
+ERR5333006,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Faecalibacterium sp.,0,0,0,0,0,0,0,0,0,0,1,35.6237
+ERR5333028,Pseudomonas sp.,Pseudomonas sp.__RARE_DOMINANT,1,0,0,0,0,0,1,0,0,0,0,22.2041
+ERR5333124,Bacteroides sp.,Bacteroides sp.__RARE_DOMINANT,0,0,0,0,1,0,0,0,0,0,0,23.3234
+ERR5333134,Streptococcus sp.,Streptococcus sp.__RARE_DOMINANT,0,0,0,0,1,0,0,1,0,0,0,23.8754
+ERR5337913,Bacteroides sp.,Bacteroides sp.__Faecalibacterium sp.,0,0,0,0,0,0,0,0,0,0,0,23.4294
+ERR5337989,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,25.3997
+ERR5342164,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,0,1,0,1,0,0,0,0,0,0,0,25.42
+ERR5342275,Akkermansia sp.,Akkermansia sp.,0,0,0,0,1,0,0,0,0,0,0,20.1092
+ERR5342289,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,0,0,0,0,0,0,0,0,0,0,1,31.3469
+ERR5342846,Staphylococcus sp.,Staphylococcus sp.,0,0,0,1,1,1,1,0,0,0,1,39.0393
+ERR5342886,Prevotella_7 sp.,Prevotella_7 sp.,1,0,0,0,0,0,0,0,0,0,0,20.3125
+ERR5342906,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,0,21.7181
+ERR5752362,Bacteroides sp.,Bacteroides sp.__Escherichia-Shigella sp.,0,0,0,0,0,1,0,0,0,0,1,30.6453
+ERR5752389,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,1,49.9222
+ERR5752456,Bacteroides sp.,Bacteroides sp.__Escherichia-Shigella sp.,0,0,0,0,1,0,0,0,0,0,1,30.8966
+ERR5752493,Bacteroides sp.,Bacteroides sp.__Agathobacter sp.,0,0,0,0,1,0,0,0,0,0,0,29.0525
+ERR6149042,Bacteroides sp.,Bacteroides sp.__RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,1,3811.29
+ERR6149166,Bacteroides sp.,Bacteroides sp.__Escherichia-Shigella sp.,0,0,0,1,0,0,0,0,1,0,0,23.0283
+ERR6149175,Bacteroides sp.,Bacteroides sp.__Faecalibacterium sp.,0,0,0,0,0,0,0,0,0,0,0,20.8306
+ERR6149185,RARE_DOMINANT,RARE_DOMINANT,0,1,0,0,0,0,0,0,0,0,0,25.8806
+ERR6149249,Bacteroides sp.,Bacteroides sp.__Lachnospiraceae,0,0,0,0,0,1,1,0,0,0,0,27.2771
+ERR6149259,Bacteroides sp.,Bacteroides sp.__RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,1,36.5884
+ERR6149263,Bacteroides sp.,Bacteroides sp.__RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,1,31.9265
+ERR6149267,Bacteroides sp.,Bacteroides sp.__RARE_DOMINANT,0,1,0,0,0,0,0,0,0,0,1,34.0387
+ERR6149351,Bacteroides sp.,Bacteroides sp.__Faecalibacterium sp.,0,0,0,0,0,0,0,0,0,0,1,24060.3
+ERR6149377,Bacteroides sp.,Bacteroides sp.__RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,1,32.872
+ERR6149382,Bacteroides sp.,Bacteroides sp.__Agathobacter sp.,0,0,0,0,0,0,1,0,0,0,0,26.1693
+ERR6149549,Bacteroides sp.,Bacteroides sp.__RARE_DOMINANT,1,0,0,0,0,1,0,0,0,0,1,2951.73
+ERR6149771,Bacteroides sp.,Bacteroides sp.__Alistipes sp.,0,0,0,1,0,0,0,1,0,0,1,35.5086
+ERR6358170,Bacteroides sp.,Bacteroides sp.__Lachnospiraceae,1,0,0,0,1,0,0,0,0,0,0,22.8571
+ERR6358351,RARE_DOMINANT,RARE_DOMINANT,1,0,0,0,1,0,1,0,0,0,0,24.0238
+ERR6358359,Bacteroides sp.,Bacteroides sp.__Akkermansia sp.,0,0,0,0,1,0,0,1,0,0,0,25.7792
+ERR6358428,Prevotella_9 sp.,Prevotella_9 sp.__Bacteroides sp.,0,0,0,0,1,0,0,0,0,0,0,27.9903
+ERR6358435,Bacteroides sp.,Bacteroides sp.__Lachnospiraceae,1,0,0,1,1,0,1,0,0,0,1,45.7666
+ERR6358452,Faecalibacterium sp.,Faecalibacterium sp.__Bacteroides sp.,1,0,0,0,1,1,1,0,1,0,0,22.8139
+ERR6360883,Bacteroides sp.,Bacteroides sp.__RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,27.1204
+ERR6360885,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,1,0,0,0,1,37.7682
+ERR6360886,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,1,0,0,0,1,37.7682
+ERR6361036,Bacteroides sp.,Bacteroides sp.__RARE_DOMINANT,0,0,0,1,0,0,1,0,0,0,1,35.4281
+ERR6361045,Prevotella_9 sp.,Prevotella_9 sp.__Bacteroides sp.,0,0,0,0,0,1,0,0,0,0,0,21.6329
+ERR6361090,Bacteroides sp.,Bacteroides sp.__Escherichia-Shigella sp.,0,0,0,1,0,0,0,0,0,0,1,43.7651
+ERR6361135,Prevotella_9 sp.,Prevotella_9 sp.__Bacteroides sp.,0,0,0,0,0,1,0,0,0,0,0,24.6916
+ERR6361185,Akkermansia sp.,Akkermansia sp.,1,0,0,0,0,1,0,0,0,0,0,23.1799
+ERR6361269,Bacteroides sp.,Bacteroides sp.__Faecalibacterium sp.,0,0,0,0,0,0,1,0,0,0,0,29.1802
+ERR6361277,Bacteroides sp.,Bacteroides sp.__RARE_DOMINANT,1,0,0,0,0,1,0,1,0,0,0,29.8668
+ERR6361289,Bacteroides sp.,Bacteroides sp.__Faecalibacterium sp.,0,0,0,1,0,0,1,0,0,0,1,35.4281
+ERR6361314,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,20.9206
+ERR6361373,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,0,24.889
+ERR6361389,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,0,25.5016
+ERR6361422,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,0,20.3607
+ERR6361425,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,1,31.9502
+ERR6361434,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,0,22.5964
+ERR6361448,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,0,21.8265
+ERR6361451,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,0,27.5315
+ERR6361455,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,1,31.4735
+ERR6361458,Akkermansia sp.,Akkermansia sp.,0,0,0,0,0,0,0,0,0,0,0,
+ERR6361459,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,1,38.2737
+ERR6361490,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,0,24.129
+ERR6361514,Bacteroides sp.,Bacteroides sp.__Lachnospiraceae,0,0,0,0,0,0,0,0,0,0,1,33.2814
+ERR6361522,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,1,32.7756
+ERR6361533,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,0,26.4338
+ERR6361546,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,0,20.3023
+ERR6361583,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,1,35.1535
+ERR6361585,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,0,20.7015
+ERR6361587,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,0,25.4039
+ERR6361615,Bacteroides sp.,Bacteroides sp.__RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,1,239.5
+ERR6361631,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,1,36.1798
+ERR6361657,Bacteroides sp.,Bacteroides sp.__Faecalibacterium sp.,0,0,0,0,0,0,0,0,0,0,1,40.7698
+ERR6361687,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,0,20.0842
+ERR6361689,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,1,39.5325
+ERR6361690,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,0,22.9192
+ERR6361727,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,1,3635.53
+ERR6361728,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,1,3718.72
+ERR6361737,Streptococcus sp.,Streptococcus sp.__RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,1,32.017
+ERR6361752,Pasteurellaceae,Pasteurellaceae,0,0,0,0,0,0,0,0,0,0,0,22.3142
+ERR6361763,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,0,23.5675
+ERR6361794,Staphylococcus sp.,Staphylococcus sp.,0,0,0,0,0,0,0,0,0,0,0,21.8733
+ERR6361817,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,0,
+ERR6361862,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,0,22.6575
+ERR6361879,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,0,22.465
+ERR6361886,Pasteurellaceae,Pasteurellaceae,0,0,0,0,0,0,0,0,0,0,0,24.4122
+ERR6361887,Pasteurellaceae,Pasteurellaceae,0,0,0,0,0,0,0,0,0,0,0,25.392
+ERR6361894,Akkermansia sp.,Akkermansia sp.,0,0,0,0,0,0,0,0,0,0,0,23.0283
+ERR6361932,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,
+ERR6363026,Bacteroides sp.,Bacteroides sp.__Escherichia-Shigella sp.,0,0,0,0,0,0,0,0,0,0,0,25.8427
+ERR6363073,Pasteurellaceae,Pasteurellaceae,0,0,0,0,0,0,0,0,0,0,0,27.1244
+ERR6363081,Bacteroides sp.,Bacteroides sp.__RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,1,44.7219
+ERR6363084,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,0,22.71
+ERR6363092,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,0,29.3518
+ERR6363125,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,0,26.7035
+ERR6363166,Bacteroides sp.,Bacteroides sp.__Akkermansia sp.,0,0,0,0,0,0,0,0,0,0,1,34.1433
+ERR6363167,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,1,32.488
+ERR7451667,RARE_DOMINANT,RARE_DOMINANT,0,0,0,1,0,0,0,1,0,0,0,22.6575
+ERR7451684,Bacteroides sp.,Bacteroides sp.__Escherichia-Shigella sp.,0,0,0,0,1,0,1,1,0,0,1,33.4729
+ERR7451687,Bacteroides sp.,Bacteroides sp.__RARE_DOMINANT,0,0,0,0,1,0,0,1,0,0,1,3655.97
+ERR7451705,Bacteroides sp.,Bacteroides sp.__RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,
+ERR7451737,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,0,0,0,0,0,0,1,0,1,0,0,26.7054
+ERR7458442,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Bacteroides sp.,1,0,0,0,0,0,0,0,0,0,0,22.5981
+ERR7458478,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,1,27215.6
+ERR7458485,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,1,0,0,0,0,0,28.2892
+ERR7458535,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,0,24.4073
+ERR7458552,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,0,
+ERR7458558,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,0,
+ERR7458561,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,0,
+ERR7458653,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,1,30.6665
+ERR7458656,Prevotella_7 sp.,Prevotella_7 sp.,1,0,0,0,0,0,0,0,0,0,0,22.6314
+ERR7458664,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,1,0,0,0,0,0,0,0,20.9411
+ERR7458672,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,1,33.9067
+ERR7458682,Pasteurellaceae,Pasteurellaceae,0,0,0,0,0,1,0,0,0,0,0,26.5711
+ERR7458699,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,1,0,0,0,0,0,0,1,39.8677
+ERR7458712,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,1,36.1798
+ERR7458713,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,1,0,0,0,0,0,0,1,30.0384
+ERR7458717,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,0,21.457
+ERR7458752,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,1,0,0,0,0,0,0,1,43.7651
+ERR7458759,Prevotella_7 sp.,Prevotella_7 sp.,1,0,0,0,0,1,0,0,0,0,1,61.4959
+ERR7458763,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,0,20.9206
+ERR7458765,Pasteurellaceae,Pasteurellaceae,0,0,0,0,0,0,0,0,0,0,1,34.4566
+ERR7458774,Pasteurellaceae,Pasteurellaceae,0,0,0,0,0,0,0,0,0,0,0,24.5631
+ERR7458780,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,27.4385
+ERR7458781,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,1,32.017
+ERR7458783,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,1,38.012
+ERR7458785,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,0,0.271157
+ERR7458786,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,0,24.5137
+ERR7458788,Prevotella_7 sp.,Prevotella_7 sp.,1,0,0,1,0,1,0,0,0,0,1,33.643
+ERR7458801,Pasteurellaceae,Pasteurellaceae,0,0,0,0,0,0,0,0,0,0,0,25.802
+ERR7458820,Prevotella_7 sp.,Prevotella_7 sp.,1,0,0,0,0,0,0,0,0,0,1,31.7963
+ERR7458836,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,1,34.177
+ERR7458848,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,0,21.7894
+ERR7458857,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,0,27.1204
+ERR7458858,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,0,19.7533
+ERR7458883,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,1,34.4566
+ERR7458898,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,0,22.465
+ERR7458902,Pasteurellaceae,Pasteurellaceae,0,0,0,1,0,0,0,0,0,0,0,23.0455
+ERR7458934,Pasteurellaceae,Pasteurellaceae,0,0,0,0,0,0,0,0,0,0,1,30.6709
+ERR7458937,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,1,0,0,0,0,1,4054.62
+ERR7458943,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,0,28.8891
+ERR7458944,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,1,0,0,0,0,0,29.1802
+ERR7458946,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,0,27.1204
+ERR7458956,Pasteurellaceae,Pasteurellaceae,1,0,0,0,0,1,0,0,0,0,0,23.1799
+ERR7458961,Pasteurellaceae,Pasteurellaceae,0,0,0,0,0,0,0,0,0,0,0,24.3277
+ERR7458965,Pasteurellaceae,Pasteurellaceae,0,0,0,0,0,0,0,0,0,0,1,36.5884
+ERR7458972,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,1,34.4566
+ERR7458977,Prevotella_7 sp.,Prevotella_7 sp.,0,0,0,0,0,0,0,0,0,0,0,26.3866
+ERR8477426,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,1,0,0,0,0,1,42.7717
+ERR8477433,Bacteroides sp.,Bacteroides sp.__Parabacteroides sp.,0,0,0,0,0,0,0,0,0,0,0,
+ERR8477483,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,
+ERR8477489,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,28.2892
+ERR8477507,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,1,3346.62
+ERR8477508,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,
+ERR9734779,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,1,0,0,0,0,0,0,
+ERR9734875,Escherichia-Shigella sp.,Escherichia-Shigella sp.__Prevotella_9 sp.,0,0,0,0,0,0,0,0,0,0,0,
+ERR9734936,Bacteroides sp.,Bacteroides sp.__Faecalibacterium sp.,0,0,0,0,0,0,0,0,1,0,0,
+ERR9735030,Prevotella_9 sp.,Prevotella_9 sp.__RARE_DOMINANT,1,1,0,0,1,0,0,0,0,0,0,
+ERR9735036,Lachnospiraceae,Lachnospiraceae,0,0,0,0,0,0,0,0,0,0,0,
+ERR9735104,Bacteroides sp.,Bacteroides sp.__RARE_DOMINANT,0,0,0,0,1,0,0,0,0,0,0,
+ERR9735122,RARE_DOMINANT,RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,
+ERR9744139,RARE_DOMINANT,RARE_DOMINANT,1,0,0,0,0,0,0,0,0,0,0,
+ERR9744155,Prevotella_9 sp.,Prevotella_9 sp.__Faecalibacterium sp.,1,1,0,0,0,0,0,0,0,0,0,
+ERR9744181,Bacteroides sp.,Bacteroides sp.__Faecalibacterium sp.,0,0,0,0,0,0,0,0,0,0,0,
+ERR9744187,Lachnospiraceae,Lachnospiraceae,0,0,0,0,1,0,0,0,0,0,0,
+ERR9744191,Prevotella_9 sp.,Prevotella_9 sp.__Faecalibacterium sp.,0,0,0,0,0,0,0,0,0,0,0,
+ERR9744218,Bacteroides sp.,Bacteroides sp.__RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,
+ERR9744225,Bacteroides sp.,Bacteroides sp.__RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,
+ERR9744232,Prevotella_9 sp.,Prevotella_9 sp.__RARE_DOMINANT,0,0,0,0,0,0,0,0,0,0,0,
+ERR9744269,Prevotella_9 sp.,Prevotella_9 sp.__RARE_DOMINANT,0,0,0,0,1,0,0,1,0,0,0,
+ERR9744276,Bacteroides sp.,Bacteroides sp.__Alistipes sp.,1,0,0,0,1,0,1,0,0,0,0,
