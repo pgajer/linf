@@ -34,8 +34,8 @@ header-includes:
 Gut microbiome community typing is often built around clustering, making the
 resulting labels sensitive to modeling choices and harder to interpret at the
 level of a single sample. We study a deterministic alternative based on
-$L_\infty$ normalization and dominant-community state types (DCSTs), in which
-each sample is assigned by rank structure rather than by cluster membership.
+dominant-community state types (DCSTs), in which each sample is assigned by
+within-sample taxon ranking rather than by cluster membership.
 Using the American Gut Project stool cohort, we analyzed 34,711 samples
 available in the SILVA species-level table and retained 30,290 after quality
 control, yielding 274 taxa for downstream analysis. At depth 1, the cohort
@@ -66,39 +66,44 @@ understand what a given sample label means and whether two analyses can be
 compared without a hidden dependence on tuning decisions.
 
 This paper studies a simpler route. A dominant-community state type (DCST) is
-defined from the rank structure of a sample after $L_\infty$ normalization. At
-depth 1, the dominant taxon determines the top-level state. At depth 2, the
-second-ranked taxon refines that state into an ordered subtype. The resulting
-construction is deterministic, hierarchical, and local to the sample: the label
-is read directly from the ordered dominant coordinates rather than inferred from
-a fitted global partition.
+defined by the within-sample ordering of taxa. At depth 1, the dominant taxon
+determines the top-level state. At depth 2, the second-ranked taxon refines
+that state into an ordered subtype. Because the construction depends only on
+rank order, it is unchanged by sample-wide rescaling and does not require a
+particular $L_p$ normalization. The resulting construction is deterministic,
+hierarchical, and local to the sample: the label is read directly from the
+ordered dominant coordinates rather than inferred from a fitted global
+partition.
 
 The gut is a particularly good stress test for this idea. In the vaginal
 microbiome, strong dominance can be common and even canonical. In the gut,
 strong dominance is less universal and often appears in dysbiotic or otherwise
 unusual settings. That makes the gut harder to type cleanly, but also more
-interesting scientifically. Literature on IBS, IBD, autoimmune disease, and
-cardiometabolic conditions suggests that shifts in dominant taxa or dominant
-taxon pairs can mark altered ecological states [@Tap2017_IBS;
-@Pittayanon2019_IBS; @LloydPrice2019_IBD; @Gevers2014_CD;
-@Scher2013_Prevotella_RA; @Vatanen2018_T1D; @Wang2011_TMAO; @Tang2013_TMAO].
+interesting. Literature on IBS, IBD, autoimmune disease, and cardiometabolic
+conditions suggests that shifts in dominant taxa or dominant taxon pairs can
+mark altered ecological states [@Tap2017_IBS; @Pittayanon2019_IBS;
+@LloydPrice2019_IBD; @Gevers2014_CD; @Scher2013_Prevotella_RA; @Vatanen2018_T1D;
+@Wang2011_TMAO; @Tang2013_TMAO].
 
 Our aim is not to argue that dominant taxa alone explain disease biology. The
-claim is narrower: a clustering-free dominance framework can recover structured
-gut community states at scale, support disease-wise interpretation without
-collapsing every phenotype into one pooled signal, and remain informative under
-covariate adjustment, sensitivity analysis, taxonomy change, and external
-validation.
+claim is narrower: recurring dominance patterns can be identified
+deterministically across a cohort of this size without fitting clusters; the
+resulting DCST labels can then be analyzed phenotype by phenotype rather than
+only through one pooled disease-versus-not-disease contrast; and several of the
+strongest DCST-phenotype associations remain visible after covariate
+adjustment, contaminant-aware sensitivity analysis, taxonomy change, and
+external validation.
 
 > **What is a DCST?**
 >
-> A DCST is the ordered dominant part of a sample after $L_\infty$
-> normalization. At depth 1, only the largest component matters. At depth 2, the
-> second-largest component refines the parent class. Samples that do not meet
-> the prevalence threshold for a named dominant type are grouped into
-> `RARE_DOMINANT`.
+> A DCST is defined by the ordered dominant taxa in a sample. At depth 1, only
+> the largest component matters. At depth 2, the second-largest component
+> refines the parent class. Because only the within-sample ordering matters, the
+> same DCST is obtained from read counts, proportions, or any sample-wide
+> $L_p$ normalization. Samples that do not meet the prevalence threshold for a
+> named dominant type are grouped into `RARE_DOMINANT`.
 
-![Conceptual schematic of the DCST construction. A sample is first normalized by its largest component, then assigned a depth-1 state by the top-ranked taxon and a depth-2 state by the ordered dominant pair. Rare dominant patterns below the prevalence threshold are grouped into `RARE_DOMINANT`.](/Users/pgajer/current_projects/linf/dev/FIGURE_1_dcst_conceptual_schematic.png){ width=92% }
+![Conceptual schematic of the DCST construction. A sample abundance profile induces a within-sample taxon ranking, which yields a depth-1 state from the dominant taxon and a depth-2 state from the ordered dominant pair. Rare dominant patterns below the prevalence threshold are grouped into `RARE_DOMINANT`.](/Users/pgajer/current_projects/linf/dev/FIGURE_1_dcst_conceptual_schematic.png){ width=92% }
 
 # 2. Methods
 
@@ -114,13 +119,14 @@ for adjusted modeling.
 
 ## 2.2 DCST construction
 
-Each sample was normalized by its largest component, so the dominant taxon took
-value 1 and the remaining coordinates were interpreted relative to that
-reference. A depth-1 DCST was defined by the dominant taxon. A depth-2 DCST was
-defined by the ordered pair consisting of the dominant and second-ranked taxa.
-To keep the resulting state space interpretable, only dominant patterns meeting
-a minimum prevalence threshold $n_0$ were promoted to named DCSTs; the rest were
-grouped into `RARE_DOMINANT`.
+A depth-1 DCST was defined by the dominant taxon. A depth-2 DCST was defined by
+the ordered pair consisting of the dominant and second-ranked taxa. This
+construction depends only on within-sample rank order, so the resulting label
+is unchanged by moving between raw counts, relative abundances, or any
+sample-wide $L_p$ normalization. To keep the resulting state space
+interpretable, only dominant patterns meeting a minimum prevalence threshold
+$n_0$ were promoted to named DCSTs; the rest were grouped into
+`RARE_DOMINANT`.
 
 ## 2.3 Association analysis
 
@@ -195,7 +201,7 @@ picture is concentrated rather than diffusely fragmented (Table 1).
 
 \endgroup
 
-![Full-cohort AGP landscape. Panel A shows the leading depth-1 DCSTs after truncation at n0 = 50, while Panel B shows the empirical dominance strength before $L_\infty$ normalization.](/Users/pgajer/current_projects/linf/dev/FIGURE_2_full_cohort_landscape.png){ width=92% }
+![Full-cohort AGP landscape. Panel A shows the leading depth-1 DCSTs after truncation at n0 = 50, while Panel B shows the empirical dominance strength, defined as the relative abundance of the dominant species in each sample.](/Users/pgajer/current_projects/linf/dev/FIGURE_2_full_cohort_landscape.png){ width=92% }
 
 ![Adjusted depth-1 association overview. Panel A shows all taxa that survive adjustment at least once across the disease screen, with colored cells annotated by adjusted odds ratio and blank cells indicating no surviving adjusted signal. Panel B shows the strongest adjusted associations with 95% confidence intervals.](/Users/pgajer/current_projects/linf/dev/FIGURE_3_adjusted_association_overview.png){ width=98% }
 

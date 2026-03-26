@@ -48,8 +48,7 @@ def main():
         }
     )
 
-    raw = np.array([0.42, 0.28, 0.18, 0.12])
-    normalized = raw / raw.max()
+    raw = np.array([420, 280, 180, 120])
     colors = ["#335c67", "#7cb518", "#ff9f1c", "#c8553d"]
 
     fig = plt.figure(figsize=(13, 8))
@@ -60,19 +59,19 @@ def main():
         ax1,
         raw,
         colors,
-        "Raw relative abundances",
-        r"Sample vector $x = (0.42,\, 0.28,\, 0.18,\, 0.12)$",
+        "Sample abundance profile",
+        r"Example sample vector $x = (420,\, 280,\, 180,\, 120)$",
     )
     add_panel_label(ax1, "A")
 
     ax2 = fig.add_subplot(gs[0, 1])
     draw_bars(
         ax2,
-        normalized,
+        raw,
         colors,
-        r"$L_\infty$ normalization",
-        r"Normalize by $\max(x)=0.42$ so the dominant taxon becomes $1$",
-        annotate=[(0, "1.00"), (1, "0.67"), (2, "0.43"), (3, "0.29")],
+        "Within-sample dominance order",
+        "Only the rank order matters: Taxon A > Taxon B > Taxon C > Taxon D",
+        annotate=[(0, "1st"), (1, "2nd"), (2, "3rd"), (3, "4th")],
     )
     add_panel_label(ax2, "B")
 
@@ -94,7 +93,7 @@ def main():
     ax3.text(
         0.5,
         0.25,
-        "Depth 1 keeps only the dominant coordinate.\nThe label is read directly from the sample, not from a fitted cluster.",
+        "Depth 1 keeps only the top-ranked taxon.\nThe label is read directly from the sample, not from a fitted cluster.",
         ha="center",
         va="center",
         fontsize=10.5,
@@ -133,7 +132,7 @@ def main():
     fig.text(
         0.5,
         0.02,
-        "The key point is that the label is determined by ordered dominance after $L_\\infty$ normalization, yielding a deterministic and hierarchical alternative to clustering-based community typing.",
+        "The key point is that the label is determined by within-sample dominance order, yielding a deterministic and hierarchical alternative to clustering-based community typing.",
         ha="center",
         va="bottom",
         fontsize=10.5,
