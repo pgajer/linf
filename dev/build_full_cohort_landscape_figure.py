@@ -129,7 +129,7 @@ def build_figure(labels: list[str], size_counts: list[int], dom_values: np.ndarr
     for val, label, col in [(q25, "Q1", "#4d908e"), (q50, "Median", "#1d3557"), (q75, "Q3", "#4d908e")]:
         ax2.axvline(val, color=col, linestyle=":", linewidth=1.3)
         ax2.text(val + 0.01, ax2.get_ylim()[1] * 0.82, label, color=col, fontsize=8.5)
-    ax2.set_title("B. Dominance strength before $L_\\infty$ normalization", loc="left", fontweight="bold")
+    ax2.set_title("B. Empirical dominance strength in the AGP cohort", loc="left", fontweight="bold")
     ax2.set_xlabel("Relative abundance of dominant species")
     ax2.set_ylabel("Samples")
     ax2.grid(axis="y", alpha=0.25, linewidth=0.6)
@@ -155,7 +155,7 @@ def build_figure(labels: list[str], size_counts: list[int], dom_values: np.ndarr
     fig.text(
         0.5,
         0.015,
-        "Panel A shows the leading depth-1 DCSTs after truncation at n0 = 50. Panel B shows the empirical dominance strength, defined as the relative abundance of the most abundant taxon before $L_\\infty$ normalization.",
+        "Panel A shows the leading depth-1 DCSTs after truncation at n0 = 50. Panel B shows the empirical dominance strength, defined as the relative abundance of the most abundant taxon in each sample.",
         ha="center",
         va="bottom",
         fontsize=10.2,
