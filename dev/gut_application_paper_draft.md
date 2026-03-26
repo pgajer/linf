@@ -100,10 +100,12 @@ external validation.
 > the largest component matters. At depth 2, the second-largest component
 > refines the parent class. Because only the within-sample ordering matters, the
 > same DCST is obtained from read counts, proportions, or any sample-wide
-> $L_p$ normalization. Samples that do not meet the prevalence threshold for a
-> named dominant type are grouped into `RARE_DOMINANT`.
+> $L_p$ normalization. How low-frequency dominant patterns are handled is a
+> separate modeling choice. In the `rare` policy used here, samples that do not
+> meet the prevalence threshold for a named dominant type are grouped into
+> `RARE_DOMINANT`.
 
-![Conceptual schematic of the DCST construction. A sample abundance profile induces a within-sample taxon ranking, which yields a depth-1 state from the dominant taxon and a depth-2 state from the ordered dominant pair. Rare dominant patterns below the prevalence threshold are grouped into `RARE_DOMINANT`.](/Users/pgajer/current_projects/linf/dev/FIGURE_1_dcst_conceptual_schematic.png){ width=92% }
+![Conceptual schematic of the DCST construction. A sample abundance profile induces a within-sample taxon ranking, which yields a depth-1 state from the dominant taxon and a depth-2 state from the ordered dominant pair. Under the `rare` low-frequency policy used in this paper, dominant patterns below the prevalence threshold are grouped into `RARE_DOMINANT`; the software also supports an `absorb` policy that merges such samples into larger named states.](/Users/pgajer/current_projects/linf/dev/FIGURE_1_dcst_conceptual_schematic.png){ width=92% }
 
 # 2. Methods
 
@@ -124,9 +126,15 @@ the ordered pair consisting of the dominant and second-ranked taxa. This
 construction depends only on within-sample rank order, so the resulting label
 is unchanged by moving between raw counts, relative abundances, or any
 sample-wide $L_p$ normalization. To keep the resulting state space
-interpretable, only dominant patterns meeting a minimum prevalence threshold
-$n_0$ were promoted to named DCSTs; the rest were grouped into
-`RARE_DOMINANT`.
+interpretable, low-frequency dominant patterns were handled by a separate
+policy choice. In the software this corresponds to `low.freq.policy`. Under
+`low.freq.policy = "rare"` (used here), only dominant patterns meeting a
+minimum prevalence threshold $n_0$ were promoted to named DCSTs, and the rest
+were grouped into `RARE_DOMINANT`. This preserves the purity of the named DCSTs
+because rare cells are not absorbed into larger ones. The alternative
+`low.freq.policy = "absorb"` merges low-frequency cells into larger named
+states, which can yield a coarser partition but disturbs the original dominant
+structure of those named DCSTs.
 
 ## 2.3 Association analysis
 

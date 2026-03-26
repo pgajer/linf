@@ -116,7 +116,7 @@ def main():
     ax4.text(
         0.48,
         0.27,
-        "Depth 2 records the ordered dominant pair.\nIf a dominant pattern is too rare globally, it is grouped into RARE_DOMINANT\nrather than treated as its own named state.",
+        "Depth 2 records the ordered dominant pair.\nIn the rare policy used here, low-frequency patterns are grouped into RARE_DOMINANT\nrather than absorbed into larger named states.",
         ha="center",
         va="center",
         fontsize=10.5,
