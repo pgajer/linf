@@ -27,6 +27,29 @@ The canonical manuscript source is
 The older Markdown draft was archived after the workflow switched to
 direct LaTeX editing for better float placement and layout control.
 
+## Versioning Policy
+
+- Use git and GitHub for day-to-day version history.
+- Keep exactly one live manuscript source file:
+  `manuscript/gut_application_paper.tex`.
+- Do not create routine `_v1`, `_v2`, `_final`, or similar manuscript
+  filenames.
+- Reserve `archive/` for milestone snapshots only, such as:
+  first full draft, preprint/submission, revision, and accepted version.
+- Name milestone archive folders as `YYYY-MM-DD-<milestone>/`.
+- For milestone commits, prefer lightweight tags such as
+  `gut-dcst-draft-1`, `gut-dcst-submission-1`, or
+  `gut-dcst-resubmission-1`.
+
+To create a standardized archive snapshot from the current manuscript
+workspace, run:
+
+- `./archive_gut_application_paper_snapshot.sh <milestone-label>`
+
+This creates a dated subdirectory under `archive/`, copies the current
+canonical `.tex` source plus `references.bib`, copies the built PDF if it
+exists, and writes a small snapshot `README.md` with the current git commit.
+
 ## Project Boundary
 
 Large cohort outputs and analysis-scale CSV/PNG artifacts remain under
