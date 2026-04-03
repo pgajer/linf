@@ -9,10 +9,11 @@ import numpy as np
 import pandas as pd
 from matplotlib.patches import Rectangle
 
+from paper_paths import DCST_ANALYSIS_DIR, FIGURES_DIR
 
-BASE = Path("/Users/pgajer/current_projects/gut_microbiome/outputs/dcst_analysis")
+BASE = DCST_ANALYSIS_DIR
 ADJUSTED = BASE / "full_cohort_adjusted_results.csv"
-OUT = Path("/Users/pgajer/current_projects/linf/dev/FIGURE_3_adjusted_association_overview.png")
+OUT = FIGURES_DIR / "FIGURE_3_adjusted_association_overview.png"
 
 
 CONDITION_ORDER = [

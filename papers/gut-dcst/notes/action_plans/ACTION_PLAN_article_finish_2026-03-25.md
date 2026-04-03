@@ -48,21 +48,21 @@ reproducible manuscript assets and integrating them into the paper.
 ## Deliverables
 
 - Updated manuscript source:
-  `/Users/pgajer/current_projects/linf/dev/gut_application_paper_draft.md`
+  `/Users/pgajer/current_projects/linf/papers/gut-dcst/manuscript/gut_application_paper.md`
 - Updated manuscript PDF:
-  `/Users/pgajer/current_projects/linf/dev/gut_application_paper_draft.pdf`
+  `/Users/pgajer/current_projects/linf/papers/gut-dcst/build/gut_application_paper.pdf`
 - Reproducible table builder:
-  `/Users/pgajer/current_projects/linf/dev/build_manuscript_tables.py`
+  `/Users/pgajer/current_projects/linf/papers/gut-dcst/scripts/build_manuscript_tables.py`
 - Table assets:
-  `/Users/pgajer/current_projects/linf/dev/TABLE_1_top_depth1_dcsts.*`
-  `/Users/pgajer/current_projects/linf/dev/TABLE_2_headline_adjusted_associations.*`
-  `/Users/pgajer/current_projects/linf/dev/TABLE_3_univariate_vs_adjusted_summary.*`
-  `/Users/pgajer/current_projects/linf/dev/TABLE_4_taxonomy_concordance_summary.*`
+  `/Users/pgajer/current_projects/linf/papers/gut-dcst/assets/tables/TABLE_1_top_depth1_dcsts.*`
+  `/Users/pgajer/current_projects/linf/papers/gut-dcst/assets/tables/TABLE_2_headline_adjusted_associations.*`
+  `/Users/pgajer/current_projects/linf/papers/gut-dcst/assets/tables/TABLE_3_univariate_vs_adjusted_summary.*`
+  `/Users/pgajer/current_projects/linf/papers/gut-dcst/assets/tables/TABLE_4_taxonomy_concordance_summary.*`
 
 ## Execution Notes
 
 - Built the missing manuscript tables with
-  `/Users/pgajer/current_projects/linf/dev/build_manuscript_tables.py`.
+  `/Users/pgajer/current_projects/linf/papers/gut-dcst/scripts/build_manuscript_tables.py`.
 - Inserted Tables 1-5 into the draft manuscript and updated the disease-wise
   prose to soften umbrella or weaker claims.
 - Added Data and Code Availability, Funding, Competing Interests, and

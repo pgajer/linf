@@ -1,0 +1,136 @@
+
+
+
+
+CI = **Continuous Integration**. It’s an automated workflow (e.g., **GitHub Actions**) that runs on every push/release to build, test, and publish things for you—like your pkgdown website and a PDF of your vignette.
+
+Below is a simple, robust setup to:
+
+1. enable **pkgdown**,
+2. build an **HTML site**,
+3. also render a **PDF** of your vignette via **TinyTeX**, and
+4. publish both to GitHub Pages with a **Download PDF** link.
+
+---
+
+# Step 1 — Enable pkgdown
+
+In R (from the package root):
+
+```r
+usethis::use_pkgdown()            # creates pkgdown.yml
+usethis::use_github_pages()       # sets Pages to serve /docs on main
+```
+
+Edit `pkgdown.yml` so it builds into `docs/` and adds a navbar link:
+
+```yaml
+# pkgdown.yml
+destination: docs
+
+template:
+  bootstrap: 5
+
+navbar:
+  structure:
+    left:  [reference, articles]
+    right: [pdf]
+  components:
+    pdf:
+      text: "Download PDF"
+      href: articles/linf-intro.pdf
+```
+
+> The link points to `docs/articles/linf-intro.pdf` (we’ll create it in CI).
+
+Commit this file.
+
+---
+
+# Step 2 — Add a CI workflow (GitHub Actions)
+
+Create `.github/workflows/pkgdown.yaml` with:
+
+```yaml
+name: pkgdown
+
+on:
+  push:
+    branches: [main, master]
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  build-site:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # to commit docs/ updates back to the repo
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: r-lib/actions/setup-pandoc@v2
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: |
+            any::pkgdown
+            any::rmarkdown
+            any::tinytex
+          needs: website
+
+      # Install TinyTeX (LaTeX) for PDF rendering
+      - name: Install TinyTeX
+        run: Rscript -e 'tinytex::install_tinytex()'
+
+      # Build the pkgdown site into docs/
+      - name: Build pkgdown site
+        run: Rscript -e 'pkgdown::build_site(new_process = FALSE)'
+
+      # Render the PDF vignette and place it under docs/articles/
+      - name: Render PDF vignette
+        run: |
+          Rscript -e 'rmarkdown::render("vignettes/linf-intro.Rmd", output_format="pdf_document", output_file="linf-intro.pdf")'
+          mkdir -p docs/articles
+          cp linf-intro.pdf docs/articles/linf-intro.pdf
+
+      # Commit the docs/ updates so GitHub Pages can serve them
+      - name: Commit & push site
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Build pkgdown site and PDF vignette"
+          file_pattern: docs/**
+```
+
+This workflow:
+
+* installs R + deps + TinyTeX,
+* builds HTML site into `docs/`,
+* renders `vignettes/linf-intro.Rmd` to PDF and copies it to `docs/articles/linf-intro.pdf`,
+* commits `docs/` back to your repo’s default branch.
+
+GitHub Pages (already configured by `use_github_pages()`) serves `https://<you>.github.io/<repo>/` from `/docs`.
+
+---
+
+# Step 3 — Verify Pages
+
+In your repo: **Settings → Pages**, ensure “Branch: main (or master) / Folder: /docs”.
+Wait for the workflow to run (push something), then visit your site. The navbar should show **Download PDF**, pointing to the freshly built `articles/linf-intro.pdf`.
+
+---
+
+## Notes & alternatives
+
+* If you prefer deploying to a **`gh-pages` branch** instead of `/docs`, that’s also fine, but the “commit back to main” approach above keeps everything in one branch and makes the PDF link straightforward.
+* You already reverted your CRAN vignette to HTML-only; perfect. CI builds the **extra** PDF for the website without burdening CRAN.
+* If you rename the vignette, update both the YAML navbar link and the CI copy path.
+
+If you want, I can also generate a minimal `pkgdown.yml` tailored to your package reference groups (e.g., “Core API” vs “Helpers”) so the site’s Reference page is tidy.

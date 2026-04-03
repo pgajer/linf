@@ -9,11 +9,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
+from paper_paths import DCST_ANALYSIS_DIR, FIGURES_DIR, GUT_MICROBIOME_ROOT
 
-META_FILE = Path("/Users/pgajer/current_projects/gut_microbiome/data/prime_gut_project_sample_metadata_2026-03-24.csv.gz")
-ABUND_FILE = Path("/Users/pgajer/current_projects/gut_microbiome/outputs/prime_species/prime_gut_projects_silva_species_absolute_2026-03-24.csv.gz")
-ASSIGN_FILE = Path("/Users/pgajer/current_projects/gut_microbiome/outputs/dcst_analysis/full_cohort_dcst_assignments.csv")
-OUT_FIG = Path("/Users/pgajer/current_projects/linf/dev/FIGURE_2_full_cohort_landscape.png")
+META_FILE = GUT_MICROBIOME_ROOT / "data" / "prime_gut_project_sample_metadata_2026-03-24.csv.gz"
+ABUND_FILE = GUT_MICROBIOME_ROOT / "outputs" / "prime_species" / "prime_gut_projects_silva_species_absolute_2026-03-24.csv.gz"
+ASSIGN_FILE = DCST_ANALYSIS_DIR / "full_cohort_dcst_assignments.csv"
+OUT_FIG = FIGURES_DIR / "FIGURE_2_full_cohort_landscape.png"
 
 AGP_PROJECT = "PRJEB11419"
 MIN_LIB = 1000

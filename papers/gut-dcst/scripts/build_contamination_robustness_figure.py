@@ -6,11 +6,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
+from paper_paths import DCST_ANALYSIS_DIR, FIGURES_DIR
 
-BASE = Path("/Users/pgajer/current_projects/gut_microbiome/outputs/dcst_analysis")
+BASE = DCST_ANALYSIS_DIR
 FULL = BASE / "full_cohort_adjusted_results.csv"
 CLEAN = BASE / "sensitivity_clean_adjusted_results.csv"
-OUT = Path("/Users/pgajer/current_projects/linf/dev/FIGURE_4_contamination_robustness.png")
+OUT = FIGURES_DIR / "FIGURE_4_contamination_robustness.png"
 
 
 def pretty_taxon(x: str) -> str:

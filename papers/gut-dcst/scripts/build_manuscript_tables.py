@@ -5,9 +5,10 @@ import math
 
 import pandas as pd
 
+from paper_paths import DCST_ANALYSIS_DIR, TABLES_DIR
 
-ANALYSIS = Path("/Users/pgajer/current_projects/gut_microbiome/outputs/dcst_analysis")
-OUT = Path("/Users/pgajer/current_projects/linf/dev")
+ANALYSIS = DCST_ANALYSIS_DIR
+OUT = TABLES_DIR
 
 DISCOVERY_ORDER = [
     "IBS",

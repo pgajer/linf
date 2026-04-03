@@ -7,13 +7,14 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
+from paper_paths import DCST_ANALYSIS_DIR, FIGURES_DIR, PHASE1_ARCHIVE_DIR
 
-BASE = Path("/Users/pgajer/current_projects/gut_microbiome/outputs/dcst_analysis")
+BASE = DCST_ANALYSIS_DIR
 SILVA = BASE / "full_cohort_dcst_assignments.csv"
 GG2 = BASE / "gg2_dcst_assignments.csv"
 CROSSTAB = BASE / "silva_vs_gg2_crosstab.csv"
-SUMMARY = BASE / "phase1_summary_report.txt"
-OUT = Path("/Users/pgajer/current_projects/linf/dev/FIGURE_6_taxonomy_concordance.png")
+SUMMARY = PHASE1_ARCHIVE_DIR / "phase1_summary_report.txt"
+OUT = FIGURES_DIR / "FIGURE_6_taxonomy_concordance.png"
 
 
 def pretty_label(x: str) -> str:

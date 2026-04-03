@@ -132,17 +132,17 @@ Decide exactly what lives in:
 
 ## Recommended Deliverables From The Next linf Thread
 
-1. `dev/MANUSCRIPT_SCAFFOLD_gut_application_paper.md`
+1. `papers/gut-dcst/notes/MANUSCRIPT_SCAFFOLD_gut_application_paper.md`
    - section-by-section paper outline
    - one-sentence claim for each section
 
-2. `dev/CLAIM_INVENTORY_gut_application_paper.tsv`
+2. `papers/gut-dcst/notes/CLAIM_INVENTORY_gut_application_paper.tsv`
    - claim
    - evidence source
    - exploratory vs adjusted vs sensitivity-supported
    - literature support needed
 
-3. `dev/FIGURE_PLAN_gut_application_paper.md`
+3. `papers/gut-dcst/notes/FIGURE_PLAN_gut_application_paper.md`
    - must-have figures
    - optional figures
    - which existing report figures can be reused
@@ -154,7 +154,7 @@ Decide exactly what lives in:
 ## Recommended First Tasks In The New linf Thread
 
 1. Read:
-   - `dev/Phase1_Full_Cohort_DCST_Analysis_Report.pdf`
+   - `papers/gut-dcst/archive/2026-03-24-phase1/Phase1_DCST_Report_by_Disease.pdf`
    - `vignettes/articles/gut-dcst-disease-analysis.Rmd`
    - `vignettes/linf-intro.Rmd`
    - `README.Rmd`
