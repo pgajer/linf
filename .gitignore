@@ -23,6 +23,8 @@ src/**/*.so
 src/**/*.dll
 src/**/*.a
 *.bc
+__pycache__/
+*.pyc
 
 # Vignette build outputs installed under inst/doc (we commit vignettes/*.Rmd, not built PDFs/HTMLs)
 inst/doc/
@@ -52,13 +54,20 @@ libs/
 libsonly/
 rchk_remote_out/
 cran_docs/
-scripts/
+/scripts/
 rchk_reports/
 dev/
 .Rproj.user
 .Rdata
 .httr-oauth
 .quarto
+
+# Paper workspaces
+papers/**/build/
+papers/**/.DS_Store
+
+# Private explorations
+notes/explorations/bacteria_cell_wall/
 
 # Do not track built artefacts
 doc/

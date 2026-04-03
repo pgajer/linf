@@ -4,8 +4,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.patches import FancyArrowPatch, Rectangle
 
+from paper_paths import FIGURES_DIR
 
-OUT = Path("/Users/pgajer/current_projects/linf/dev/FIGURE_1_dcst_conceptual_schematic.png")
+OUT = FIGURES_DIR / "FIGURE_1_dcst_conceptual_schematic.png"
 
 
 def draw_bars(ax, values, colors, title, xlabel_text, annotate=None):

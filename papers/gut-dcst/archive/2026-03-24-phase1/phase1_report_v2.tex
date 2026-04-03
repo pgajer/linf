@@ -1,0 +1,497 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{setspace}
+\usepackage{enumitem}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{natbib}
+
+\hypersetup{colorlinks=true, linkcolor=blue!60!black, citecolor=green!50!black, urlcolor=blue!70!black}
+\captionsetup{font=small, labelfont=bf}
+\onehalfspacing
+
+\title{\textbf{Dominant Community State Types and Health Outcomes:\\Phase 1 Full-Cohort Analysis of the American Gut Project}\\[0.5em]\large Organized by Disease Outcome}
+\author{Pawel Gajer}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We applied $L_\infty$ normalization and Dominant Community State Type (DCST) classification to 30,290 samples from the American Gut Project (AGP) to investigate associations between gut microbiota community structure and 12 self-reported health conditions. Using two independent taxonomic schemas (SILVA 138 and GreenGenes2), we identified 40 depth-1 DCSTs and performed univariate (Fisher's exact test) and covariate-adjusted (logistic regression controlling for age, sex, BMI, and sequencing depth) association analyses. Sensitivity analysis excluding potentially oral/skin-contaminated samples assessed robustness. This report presents results organized by disease outcome, integrating findings across both taxonomies with published literature.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+% ============================================================
+\section{Methods}
+% ============================================================
+
+\subsection{Data and Cohort}
+We analyzed 16S rRNA gene amplicon sequencing data from 34,711 AGP samples \cite{McDonald2018_AGP}. After quality filtering (library size $\geq 1000$ reads, $>0$ non-zero taxa), 30,290 samples across 274 taxa (SILVA 138 genus level \cite{Quast2013_SILVA}) were retained.
+
+\subsection{DCST Classification}
+Each sample was classified by its dominant taxon after $L_\infty$ normalization (dividing each row by its maximum value). DCSTs were defined with a minimum size threshold $n_0=50$; samples whose dominant taxon fell below this threshold were aggregated into a \texttt{RARE\_DOMINANT} category. This yielded 40 depth-1 DCSTs plus one rare-dominant group. Depth-2 refinement subdivided each depth-1 DCST by its second-most-abundant taxon, yielding 123 depth-2 subtypes. The concept of community state types based on dominant species follows \citet{Gajer2012_CST}.
+
+\subsection{Statistical Analysis}
+\textbf{Univariate:} Fisher's exact test for each DCST--condition pair, with Benjamini--Hochberg correction \cite{BenjaminiHochberg1995} at $q<0.05$. \textbf{Adjusted:} Logistic regression with covariates: age (midpoint of AGP categorical bin), sex, BMI, and $\log_{10}$ sequencing depth. \textbf{Sensitivity:} Repeated adjusted analysis after excluding 2,229 samples dominated by putative oral or skin taxa (Streptococcus, Staphylococcus, Rothia, Corynebacterium, Neisseria, Veillonella). \textbf{GG2 replication:} Independent analysis using GreenGenes2 taxonomy \cite{McDonald2024_GG2} on the same samples. \textbf{Depth-2:} Adjusted analysis on 123 depth-2 subtypes.
+
+\subsection{Covariates}
+Age was available for 27,372 samples (90.4\%), sex for 25,598 (84.5\%), and BMI for 26,541 (87.6\%). Complete cases for adjusted analysis: 22,632 (74.7\%). Obesity was defined as BMI $\geq 30$.
+
+\newpage
+\section{Cohort Overview}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{/sessions/nifty-keen-newton/mnt/gut_microbiome/outputs/dcst_analysis/full_cohort_dcst_sizes.png}
+\caption{Distribution of depth-1 DCST sizes across 30,290 AGP samples (SILVA taxonomy). \textit{Bacteroides} is the largest DCST (10,358 samples), followed by \textit{Escherichia--Shigella} (6,857).}
+\label{fig:dcst_sizes}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{/sessions/nifty-keen-newton/mnt/gut_microbiome/outputs/dcst_analysis/full_cohort_dominance_strength.png}
+\caption{Distribution of dominance strength ($L_\infty$-normalized maximum) across DCSTs. Higher values indicate stronger dominance by a single taxon.}
+\label{fig:dominance}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\textwidth]{/sessions/nifty-keen-newton/mnt/gut_microbiome/outputs/dcst_analysis/full_cohort_heatmap.png}
+\caption{Heatmap of univariate DCST--disease association significance ($-\log_{10} q$). Red cells indicate enrichment (OR$>$1), blue indicate depletion (OR$<$1).}
+\label{fig:heatmap}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\textwidth]{/sessions/nifty-keen-newton/mnt/gut_microbiome/outputs/dcst_analysis/full_cohort_forest_plot.png}
+\caption{Forest plot of covariate-adjusted odds ratios for significant DCST--disease associations ($q<0.05$). Error bars represent 95\% confidence intervals.}
+\label{fig:forest}
+\end{figure}
+
+\newpage
+\section{Taxonomy Concordance: SILVA vs.\ GreenGenes2}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{/sessions/nifty-keen-newton/mnt/gut_microbiome/outputs/dcst_analysis/silva_vs_gg2_concordance_heatmap.png}
+\caption{Concordance heatmap showing mapping between SILVA and GG2 dominant-taxon assignments. Overall genus-level concordance: 91.6\%.}
+\label{fig:concordance}
+\end{figure}
+
+Independent DCST classification using GreenGenes2 \cite{McDonald2024_GG2} identified 59 depth-1 DCSTs. Key taxonomic mappings include: SILVA \textit{Bacteroides} maps predominantly to GG2 \textit{Phocaeicola\_A} (47\%) and \textit{Bacteroides\_H} (34\%); SILVA \textit{Escherichia--Shigella} maps 100\% to GG2 ``Bacteria;\_\_'' (unresolved); \textit{Akkermansia} shows 99\% concordance. Overall, 91.6\% of samples received concordant genus-level dominant-taxon assignments.
+
+\newpage
+\section{Irritable Bowel Syndrome (IBS)}
+\subsection{Introduction}
+Irritable bowel syndrome (IBS) is a functional gastrointestinal disorder affecting 10--15\% of the global population, characterized by chronic abdominal pain, bloating, and altered bowel habits \cite{Pittayanon2019_IBS}. The gut microbiome has emerged as a central factor in IBS pathophysiology through the microbiota--gut--brain axis \cite{Dinan2015_IBS,Cryan2012_gutbrain}. Systematic reviews identify consistent compositional shifts including increased Enterobacteriaceae and \textit{Bacteroides}, decreased \textit{Faecalibacterium prausnitzii} and \textit{Bifidobacterium}, and reduced overall diversity \cite{Pittayanon2019_IBS}. A 90-OTU microbiota signature has been linked to IBS severity \cite{Tap2017_IBS}. Here we present DCST-based associations with IBS in the American Gut Project (AGP) cohort.
+
+\subsection{Results}
+\subsubsection{SILVA Univariate Associations}
+Significant univariate DCST associations with irritable bowel syndrome: \textit{Staphylococcus} (depleted, OR=0.31, $q=2.2e-08$), \textit{Escherichia-Shigella} (enriched, OR=1.29, $q=7.8e-08$), \textit{Streptococcus} (depleted, OR=0.60, $q=2.6e-03$), \textit{Chloroplast} (depleted, OR=0.18, $q=2.7e-03$), \textit{Corynebacterium} (depleted, OR=0.29, $q=1.9e-02$), \textit{Pasteurellaceae} (depleted, OR=0.47, $q=2.5e-02$), \textit{Eukaryota;  ;  ;  ;  ;  ;  } (enriched, OR=1.57, $q=5.0e-02$).
+
+\subsubsection{SILVA Covariate-Adjusted Associations}
+\begin{table}[H]\centering\small
+\caption{Covariate-adjusted DCST associations with Irritable Bowel Syndrome (IBS) (SILVA, $q<0.05$).}\label{tab:IBS_adj}
+\begin{tabular}{lcccc}
+\toprule
+DCST & adjOR & 95\% CI & $q$-value \\
+\midrule
+\textit{Escherichia-Shigella} & 1.23 & 1.12--1.35 & 6.8e-04 \\
+\textit{Faecalibacterium} & 0.64 & 0.50--0.82 & 9.5e-03 \\
+\textit{Staphylococcus} & 0.46 & 0.29--0.73 & 2.0e-02 \\
+\textit{Streptococcus} & 0.61 & 0.44--0.85 & 5.0e-02 \\
+\bottomrule
+\end{tabular}\end{table}
+
+\subsubsection{GreenGenes2 Replication}
+Under GG2 taxonomy: \textit{Bacteria;  ;  ;  ;  ;  ;  } (enriched, OR=1.30), \textit{Staphylococcus} (depleted, OR=0.32), \textit{Streptococcus} (depleted, OR=0.57), \textit{Corynebacterium} (depleted, OR=0.34), \textit{Bacteroides H 857956} (enriched, OR=2.11) (showing top 5 of 7).
+
+\subsubsection{Depth-2 Subtype Analysis}
+\textit{Escherichia-Shigella} (adjOR=1.55, $q=3.2e-04$), \textit{Bacteroides} (adjOR=1.23, $q=3.7e-02$).
+
+\subsubsection{Sensitivity Analysis}
+3 association(s) survived: \textit{Faecalibacterium} (adjOR=0.62), \textit{Escherichia-Shigella} (adjOR=1.19), \textit{Prevotella 9} (adjOR=0.71).
+
+\subsection{Discussion}
+Our finding of enriched \textit{Escherichia--Shigella}-dominant DCSTs in IBS aligns with the well-documented expansion of Enterobacteriaceae in IBS \cite{Pittayanon2019_IBS}. The protective association of \textit{Faecalibacterium}-dominant DCSTs is consistent with the anti-inflammatory properties of \textit{F.\ prausnitzii} and its depletion in IBS patients \cite{Sokol2008_Fprausnitzii}. The reduced prevalence of \textit{Streptococcus} and \textit{Staphylococcus} DCSTs among IBS subjects is notable; these oral-associated taxa may reflect sample characteristics rather than true protective effects, though the association persisted in the sensitivity analysis excluding potential oral contaminants for \textit{Faecalibacterium}. The microbiota--gut--brain axis framework suggests that these compositional shifts affect visceral sensitivity, motility, and immune activation through altered SCFA production and serotonin signaling \cite{Dinan2015_IBS,Cryan2012_gutbrain}.
+\newpage
+
+\section{Inflammatory Bowel Disease (IBD)}
+\subsection{Introduction}
+Inflammatory bowel disease encompasses Crohn's disease and ulcerative colitis and affects over 6 million people worldwide. The gut microbiome plays a fundamental role in IBD pathogenesis, with landmark studies demonstrating reduced microbial diversity, expansion of Proteobacteria, and depletion of butyrate-producing Firmicutes \cite{LloydPrice2019_IBD,Gevers2014_CD,Frank2007_IBD}. The iHMP longitudinal study confirmed that not only composition but also microbial transcription and metabolite profiles are disrupted during disease flares \cite{LloydPrice2019_IBD}. Depletion of \textit{Faecalibacterium prausnitzii}, a potent anti-inflammatory commensal, is a hallmark of Crohn's disease \cite{Sokol2008_Fprausnitzii,Manichanh2006_CD}.
+
+\subsection{Results}
+\subsubsection{SILVA Univariate Associations}
+Significant univariate DCST associations with inflammatory bowel disease: \textit{Morganella} (enriched, OR=18.05, $q=9.1e-16$), \textit{Bacteroides} (enriched, OR=1.46, $q=2.2e-08$), \textit{Prevotella 7} (depleted, OR=0.10, $q=5.8e-05$), \textit{Staphylococcus} (depleted, OR=0.26, $q=1.2e-03$), \textit{Lachnospiraceae} (enriched, OR=2.19, $q=1.5e-03$), \textit{Enterobacterales} (enriched, OR=3.77, $q=2.8e-03$), \textit{Streptococcus} (depleted, OR=0.42, $q=5.3e-03$), \textit{Prevotella 9} (depleted, OR=0.64, $q=2.2e-02$), \textit{Chloroplast} (depleted, OR=0.00, $q=4.1e-02$).
+
+\subsubsection{SILVA Covariate-Adjusted Associations}
+\begin{table}[H]\centering\small
+\caption{Covariate-adjusted DCST associations with Inflammatory Bowel Disease (IBD) (SILVA, $q<0.05$).}\label{tab:IBD_adj}
+\begin{tabular}{lcccc}
+\toprule
+DCST & adjOR & 95\% CI & $q$-value \\
+\midrule
+\textit{Morganella} & 16.94 & 8.88--32.31 & 4.0e-15 \\
+\textit{Bacteroides} & 1.56 & 1.37--1.78 & 3.5e-09 \\
+\textit{Prevotella 9} & 0.41 & 0.27--0.61 & 5.5e-04 \\
+\textit{Lachnospiraceae} & 2.14 & 1.43--3.19 & 6.2e-03 \\
+\textit{Bifidobacterium} & 3.36 & 1.77--6.37 & 6.2e-03 \\
+\textit{Enterobacterales} & 3.15 & 1.60--6.24 & 2.0e-02 \\
+\textit{Proteus} & 4.37 & 1.78--10.73 & 2.4e-02 \\
+\bottomrule
+\end{tabular}\end{table}
+
+\subsubsection{GreenGenes2 Replication}
+Under GG2 taxonomy: \textit{Lachnospira} (enriched, OR=116.44), \textit{Morganella} (enriched, OR=17.70), \textit{Alistipes A 871400} (enriched, OR=11.63), \textit{Streptococcus} (depleted, OR=0.28), \textit{Proteus} (enriched, OR=5.52) (showing top 5 of 10).
+
+\subsubsection{Depth-2 Subtype Analysis}
+\textit{Bacteroides} (adjOR=3.54, $q=1.6e-37$), \textit{Morganella} (adjOR=16.94, $q=4.0e-15$), \textit{Bacteroides} (adjOR=4.04, $q=2.1e-04$).
+
+\subsubsection{Sensitivity Analysis}
+8 association(s) survived: \textit{Morganella} (adjOR=16.33), \textit{Bacteroides} (adjOR=1.48), \textit{Prevotella 9} (adjOR=0.39), \textit{Bifidobacterium} (adjOR=3.21), \textit{Lachnospiraceae} (adjOR=2.06), \textit{Enterobacterales} (adjOR=3.02), \textit{Escherichia-Shigella} (adjOR=0.78), \textit{Proteus} (adjOR=4.20).
+
+\subsection{Discussion}
+The striking association between \textit{Morganella}-dominant DCSTs and IBD (adjOR=16.94) represents one of the strongest signals in our analysis. \textit{Morganella morganii}, a member of Enterobacteriaceae, is an opportunistic pathogen whose expansion in the inflamed gut is consistent with the oxygen hypothesis: mucosal inflammation generates reactive oxygen species that favor facultative anaerobes over obligate anaerobes \cite{Sartor2008_IBD,Frank2007_IBD}. The enrichment of \textit{Bacteroides}-dominant DCSTs (adjOR=1.56) aligns with observations from the iHMP that \textit{Bacteroides} species expand during IBD flares, potentially through exploitation of host-derived glycans \cite{LloydPrice2019_IBD}. Conversely, the protective \textit{Prevotella\_9} association (adjOR=0.41) mirrors the ecological incompatibility between Prevotella-dominated and Bacteroides-dominated community states \cite{Arumugam2011_enterotypes}. The \textit{Lachnospiraceae} and \textit{Bifidobacterium} DCST enrichments in IBD may reflect compensatory community restructuring after loss of other commensals. These associations were robust across taxonomic schemas (SILVA and GG2) and survived sensitivity analysis, supporting their biological relevance \cite{Gevers2014_CD}.
+\newpage
+
+\section{Autoimmune Diseases}
+\subsection{Introduction}
+Autoimmune diseases arise from aberrant immune responses against self-antigens, and the gut microbiome has emerged as a key modulator of immune tolerance. Expansion of \textit{Prevotella copri} in rheumatoid arthritis \cite{Scher2013_Prevotella_RA}, depletion of regulatory T-cell-inducing Clostridia \cite{Atarashi2013_Clostridia_Treg}, and disease-specific dysbiosis across SLE, multiple sclerosis, and type 1 diabetes have been documented \cite{DeLuca2019_autoimmune,Vatanen2018_T1D}. Mechanistic pathways include molecular mimicry, impaired SCFA-mediated Treg induction, and barrier dysfunction permitting bacterial translocation.
+
+\subsection{Results}
+\subsubsection{SILVA Univariate Associations}
+Significant univariate DCST associations with autoimmune diseases: \textit{Prevotella 9} (depleted, OR=0.49, $q=1.6e-11$), \textit{Bacteroides} (enriched, OR=1.34, $q=4.5e-11$), \textit{Staphylococcus} (depleted, OR=0.28, $q=1.8e-08$), \textit{Morganella} (enriched, OR=6.82, $q=2.2e-08$), \textit{Streptococcus} (depleted, OR=0.38, $q=2.2e-08$), \textit{Escherichia-Shigella} (enriched, OR=1.19, $q=2.0e-03$), \textit{Faecalibacterium} (depleted, OR=0.66, $q=2.1e-03$), \textit{Alistipes} (enriched, OR=2.60, $q=7.8e-03$), \textit{Pasteurellaceae} (depleted, OR=0.43, $q=1.9e-02$).
+
+\subsubsection{SILVA Covariate-Adjusted Associations}
+\begin{table}[H]\centering\small
+\caption{Covariate-adjusted DCST associations with Autoimmune Diseases (SILVA, $q<0.05$).}\label{tab:Autoimmune_adj}
+\begin{tabular}{lcccc}
+\toprule
+DCST & adjOR & 95\% CI & $q$-value \\
+\midrule
+\textit{Bacteroides} & 1.39 & 1.28--1.52 & 2.1e-11 \\
+\textit{Morganella} & 6.88 & 3.66--12.92 & 1.9e-07 \\
+\textit{Prevotella 9} & 0.53 & 0.42--0.68 & 2.6e-05 \\
+\textit{Streptococcus} & 0.36 & 0.23--0.56 & 2.0e-04 \\
+\textit{Faecalibacterium} & 0.61 & 0.47--0.79 & 5.9e-03 \\
+\textit{Staphylococcus} & 0.43 & 0.26--0.71 & 2.0e-02 \\
+\bottomrule
+\end{tabular}\end{table}
+
+\subsubsection{GreenGenes2 Replication}
+Under GG2 taxonomy: \textit{Lachnospira} (enriched, OR=46.76), \textit{Morganella} (enriched, OR=7.15), \textit{Streptococcus} (depleted, OR=0.35), \textit{Staphylococcus} (depleted, OR=0.29), \textit{Prevotella} (depleted, OR=0.48) (showing top 5 of 16).
+
+\subsubsection{Depth-2 Subtype Analysis}
+\textit{Bacteroides} (adjOR=2.25, $q=1.2e-23$), \textit{Morganella} (adjOR=6.88, $q=7.0e-07$), \textit{Bacteroides} (adjOR=1.89, $q=8.2e-07$).
+
+\subsubsection{Sensitivity Analysis}
+4 association(s) survived: \textit{Bacteroides} (adjOR=1.33), \textit{Morganella} (adjOR=6.63), \textit{Prevotella 9} (adjOR=0.51), \textit{Faecalibacterium} (adjOR=0.59).
+
+\subsection{Discussion}
+The \textit{Bacteroides}-dominant DCST enrichment in autoimmune disease (adjOR=1.39) resonates with literature documenting \textit{Bacteroides fragilis} as both protective (via polysaccharide A induction of IL-10-producing Tregs) and pathogenic (enterotoxigenic strains promoting Th17 responses) depending on strain context \cite{DeLuca2019_autoimmune}. The strong \textit{Morganella} association (adjOR=6.88) parallels the IBD findings and likely reflects shared inflammatory mechanisms. The protective \textit{Prevotella\_9} (adjOR=0.53), \textit{Faecalibacterium} (adjOR=0.61), and \textit{Streptococcus} associations align with the framework of SCFA-producing commensals maintaining immune tolerance through Treg induction \cite{Atarashi2013_Clostridia_Treg}. These patterns were confirmed with GG2 taxonomy and survived sensitivity analysis, with \textit{Bacteroides}, \textit{Morganella}, \textit{Prevotella\_9}, and \textit{Faecalibacterium} all remaining significant.
+\newpage
+
+\section{Acid Reflux / GERD}
+\subsection{Introduction}
+Gastroesophageal reflux disease (GERD) affects approximately 20\% of the Western population. Recent research has shifted the understanding of GERD pathophysiology from a purely acid-mediated mechanism to include microbial dysbiosis \cite{DeSouza2021_GERD}. Two distinct esophageal microbiome phenotypes have been identified: a healthy Streptococcus-dominated type and a GERD-associated gram-negative-enriched type \cite{Deshpande2018_esophageal}. Mendelian randomization studies have identified causal associations between specific gut microbial taxa and GERD risk \cite{Wang2024_GERD_MR}.
+
+\subsection{Results}
+\subsubsection{SILVA Univariate Associations}
+Significant univariate DCST associations with acid reflux / gerd: \textit{Unassigned;  ;  ;  ;  ;  ;  } (depleted, OR=0.00, $q=1.8e-17$), \textit{Eukaryota;  ;  ;  ;  ;  ;  } (depleted, OR=0.00, $q=4.9e-13$), \textit{Prevotella 7} (depleted, OR=0.12, $q=5.7e-12$), \textit{Streptococcus} (depleted, OR=0.35, $q=4.5e-09$), \textit{Bacteroides} (enriched, OR=1.29, $q=9.6e-09$), \textit{Staphylococcus} (depleted, OR=0.28, $q=2.2e-08$), \textit{Neisseria} (depleted, OR=0.17, $q=1.5e-04$), \textit{Escherichia-Shigella} (enriched, OR=1.22, $q=2.0e-04$), \textit{Pasteurellaceae} (depleted, OR=0.36, $q=4.7e-03$), \textit{Corynebacterium} (depleted, OR=0.19, $q=5.1e-03$).
+
+\subsubsection{SILVA Covariate-Adjusted Associations}
+\begin{table}[H]\centering\small
+\caption{Covariate-adjusted DCST associations with Acid Reflux / GERD (SILVA, $q<0.05$).}\label{tab:Acid_reflux_adj}
+\begin{tabular}{lcccc}
+\toprule
+DCST & adjOR & 95\% CI & $q$-value \\
+\midrule
+\textit{Bacteroides} & 1.28 & 1.17--1.40 & 6.9e-06 \\
+\textit{Streptococcus} & 0.45 & 0.30--0.67 & 4.2e-03 \\
+\textit{Staphylococcus} & 0.41 & 0.25--0.68 & 1.1e-02 \\
+\bottomrule
+\end{tabular}\end{table}
+
+\subsubsection{GreenGenes2 Replication}
+Under GG2 taxonomy: \textit{Streptococcus} (depleted, OR=0.30), \textit{Prevotella} (depleted, OR=0.13), \textit{Staphylococcus} (depleted, OR=0.33), \textit{Neisseria 563205} (depleted, OR=0.18), \textit{Pseudomonadaceae} (enriched, OR=2.43) (showing top 5 of 9).
+
+\subsubsection{Depth-2 Subtype Analysis}
+\textit{Parabacteroides} (adjOR=1.99, $q=6.6e-04$), \textit{Alistipes} (adjOR=1.51, $q=3.7e-02$).
+
+\subsubsection{Sensitivity Analysis}
+1 association(s) survived: \textit{Bacteroides} (adjOR=1.21).
+
+\subsection{Discussion}
+The enrichment of \textit{Bacteroides}-dominant DCSTs in acid reflux (adjOR=1.28) and protective associations for \textit{Streptococcus} and \textit{Staphylococcus} DCSTs are noteworthy. The latter may reflect the observation that healthy esophageal microbiomes are dominated by gram-positive organisms \cite{Deshpande2018_esophageal}, and individuals whose gut is dominated by these taxa may represent a healthier baseline. The protective \textit{Streptococcus} association survived covariate adjustment but only \textit{Bacteroides} survived the full sensitivity analysis, suggesting potential confounding for some associations. The strong univariate depletion of Unassigned and Eukaryota DCSTs in acid reflux is intriguing and may indicate a selection effect related to sampling quality or an unknown biological mechanism \cite{DeSouza2021_GERD}.
+\newpage
+
+\section{Cardiovascular Disease}
+\subsection{Introduction}
+The gut microbiome influences cardiovascular disease (CVD) through several mechanisms, most notably the trimethylamine N-oxide (TMAO) pathway where gut bacteria convert dietary choline and carnitine to trimethylamine, subsequently oxidized to the pro-atherogenic metabolite TMAO \cite{Wang2011_TMAO,Tang2013_TMAO}. Atherosclerotic CVD patients exhibit dysbiosis with increased Enterobacteriaceae and \textit{Streptococcus} \cite{Jie2017_ASCVD}, and TMAO directly enhances platelet reactivity and thrombosis \cite{Zhu2016_TMAO_thrombosis}. Oral bacteria, particularly Pasteurellaceae, have been detected in atherosclerotic plaques, implicating oral--gut--cardiovascular cross-talk.
+
+\subsection{Results}
+\subsubsection{SILVA Univariate Associations}
+Significant univariate DCST associations with cardiovascular disease: \textit{Pasteurellaceae} (enriched, OR=8.77, $q=2.0e-28$), \textit{Staphylococcus} (enriched, OR=4.22, $q=2.3e-17$), \textit{Neisseria} (enriched, OR=4.51, $q=2.7e-08$), \textit{Chloroplast} (enriched, OR=4.70, $q=3.4e-06$), \textit{Prevotella 7} (depleted, OR=0.13, $q=1.8e-03$), \textit{Escherichia-Shigella} (depleted, OR=0.74, $q=5.5e-03$).
+
+\subsubsection{SILVA Covariate-Adjusted Associations}
+No associations reached significance after covariate adjustment.
+
+\subsubsection{GreenGenes2 Replication}
+Under GG2 taxonomy: \textit{Pasteurellaceae} (enriched, OR=9.50), \textit{Staphylococcus} (enriched, OR=4.52), \textit{JC017} (enriched, OR=6.13), \textit{Bacteria;  ;  ;  ;  ;  ;  } (depleted, OR=0.74), \textit{Acinetobacter} (enriched, OR=2.55).
+
+\subsubsection{Depth-2 Subtype Analysis}
+\textit{Agathobacter} (adjOR=3.47, $q=2.6e-05$).
+
+\subsubsection{Sensitivity Analysis}
+No associations survived the sensitivity analysis after excluding potentially contaminated samples.
+
+\subsection{Discussion}
+The CVD associations in our data are striking but must be interpreted cautiously: the strong enrichment of \textit{Pasteurellaceae}-dominant DCSTs (OR=8.77) and \textit{Staphylococcus} (OR=4.22) in univariate analysis did not survive covariate adjustment, suggesting confounding by age and other demographic factors. CVD disproportionately affects older individuals, and these taxa may correlate with age-related microbiome changes. The \textit{Pasteurellaceae} result is nonetheless biologically plausible given the documented presence of oral bacteria in atherosclerotic lesions \cite{Jie2017_ASCVD}. The depth-2 \textit{Agathobacter} enrichment (adjOR=3.47) is a novel finding warranting further investigation, as \textit{Agathobacter rectalis} is typically considered a beneficial SCFA producer \cite{Wang2011_TMAO}. GG2 analysis confirmed the \textit{Pasteurellaceae} and \textit{Staphylococcus} associations univariately.
+\newpage
+
+\section{Obesity}
+\subsection{Introduction}
+The relationship between gut microbiome and obesity has been studied extensively since landmark findings that the obese microbiome has increased energy harvest capacity \cite{Turnbaugh2006_energy,Ley2006_obesity}. The Firmicutes/Bacteroidetes ratio was initially proposed as a biomarker, though subsequent meta-analyses questioned its consistency \cite{Walters2014_meta_obesity}. Low microbial gene richness correlates with metabolic dysfunction \cite{LeChatelier2013_richness}, and \textit{Akkermansia muciniphila} has shown anti-obesity effects through enhanced barrier function \cite{Everard2013_Akkermansia}. Enterotype classification (Bacteroides vs.\ Prevotella dominant) may predict dietary response in obesity \cite{Arumugam2011_enterotypes}.
+
+\subsection{Results}
+\subsubsection{SILVA Univariate Associations}
+Significant univariate DCST associations with obesity: \textit{Prevotella 7} (enriched, OR=2.75, $q=1.2e-14$), \textit{Escherichia-Shigella} (depleted, OR=0.85, $q=4.5e-03$), \textit{Lactobacillus} (enriched, OR=2.46, $q=1.9e-02$).
+
+\subsubsection{SILVA Covariate-Adjusted Associations}
+No associations reached significance after covariate adjustment.
+
+\subsubsection{GreenGenes2 Replication}
+Under GG2 taxonomy: \textit{Prevotella} (enriched, OR=2.52), \textit{Bacteroides H 857956} (enriched, OR=1.86), \textit{Bacteria;  ;  ;  ;  ;  ;  } (depleted, OR=0.83), \textit{Bacteroides H 857956} (enriched, OR=1.95), \textit{Phocaeicola A} (enriched, OR=1.24) (showing top 5 of 8).
+
+\subsubsection{Depth-2 Subtype Analysis}
+No depth-2 associations reached significance.
+
+\subsubsection{Sensitivity Analysis}
+No associations survived the sensitivity analysis after excluding potentially contaminated samples.
+
+\subsection{Discussion}
+Our analysis identified only univariate associations with obesity, with the \textit{Prevotella\_7}-dominant DCST showing the strongest enrichment (OR=2.75). This finding aligns with the literature on Prevotella-dominated gut types and their complex relationship with diet and obesity; high Prevotella/Bacteroidetes ratios predict greater weight loss on high-fiber diets but may also associate with higher BMI in certain dietary contexts \cite{Arumugam2011_enterotypes}. The lack of adjusted associations suggests that demographic confounders (age, sex) explain much of the variance, consistent with the well-documented complexity of obesity--microbiome relationships \cite{Walters2014_meta_obesity}. GG2 analysis identified additional signals including \textit{Bacteroides\_H} enrichment, which may represent reclassified \textit{Bacteroides} species under updated taxonomy \cite{McDonald2024_GG2}.
+\newpage
+
+\section{Seasonal Allergies}
+\subsection{Introduction}
+The hygiene hypothesis, first articulated by Strachan \cite{Strachan1989_hygiene}, posits that reduced early microbial exposure underlies the rise in allergic diseases. Modern reformulations focus on the microbiome: delayed gut microbiota maturation in infancy is a hallmark of all pediatric allergic diseases \cite{Hoskinson2023_allergy}. Analysis of the American Gut Project specifically identified reduced Clostridiales and increased Bacteroidales in allergic individuals \cite{Hua2016_AGP_allergy}. Short-chain fatty acids, particularly butyrate, protect against allergic sensitization by promoting regulatory T cells and strengthening epithelial barriers.
+
+\subsection{Results}
+\subsubsection{SILVA Univariate Associations}
+Significant univariate DCST associations with seasonal allergies: \textit{Prevotella 7} (depleted, OR=0.22, $q=2.0e-28$), \textit{Escherichia-Shigella} (enriched, OR=1.21, $q=4.4e-09$), \textit{Prevotella 9} (depleted, OR=0.75, $q=1.2e-06$), \textit{Enterobacteriaceae} (enriched, OR=1.25, $q=5.8e-04$), \textit{Pasteurellaceae} (depleted, OR=0.58, $q=2.1e-03$), \textit{Neisseria} (depleted, OR=0.57, $q=5.4e-03$).
+
+\subsubsection{SILVA Covariate-Adjusted Associations}
+\begin{table}[H]\centering\small
+\caption{Covariate-adjusted DCST associations with Seasonal Allergies (SILVA, $q<0.05$).}\label{tab:Seasonal_allergies_adj}
+\begin{tabular}{lcccc}
+\toprule
+DCST & adjOR & 95\% CI & $q$-value \\
+\midrule
+\textit{Prevotella 9} & 0.67 & 0.59--0.76 & 3.3e-08 \\
+\textit{Escherichia-Shigella} & 1.13 & 1.06--1.21 & 5.1e-03 \\
+\textit{Enterobacteriaceae} & 1.21 & 1.08--1.36 & 2.7e-02 \\
+\bottomrule
+\end{tabular}\end{table}
+
+\subsubsection{GreenGenes2 Replication}
+Under GG2 taxonomy: \textit{Prevotella} (depleted, OR=0.12), \textit{Bacteria;  ;  ;  ;  ;  ;  } (enriched, OR=1.22), \textit{Lachnospira} (depleted, OR=0.06), \textit{Enterobacteriaceae A 725029} (enriched, OR=1.26), \textit{Pasteurellaceae} (depleted, OR=0.56) (showing top 5 of 9).
+
+\subsubsection{Depth-2 Subtype Analysis}
+\textit{Bacteroides} (adjOR=1.25, $q=1.2e-05$), \textit{Bacteroides} (adjOR=0.62, $q=2.8e-04$).
+
+\subsubsection{Sensitivity Analysis}
+3 association(s) survived: \textit{Prevotella 9} (adjOR=0.67), \textit{Escherichia-Shigella} (adjOR=1.14), \textit{Enterobacteriaceae} (adjOR=1.22).
+
+\subsection{Discussion}
+The protective \textit{Prevotella\_9} association (adjOR=0.67) aligns directly with the AGP analysis by Hua et al. \cite{Hua2016_AGP_allergy}, which identified Prevotella depletion in allergic subjects. The enrichment of \textit{Escherichia--Shigella} and \textit{Enterobacteriaceae} DCSTs in seasonal allergy subjects (both surviving adjustment and sensitivity analysis) is consistent with the framework that Proteobacteria-dominated gut communities reflect a dysbiotic state with reduced colonization resistance and impaired immune tolerance \cite{Hoskinson2023_allergy}. The GG2 analysis showed the same pattern with \textit{Prevotella} depletion being among the strongest signals. All three adjusted associations survived sensitivity analysis, indicating these are robust findings independent of potential oral/skin contamination.
+\newpage
+
+\section{Diabetes}
+\subsection{Introduction}
+The gut microbiome is implicated in both type 1 and type 2 diabetes through distinct but overlapping mechanisms. Landmark metagenomics studies revealed decreased butyrate producers and increased opportunistic pathogens in type 2 diabetes \cite{Qin2012_T2D,Karlsson2013_T2D_women}. Metabolic endotoxemia---elevated circulating bacterial LPS---initiates insulin resistance through TLR4 signaling \cite{Cani2007_endotoxemia}. Metformin's therapeutic effects are partly mediated through enrichment of \textit{Akkermansia muciniphila} \cite{Forslund2015_metformin}. Recent work demonstrates that dysbiotic carbohydrate fermentation directly contributes to insulin resistance \cite{Takeuchi2023_carbohydrate}.
+
+\subsection{Results}
+\subsubsection{SILVA Univariate Associations}
+Significant univariate DCST associations with diabetes: \textit{Streptococcus} (depleted, OR=0.28, $q=8.2e-03$), \textit{Staphylococcus} (depleted, OR=0.24, $q=2.9e-02$).
+
+\subsubsection{SILVA Covariate-Adjusted Associations}
+No associations reached significance after covariate adjustment.
+
+\subsubsection{GreenGenes2 Replication}
+Under GG2 taxonomy: \textit{Streptococcus} (depleted, OR=0.26), \textit{Prevotella} (enriched, OR=4.59), \textit{Bacteroides H 857956} (enriched, OR=2.01), \textit{Staphylococcus} (depleted, OR=0.25), \textit{Prevotella} (depleted, OR=0.00).
+
+\subsubsection{Depth-2 Subtype Analysis}
+\textit{Akkermansia} (adjOR=4.88, $q=2.1e-04$).
+
+\subsubsection{Sensitivity Analysis}
+No associations survived the sensitivity analysis after excluding potentially contaminated samples.
+
+\subsection{Discussion}
+Diabetes showed relatively few DCST associations, with only univariate depletion of \textit{Streptococcus} and \textit{Staphylococcus} DCSTs reaching significance. At depth-2, however, \textit{Akkermansia}-dominant subtypes showed strong enrichment (adjOR=4.88), which is paradoxical given the protective role typically attributed to \textit{A.\ muciniphila} \cite{Everard2013_Akkermansia,Forslund2015_metformin}. This may reflect reverse causation: metformin treatment enriches \textit{Akkermansia}, and treated diabetics would have high \textit{Akkermansia} abundance precisely because of their medication \cite{Forslund2015_metformin}. This confounding effect highlights the challenge of cross-sectional microbiome studies in medicated populations \cite{Qin2012_T2D}.
+\newpage
+
+\section{\textit{Clostridioides difficile} Infection (CDI)}
+\subsection{Introduction}
+\textit{Clostridioides difficile} infection is fundamentally a disease of dysbiosis: antibiotic-mediated disruption of the healthy microbiome eliminates colonization resistance, enabling \textit{C.\ difficile} spore germination and toxin production \cite{Sehgal2021_CDI,Schubert2014_CDI}. CDI patients exhibit reduced diversity with enrichment of Enterococcus and depletion of Bacteroides, Lachnospiraceae, and Ruminococcaceae. Fecal microbiota transplantation achieves 80--93\% cure rates by restoring these protective communities \cite{Seekatz2014_FMT}. Key protective mechanisms include secondary bile acid production by \textit{Clostridium scindens} and resource competition by diverse anaerobic communities.
+
+\subsection{Results}
+\subsubsection{SILVA Univariate Associations}
+Significant univariate DCST associations with \textit{clostridioides difficile} infection: \textit{Escherichia-Shigella} (enriched, OR=1.45, $q=5.5e-03$), \textit{Prevotella 9} (depleted, OR=0.47, $q=3.0e-02$).
+
+\subsubsection{SILVA Covariate-Adjusted Associations}
+\begin{table}[H]\centering\small
+\caption{Covariate-adjusted DCST associations with \textit{Clostridioides difficile} Infection (CDI) (SILVA, $q<0.05$).}\label{tab:CDI_adj}
+\begin{tabular}{lcccc}
+\toprule
+DCST & adjOR & 95\% CI & $q$-value \\
+\midrule
+\textit{Escherichia-Shigella} & 1.48 & 1.19--1.84 & 1.1e-02 \\
+\bottomrule
+\end{tabular}\end{table}
+
+\subsubsection{GreenGenes2 Replication}
+Under GG2 taxonomy: \textit{Bacteroides H 857956} (enriched, OR=2.81), \textit{Streptococcus} (depleted, OR=0.21), \textit{Proteus} (enriched, OR=5.43), \textit{Phocaeicola A} (enriched, OR=1.93), \textit{Pseudomonadaceae} (enriched, OR=3.34).
+
+\subsubsection{Depth-2 Subtype Analysis}
+\textit{Sutterella} (adjOR=9.85, $q=1.2e-05$).
+
+\subsubsection{Sensitivity Analysis}
+2 association(s) survived: \textit{Escherichia-Shigella} (adjOR=1.41), \textit{Prevotella 9} (adjOR=0.34).
+
+\subsection{Discussion}
+The \textit{Escherichia--Shigella} DCST enrichment in CDI (adjOR=1.48) is consistent with the well-documented expansion of Enterobacteriaceae in CDI-susceptible gut communities \cite{Schubert2014_CDI}. This association survived both covariate adjustment and sensitivity analysis, reinforcing its robustness. The depth-2 \textit{Sutterella} association (adjOR=9.85) is novel; while \textit{Sutterella} has been reported as enriched in some inflammatory conditions, its role in CDI susceptibility deserves further investigation. The protective trend for \textit{Prevotella\_9} aligns with evidence that diverse anaerobic communities provide colonization resistance against \textit{C.\ difficile} \cite{Sehgal2021_CDI,Seekatz2014_FMT}.
+\newpage
+
+\section{Lung Disease}
+\subsection{Introduction}
+The gut--lung axis represents a bidirectional communication pathway where gut microbiota composition influences respiratory health \cite{Budden2017_gutlung}. Short-chain fatty acids from gut bacterial fermentation protect against allergic airway inflammation \cite{Trompette2014_fiber_asthma}, while airway \textit{Prevotella} enhance pathogen clearance through TLR2-dependent immune activation \cite{Horn2022_Prevotella_lung}. COPD patients exhibit characteristic gut dysbiosis with altered Streptococcus species and lipid metabolites correlating with reduced lung function.
+
+\subsection{Results}
+\subsubsection{SILVA Univariate Associations}
+Significant univariate DCST associations with lung disease: \textit{Prevotella 7} (depleted, OR=0.23, $q=1.5e-07$), \textit{Streptococcus} (depleted, OR=0.65, $q=3.2e-02$), \textit{Pasteurellaceae} (depleted, OR=0.44, $q=4.1e-02$).
+
+\subsubsection{SILVA Covariate-Adjusted Associations}
+\begin{table}[H]\centering\small
+\caption{Covariate-adjusted DCST associations with Lung Disease (SILVA, $q<0.05$).}\label{tab:Lung_disease_adj}
+\begin{tabular}{lcccc}
+\toprule
+DCST & adjOR & 95\% CI & $q$-value \\
+\midrule
+\textit{Staphylococcus} & 1.55 & 1.17--2.05 & 3.9e-02 \\
+\bottomrule
+\end{tabular}\end{table}
+
+\subsubsection{GreenGenes2 Replication}
+Under GG2 taxonomy: \textit{Prevotella} (depleted, OR=0.23), \textit{Streptococcus} (depleted, OR=0.61), \textit{Pasteurellaceae} (depleted, OR=0.46).
+
+\subsubsection{Depth-2 Subtype Analysis}
+\textit{Agathobacter} (adjOR=1.89, $q=6.5e-04$), \textit{Staphylococcus} (adjOR=2.04, $q=3.7e-02$).
+
+\subsubsection{Sensitivity Analysis}
+No associations survived the sensitivity analysis after excluding potentially contaminated samples.
+
+\subsection{Discussion}
+Our analysis found limited but intriguing lung disease associations. The \textit{Staphylococcus}-dominant DCST enrichment (adjOR=1.55) may reflect the known role of \textit{S.\ aureus} in respiratory infections and its bidirectional translocation between gut and airways. The univariate depletion of \textit{Prevotella\_7} (OR=0.23) is consistent with the protective role of Prevotella species in respiratory immunity \cite{Horn2022_Prevotella_lung}. The depth-2 \textit{Agathobacter} enrichment (adjOR=1.89) parallels the CVD finding and warrants investigation of whether SCFA-producer dominated guts reflect metabolic changes associated with chronic inflammatory conditions. None of the adjusted associations survived sensitivity analysis, suggesting potential confounding by oral-associated taxa \cite{Budden2017_gutlung}.
+\newpage
+
+\section{Migraine}
+\subsection{Introduction}
+The gut--brain axis is increasingly implicated in migraine pathophysiology. Systematic reviews confirm altered microbiota composition in migraine patients \cite{Gorenshtein2025_migraine}, with dysbiosis affecting serotonin biosynthesis, CGRP release from trigeminal neurons, and systemic inflammation. Fecal microbiota transplantation has shown promise as a durable intervention \cite{Kappeter2023_migraine_FMT}. Mendelian randomization studies have identified \textit{Bacteroides fragilis} and \textit{Blautia} as protective against migraine risk.
+
+\subsection{Results}
+\subsubsection{SILVA Univariate Associations}
+Significant univariate DCST associations with migraine: \textit{Bacteroides} (enriched, OR=1.19, $q=3.7e-04$), \textit{Corynebacteriaceae} (depleted, OR=0.20, $q=4.8e-02$).
+
+\subsubsection{SILVA Covariate-Adjusted Associations}
+\begin{table}[H]\centering\small
+\caption{Covariate-adjusted DCST associations with Migraine (SILVA, $q<0.05$).}\label{tab:Migraine_adj}
+\begin{tabular}{lcccc}
+\toprule
+DCST & adjOR & 95\% CI & $q$-value \\
+\midrule
+\textit{Bacteroides} & 1.16 & 1.05--1.26 & 3.4e-02 \\
+\bottomrule
+\end{tabular}\end{table}
+
+\subsubsection{GreenGenes2 Replication}
+Under GG2 taxonomy: \textit{Bacteroides H 857956} (enriched, OR=1.68), \textit{Lactobacillus} (enriched, OR=2.34), \textit{Bacteroides H 857956} (enriched, OR=1.48).
+
+\subsubsection{Depth-2 Subtype Analysis}
+No depth-2 associations reached significance.
+
+\subsubsection{Sensitivity Analysis}
+No associations survived the sensitivity analysis after excluding potentially contaminated samples.
+
+\subsection{Discussion}
+The modest \textit{Bacteroides}-dominant DCST enrichment in migraine (adjOR=1.16) is consistent with recent Mendelian randomization findings and may reflect metabolite-driven mechanisms, as \textit{Bacteroides} species produce substantial amounts of propionate, which affects vagal afferent signaling \cite{Gorenshtein2025_migraine,Cryan2012_gutbrain}. The univariate depletion of \textit{Corynebacteriaceae} DCSTs is difficult to interpret biologically. The relatively weak associations overall suggest that DCSTs based on dominant taxa may not capture the subtle compositional shifts relevant to migraine, where functional metabolite profiles may be more informative than dominant-taxon community typing \cite{Kappeter2023_migraine_FMT}.
+\newpage
+
+\section{Kidney Disease}
+\subsection{Introduction}
+The gut--kidney axis links intestinal dysbiosis to chronic kidney disease (CKD) progression through uremic toxin production. Gut bacteria metabolize dietary precursors to produce trimethylamine N-oxide (TMAO), indoxyl sulfate, and p-cresyl sulfate, all of which accelerate renal decline \cite{Tang2015_TMAO_CKD}. CKD itself alters the gut environment, creating a vicious cycle of dysbiosis and uremia \cite{Vaziri2013_CKD}. \textit{Lactobacillus} supplementation has shown protective effects in diabetic kidney disease models.
+
+\subsection{Results}
+\subsubsection{SILVA Univariate Associations}
+Significant univariate DCST associations with kidney disease: No univariate associations reached significance.
+
+\subsubsection{SILVA Covariate-Adjusted Associations}
+\begin{table}[H]\centering\small
+\caption{Covariate-adjusted DCST associations with Kidney Disease (SILVA, $q<0.05$).}\label{tab:Kidney_disease_adj}
+\begin{tabular}{lcccc}
+\toprule
+DCST & adjOR & 95\% CI & $q$-value \\
+\midrule
+\textit{Lactobacillus} & 5.85 & 2.26--15.14 & 7.8e-03 \\
+\textit{Prevotella 7} & 4.57 & 1.97--10.59 & 1.0e-02 \\
+\bottomrule
+\end{tabular}\end{table}
+
+\subsubsection{GreenGenes2 Replication}
+Under GG2 taxonomy: \textit{Bacteroides H 857956} (enriched, OR=3.85), \textit{Prevotella} (enriched, OR=5.30).
+
+\subsubsection{Depth-2 Subtype Analysis}
+\textit{Lactobacillus} (adjOR=5.85, $q=1.8e-02$).
+
+\subsubsection{Sensitivity Analysis}
+2 association(s) survived: \textit{Lactobacillus} (adjOR=6.26), \textit{Prevotella 7} (adjOR=4.55).
+
+\subsection{Discussion}
+The \textit{Lactobacillus}-dominant DCST enrichment in kidney disease (adjOR=5.85) is the most noteworthy finding. While \textit{Lactobacillus} is generally considered beneficial, elevated abundance may reflect a compensatory response to CKD-associated dysbiosis or a selection effect related to probiotic use among kidney disease patients. Alternatively, certain \textit{Lactobacillus} species produce D-lactate, which accumulates in renal failure \cite{Vaziri2013_CKD}. The \textit{Prevotella\_7} enrichment (adjOR=4.57) deserves attention given that Prevotellaceae have been identified as CKD-protective in Mendelian randomization studies, though elevated abundance in our cross-sectional data may again reflect reverse causation. Both associations survived sensitivity analysis, supporting their robustness \cite{Tang2015_TMAO_CKD}.
+\newpage
+
+
+% ============================================================
+\section{General Discussion}
+% ============================================================
+
+This Phase 1 analysis demonstrates that DCST classification---a simple, clustering-free method of community typing based on the dominant taxon after $L_\infty$ normalization---identifies biologically meaningful associations between gut microbiota structure and diverse health outcomes. Across 12 conditions, we identified 28 covariate-adjusted associations (SILVA) and 23 that survived sensitivity analysis, indicating that the majority of findings are robust to potential oral/skin contamination artifacts.
+
+Several cross-cutting patterns emerge. First, \textit{Bacteroides}-dominant guts show consistent positive associations with inflammatory conditions (IBD, autoimmune disease, acid reflux, migraine), suggesting that Bacteroides dominance may mark a community state with reduced resilience to inflammatory challenges. Second, \textit{Prevotella}-dominant states are consistently protective against allergies and autoimmune conditions, consistent with the hygiene hypothesis framework and the ecological trade-off between Prevotella and Bacteroides community types \cite{Arumugam2011_enterotypes}. Third, \textit{Morganella} dominance---a rare but strongly disease-associated DCST---emerges as a powerful marker for IBD and autoimmune conditions, likely reflecting severe dysbiosis with expansion of opportunistic Enterobacteriaceae.
+
+The GG2 analysis provides independent taxonomic validation, with 91.6\% genus-level concordance and qualitatively similar association patterns. This dual-taxonomy approach strengthens confidence in our findings and demonstrates the robustness of DCST classification to reference database choice.
+
+\subsection{Limitations}
+Key limitations include: (1) cross-sectional design precludes causal inference; (2) self-reported health conditions in AGP are not clinically verified; (3) potential confounding by diet, medication, and geography not captured in available metadata; (4) DCSTs capture only the dominant taxon and may miss more subtle compositional shifts; (5) Obesity was derived from BMI $\geq 30$ rather than clinical diagnosis. Despite these limitations, the large sample size, consistent results across taxonomic schemas, and robustness to sensitivity analysis support the utility of DCSTs as a practical tool for community-level microbiome epidemiology.
+
+\subsection{Conclusions}
+DCST classification provides a computationally simple yet informative framework for characterizing gut microbiota community structure at scale. The method identifies disease associations that are biologically plausible, reproducible across taxonomic references, and robust to quality-control sensitivity analysis. Future work should extend this approach to longitudinal cohorts with clinical phenotyping and integrate functional metagenomics data to elucidate mechanistic pathways underlying DCST--disease associations.
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\end{document}

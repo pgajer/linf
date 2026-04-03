@@ -1,0 +1,168 @@
+Phase 1 Full-Cohort Analysis: Summary Report
+==================================================
+Date: 2026-03-24
+
+COHORT
+  AGP samples in SILVA table: 34711
+  After QC: 30290 samples × 274 taxa
+
+DEPTH-1 DCSTs (n0=50)
+  40 DCSTs + RARE_DOMINANT (1162 samples)
+    d__Bacteroides                       10358
+    d__Escherichia-Shigella               6857
+    d__Prevotella_9                       1870
+    d__Enterobacteriaceae                 1564
+    d__Faecalibacterium                   1320
+    RARE_DOMINANT                         1162
+    d__Streptococcus                       827
+    d__Pseudomonas                         664
+    d__Staphylococcus                      583
+    d__Prevotella_7                        476
+    Unassigned;__;__;__;__;__;__           444
+    d__Lachnospiraceae                     416
+    d__Eukaryota;__;__;__;__;__;__         331
+    d__Akkermansia                         330
+    d__Pasteurellaceae                     276
+    d__Acinetobacter                       229
+    d__Neisseria                           222
+    d__Agathobacter                        177
+    d__Rothia                              167
+    d__Bifidobacterium                     161
+    d__Veillonella                         156
+    d__Corynebacterium                     154
+    d__Chloroplast                         150
+    d__Stenotrophomonas                    135
+    d__Lactobacillus                       117
+    d__Corynebacteriaceae                  104
+    d__Clostridia_UCG-014                   95
+    d__Enterobacterales                     92
+    d__Alistipes                            89
+    d__Subdoligranulum                      79
+    d__Dialister                            76
+    d__Comamonadaceae                       73
+    d__Prevotellaceae                       70
+    d__uncultured                           69
+    d__Blautia                              68
+    d__Muribaculaceae                       64
+    d__Prevotellaceae_NK3B31_group          55
+    d__uncultured                           53
+    d__Lawsonella                           53
+    d__Morganella                           53
+    d__Proteus                              51
+
+COVARIATES
+  Age valid: 27372 (90.4%)
+  Sex valid: 25598 (84.5%)
+  BMI valid: 26541 (87.6%)
+  Complete cases: 22632 (74.7%)
+
+UNIVARIATE (Fisher, depth-1)
+  Tests: 492, significant q<0.05: 59
+    d__Prevotella_7 × Seasonal_allergies: OR=0.22, q=2.01e-28
+    d__Pasteurellaceae × Cardiovascular_disease: OR=8.77, q=2.01e-28
+    Unassigned;__;__;__;__;__;__ × Acid_reflux: OR=0.00, q=1.80e-17
+    d__Staphylococcus × Cardiovascular_disease: OR=4.22, q=2.34e-17
+    d__Morganella × IBD: OR=18.05, q=9.08e-16
+    d__Prevotella_7 × Obesity: OR=2.75, q=1.20e-14
+    d__Eukaryota;__;__;__;__;__;__ × Acid_reflux: OR=0.00, q=4.86e-13
+    d__Prevotella_7 × Acid_reflux: OR=0.12, q=5.75e-12
+    d__Prevotella_9 × Autoimmune: OR=0.49, q=1.62e-11
+    d__Bacteroides × Autoimmune: OR=1.34, q=4.54e-11
+    d__Escherichia-Shigella × Seasonal_allergies: OR=1.21, q=4.40e-09
+    d__Streptococcus × Acid_reflux: OR=0.35, q=4.49e-09
+    d__Bacteroides × Acid_reflux: OR=1.29, q=9.63e-09
+    d__Staphylococcus × Autoimmune: OR=0.28, q=1.84e-08
+    d__Morganella × Autoimmune: OR=6.82, q=2.17e-08
+    d__Staphylococcus × Acid_reflux: OR=0.28, q=2.17e-08
+    d__Bacteroides × IBD: OR=1.46, q=2.17e-08
+    d__Staphylococcus × IBS: OR=0.31, q=2.17e-08
+    d__Streptococcus × Autoimmune: OR=0.38, q=2.17e-08
+    d__Neisseria × Cardiovascular_disease: OR=4.51, q=2.71e-08
+    d__Escherichia-Shigella × IBS: OR=1.29, q=7.85e-08
+    d__Prevotella_7 × Lung_disease: OR=0.23, q=1.47e-07
+    d__Prevotella_9 × Seasonal_allergies: OR=0.75, q=1.17e-06
+    d__Chloroplast × Cardiovascular_disease: OR=4.70, q=3.40e-06
+    d__Prevotella_7 × IBD: OR=0.10, q=5.81e-05
+    d__Neisseria × Acid_reflux: OR=0.17, q=1.49e-04
+    d__Escherichia-Shigella × Acid_reflux: OR=1.22, q=2.04e-04
+    d__Bacteroides × Migraine: OR=1.19, q=3.71e-04
+    d__Enterobacteriaceae × Seasonal_allergies: OR=1.25, q=5.78e-04
+    d__Staphylococcus × IBD: OR=0.26, q=1.17e-03
+    d__Lachnospiraceae × IBD: OR=2.19, q=1.47e-03
+    d__Prevotella_7 × Cardiovascular_disease: OR=0.13, q=1.80e-03
+    d__Escherichia-Shigella × Autoimmune: OR=1.19, q=1.98e-03
+    d__Faecalibacterium × Autoimmune: OR=0.66, q=2.07e-03
+    d__Pasteurellaceae × Seasonal_allergies: OR=0.58, q=2.07e-03
+    d__Streptococcus × IBS: OR=0.60, q=2.62e-03
+    d__Chloroplast × IBS: OR=0.18, q=2.65e-03
+    d__Enterobacterales × IBD: OR=3.77, q=2.75e-03
+    d__Escherichia-Shigella × Obesity: OR=0.85, q=4.47e-03
+    d__Pasteurellaceae × Acid_reflux: OR=0.36, q=4.66e-03
+    d__Corynebacterium × Acid_reflux: OR=0.19, q=5.12e-03
+    d__Streptococcus × IBD: OR=0.42, q=5.31e-03
+    d__Neisseria × Seasonal_allergies: OR=0.57, q=5.37e-03
+    d__Escherichia-Shigella × CDI: OR=1.45, q=5.51e-03
+    d__Escherichia-Shigella × Cardiovascular_disease: OR=0.74, q=5.51e-03
+    d__Alistipes × Autoimmune: OR=2.60, q=7.76e-03
+    d__Streptococcus × Diabetes: OR=0.28, q=8.22e-03
+    d__Pasteurellaceae × Autoimmune: OR=0.43, q=1.91e-02
+    d__Corynebacterium × IBS: OR=0.29, q=1.94e-02
+    d__Lactobacillus × Obesity: OR=2.46, q=1.94e-02
+    d__Prevotella_9 × IBD: OR=0.64, q=2.22e-02
+    d__Pasteurellaceae × IBS: OR=0.47, q=2.53e-02
+    d__Staphylococcus × Diabetes: OR=0.24, q=2.91e-02
+    d__Prevotella_9 × CDI: OR=0.47, q=2.99e-02
+    d__Streptococcus × Lung_disease: OR=0.65, q=3.24e-02
+    d__Pasteurellaceae × Lung_disease: OR=0.44, q=4.05e-02
+    d__Chloroplast × IBD: OR=0.00, q=4.10e-02
+    d__Corynebacteriaceae × Migraine: OR=0.20, q=4.81e-02
+    d__Eukaryota;__;__;__;__;__;__ × IBS: OR=1.57, q=4.99e-02
+
+ADJUSTED (Logistic, depth-1)
+  Tests: 452, significant q<0.05: 28
+    d__Morganella × IBD: adjOR=16.94 [8.88-32.31], q=4.05e-15
+    d__Bacteroides × Autoimmune: adjOR=1.39 [1.28-1.52], q=2.12e-11
+    d__Bacteroides × IBD: adjOR=1.56 [1.37-1.78], q=3.55e-09
+    d__Prevotella_9 × Seasonal_allergies: adjOR=0.67 [0.59-0.76], q=3.27e-08
+    d__Morganella × Autoimmune: adjOR=6.88 [3.66-12.92], q=1.88e-07
+    d__Bacteroides × Acid_reflux: adjOR=1.28 [1.17-1.40], q=6.94e-06
+    d__Prevotella_9 × Autoimmune: adjOR=0.53 [0.42-0.68], q=2.56e-05
+    d__Streptococcus × Autoimmune: adjOR=0.36 [0.23-0.56], q=1.96e-04
+    d__Prevotella_9 × IBD: adjOR=0.41 [0.27-0.61], q=5.54e-04
+    d__Escherichia-Shigella × IBS: adjOR=1.23 [1.12-1.35], q=6.77e-04
+    d__Streptococcus × Acid_reflux: adjOR=0.45 [0.30-0.67], q=4.17e-03
+    d__Escherichia-Shigella × Seasonal_allergies: adjOR=1.13 [1.06-1.21], q=5.12e-03
+    d__Faecalibacterium × Autoimmune: adjOR=0.61 [0.47-0.79], q=5.89e-03
+    d__Lachnospiraceae × IBD: adjOR=2.14 [1.43-3.19], q=6.17e-03
+    d__Bifidobacterium × IBD: adjOR=3.36 [1.77-6.37], q=6.17e-03
+    d__Lactobacillus × Kidney_disease: adjOR=5.85 [2.26-15.14], q=7.79e-03
+    d__Faecalibacterium × IBS: adjOR=0.64 [0.50-0.82], q=9.49e-03
+    d__Prevotella_7 × Kidney_disease: adjOR=4.57 [1.97-10.59], q=1.01e-02
+    d__Staphylococcus × Acid_reflux: adjOR=0.41 [0.25-0.68], q=1.12e-02
+    d__Escherichia-Shigella × CDI: adjOR=1.48 [1.19-1.84], q=1.12e-02
+    d__Staphylococcus × IBS: adjOR=0.46 [0.29-0.73], q=1.95e-02
+    d__Enterobacterales × IBD: adjOR=3.15 [1.60-6.24], q=1.95e-02
+    d__Staphylococcus × Autoimmune: adjOR=0.43 [0.26-0.71], q=2.00e-02
+    d__Proteus × IBD: adjOR=4.37 [1.78-10.73], q=2.44e-02
+    d__Enterobacteriaceae × Seasonal_allergies: adjOR=1.21 [1.08-1.36], q=2.67e-02
+    d__Bacteroides × Migraine: adjOR=1.16 [1.05-1.26], q=3.40e-02
+    d__Staphylococcus × Lung_disease: adjOR=1.55 [1.17-2.05], q=3.86e-02
+    d__Streptococcus × IBS: adjOR=0.61 [0.44-0.85], q=4.95e-02
+
+SENSITIVITY ANALYSIS
+  Oral/skin excluded: 2229
+  Clean adjusted significant q<0.05: 23
+
+GG2 TAXONOMY: Download incomplete — skipped
+
+DEPTH-2
+  Fisher: 1464 tests, 79 significant
+  Adjusted: 1340 tests, 23 significant
+
+GG2 TAXONOMY ANALYSIS
+  GG2 samples passing lib filter: 30290
+  GG2 DCSTs (n0=50): 59 + RARE_DOMINANT
+  GG2 Fisher tests: 720, significant q<0.05: 82
+  Samples in both taxonomies: 30290
+  Exact genus match: 27739/30290 (91.6%)
+  Mapped genus match: 27739/30290 (91.6%)

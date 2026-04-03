@@ -8,17 +8,16 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import pandas as pd
 
+from paper_paths import DCST_VALIDATION_DIR, FIGURES_DIR, TABLES_DIR
 
-ROOT = Path("/Users/pgajer/current_projects")
-LINF_DEV = ROOT / "linf" / "dev"
-VALIDATION_ROOT = ROOT / "gut_microbiome" / "outputs" / "dcst_validation"
+VALIDATION_ROOT = DCST_VALIDATION_DIR
 
 HMP2_DIR = VALIDATION_ROOT / "hmp2"
 PRJEB_DIR = VALIDATION_ROOT / "prjeb84421"
 
-TABLE_TSV = LINF_DEV / "TABLE_V1_external_validation_summary.tsv"
-TABLE_MD = LINF_DEV / "TABLE_V1_external_validation_summary.md"
-FIGURE_PNG = LINF_DEV / "FIGURE_V1_two_cohort_external_validation.png"
+TABLE_TSV = TABLES_DIR / "TABLE_V1_external_validation_summary.tsv"
+TABLE_MD = TABLES_DIR / "TABLE_V1_external_validation_summary.md"
+FIGURE_PNG = FIGURES_DIR / "FIGURE_V1_two_cohort_external_validation.png"
 
 
 def shorten_label(label: str) -> str:

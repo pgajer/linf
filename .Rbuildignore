@@ -18,4 +18,6 @@
 ^_pkgdown\.yml$
 ^doc$
 ^Meta$
+^notes$
+^papers$
 ^\.\.Rcheck$

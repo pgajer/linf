@@ -6,12 +6,13 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
+from paper_paths import DCST_ANALYSIS_DIR, FIGURES_DIR
 
-BASE = Path("/Users/pgajer/current_projects/gut_microbiome/outputs/dcst_analysis")
+BASE = DCST_ANALYSIS_DIR
 ASSIGN = BASE / "full_cohort_dcst_assignments.csv"
 DEPTH2 = BASE / "depth2_adjusted_results.csv"
 DEPTH1 = BASE / "full_cohort_adjusted_results.csv"
-OUT = Path("/Users/pgajer/current_projects/linf/dev/FIGURE_6_depth2_refinement_case_study.png")
+OUT = FIGURES_DIR / "FIGURE_6_depth2_refinement_case_study.png"
 
 
 def parse_last_label(part: str) -> str:
