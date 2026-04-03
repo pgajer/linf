@@ -48,7 +48,7 @@ reproducible manuscript assets and integrating them into the paper.
 ## Deliverables
 
 - Updated manuscript source:
-  `/Users/pgajer/current_projects/linf/papers/gut-dcst/manuscript/gut_application_paper.md`
+  `/Users/pgajer/current_projects/linf/papers/gut-dcst/manuscript/gut_application_paper.tex`
 - Updated manuscript PDF:
   `/Users/pgajer/current_projects/linf/papers/gut-dcst/build/gut_application_paper.pdf`
 - Reproducible table builder:
