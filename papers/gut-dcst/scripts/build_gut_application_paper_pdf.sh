@@ -5,22 +5,19 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PAPER_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 MANUSCRIPT_DIR="$PAPER_DIR/manuscript"
 BUILD_DIR="$PAPER_DIR/build"
-PANDOC="${PANDOC:-/Users/pgajer/bin/pandoc}"
-PDF_ENGINE="${PDF_ENGINE:-/Library/TeX/texbin/xelatex}"
-INPUT_MD="gut_application_paper.md"
+LATEXMK="${LATEXMK:-/Library/TeX/texbin/latexmk}"
+INPUT_TEX="gut_application_paper.tex"
 OUTPUT_PDF="$BUILD_DIR/gut_application_paper.pdf"
 
 mkdir -p "$BUILD_DIR"
 cd "$MANUSCRIPT_DIR"
 
-"$PANDOC" "$INPUT_MD" \
-  --standalone \
-  --from markdown+yaml_metadata_block+implicit_figures \
-  --citeproc \
-  --pdf-engine="$PDF_ENGINE" \
-  -V colorlinks=true \
-  -V linkcolor=blue \
-  -V urlcolor=blue \
-  -o "$OUTPUT_PDF"
+"$LATEXMK" \
+  -xelatex \
+  -interaction=nonstopmode \
+  -halt-on-error \
+  -file-line-error \
+  -outdir="$BUILD_DIR" \
+  "$INPUT_TEX"
 
 print "$OUTPUT_PDF"
