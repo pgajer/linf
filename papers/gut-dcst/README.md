@@ -10,7 +10,8 @@ microbiome application paper.
 - `assets/tables/`: manuscript-ready table files
 - `scripts/`: builders for figures, tables, and manuscript exports
 - `build/`: generated PDF output and visual check artifacts
-- `notes/`: action plans, handoffs, claim inventories, and figure plans
+- `notes/`: action plans, handoffs, claim inventories, figure plans, and
+  journal-target planning
 - `archive/2026-03-24-phase1/`: the phase-1 report and related archived paper files
 - `archive/2026-04-03-markdown-source/`: archived Pandoc-era Markdown source
 
@@ -26,6 +27,9 @@ The canonical manuscript source is
 [`gut_application_paper.tex`](/Users/pgajer/current_projects/linf/papers/gut-dcst/manuscript/gut_application_paper.tex).
 The older Markdown draft was archived after the workflow switched to
 direct LaTeX editing for better float placement and layout control.
+
+The current journal-target shortlist is tracked in
+[`JOURNAL_TARGETS_gut_application_paper.md`](/Users/pgajer/current_projects/linf/papers/gut-dcst/notes/JOURNAL_TARGETS_gut_application_paper.md).
 
 ## Versioning Policy
 
