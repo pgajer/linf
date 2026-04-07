@@ -7,6 +7,7 @@ import numpy as np
 import pandas as pd
 
 from paper_paths import DCST_ANALYSIS_DIR, FIGURES_DIR
+from taxon_formatting import italicize_taxa_mpl
 
 BASE = DCST_ANALYSIS_DIR
 FULL = BASE / "full_cohort_adjusted_results.csv"
@@ -139,7 +140,14 @@ def build_figure(df: pd.DataFrame) -> None:
         ax3.text(x0 + 0.02, y0 + h - 0.08, title, transform=ax3.transAxes, fontsize=12, fontweight="bold", color=color)
         items = examples[title]
         for i, item in enumerate(items):
-            ax3.text(x0 + 0.03, y0 + h - 0.18 - i * 0.16, f"• {item}", transform=ax3.transAxes, fontsize=11, color="#333333")
+            ax3.text(
+                x0 + 0.03,
+                y0 + h - 0.18 - i * 0.16,
+                f"• {italicize_taxa_mpl(item)}",
+                transform=ax3.transAxes,
+                fontsize=11,
+                color="#333333",
+            )
 
     fig.subplots_adjust(left=0.11, right=0.98, top=0.97, bottom=0.07)
     OUT.parent.mkdir(parents=True, exist_ok=True)

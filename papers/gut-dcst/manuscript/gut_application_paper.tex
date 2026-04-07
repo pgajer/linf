@@ -112,6 +112,7 @@
 \usepackage{caption}
 \captionsetup{font=small,labelfont=bf}
 \newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcommand{\taxon}[1]{\emph{#1}}
 \newcommand{\submissionplaceholder}[2]{%
   \begin{center}
   \fbox{\parbox{0.92\linewidth}{\textbf{Submission-stage placeholder: #1}\par\smallskip #2}}
@@ -368,9 +369,9 @@ blurring completed evidence and pending work.
 The Phase 1 discovery analysis used 30,290 quality-controlled AGP gut
 samples. At depth 1 with \(n_0 = 50\), the cohort yielded 40 named DCSTs
 plus \texttt{RARE\_DOMINANT} (1,162 samples). The largest types were
-\texttt{Bacteroides} (10,358 samples), \texttt{Escherichia-Shigella}
-(6,857), \texttt{Prevotella\_9} (1,870), \texttt{Enterobacteriaceae}
-(1,564), and \texttt{Faecalibacterium} (1,320). In other words, the gut
+\taxon{Bacteroides} (10,358 samples), \taxon{Escherichia-Shigella}
+(6,857), \taxon{Prevotella\_9} (1,870), Enterobacteriaceae (1,564), and
+\taxon{Faecalibacterium} (1,320). In other words, the gut
 landscape is neither one universal dominant state nor an uninterpretable
 spray of rare labels.
 
@@ -396,16 +397,16 @@ Rank & DCST & n & Share (\%) & Cumulative (\%) \\
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-1 & Bacteroides & 10358 & 34.2 & 34.2 \\
-2 & Escherichia-Shigella & 6857 & 22.6 & 56.8 \\
-3 & Prevotella\_9 & 1870 & 6.2 & 63.0 \\
+1 & \taxon{Bacteroides} & 10358 & 34.2 & 34.2 \\
+2 & \taxon{Escherichia-Shigella} & 6857 & 22.6 & 56.8 \\
+3 & \taxon{Prevotella\_9} & 1870 & 6.2 & 63.0 \\
 4 & Enterobacteriaceae & 1564 & 5.2 & 68.2 \\
-5 & Faecalibacterium & 1320 & 4.4 & 72.5 \\
+5 & \taxon{Faecalibacterium} & 1320 & 4.4 & 72.5 \\
 6 & Rare dominant & 1162 & 3.8 & 76.4 \\
-7 & Streptococcus & 827 & 2.7 & 79.1 \\
-8 & Pseudomonas & 664 & 2.2 & 81.3 \\
-9 & Staphylococcus & 583 & 1.9 & 83.2 \\
-10 & Prevotella\_7 & 476 & 1.6 & 84.8 \\
+7 & \taxon{Streptococcus} & 827 & 2.7 & 79.1 \\
+8 & \taxon{Pseudomonas} & 664 & 2.2 & 81.3 \\
+9 & \taxon{Staphylococcus} & 583 & 1.9 & 83.2 \\
+10 & \taxon{Prevotella\_7} & 476 & 1.6 & 84.8 \\
 11 & Unassigned & 444 & 1.5 & 86.2 \\
 12 & Lachnospiraceae & 416 & 1.4 & 87.6 \\
 \end{longtable}
@@ -445,15 +446,15 @@ results in context.
 \toprule
 Phenotype & Direction & DCST & $n$ & Adjusted OR (95\% CI) & adj $q$ & $C$ \\
 \midrule
-IBS & Enriched & Escherichia-Shigella & 6857 & 1.23 (1.12-1.35) & 6.8e-04 & Yes \\
-IBD & Enriched & Morganella & 53 & 16.94 (8.88-32.31) & 4.0e-15 & Yes \\
-Autoimmune & Enriched & Bacteroides & 10358 & 1.39 (1.28-1.52) & 2.1e-11 & Yes \\
-Acid reflux & Enriched & Bacteroides & 10358 & 1.28 (1.17-1.40) & 6.9e-06 & Yes \\
-Seasonal allergies & Depleted & Prevotella\_9 & 1870 & 0.67 (0.59-0.76) & 3.3e-08 & Yes \\
-CDI & Enriched & Escherichia-Shigella & 6857 & 1.48 (1.19-1.84) & 0.0112 & Yes \\
-Lung disease & Enriched & Staphylococcus & 583 & 1.55 (1.17-2.05) & 0.0386 & No \\
-Migraine & Enriched & Bacteroides & 10358 & 1.16 (1.05-1.26) & 0.034 & No \\
-Kidney disease & Enriched & Lactobacillus & 117 & 5.85 (2.26-15.14) & 0.00779 & Yes \\
+IBS & Enriched & \taxon{Escherichia-Shigella} & 6857 & 1.23 (1.12-1.35) & 6.8e-04 & Yes \\
+IBD & Enriched & \taxon{Morganella} & 53 & 16.94 (8.88-32.31) & 4.0e-15 & Yes \\
+Autoimmune & Enriched & \taxon{Bacteroides} & 10358 & 1.39 (1.28-1.52) & 2.1e-11 & Yes \\
+Acid reflux & Enriched & \taxon{Bacteroides} & 10358 & 1.28 (1.17-1.40) & 6.9e-06 & Yes \\
+Seasonal allergies & Depleted & \taxon{Prevotella\_9} & 1870 & 0.67 (0.59-0.76) & 3.3e-08 & Yes \\
+CDI & Enriched & \taxon{Escherichia-Shigella} & 6857 & 1.48 (1.19-1.84) & 0.0112 & Yes \\
+Lung disease & Enriched & \taxon{Staphylococcus} & 583 & 1.55 (1.17-2.05) & 0.0386 & No \\
+Migraine & Enriched & \taxon{Bacteroides} & 10358 & 1.16 (1.05-1.26) & 0.034 & No \\
+Kidney disease & Enriched & \taxon{Lactobacillus} & 117 & 5.85 (2.26-15.14) & 0.00779 & Yes \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -464,9 +465,9 @@ informative view is to compare which signals are lost, which are
 retained, and which become clearer once likely oral- or skin-associated
 dominants are excluded. Twenty adjusted-significant associations are
 retained, eight are lost, and three become significant only in the clean
-analysis. The lost signals are concentrated in \texttt{Staphylococcus}-
-and \texttt{Streptococcus}-linked contrasts, while the strongest IBD,
-allergy, and several \texttt{Bacteroides} / \texttt{Prevotella\_9}
+analysis. The lost signals are concentrated in \taxon{Staphylococcus}-
+and \taxon{Streptococcus}-linked contrasts, while the strongest IBD,
+allergy, and several \taxon{Bacteroides} / \taxon{Prevotella\_9}
 associations remain in place. Table 3 shows how this transition looks
 phenotype by phenotype rather than only in aggregate.
 
@@ -486,37 +487,37 @@ inflammatory and allergy-linked signals.}
 \toprule
 Phenotype & $n_F$ & $n_A$ & $n_C$ & Representative retained & Representative Fisher-only \\
 \midrule
-IBS & 7 & 4 & 3 & Escherichia-Shigella (1.29 -> 1.23) & Corynebacterium (0.29 -> 0.41) \\
-IBD & 9 & 7 & 8 & Morganella (18.05 -> 16.94) & Prevotella\_7 (0.10 -> 0.44) \\
-Autoimmune & 9 & 6 & 4 & Bacteroides (1.34 -> 1.39) & Escherichia-Shigella (1.19 -> 0.99) \\
-Acid reflux & 10 & 3 & 1 & Bacteroides (1.29 -> 1.28) & Prevotella\_7 (0.12 -> 0.55) \\
+IBS & 7 & 4 & 3 & \taxon{Escherichia-Shigella} (1.29 -> 1.23) & \taxon{Corynebacterium} (0.29 -> 0.41) \\
+IBD & 9 & 7 & 8 & \taxon{Morganella} (18.05 -> 16.94) & \taxon{Prevotella\_7} (0.10 -> 0.44) \\
+Autoimmune & 9 & 6 & 4 & \taxon{Bacteroides} (1.34 -> 1.39) & \taxon{Escherichia-Shigella} (1.19 -> 0.99) \\
+Acid reflux & 10 & 3 & 1 & \taxon{Bacteroides} (1.29 -> 1.28) & \taxon{Prevotella\_7} (0.12 -> 0.55) \\
 CVD & 6 & 0 & 0 & -- & Pasteurellaceae (8.77 -> 1.74) \\
-Obesity & 3 & 0 & 0 & -- & Prevotella\_7 (2.75 -> not estimable) \\
-Seasonal allergies & 6 & 3 & 3 & Prevotella\_9 (0.75 -> 0.67) & Prevotella\_7 (0.22 -> 1.11) \\
-Diabetes & 2 & 0 & 0 & -- & Streptococcus (0.28 -> 0.44) \\
-CDI & 2 & 1 & 2 & Escherichia-Shigella (1.45 -> 1.48) & Prevotella\_9 (0.47 -> 0.35) \\
-Lung disease & 3 & 1 & 0 & Staphylococcus (1.26 -> 1.55) & Prevotella\_7 (0.23 -> 0.89) \\
-Migraine & 2 & 1 & 0 & Bacteroides (1.19 -> 1.16) & Corynebacteriaceae (0.20 -> 0.30) \\
-Kidney disease & 0 & 2 & 2 & Lactobacillus (3.50 -> 5.85) & -- \\
+Obesity & 3 & 0 & 0 & -- & \taxon{Prevotella\_7} (2.75 -> not estimable) \\
+Seasonal allergies & 6 & 3 & 3 & \taxon{Prevotella\_9} (0.75 -> 0.67) & \taxon{Prevotella\_7} (0.22 -> 1.11) \\
+Diabetes & 2 & 0 & 0 & -- & \taxon{Streptococcus} (0.28 -> 0.44) \\
+CDI & 2 & 1 & 2 & \taxon{Escherichia-Shigella} (1.45 -> 1.48) & \taxon{Prevotella\_9} (0.47 -> 0.35) \\
+Lung disease & 3 & 1 & 0 & \taxon{Staphylococcus} (1.26 -> 1.55) & \taxon{Prevotella\_7} (0.23 -> 0.89) \\
+Migraine & 2 & 1 & 0 & \taxon{Bacteroides} (1.19 -> 1.16) & Corynebacteriaceae (0.20 -> 0.30) \\
+Kidney disease & 0 & 2 & 2 & \taxon{Lactobacillus} (3.50 -> 5.85) & -- \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
 Depth 2 matters most when a broad parent state hides materially
 different substructures. The depth-2 case-study figure makes that
-concrete for the depth-1 \texttt{Bacteroides} state in IBD. The ten most
-common depth-2 children cover 85\% of all \texttt{Bacteroides}-dominant
+concrete for the depth-1 \taxon{Bacteroides} state in IBD. The ten most
+common depth-2 children cover 85\% of all \taxon{Bacteroides}-dominant
 samples, yet their IBD odds ratios range from strong enrichment
-(\texttt{Lachnospiraceae}, \texttt{Enterobacteriaceae}) to attenuation
-or partial reversal (\texttt{Faecalibacterium}, \texttt{Agathobacter},
-\texttt{Parabacteroides}). The depth-1 \texttt{Bacteroides} signal
+(Lachnospiraceae, Enterobacteriaceae) to attenuation or partial
+reversal (\taxon{Faecalibacterium}, \taxon{Agathobacter},
+\taxon{Parabacteroides}). The depth-1 \taxon{Bacteroides} signal
 should therefore be read as an average over heterogeneous subtypes
 rather than as a single ecological state.
 
 \begin{figure}
 \centering
 \includegraphics[width=0.95\linewidth,height=\textheight,keepaspectratio,alt={Depth-2 refinement case study for the broad Bacteroides parent in IBD. Panel A shows the most common depth-2 children inside the parent state. Panel B shows that those common children have materially different adjusted odds ratios, with the dashed line marking the coarser depth-1 parent effect.}]{../assets/figures/FIGURE_6_depth2_refinement_case_study.png}
-\caption{Depth-2 refinement case study for the broad Bacteroides parent
+\caption{Depth-2 refinement case study for the broad \taxon{Bacteroides} parent
 in IBD. Panel A shows the most common depth-2 children inside the parent
 state. Panel B shows that those common children have materially
 different adjusted odds ratios, with the dashed line marking the coarser
@@ -532,12 +533,12 @@ the exact dominant-genus agreement between SILVA and GG2 was 27,739 /
 30,290 (91.6\%). This does not mean that the taxonomies are
 interchangeable. It does mean that the main dominant-typing picture is
 fairly stable across reference databases, even though some clinically
-relevant groups, especially \texttt{Escherichia-Shigella}, expose
+relevant groups, especially \taxon{Escherichia-Shigella}, expose
 genuine naming and resolution differences. The new concordance figure
 makes an important distinction explicit: harmonized genus-level
 agreement is high, but exact short-label equality is much lower because
-GG2 splits some large SILVA states, especially \texttt{Bacteroides},
-into multiple named groups and leaves \texttt{Escherichia-Shigella}
+GG2 splits some large SILVA states, especially \taxon{Bacteroides},
+into multiple named groups and leaves \taxon{Escherichia-Shigella}
 largely unresolved. Table 4A summarizes the headline concordance
 metrics, while Table 4B gives a few representative remappings that
 matter biologically and interpretively.
@@ -608,15 +609,15 @@ Reading
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-Akkermansia & Akkermansia & 99.1\% & Near one-to-one mapping. \\
-Faecalibacterium & Faecalibacterium & 81.7\% & Mostly preserved with
+\taxon{Akkermansia} & \taxon{Akkermansia} & 99.1\% & Near one-to-one mapping. \\
+\taxon{Faecalibacterium} & \taxon{Faecalibacterium} & 81.7\% & Mostly preserved with
 modest spillover. \\
-Prevotella\_9 & Prevotella & 90.5\% & High genus-level concordance
+\taxon{Prevotella\_9} & \taxon{Prevotella} & 90.5\% & High genus-level concordance
 despite label change. \\
-Bacteroides & Phocaeicola\_A; Bacteroides\_H\_857956; unresolved &
+\taxon{Bacteroides} & \taxon{Phocaeicola\_A}; \taxon{Bacteroides\_H\_857956}; unresolved &
 46.6\%; 17.4\%; 8.4\% & Large SILVA state is split across multiple GG2
 labels. \\
-Escherichia-Shigella & Unresolved & 99.7\% & GG2 leaves this dominant
+\taxon{Escherichia-Shigella} & Unresolved & 99.7\% & GG2 leaves this dominant
 state largely unresolved. \\
 Enterobacteriaceae & Enterobacteriaceae\_A\_725029;
 Enterobacterales\_737866 & 92.6\%; 4.3\% & Mostly preserved at
@@ -686,16 +687,16 @@ population cohort.
 
 
 In SILVA, the strongest adjusted depth-1 IBS association was enrichment
-of \texttt{Escherichia-Shigella} (adjusted OR 1.23, q = 6.8e-04),
-accompanied by protective associations for \texttt{Faecalibacterium}
-(adjusted OR 0.64), \texttt{Staphylococcus} (adjusted OR 0.46), and
-\texttt{Streptococcus} (adjusted OR 0.61). GG2 showed a qualitatively
+of \taxon{Escherichia-Shigella} (adjusted OR 1.23, q = 6.8e-04),
+accompanied by protective associations for \taxon{Faecalibacterium}
+(adjusted OR 0.64), \taxon{Staphylococcus} (adjusted OR 0.46), and
+\taxon{Streptococcus} (adjusted OR 0.61). GG2 showed a qualitatively
 similar picture, with an enriched unresolved enterobacterial signal and
-depleted \texttt{Staphylococcus} and \texttt{Streptococcus} states. At
+depleted \taxon{Staphylococcus} and \taxon{Streptococcus} states. At
 depth 2, additional IBS-related subtype signal appeared in
-\texttt{Escherichia-Shigella}- and \texttt{Bacteroides}-centered
-subtypes. Sensitivity analysis retained \texttt{Faecalibacterium},
-\texttt{Escherichia-Shigella}, and \texttt{Prevotella\_9}, suggesting
+\taxon{Escherichia-Shigella}- and \taxon{Bacteroides}-centered
+subtypes. Sensitivity analysis retained \taxon{Faecalibacterium},
+\taxon{Escherichia-Shigella}, and \taxon{Prevotella\_9}, suggesting
 that the main IBS pattern is not driven entirely by putative oral
 contaminants.
 
@@ -704,7 +705,7 @@ These IBS findings are consistent with literature linking
 Enterobacteriaceae expansion and loss of anti-inflammatory commensals to
 symptom burden (\citeproc{ref-Pittayanon2019_IBS}{Pittayanon et al.
 2019}; \citeproc{ref-Tap2017_IBS}{Tap et al. 2017}). The
-\texttt{Faecalibacterium} signal is particularly interpretable for a
+\taxon{Faecalibacterium} signal is particularly interpretable for a
 mechanistic reader, because it points toward loss of butyrate-associated
 ecological stability rather than toward one IBS-specific pathogen. The
 oral-associated taxa should still be treated cautiously, and the overall
@@ -726,17 +727,17 @@ especially \emph{Faecalibacterium prausnitzii}
 
 
 IBD produced the strongest adjusted depth-1 signal in the entire Phase 1
-scan: \texttt{Morganella} was highly enriched (adjusted OR 16.94, q =
+scan: \taxon{Morganella} was highly enriched (adjusted OR 16.94, q =
 4.0e-15). Additional adjusted SILVA signals included enrichment of
-\texttt{Bacteroides}, \texttt{Lachnospiraceae},
-\texttt{Bifidobacterium}, \texttt{Enterobacterales}, and
-\texttt{Proteus}, along with depletion of \texttt{Prevotella\_9}. GG2
+\taxon{Bacteroides}, Lachnospiraceae,
+\taxon{Bifidobacterium}, Enterobacterales, and
+\taxon{Proteus}, along with depletion of \taxon{Prevotella\_9}. GG2
 showed concordant inflammatory structure, again highlighting
-\texttt{Morganella} and related enterobacterial signals. Depth 2 was
-even more striking: a \texttt{Bacteroides} subtype with a
-\texttt{Lachnospiraceae} second-ranked component reached adjusted OR
+\taxon{Morganella} and related enterobacterial signals. Depth 2 was
+even more striking: a \taxon{Bacteroides} subtype with a
+Lachnospiraceae second-ranked component reached adjusted OR
 3.54 with q = 1.6e-37, and multiple IBD-associated subtypes appeared
-within the broad \texttt{Bacteroides} parent class. Eight IBD
+within the broad \taxon{Bacteroides} parent class. Eight IBD
 associations survived sensitivity analysis.
 
 
@@ -750,11 +751,11 @@ inflammatory facultative taxa (\citeproc{ref-Frank2007_IBD}{Frank et al.
 \citeproc{ref-Sokol2008_Fprausnitzii}{Sokol et al. 2008};
 \citeproc{ref-Sartor2008_IBD}{Sartor 2008}). The present DCST results
 fit that picture in a compressed rank-based language: a rare
-\texttt{Morganella} state marks severe enterobacterial dysbiosis,
-whereas the broad \texttt{Bacteroides} parent resolves into subtypes
+\taxon{Morganella} state marks severe enterobacterial dysbiosis,
+whereas the broad \taxon{Bacteroides} parent resolves into subtypes
 with materially different odds ratios. That matters for interpretation
-because the enriched depth-1 \texttt{Bacteroides} label is not the
-opposite of the classic \texttt{Faecalibacterium}-depletion story;
+because the enriched depth-1 \taxon{Bacteroides} label is not the
+opposite of the classic \taxon{Faecalibacterium}-depletion story;
 rather, it partly reflects loss of protective second-rank partners
 inside Bacteroides-dominant samples.
 
@@ -768,7 +769,7 @@ local metadata, the retained set is dominated by rectal, ileal, and
 colonic sites and includes repeated measures. At depth 1, the HMP2
 landscape was too sparse to yield strong multiple-testing-corrected
 disease signal. At depth 2, however, a
-\texttt{Bacteroides\_\_Faecalibacterium} subtype was depleted in
+\taxon{Bacteroides}/\taxon{Faecalibacterium} subtype was depleted in
 \texttt{IBD\_vs\_Healthy} (OR = 0.391, q = 0.016),
 \texttt{UC\_vs\_Healthy} (OR = 0.318, q = 0.032), and
 \texttt{Crohn\_vs\_Healthy} (OR = 0.429, q = 0.041). PRJEB84421 supplied
@@ -785,11 +786,11 @@ Halfvarson 2017 added the strongest currently completed external
 positive validation. The final IBD-focused branch retained 533 samples
 after QC and 379 taxa after filtering. Unlike HMP2, this cohort yielded
 clear q-significant signal at both depths. At depth 1,
-\texttt{Segatella} was depleted in \texttt{IBD\_vs\_Healthy} (OR =
+\taxon{Segatella} was depleted in \texttt{IBD\_vs\_Healthy} (OR =
 0.136, q = 1.25e-09), \texttt{Crohn\_vs\_Healthy} (OR = 0.139, q =
 2.73e-08), and \texttt{UC\_vs\_Healthy} (OR = 0.133, q = 3.40e-09). At
 depth 2, the clearest replicated signal was depletion of a
-\texttt{Segatella\_\_Faecalibacterium\ prausnitzii} subtype in
+\taxon{Segatella}/\taxon{Faecalibacterium prausnitzii} subtype in
 \texttt{IBD\_vs\_Healthy} (OR = 0.113, q = 6.37e-07) and
 \texttt{UC\_vs\_Healthy} (OR = 0.169, q = 6.17e-05), with a separate
 \texttt{RARE\_DOMINANT} expansion in \texttt{Crohn\_vs\_Healthy} (OR =
@@ -799,9 +800,9 @@ taxa after filtering. This cohort is valuable because it completed the
 same reprocessing and harmonization path as Halfvarson, but in the
 current pass it did not yield q-significant depth-1 or depth-2 DCST
 associations. Its strongest depth-1 signal was a
-\texttt{Bacteroides\ vulgatus} state in \texttt{Crohn\_vs\_Healthy} (OR
-= 0.465, q = 0.505), and its strongest depth-2 signal was a
-\texttt{Faecalibacterium\ prausnitzii\_\_Bacteroides\ vulgatus} pair (OR
+\taxon{Bacteroides vulgatus} state in \texttt{Crohn\_vs\_Healthy} (OR =
+0.465, q = 0.505), and its strongest depth-2 signal was a
+\taxon{Faecalibacterium prausnitzii}/\taxon{Bacteroides vulgatus} pair (OR =
 = 1.284, q = 1.000). That makes Gevers useful not as a positive
 replicate, but as a completed weak/null control showing that the
 validation pipeline does not produce strong inflammatory signal
@@ -817,9 +818,9 @@ automatically.
 \toprule
 Cohort & $n$ & Strongest completed signal & Validation role \\
 \midrule
-HMP2 / IBDMDB & 166 & No q-significant depth-1 signal; depth-2 depletion of a Bacteroides/Faecalibacterium subtype in inflammatory contrasts & Clinically grounded directional IBD validation despite mucosal and repeated-measures caveats \\
+HMP2 / IBDMDB & 166 & No q-significant depth-1 signal; depth-2 depletion of a \taxon{Bacteroides}/\taxon{Faecalibacterium} subtype in inflammatory contrasts & Clinically grounded directional IBD validation despite mucosal and repeated-measures caveats \\
 PRJEB84421 / OFGCD-FI-2025 & 73 & Borderline rare-dominant enrichment in OFG and inflammatory contrasts & Stool-based inflammatory complement with pediatric and phenotype-mixed caveats \\
-Halfvarson 2017 & 533 & Depth-1 depletion of Segatella plus depth-2 depletion of a Segatella/F.\ prausnitzii subtype & Strongest completed external positive IBD validation \\
+Halfvarson 2017 & 533 & Depth-1 depletion of \taxon{Segatella} plus depth-2 depletion of a \taxon{Segatella}/\taxon{F.\ prausnitzii} subtype & Strongest completed external positive IBD validation \\
 Gevers 2014 & 396 & Weak/null depth-1 and depth-2 Crohn-vs-healthy signal in the current pass & Completed external weak/null IBD control \\
 \bottomrule
 \end{tabularx}
@@ -866,25 +867,25 @@ pathobionts to altered Treg/Th17 balance
 
 
 In SILVA, autoimmune disease showed adjusted enrichment of
-\texttt{Bacteroides} (adjusted OR 1.39, q = 2.1e-11) and
-\texttt{Morganella} (adjusted OR 6.88, q = 1.9e-07), together with
-depletion of \texttt{Prevotella\_9}, \texttt{Streptococcus},
-\texttt{Faecalibacterium}, and \texttt{Staphylococcus}. GG2 recovered
+\taxon{Bacteroides} (adjusted OR 1.39, q = 2.1e-11) and
+\taxon{Morganella} (adjusted OR 6.88, q = 1.9e-07), together with
+depletion of \taxon{Prevotella\_9}, \taxon{Streptococcus},
+\taxon{Faecalibacterium}, and \taxon{Staphylococcus}. GG2 recovered
 the same broad pattern: enriched inflammatory or enterobacterial
-structure and depleted \texttt{Prevotella} and \texttt{Streptococcus}
+structure and depleted \taxon{Prevotella} and \taxon{Streptococcus}
 states. Depth 2 again sharpened the signal, especially within
-\texttt{Bacteroides}-centered subtypes, where a major subtype reached
+\taxon{Bacteroides}-centered subtypes, where a major subtype reached
 adjusted OR 2.25 with q = 1.2e-23. Four autoimmune associations survived
 sensitivity analysis.
 
 
 Because this AGP label pools multiple autoimmune conditions, the safest
 reading is an inflammatory umbrella rather than a disease-specific
-microbiome signature. The observed \texttt{Bacteroides} /
-\texttt{Morganella} enrichment and \texttt{Faecalibacterium} /
-\texttt{Prevotella\_9} depletion are broadly compatible with
+microbiome signature. The observed \taxon{Bacteroides} /
+\taxon{Morganella} enrichment and \taxon{Faecalibacterium} /
+\taxon{Prevotella\_9} depletion are broadly compatible with
 disease-specific literature in RA and T1D, but the component mechanisms
-differ: \texttt{Prevotella} expansion in RA is not the same biological
+differ: \taxon{Prevotella} expansion in RA is not the same biological
 claim as early-life dysbiosis in T1D, even though both can be placed
 within a broader Treg/Th17 or immune-education framework
 (\citeproc{ref-Scher2013_Prevotella_RA}{Scher et al. 2013};
@@ -905,14 +906,14 @@ of gram-positive dominance implicated in esophageal disease
 \citeproc{ref-Wang2024_GERD_MR}{K. Wang et al. 2024}).
 
 
-In SILVA, acid reflux showed adjusted enrichment of \texttt{Bacteroides}
-(adjusted OR 1.28, q = 6.9e-06) and depletion of \texttt{Streptococcus}
-(adjusted OR 0.45, q = 4.2e-03) and \texttt{Staphylococcus} (adjusted OR
+In SILVA, acid reflux showed adjusted enrichment of \taxon{Bacteroides}
+(adjusted OR 1.28, q = 6.9e-06) and depletion of \taxon{Streptococcus}
+(adjusted OR 0.45, q = 4.2e-03) and \taxon{Staphylococcus} (adjusted OR
 0.41, q = 1.1e-02). GG2 replicated the depletion of
-\texttt{Streptococcus} and \texttt{Staphylococcus} together with a
-depleted \texttt{Prevotella} signal. Depth 2 produced additional
-\texttt{Parabacteroides}- and \texttt{Alistipes}-linked signals. After
-contaminant-aware filtering, only the \texttt{Bacteroides} association
+\taxon{Streptococcus} and \taxon{Staphylococcus} together with a
+depleted \taxon{Prevotella} signal. Depth 2 produced additional
+\taxon{Parabacteroides}- and \taxon{Alistipes}-linked signals. After
+contaminant-aware filtering, only the \taxon{Bacteroides} association
 remained.
 
 
@@ -923,7 +924,7 @@ rather than stool alone
 \citeproc{ref-DeSouza2021_GERD}{D'Souza et al. 2021}). In other words,
 the disease-facing evidence is strongest for compartment-specific shifts
 along the reflux-to-Barrett spectrum, whereas the AGP analysis sees only
-a downstream gut-side view. The surviving \texttt{Bacteroides} signal
+a downstream gut-side view. The surviving \taxon{Bacteroides} signal
 therefore supports a modest reflux-spectrum association rather than a
 direct esophageal mechanism. By contrast, the oral-associated taxa are
 more exposed to compartment choice, PPI effects, and oral-esophageal
@@ -944,11 +945,11 @@ al. 2011}; \citeproc{ref-Tang2013_TMAO}{Tang et al. 2013};
 
 
 The univariate CVD signals were strong, especially
-\texttt{Pasteurellaceae}, \texttt{Staphylococcus}, and
-\texttt{Neisseria}, but none survived covariate adjustment at depth 1.
+Pasteurellaceae, \taxon{Staphylococcus}, and
+\taxon{Neisseria}, but none survived covariate adjustment at depth 1.
 GG2 showed analogous univariate enrichment of oral-associated or
 aerotolerant taxa. Depth 2 nonetheless yielded a notable
-\texttt{Agathobacter} association (adjusted OR 3.47, q = 2.6e-05). No
+\taxon{Agathobacter} association (adjusted OR 3.47, q = 2.6e-05). No
 CVD signal survived the sensitivity analysis.
 
 
@@ -963,7 +964,7 @@ than as a primary biological claim.
 
 Obesity has a large and often contradictory microbiome literature,
 ranging from energy-harvest hypotheses to gene-richness models and
-\texttt{Akkermansia}-linked barrier effects
+\taxon{Akkermansia}-linked barrier effects
 (\citeproc{ref-Turnbaugh2006_energy}{Turnbaugh et al. 2006};
 \citeproc{ref-Ley2006_obesity}{Ley et al. 2006};
 \citeproc{ref-LeChatelier2013_richness}{Le Chatelier et al. 2013};
@@ -972,10 +973,10 @@ ranging from energy-harvest hypotheses to gene-richness models and
 
 
 For obesity, the evidence remained at the univariate depth-1 level, led
-by \texttt{Prevotella\_7} enrichment (OR 2.75) and weaker shifts in
-\texttt{Escherichia-Shigella} and \texttt{Lactobacillus}. No depth-1
+by \taxon{Prevotella\_7} enrichment (OR 2.75) and weaker shifts in
+\taxon{Escherichia-Shigella} and \taxon{Lactobacillus}. No depth-1
 association survived covariate adjustment, GG2 mainly reproduced a broad
-\texttt{Prevotella}-side signal, no depth-2 associations reached
+\taxon{Prevotella}-side signal, no depth-2 associations reached
 significance, and nothing survived the sensitivity analysis.
 
 
@@ -998,17 +999,17 @@ microbiota maturation literature
 
 
 In SILVA, seasonal allergies showed adjusted depletion of
-\texttt{Prevotella\_9} (adjusted OR 0.67, q = 3.3e-08) and adjusted
-enrichment of \texttt{Escherichia-Shigella} (adjusted OR 1.13, q =
-5.1e-03) and \texttt{Enterobacteriaceae} (adjusted OR 1.21, q =
+\taxon{Prevotella\_9} (adjusted OR 0.67, q = 3.3e-08) and adjusted
+enrichment of \taxon{Escherichia-Shigella} (adjusted OR 1.13, q =
+5.1e-03) and Enterobacteriaceae (adjusted OR 1.21, q =
 2.7e-02). GG2 showed the same broad pattern, especially strong
-\texttt{Prevotella} depletion. Depth 2 added
-\texttt{Bacteroides}-centered subtype signal, and all three adjusted
+\taxon{Prevotella} depletion. Depth 2 added
+\taxon{Bacteroides}-centered subtype signal, and all three adjusted
 depth-1 associations survived sensitivity analysis.
 
 
 Among the non-IBD outcomes, seasonal allergy is one of the cleaner
-screen-level signals in the AGP scan. The protective \texttt{Prevotella}
+screen-level signals in the AGP scan. The protective \taxon{Prevotella}
 pattern fits well with the broader allergy literature, which links
 allergic phenotypes to lower richness, delayed microbiota maturation,
 and weaker SCFA-associated immune education
@@ -1037,17 +1038,17 @@ medication effects, and altered fermentation ecology
 
 
 At depth 1, diabetes yielded only univariate depletion of
-\texttt{Streptococcus} and \texttt{Staphylococcus}, with no
+\taxon{Streptococcus} and \taxon{Staphylococcus}, with no
 adjusted-significant depth-1 signal. GG2 again recovered only modest,
 taxonomically heterogeneous univariate shifts. Depth 2, however,
-produced a strong \texttt{Akkermansia}-associated subtype signal
+produced a strong \taxon{Akkermansia}-associated subtype signal
 (adjusted OR 4.88, q = 2.1e-04). No diabetes association survived the
 sensitivity analysis.
 
 
-The \texttt{Akkermansia} depth-2 result is biologically interesting
+The \taxon{Akkermansia} depth-2 result is biologically interesting
 precisely because it is paradoxical if interpreted naively. Since
-metformin can enrich \texttt{Akkermansia}, the cross-sectional signal
+metformin can enrich \taxon{Akkermansia}, the cross-sectional signal
 may encode medication rather than disease mechanism. The broader
 diabetes literature is dominated by T2D, glucose-tolerance gradients,
 and treatment confounding, so a clean disease-only signal is not
@@ -1056,7 +1057,7 @@ expected in a cross-sectional screen of this kind
 \citeproc{ref-Karlsson2013_T2D_women}{Karlsson et al. 2013};
 \citeproc{ref-Forslund2015_metformin}{Forslund et al. 2015}). The
 present pattern therefore reads sensibly: no stable adjusted depth-1
-signal, but one striking \texttt{Akkermansia}-associated depth-2 lead
+signal, but one striking \taxon{Akkermansia}-associated depth-2 lead
 that likely mixes disease status, treatment, and carbohydrate-metabolic
 ecology (\citeproc{ref-Forslund2015_metformin}{Forslund et al. 2015};
 \citeproc{ref-Takeuchi2023_carbohydrate}{Takeuchi et al. 2023};
@@ -1075,12 +1076,12 @@ al. 2014}; \citeproc{ref-Seekatz2014_FMT}{Seekatz et al. 2014};
 
 
 In SILVA, CDI showed adjusted enrichment of
-\texttt{Escherichia-Shigella} (adjusted OR 1.48, q = 1.1e-02). GG2
+\taxon{Escherichia-Shigella} (adjusted OR 1.48, q = 1.1e-02). GG2
 highlighted related inflammatory or facultative-anaerobe structure,
-including \texttt{Proteus}. Depth 2 added a strong
-\texttt{Sutterella}-linked subtype signal (adjusted OR 9.85, q =
-1.2e-05). After sensitivity analysis, \texttt{Escherichia-Shigella}
-remained enriched and \texttt{Prevotella\_9} showed a protective
+including \taxon{Proteus}. Depth 2 added a strong
+\taxon{Sutterella}-linked subtype signal (adjusted OR 9.85, q =
+1.2e-05). After sensitivity analysis, \taxon{Escherichia-Shigella}
+remained enriched and \taxon{Prevotella\_9} showed a protective
 pattern.
 
 
@@ -1090,10 +1091,10 @@ resistance (\citeproc{ref-Schubert2014_CDI}{Schubert et al. 2014};
 \citeproc{ref-Seekatz2014_FMT}{Seekatz et al. 2014};
 \citeproc{ref-Sehgal2021_CDI}{Sehgal and Khanna 2021}). The
 enterobacterial enrichment is in line with recurrent-CDI dysbiosis, and
-the protective \texttt{Prevotella\_9} direction is at least ecologically
+the protective \taxon{Prevotella\_9} direction is at least ecologically
 compatible with restoration of anaerobic fermentation and
 bile-acid-converting community structure after FMT. The
-\texttt{Sutterella} depth-2 signal is interesting, but it is best
+\taxon{Sutterella} depth-2 signal is interesting, but it is best
 treated as exploratory until it can be tied more directly to recurrence,
 bile acids, or treatment status.
 
@@ -1109,12 +1110,12 @@ pools several different conditions
 
 
 In SILVA, the main adjusted depth-1 lung-disease signal was
-\texttt{Staphylococcus} enrichment (adjusted OR 1.55, q = 3.9e-02),
-while univariate depletion appeared for \texttt{Prevotella\_7},
-\texttt{Streptococcus}, and \texttt{Pasteurellaceae}. GG2 reproduced the
-depleted \texttt{Prevotella} / \texttt{Streptococcus} /
-\texttt{Pasteurellaceae} side of the signal. Depth 2 added
-\texttt{Agathobacter} and \texttt{Staphylococcus} subtype associations.
+\taxon{Staphylococcus} enrichment (adjusted OR 1.55, q = 3.9e-02),
+while univariate depletion appeared for \taxon{Prevotella\_7},
+\taxon{Streptococcus}, and Pasteurellaceae. GG2 reproduced the
+depleted \taxon{Prevotella} / \taxon{Streptococcus} /
+Pasteurellaceae side of the signal. Depth 2 added
+\taxon{Agathobacter} and \taxon{Staphylococcus} subtype associations.
 None of the signals survived sensitivity analysis.
 
 
@@ -1124,7 +1125,7 @@ studies, airway COPD studies, and respiratory-infection models
 (\citeproc{ref-Budden2017_gutlung}{Budden et al. 2017};
 \citeproc{ref-Trompette2014_fiber_asthma}{Trompette et al. 2014};
 \citeproc{ref-Horn2022_Prevotella_lung}{Horn et al. 2022}). The
-surviving \texttt{Staphylococcus} signal is therefore difficult to
+surviving \taxon{Staphylococcus} signal is therefore difficult to
 interpret as a gut-lung-axis result per se, especially because it
 disappears in the clean analysis. The most defensible reading is that
 the AGP screen detects a weak, partly compartment-mixed respiratory
@@ -1142,8 +1143,8 @@ microbiome evidence base is thinner than for IBD or allergy
 
 
 Migraine produced one adjusted depth-1 signal in SILVA:
-\texttt{Bacteroides} enrichment (adjusted OR 1.16, q = 3.4e-02). GG2
-showed a qualitatively similar \texttt{Bacteroides}-side enrichment
+\taxon{Bacteroides} enrichment (adjusted OR 1.16, q = 3.4e-02). GG2
+showed a qualitatively similar \taxon{Bacteroides}-side enrichment
 together with weaker secondary signals. No depth-2 association reached
 significance, and nothing survived the sensitivity analysis.
 
@@ -1155,7 +1156,7 @@ than any one reproducible taxon
 (\citeproc{ref-Gorenshtein2025_migraine}{Gorenshtein et al. 2025};
 \citeproc{ref-Kappeter2023_migraine_FMT}{Kappéter et al. 2023};
 \citeproc{ref-Cryan2012_gutbrain}{Cryan and Dinan 2012}). The present
-\texttt{Bacteroides} enrichment is therefore best read as a weak
+\taxon{Bacteroides} enrichment is therefore best read as a weak
 cross-disease inflammatory echo rather than as migraine-specific
 evidence.
 
@@ -1169,11 +1170,11 @@ worsen renal decline (\citeproc{ref-Tang2015_TMAO_CKD}{Tang et al.
 
 
 Kidney disease showed no univariate depth-1 signals, but the adjusted
-pass identified strong enrichment of \texttt{Lactobacillus} (adjusted OR
-5.85, q = 7.8e-03) and \texttt{Prevotella\_7} (adjusted OR 4.57, q =
+pass identified strong enrichment of \taxon{Lactobacillus} (adjusted OR
+5.85, q = 7.8e-03) and \taxon{Prevotella\_7} (adjusted OR 4.57, q =
 1.0e-02). GG2 recovered a compatible pattern through enriched
-\texttt{Prevotella} and a reclassified \texttt{Bacteroides} group. Depth
-2 retained a \texttt{Lactobacillus} signal, and both adjusted depth-1
+\taxon{Prevotella} and a reclassified \taxon{Bacteroides} group. Depth
+2 retained a \taxon{Lactobacillus} signal, and both adjusted depth-1
 associations survived sensitivity analysis.
 
 
@@ -1182,9 +1183,9 @@ stronger than its immediate biological label. The CKD literature is most
 coherent at the mechanism layer: depletion of saccharolytic commensals,
 accumulation of uremic-toxin pathways, and the broader
 gut-kidney/cardiorenal axis built around TMAO, rather than any universal
-\texttt{Lactobacillus} signature (\citeproc{ref-Tang2015_TMAO_CKD}{Tang
+\taxon{Lactobacillus} signature (\citeproc{ref-Tang2015_TMAO_CKD}{Tang
 et al. 2015}; \citeproc{ref-Vaziri2013_CKD}{Vaziri et al. 2013}). The
-observed \texttt{Lactobacillus} and \texttt{Prevotella\_7} enrichments
+observed \taxon{Lactobacillus} and \taxon{Prevotella\_7} enrichments
 may therefore encode CKD stage, treatment behavior, probiotic use, or
 compensatory ecology superimposed on a real gut-kidney-axis signal. What
 keeps this section prominent is robustness: unlike several weaker
@@ -1204,13 +1205,13 @@ inflammatory signals from weaker or more fragile discovery outcomes
 instead of flattening everything into one pooled odds-ratio screen.
 
 Several cross-cutting patterns survive this disease-wise reading. First,
-\texttt{Bacteroides}-dominant structure repeatedly aligns with
+\taxon{Bacteroides}-dominant structure repeatedly aligns with
 inflammatory or inflammation-adjacent phenotypes, including IBD,
 autoimmune disease, acid reflux, and migraine. Second,
-\texttt{Prevotella}-side dominance is repeatedly protective in allergy
+\taxon{Prevotella}-side dominance is repeatedly protective in allergy
 and inflammatory settings, especially seasonal allergies and IBD. Third,
 rare but striking enterobacterial states, particularly
-\texttt{Morganella}, behave as markers of severe dysbiosis rather than
+\taxon{Morganella}, behave as markers of severe dysbiosis rather than
 as subtle population shifts. Fourth, depth 2 adds real information by
 turning a top-dominant label into an ordered ecological pair. For a
 mathematically oriented reader, this is important: the refinement is
@@ -1218,15 +1219,15 @@ explicit and interpretable rather than latent.
 
 Those broad patterns also line up with the stronger disease-specific
 literatures in recognizable ways. In IBD, the combination of
-enterobacterial rare states, \texttt{Prevotella\_9} depletion, and
-depth-2 \texttt{Bacteroides} heterogeneity matches the treatment-naive
+enterobacterial rare states, \taxon{Prevotella\_9} depletion, and
+depth-2 \taxon{Bacteroides} heterogeneity matches the treatment-naive
 and multi-omics literature that emphasizes loss of butyrate- associated
 anaerobes together with inflammatory expansion of facultative taxa
 (\citeproc{ref-Gevers2014_CD}{Gevers et al. 2014};
 \citeproc{ref-LloydPrice2019_IBD}{Lloyd-Price et al. 2019};
 \citeproc{ref-Sokol2008_Fprausnitzii}{Sokol et al. 2008}). IBS shows a
 weaker but directionally similar ecology, with Enterobacteriaceae-side
-enrichment and \texttt{Faecalibacterium} depletion rather than a
+enrichment and \taxon{Faecalibacterium} depletion rather than a
 dramatic dysbiosis collapse
 (\citeproc{ref-Pittayanon2019_IBS}{Pittayanon et al. 2019};
 \citeproc{ref-Tap2017_IBS}{Tap et al. 2017}). Seasonal allergy aligns
@@ -1245,7 +1246,7 @@ gut-kidney/cardiorenal axis defined by TMAO and uremic-toxin biology
 (\citeproc{ref-Tang2015_TMAO_CKD}{Tang et al. 2015};
 \citeproc{ref-Vaziri2013_CKD}{Vaziri et al. 2013}). Acid reflux is
 informative in the opposite way: the surviving stool-side
-\texttt{Bacteroides} association is usable, but mainly as a
+\taxon{Bacteroides} association is usable, but mainly as a
 compartment-aware signal within a literature that remains centered on
 oral and esophageal microbiology rather than stool
 (\citeproc{ref-Deshpande2018_esophageal}{Deshpande et al. 2018};

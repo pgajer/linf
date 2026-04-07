@@ -14,6 +14,7 @@ import numpy as np
 import pandas as pd
 
 from paper_paths import DCST_VALIDATION_DIR, FIGURES_DIR
+from taxon_formatting import italicize_taxa_mpl
 
 REPORT_DIR = DCST_VALIDATION_DIR / "completed_validation_report_assets_2026-04-02"
 OUT = FIGURES_DIR / "FIGURE_V1_four_cohort_external_validation.png"
@@ -114,8 +115,20 @@ def main() -> None:
     ax2.set_title("Primary-comparison support")
     ax2.legend(loc="lower right", fontsize=8)
     for idx, row in plot_df.iterrows():
-        ax2.text(row["depth1_score"] + 0.07, idx - 0.14, row["depth1_state"], fontsize=7, color="#4c78a8")
-        ax2.text(row["depth2_score"] + 0.07, idx + 0.18, row["depth2_state"], fontsize=7, color="#e45756")
+        ax2.text(
+            row["depth1_score"] + 0.07,
+            idx - 0.14,
+            italicize_taxa_mpl(row["depth1_state"]),
+            fontsize=7,
+            color="#4c78a8",
+        )
+        ax2.text(
+            row["depth2_score"] + 0.07,
+            idx + 0.18,
+            italicize_taxa_mpl(row["depth2_state"]),
+            fontsize=7,
+            color="#e45756",
+        )
 
     ax3 = fig.add_subplot(gs[1, :])
     ax3.axis("off")

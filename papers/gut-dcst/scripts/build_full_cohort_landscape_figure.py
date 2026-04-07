@@ -10,6 +10,7 @@ import numpy as np
 import pandas as pd
 
 from paper_paths import DCST_ANALYSIS_DIR, FIGURES_DIR, GUT_MICROBIOME_ROOT
+from taxon_formatting import italicize_taxa_mpl
 
 META_FILE = GUT_MICROBIOME_ROOT / "data" / "prime_gut_project_sample_metadata_2026-03-24.csv.gz"
 ABUND_FILE = GUT_MICROBIOME_ROOT / "outputs" / "prime_species" / "prime_gut_projects_silva_species_absolute_2026-03-24.csv.gz"
@@ -85,7 +86,7 @@ def build_figure(labels: list[str], size_counts: list[int], dom_values: np.ndarr
 
     top_n = 12
     tail_count = int(sum(size_counts[top_n:]))
-    plot_labels = labels[:top_n] + ["Other named DCSTs"]
+    plot_labels = [italicize_taxa_mpl(label) for label in labels[:top_n]] + ["Other named DCSTs"]
     plot_counts = size_counts[:top_n] + [tail_count]
     colors = ["#335c67", "#335c67", "#7cb518", "#ff9f1c", "#c8553d"] + ["#7a8c99"] * (len(plot_labels) - 5)
     if len(colors) < len(plot_labels):
