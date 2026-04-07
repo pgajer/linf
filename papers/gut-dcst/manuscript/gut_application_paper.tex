@@ -113,10 +113,6 @@
 \captionsetup{font=small,labelfont=bf}
 \newcolumntype{Y}{>{\raggedright\arraybackslash}X}
 \newcommand{\taxon}[1]{\emph{#1}}
-\newcommand{\submissionplaceholder}[2]{%
-  \begin{center}
-  \fbox{\parbox{0.92\linewidth}{\textbf{Submission-stage placeholder: #1}\par\smallskip #2}}
-  \end{center}}
 \setlength{\droptitle}{-2.6em}
 \pretitle{\begin{center}\Large}
 \posttitle{\par\end{center}\vspace{0.55em}}
@@ -633,29 +629,6 @@ family/order level with minor split. \\
 \end{longtable}
 
 \endgroup
-
-\medskip
-
-A concise benchmark against a clustering-based typing baseline would
-further strengthen the methods claim for a journal-facing version of the
-paper by making the gain in determinism and interpretability visible
-rather than only asserted.
-
-\begin{figure}[H]
-\centering
-\submissionplaceholder{direct comparison with a clustering-based
-community-typing baseline}{
-Populate this panel with a compact comparison between DCSTs and one
-representative clustering workflow applied to the same AGP subset. The
-figure should show, at minimum, assignment determinism under reruns or
-resampling, state coverage, and whether the resulting labels remain
-sample interpretable. If space is limited, this panel can move to the
-supplement, but some explicit benchmark would materially strengthen the
-methodological framing for submission.
-}
-\caption{Submission-stage placeholder for a direct benchmark between
-DCSTs and a clustering-based community-typing baseline.}
-\end{figure}
 
 \clearpage
 
