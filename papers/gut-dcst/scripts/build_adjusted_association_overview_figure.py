@@ -10,6 +10,7 @@ import pandas as pd
 from matplotlib.patches import Rectangle
 
 from paper_paths import DCST_ANALYSIS_DIR, FIGURES_DIR
+from taxon_formatting import italicize_taxa_mpl
 
 BASE = DCST_ANALYSIS_DIR
 ADJUSTED = BASE / "full_cohort_adjusted_results.csv"
@@ -98,7 +99,9 @@ def load_data() -> tuple[pd.DataFrame, pd.DataFrame, list[str], pd.Series]:
     plot_df = df.loc[df["DCST_short"].isin(row_order)].copy()
     top_forest = sig.sort_values("adj_q").head(18).copy()
     top_forest["label"] = top_forest.apply(
-        lambda r: f"{pretty_taxon(r['DCST_short'])} x {condition_label(r['Condition'], mode='forest')}",
+        lambda r: italicize_taxa_mpl(
+            f"{pretty_taxon(r['DCST_short'])} x {condition_label(r['Condition'], mode='forest')}"
+        ),
         axis=1,
     )
 
@@ -183,7 +186,9 @@ def build_figure(plot_df: pd.DataFrame, top_forest: pd.DataFrame, row_order: lis
     ax1.set_xticks(range(n_cols))
     ax1.set_xticklabels([condition_label(c, mode="heatmap") for c in CONDITION_ORDER])
     ax1.set_yticks(range(n_rows))
-    ax1.set_yticklabels([f"{pretty_taxon(t)} ({int(n_dcst[t]):,})" for t in row_order])
+    ax1.set_yticklabels(
+        [italicize_taxa_mpl(f"{pretty_taxon(t)} ({int(n_dcst[t]):,})") for t in row_order]
+    )
     ax1.tick_params(axis="x", bottom=False, top=False, labelsize=10)
     plt.setp(ax1.get_xticklabels(), rotation=35, ha="right", rotation_mode="anchor")
     ax1.tick_params(axis="y", length=0)

@@ -7,6 +7,7 @@ import numpy as np
 import pandas as pd
 
 from paper_paths import DCST_ANALYSIS_DIR, FIGURES_DIR
+from taxon_formatting import italicize_taxa_mpl
 
 BASE = DCST_ANALYSIS_DIR
 ASSIGN = BASE / "full_cohort_dcst_assignments.csv"
@@ -76,7 +77,7 @@ def load_data() -> tuple[pd.DataFrame, pd.Series]:
     top["color"] = [
         color_for_row(or_, q_) for or_, q_ in zip(top["adj_OR"], top["adj_q"])
     ]
-    top["display_label"] = top["child"]
+    top["display_label"] = top["child"].map(italicize_taxa_mpl)
 
     depth1 = pd.read_csv(DEPTH1)
     for col in ["adj_OR", "adj_CI_lo", "adj_CI_hi", "adj_q"]:
@@ -120,11 +121,15 @@ def build_figure(top: pd.DataFrame, parent_row: pd.Series) -> None:
     )
     plot_a = plot_a.iloc[::-1].reset_index(drop=True)
     y = np.arange(len(plot_a))
-    ax1.set_title("A. The broad Bacteroides parent contains many common depth-2 children", loc="left", fontweight="bold")
+    ax1.set_title(
+        italicize_taxa_mpl("A. The broad Bacteroides parent contains many common depth-2 children"),
+        loc="left",
+        fontweight="bold",
+    )
     ax1.barh(y, plot_a["count"], color=plot_a["color"], edgecolor="white", height=0.72)
     ax1.set_yticks(y)
     ax1.set_yticklabels(plot_a["display_label"])
-    ax1.set_xlabel("Samples within the depth-1 Bacteroides state")
+    ax1.set_xlabel(italicize_taxa_mpl("Samples within the depth-1 Bacteroides state"))
     ax1.grid(axis="x", alpha=0.25, linewidth=0.6)
     ax1.spines["top"].set_visible(False)
     ax1.spines["right"].set_visible(False)
@@ -140,7 +145,9 @@ def build_figure(top: pd.DataFrame, parent_row: pd.Series) -> None:
     ax1.text(
         0.99,
         0.94,
-        f"Top 10 children cover {top['count'].sum()/total_parent:.0%} of all Bacteroides-dominant samples",
+        italicize_taxa_mpl(
+            f"Top 10 children cover {top['count'].sum()/total_parent:.0%} of all Bacteroides-dominant samples"
+        ),
         transform=ax1.transAxes,
         fontsize=10.6,
         color="#4a4a4a",
@@ -157,7 +164,7 @@ def build_figure(top: pd.DataFrame, parent_row: pd.Series) -> None:
     ax2.text(
         parent_row["adj_OR"] * 1.02,
         0.98,
-        f"depth-1 parent OR = {parent_row['adj_OR']:.2f}",
+        italicize_taxa_mpl(f"depth-1 parent OR = {parent_row['adj_OR']:.2f}"),
         transform=ax2.get_xaxis_transform(),
         ha="left",
         va="top",

@@ -8,6 +8,7 @@ import numpy as np
 import pandas as pd
 
 from paper_paths import DCST_ANALYSIS_DIR, FIGURES_DIR, PHASE1_ARCHIVE_DIR
+from taxon_formatting import italicize_taxa_mpl
 
 BASE = DCST_ANALYSIS_DIR
 SILVA = BASE / "full_cohort_dcst_assignments.csv"
@@ -170,7 +171,7 @@ def build_figure(mapping: pd.DataFrame, harmonized: int, exact_short: int, total
         )
 
     plot_df = mapping.copy()
-    plot_df["silva_pretty"] = plot_df["silva"].map(pretty_label)
+    plot_df["silva_pretty"] = plot_df["silva"].map(pretty_label).map(italicize_taxa_mpl)
     y = np.arange(len(plot_df))
     left = np.zeros(len(plot_df))
     ax2.set_title("B. Most dominant states map cleanly, while a few large states split under GG2", loc="left", fontweight="bold")
@@ -188,7 +189,15 @@ def build_figure(mapping: pd.DataFrame, harmonized: int, exact_short: int, total
         )
         for i, v in enumerate(vals):
             if v >= 12:
-                ax2.text(left[i] + v / 2, i, f"{pretty_label(cat)}\n{v:.0f}%", ha="center", va="center", fontsize=8.8, color="#1f1f1f")
+                ax2.text(
+                    left[i] + v / 2,
+                    i,
+                    italicize_taxa_mpl(f"{pretty_label(cat)}\n{v:.0f}%"),
+                    ha="center",
+                    va="center",
+                    fontsize=8.8,
+                    color="#1f1f1f",
+                )
         left += vals
 
     ax2.set_yticks(y)
@@ -221,7 +230,7 @@ def build_figure(mapping: pd.DataFrame, harmonized: int, exact_short: int, total
     filtered = [(h, l) for h, l in zip(handles, labels) if l in keep]
     ax2.legend(
         [h for h, _ in filtered],
-        [l for _, l in filtered],
+        [italicize_taxa_mpl(l) for _, l in filtered],
         ncol=4,
         loc="upper center",
         bbox_to_anchor=(0.5, -0.18),
