@@ -5,6 +5,7 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from matplotlib.patches import Patch
 
 from paper_paths import DCST_ANALYSIS_DIR, FIGURES_DIR
 from taxon_formatting import italicize_taxa_mpl
@@ -72,9 +73,6 @@ def build_figure(df: pd.DataFrame) -> None:
     ax1.barh([0], [clean_sig], color="#b8c4ce", edgecolor="#404040", height=0.35)
     ax1.text(full_sig + 0.4, 1, f"{full_sig} significant before filter", va="center", ha="left", fontsize=11)
     ax1.text(clean_sig + 0.4, 0, f"{clean_sig} significant after filter", va="center", ha="left", fontsize=11)
-    ax1.text(0.02, 0.92, f"{counts['kept']} kept", transform=ax1.transAxes, color=colors["kept"], fontsize=12, fontweight="bold")
-    ax1.text(0.02, 0.82, f"{counts['lost']} lost", transform=ax1.transAxes, color=colors["lost"], fontsize=12, fontweight="bold")
-    ax1.text(0.02, 0.72, f"{counts['gained']} gained", transform=ax1.transAxes, color=colors["gained"], fontsize=12, fontweight="bold")
     ax1.set_xlim(0, max(full_sig, clean_sig) + 6)
     ax1.set_ylim(-0.6, 1.6)
     ax1.set_yticks([])
@@ -83,6 +81,20 @@ def build_figure(df: pd.DataFrame) -> None:
     ax1.spines["top"].set_visible(False)
     ax1.spines["right"].set_visible(False)
     ax1.spines["left"].set_visible(False)
+    ax1.legend(
+        handles=[
+            Patch(facecolor=colors["kept"], edgecolor="none", label=f"{counts['kept']} kept"),
+            Patch(facecolor=colors["lost"], edgecolor="none", label=f"{counts['lost']} lost"),
+            Patch(facecolor=colors["gained"], edgecolor="none", label=f"{counts['gained']} gained"),
+        ],
+        frameon=False,
+        ncol=3,
+        loc="lower right",
+        bbox_to_anchor=(1.0, 1.03),
+        borderaxespad=0.0,
+        handlelength=1.1,
+        columnspacing=1.2,
+    )
 
     cond = (
         df.groupby(["condition_pretty", "status"])
@@ -106,7 +118,15 @@ def build_figure(df: pd.DataFrame) -> None:
     ax2.grid(axis="x", alpha=0.25, linewidth=0.6)
     ax2.spines["top"].set_visible(False)
     ax2.spines["right"].set_visible(False)
-    ax2.legend(frameon=False, ncol=3, loc="upper right")
+    ax2.legend(
+        frameon=False,
+        ncol=3,
+        loc="lower right",
+        bbox_to_anchor=(1.0, 1.03),
+        borderaxespad=0.0,
+        handlelength=1.1,
+        columnspacing=1.2,
+    )
 
     ax3.axis("off")
     ax3.set_title("C. Representative signals", loc="left", fontweight="bold", pad=8)
@@ -130,9 +150,9 @@ def build_figure(df: pd.DataFrame) -> None:
         ],
     }
     box_specs = [
-        (0.02, 0.12, 0.30, 0.74, "Robust after filtering", colors["kept"]),
-        (0.35, 0.12, 0.30, 0.74, "Lost after filtering", colors["lost"]),
-        (0.68, 0.12, 0.30, 0.74, "New after filtering", colors["gained"]),
+        (0.02, 0.12, 0.33, 0.74, "Robust after filtering", colors["kept"]),
+        (0.37, 0.12, 0.29, 0.74, "Lost after filtering", colors["lost"]),
+        (0.69, 0.12, 0.29, 0.74, "New after filtering", colors["gained"]),
     ]
     for x0, y0, w, h, title, color in box_specs:
         rect = plt.Rectangle((x0, y0), w, h, transform=ax3.transAxes, facecolor="#fcfcfb", edgecolor=color, linewidth=1.6)
