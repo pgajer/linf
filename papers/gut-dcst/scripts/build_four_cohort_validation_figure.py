@@ -92,8 +92,15 @@ def main() -> None:
     plot_df["depth1_score"] = -np.log10(plot_df["depth1_q"].clip(lower=1e-12))
     plot_df["depth2_score"] = -np.log10(plot_df["depth2_q"].clip(lower=1e-12))
 
-    fig = plt.figure(figsize=(12, 7.6), constrained_layout=True)
-    gs = fig.add_gridspec(2, 2, height_ratios=[1.0, 1.1], width_ratios=[1.05, 1.2])
+    fig = plt.figure(figsize=(11.6, 7.2))
+    gs = fig.add_gridspec(
+        2,
+        2,
+        height_ratios=[1.18, 0.92],
+        width_ratios=[1.02, 1.18],
+        hspace=0.32,
+        wspace=0.32,
+    )
 
     ax1 = fig.add_subplot(gs[0, 0])
     y = np.arange(len(plot_df))
@@ -101,9 +108,12 @@ def main() -> None:
     ax1.set_yticks(y, labels=plot_df["display_name"])
     ax1.invert_yaxis()
     ax1.set_xlabel("Samples after QC")
-    ax1.set_title("Validation cohort sizes")
+    ax1.set_title("A. Validation cohort sizes", loc="left", fontweight="bold")
     for yi, val in zip(y, plot_df["samples_after_qc"]):
         ax1.text(val + 3, yi, str(val), va="center", fontsize=8)
+    ax1.set_xlim(0, plot_df["samples_after_qc"].max() + 28)
+    ax1.spines["top"].set_visible(False)
+    ax1.spines["right"].set_visible(False)
 
     ax2 = fig.add_subplot(gs[0, 1])
     ax2.scatter(plot_df["depth1_score"], y, color="#4c78a8", s=55, label="Depth 1")
@@ -112,8 +122,8 @@ def main() -> None:
     ax2.set_yticks(y, labels=plot_df["display_name"])
     ax2.invert_yaxis()
     ax2.set_xlabel(r"$-\log_{10}(q)$ for primary contrast")
-    ax2.set_title("Primary-comparison support")
-    ax2.legend(loc="lower right", fontsize=8)
+    ax2.set_title("B. Primary-comparison support", loc="left", fontweight="bold")
+    ax2.legend(loc="lower right", fontsize=8, frameon=True, borderpad=0.35)
     for idx, row in plot_df.iterrows():
         ax2.text(
             row["depth1_score"] + 0.07,
@@ -129,11 +139,20 @@ def main() -> None:
             fontsize=7,
             color="#e45756",
         )
+    ax2.spines["top"].set_visible(False)
+    ax2.spines["right"].set_visible(False)
+    ax2.set_xlim(-0.35, max(plot_df["depth1_score"].max(), plot_df["depth2_score"].max()) + 0.5)
 
     ax3 = fig.add_subplot(gs[1, :])
     ax3.axis("off")
-    x_positions = np.linspace(0.02, 0.98, len(plot_df))
-    for x, (_, row) in zip(x_positions, plot_df.iterrows()):
+    ax3.set_title("C. Cohort roles and signal counts", loc="left", fontweight="bold", pad=6)
+    box_specs = [
+        (0.03, 0.53),
+        (0.53, 0.53),
+        (0.03, 0.09),
+        (0.53, 0.09),
+    ]
+    for (x, y0), (_, row) in zip(box_specs, plot_df.iterrows()):
         text = (
             f"{row['display_name']}\n"
             f"{row['role']}\n"
@@ -141,17 +160,18 @@ def main() -> None:
         )
         ax3.text(
             x,
-            0.55,
+            y0,
             text,
-            ha="center",
-            va="center",
-            fontsize=9,
-            bbox=dict(boxstyle="round,pad=0.45", facecolor="#f7f7f7", edgecolor="#999999"),
+            ha="left",
+            va="bottom",
+            fontsize=10,
+            linespacing=1.18,
+            bbox=dict(boxstyle="round,pad=0.55", facecolor="#f7f7f7", edgecolor="#999999"),
             transform=ax3.transAxes,
         )
 
-    fig.suptitle("Four-cohort IBD-focused external validation", fontsize=16)
-    fig.savefig(OUT, dpi=220, bbox_inches="tight")
+    fig.subplots_adjust(left=0.08, right=0.985, top=0.96, bottom=0.08)
+    fig.savefig(OUT, dpi=220, bbox_inches="tight", pad_inches=0.03)
 
 
 if __name__ == "__main__":
