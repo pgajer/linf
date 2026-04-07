@@ -265,15 +265,20 @@ threshold for a named dominant type are grouped into
 
 \begin{figure}
 \centering
-\includegraphics[width=0.92\linewidth,height=\textheight,keepaspectratio,alt={Conceptual schematic of the DCST construction. A sample abundance profile induces a within-sample taxon ranking, which yields a depth-1 state from the dominant taxon and a depth-2 state from the ordered dominant pair. Under the rare low-frequency policy used in this paper, dominant patterns below the prevalence threshold are grouped into RARE\_DOMINANT; the software also supports an absorb policy that merges such samples into larger named states.}]{../assets/figures/FIGURE_1_dcst_conceptual_schematic.png}
-\caption{Conceptual schematic of the DCST construction. A sample
-abundance profile induces a within-sample taxon ranking, which yields a
-depth-1 state from the dominant taxon and a depth-2 state from the
-ordered dominant pair. Under the \texttt{rare} low-frequency policy used
-in this paper, dominant patterns below the prevalence threshold are
-grouped into \texttt{RARE\_DOMINANT}; the software also supports an
+\includegraphics[width=0.92\linewidth,height=\textheight,keepaspectratio,alt={Conceptual schematic of the DCST construction. Panel A shows an example sample abundance profile. Panel B shows the induced within-sample dominance ranking. Panel C shows the depth-1 assignment, which keeps only the top-ranked taxon and reads the label directly from the sample. Panel D shows the depth-2 assignment, which records the ordered dominant pair. Under the rare low-frequency policy used in this paper, dominant patterns below the prevalence threshold are grouped into RARE\_DOMINANT; the software also supports an absorb policy that merges such samples into larger named states.}]{../assets/figures/FIGURE_1_dcst_conceptual_schematic.png}
+\caption{Conceptual schematic of the DCST construction. Panel A shows an
+example sample abundance profile, and panel B shows the corresponding
+within-sample dominance order. Panel C illustrates the depth-1
+assignment, which keeps only the top-ranked taxon and reads the label
+directly from the sample rather than from a fitted cluster. Panel D
+illustrates the depth-2 assignment, which records the ordered dominant
+pair. Under the \texttt{rare} low-frequency policy used in this paper,
+dominant patterns below the prevalence threshold are grouped into
+\texttt{RARE\_DOMINANT}; the software also supports an
 \texttt{absorb} policy that merges such samples into larger named
-states.}
+states. The key point is that the label is determined by within-sample
+dominance order, yielding a deterministic and hierarchical alternative
+to clustering-based community typing.}
 \end{figure}
 
 \section{Materials and Methods}\label{methods}
@@ -415,11 +420,13 @@ Rank & DCST & n & Share (\%) & Cumulative (\%) \\
 
 \begin{figure}
 \centering
-\includegraphics[width=0.92\linewidth,height=\textheight,keepaspectratio,alt={Full-cohort AGP landscape. Panel A shows the leading depth-1 DCSTs after truncation at n0 = 50, while Panel B shows the empirical dominance strength, defined as the relative abundance of the dominant species in each sample.}]{../assets/figures/FIGURE_2_full_cohort_landscape.png}
+\includegraphics[width=0.92\linewidth,height=\textheight,keepaspectratio,alt={Full-cohort AGP landscape. Panel A shows the leading depth-1 DCSTs in the 30,290-sample AGP cohort after truncation at n0 = 50, with the remaining named states grouped as other named DCSTs. Panel B shows the distribution of empirical dominance strength, defined as the relative abundance of the dominant species in each sample, with the median and interquartile range annotated.}]{../assets/figures/FIGURE_2_full_cohort_landscape.png}
 \caption{Full-cohort AGP landscape. Panel A shows the leading depth-1
-DCSTs after truncation at n0 = 50, while Panel B shows the empirical
-dominance strength, defined as the relative abundance of the dominant
-species in each sample.}
+DCSTs in the 30,290-sample AGP cohort after truncation at \(n_0 = 50\),
+with the remaining named states grouped as other named DCSTs. Panel B
+shows the distribution of empirical dominance strength, defined as the
+relative abundance of the dominant species in each sample, with the
+median and interquartile range annotated.}
 \end{figure}
 
 \begin{figure}

@@ -148,23 +148,8 @@ def build_figure(labels: list[str], size_counts: list[int], dom_values: np.ndarr
         color="#4d4d4d",
     )
 
-    fig.suptitle(
-        "Figure 2. The full-cohort AGP gut landscape combines a few large dominant states with a broad moderate-dominance background",
-        fontsize=14.5,
-        fontweight="bold",
-        y=0.98,
-    )
-    fig.text(
-        0.5,
-        0.015,
-        "Panel A shows the leading depth-1 DCSTs after truncation at n0 = 50. Panel B shows the empirical dominance strength, defined as the relative abundance of the most abundant taxon in each sample.",
-        ha="center",
-        va="bottom",
-        fontsize=10.2,
-        color="#3b3b3b",
-    )
     OUT_FIG.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(OUT_FIG, dpi=220, bbox_inches="tight")
+    fig.savefig(OUT_FIG, dpi=220, bbox_inches="tight", pad_inches=0.04)
     plt.close(fig)
 
 
