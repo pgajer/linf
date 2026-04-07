@@ -142,36 +142,11 @@ def build_figure(top: pd.DataFrame, parent_row: pd.Series) -> None:
             ha="left",
             fontsize=10.5,
         )
-    ax1.text(
-        0.99,
-        0.94,
-        italicize_taxa_mpl(
-            f"Top 10 children cover {top['count'].sum()/total_parent:.0%} of all Bacteroides-dominant samples"
-        ),
-        transform=ax1.transAxes,
-        fontsize=10.6,
-        color="#4a4a4a",
-        ha="right",
-        va="top",
-        bbox={"facecolor": "white", "edgecolor": "none", "pad": 1.5, "alpha": 0.9},
-    )
-
     plot_b = top.iloc[::-1].reset_index(drop=True)
     y2 = np.arange(len(plot_b))
     ax2.set_title("B. IBD odds ratios differ materially across those common children", loc="left", fontweight="bold")
     ax2.axvline(1.0, color="#4a4a4a", linewidth=1.2)
     ax2.axvline(parent_row["adj_OR"], color="#7a7a7a", linewidth=1.3, linestyle="--")
-    ax2.text(
-        parent_row["adj_OR"] * 1.02,
-        0.98,
-        italicize_taxa_mpl(f"depth-1 parent OR = {parent_row['adj_OR']:.2f}"),
-        transform=ax2.get_xaxis_transform(),
-        ha="left",
-        va="top",
-        fontsize=10.3,
-        color="#5a5a5a",
-        bbox={"facecolor": "white", "edgecolor": "none", "pad": 1.5, "alpha": 0.9},
-    )
     for yi, (_, row) in zip(y2, plot_b.iterrows()):
         left = row["adj_OR"] - row["adj_CI_lo"]
         right = row["adj_CI_hi"] - row["adj_OR"]
