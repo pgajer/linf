@@ -31,6 +31,9 @@ direct LaTeX editing for better float placement and layout control.
 The current journal-target shortlist is tracked in
 [`JOURNAL_TARGETS_gut_application_paper.md`](/Users/pgajer/current_projects/linf/papers/gut-dcst/notes/JOURNAL_TARGETS_gut_application_paper.md).
 
+The absorb-policy rerun plan is tracked in
+[`ACTION_PLAN_absorb_dcst_rerun_2026-04-10.md`](/Users/pgajer/current_projects/linf/papers/gut-dcst/notes/action_plans/ACTION_PLAN_absorb_dcst_rerun_2026-04-10.md).
+
 ## Versioning Policy
 
 - Use git and GitHub for day-to-day version history.
