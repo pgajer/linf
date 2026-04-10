@@ -573,6 +573,10 @@ refine.linf.csts <- function(M,
     }
 
     for (cell in refine.cells) {
+        ## Rare buckets are synthetic catch-all groups, not real feature paths.
+        ## They should never be refined further.
+        if (identical(cell, rare.label)) next
+
         idx <- which(parent.ids == cell)
         parent.id.rare <- parent.ids.rare[idx[1L]]
         parent.id.absorb <- parent.ids.absorb[idx[1L]]
@@ -738,6 +742,10 @@ refine.linf.csts.iter <- function(M,
     new.labels.absorb <- parent.labels.absorb
 
     for (cell in cells.to.refine) {
+        ## Rare buckets are synthetic catch-all groups, not real feature paths.
+        ## They should never be refined further.
+        if (identical(cell, rare.label)) next
+
         idx <- which(parent.ids == cell)
         parent.id.rare <- parent.ids.rare[idx[1L]]
         parent.id.absorb <- parent.ids.absorb[idx[1L]]

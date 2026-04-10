@@ -131,10 +131,18 @@
   citecolor={Blue},
   urlcolor={blue},
   pdfcreator={LaTeX via pandoc}}
+\newcommand{\paperaffiliation}{Center for Advanced Microbiome Research and Innovation (CAMRI), Institute for Genome Sciences, Department of Microbiology and Immunology, University of Maryland School of Medicine, Baltimore, Maryland, USA.}
+\newcommand{\paperfundingnote}{Research reported in this publication was supported by grant number INV-048956 from the Gates Foundation.}
+\newcommand{\blfootnote}[1]{%
+  \begingroup
+  \renewcommand{\thefootnote}{}\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \endgroup
+}
 
 \title{Dominant Community State Types Reveal Disease-Associated
 Dominance Patterns in the Human Gut Microbiome}
-\author{\parbox{0.9\textwidth}{\centering Pawel Gajer$^{1}$\thanks{Research reported in this publication was supported by grant number INV-048956 from the Gates Foundation.}\thanks{Corresponding author: pgajer@gmail.com} and Jacques Ravel$^{1}$\\[0.35em] $^{1}$University of Maryland School of Medicine}}
+\author{\parbox{0.9\textwidth}{\centering Pawel Gajer\thanks{\paperaffiliation}\thanks{Corresponding author: pgajer@gmail.com} and Jacques Ravel\protect\footnotemark[1]}}
 \date{}
 \providecommand{\manuscriptversion}{unversioned}
 \providecommand{\manuscriptbuildnumber}{NA}
@@ -144,6 +152,7 @@ Dominance Patterns in the Human Gut Microbiome}
 
 \begin{document}
 \maketitle
+\blfootnote{\paperfundingnote}
 \begin{center}
 \footnotesize
 Version \texttt{\manuscriptversion} \quad | \quad Build
@@ -179,56 +188,35 @@ reproducible, and interpretable framework for large-scale microbiome
 association screens while also showing that external validation remains
 phenotype dependent rather than automatic.
 
-\section{Importance}\label{importance}
-
-Large microbiome studies need community-typing schemes that remain
-interpretable after preprocessing choices, covariate adjustment, and
-cross-cohort comparison. This study shows that a simple rank-based
-dominant-state representation can recover structured ecological states
-from a very large gut cohort without fitting global clusters, while also
-making it easy to separate durable inflammatory signals from weaker or
-more fragile associations. The strongest completed use case is
-inflammatory bowel disease, where discovery, subtype refinement,
-taxonomy concordance, and external validation point in the same
-direction. The main contribution is therefore not a claim of causality,
-but a reproducible workflow for turning large microbiome tables into
-explicit sample-level states that can be screened, interpreted, and
-tested in independent cohorts.
-
 \textbf{Keywords:} gut microbiome; community typing; dominant-community
 state types; American Gut Project; inflammatory bowel disease; external
 validation
 
 \section{Introduction}\label{introduction}
 
-Microbiome community typing is useful when it compresses a
+Microbiome community typing is valuable when it compresses a
 high-dimensional abundance profile into a smaller number of biologically
 interpretable states. In practice, however, many typing schemes are
-built around clustering. That can work well, but it also ties the final
-labels to choices about transformations, distance metrics,
-initialization, model class, and the number of clusters. Those choices
-are not merely technical. They affect whether a reader can understand
-what a given sample label means and whether two analyses can be compared
-without a hidden dependence on tuning decisions.
+built around clustering. That strategy can be informative, but it also
+ties the final labels to choices about transformations, distance
+metrics, initialization, model class, and the number of clusters. Those
+choices affect whether a reader can understand what a given sample label
+means and whether two analyses can be compared without a hidden
+dependence on tuning decisions.
 
-This paper studies a simpler route. A dominant-community state type
-(DCST) is defined by the within-sample ordering of taxa. At depth 1, the
-dominant taxon determines the top-level state. At depth 2, the
-second-ranked taxon refines that state into an ordered subtype. Because
-the construction depends only on rank order, it is unchanged by
-sample-wide rescaling and does not require a particular \(L_p\)
-normalization. The resulting construction is deterministic,
-hierarchical, and local to the sample: the label is read directly from
-the ordered dominant coordinates rather than inferred from a fitted
-global partition.
+Here we evaluate a simpler deterministic representation: a dominant-community
+state type (DCST), defined by the within-sample ordering of taxa. At depth 1,
+the state is assigned by the dominant taxon; at depth 2, it is refined by the
+ordered pair of the two most abundant taxa. Because assignment depends only on
+within-sample rank order, the same label is recovered from counts, proportions,
+or any sample-wide order-preserving normalization. DCSTs therefore provide
+explicit, hierarchical sample-level states that can be read directly from the
+data, rather than inferred from a fitted global partition.
 
-The gut is a particularly good stress test for this idea. In the vaginal
-microbiome, strong dominance can be common and even canonical. In the
-gut, strong dominance is less universal and often appears in dysbiotic
-or otherwise unusual settings. That makes the gut harder to type
-cleanly, but also more interesting. Literature on IBS, IBD, autoimmune
-disease, and cardiometabolic conditions suggests that shifts in dominant
-taxa or dominant taxon pairs can mark altered ecological states
+We apply this framework to the gut microbiome, where literature on IBS,
+IBD, autoimmune disease, and cardiometabolic conditions suggests that
+shifts in dominant taxa or dominant taxon pairs can mark altered
+ecological states
 (\citeproc{ref-Tap2017_IBS}{Tap et al. 2017};
 \citeproc{ref-Pittayanon2019_IBS}{Pittayanon et al. 2019};
 \citeproc{ref-LloydPrice2019_IBD}{Lloyd-Price et al. 2019};
@@ -236,32 +224,27 @@ taxa or dominant taxon pairs can mark altered ecological states
 \citeproc{ref-Scher2013_Prevotella_RA}{Scher et al. 2013};
 \citeproc{ref-Vatanen2018_T1D}{Vatanen et al. 2018};
 \citeproc{ref-Wang2011_TMAO}{Z. Wang et al. 2011};
-\citeproc{ref-Tang2013_TMAO}{Tang et al. 2013}).
+\citeproc{ref-Tang2013_TMAO}{Tang et al. 2013}). In this setting,
+DCSTs provide a natural high-level characterization of community
+structure and a useful first abstraction layer for downstream
+mechanistic analyses.
 
 Our aim is not to argue that dominant taxa alone explain disease
-biology. The claim is narrower and more operational. First, recurring
-dominance patterns can be identified deterministically across a cohort
-of this size without fitting clusters. Second, those labels retain
-enough ecological meaning to support phenotype-resolved screening rather
-than only one pooled disease-versus-not-disease contrast. Third, the
-strongest signals can be stress-tested across covariate adjustment,
+biology. Rather, we ask whether recurrent dominance patterns can be
+identified deterministically in a cohort of this size, whether the
+resulting labels retain enough ecological meaning to support
+phenotype-specific association screening, and whether the strongest
+signals remain recognizable after covariate adjustment,
 contaminant-aware filtering, taxonomy change, and external validation.
-That combination makes DCSTs attractive as a systems-level analysis
-layer even when mechanistic follow-up remains incomplete.
-
-A DCST is defined by the ordered dominant taxa in a sample. At depth 1,
-only the largest component matters. At depth 2, the second-largest
-component refines the parent class. Because only the within-sample
-ordering matters, the same DCST is obtained from read counts,
-proportions, or any sample-wide \(L_p\) normalization. How low-frequency
-dominant patterns are handled is a separate modeling choice. In the
-\texttt{rare} policy used here, samples that do not meet the prevalence
-threshold for a named dominant type are grouped into
-\texttt{RARE\_DOMINANT}.
+If so, DCSTs provide a practical analysis layer for large microbiome
+studies in which interpretability and reproducibility matter as much as
+statistical association strength. Throughout this study, dominant
+patterns observed in fewer than \(n_0 = 50\) samples were grouped into a
+rare-dominant category, denoted RARE\_DOMINANT in the analysis outputs.
 
 \begin{figure}
 \centering
-\includegraphics[width=0.92\linewidth,height=\textheight,keepaspectratio,alt={Conceptual schematic of the DCST construction. Panel A shows an example sample abundance profile. Panel B shows the induced within-sample dominance ranking. Panel C shows the depth-1 assignment, which keeps only the top-ranked taxon and reads the label directly from the sample. Panel D shows the depth-2 assignment, which records the ordered dominant pair. Under the rare low-frequency policy used in this paper, dominant patterns below the prevalence threshold are grouped into RARE\_DOMINANT; the software also supports an absorb policy that merges such samples into larger named states.}]{../assets/figures/FIGURE_1_dcst_conceptual_schematic.png}
+\includegraphics[width=0.92\linewidth,height=\textheight,keepaspectratio,alt={Conceptual schematic of the DCST construction. Panel A shows an example sample abundance profile. Panel B shows the induced within-sample dominance ranking. Panel C shows the depth-1 assignment, which keeps only the top-ranked taxon and reads the label directly from the sample. Panel D shows the depth-2 assignment, which records the ordered dominant pair. Under the rare low-frequency policy used in this paper, dominant patterns below the prevalence threshold are grouped into a rare-dominant category (RARE_DOMINANT); the software also supports an absorb policy that merges such samples into larger named states.}]{../assets/figures/FIGURE_1_dcst_conceptual_schematic.png}
 \caption{Conceptual schematic of the DCST construction. Panel A shows an
 example sample abundance profile, and panel B shows the corresponding
 within-sample dominance order. Panel C illustrates the depth-1
@@ -269,135 +252,96 @@ assignment, which keeps only the top-ranked taxon and reads the label
 directly from the sample rather than from a fitted cluster. Panel D
 illustrates the depth-2 assignment, which records the ordered dominant
 pair. Under the \texttt{rare} low-frequency policy used in this paper,
-dominant patterns below the prevalence threshold are grouped into
-\texttt{RARE\_DOMINANT}; the software also supports an
+dominant patterns below the prevalence threshold are grouped into a
+rare-dominant category (RARE\_DOMINANT); the software also supports an
 \texttt{absorb} policy that merges such samples into larger named
-states. The key point is that the label is determined by within-sample
-dominance order, yielding a deterministic and hierarchical alternative
-to clustering-based community typing.}
+states. The label is therefore determined by within-sample dominance
+order, yielding a deterministic and hierarchical alternative to
+clustering-based community typing.}
 \end{figure}
 
 \section{Materials and Methods}\label{methods}
 
-\subsection{Cohort and
-preprocessing}\label{cohort-and-preprocessing}
-
 The discovery analysis used AGP gut samples from the PRIME-derived SILVA
 species-level abundance table (\citeproc{ref-McDonald2018_AGP}{McDonald
-et al. 2018}; \citeproc{ref-Quast2013_SILVA}{Quast et al. 2013}). The
-starting table contained 34,711 samples, of which 30,290 passed
-quality-control filters and were retained for analysis. The retained
-matrix contained 274 taxa. Age was available for 27,372 samples
-(90.4\%), sex for 25,598 (84.5\%), and BMI for 26,541 (87.6\%),
-producing 22,632 complete cases for adjusted modeling.
+et al. 2018}; \citeproc{ref-Quast2013_SILVA}{Quast et al. 2013}). We
+restricted the analysis to the 34,711 AGP rows present in the PRIME
+gut-project abundance table. Samples with total library size below
+1,000 reads were excluded, removing 4,421 samples.
+Taxa were then retained only if they reached a count of at least 2 in at
+least 5\% of the retained samples, corresponding to a prevalence
+threshold of 1,515 samples in this cohort. This feature filter retained
+274 taxa, and no additional samples became all-zero after feature
+filtering, leaving 30,290 samples for the discovery analysis. Age was
+available for 27,372 samples (90.4\%), sex for 25,598 (84.5\%), and BMI
+for 26,541 (87.6\%), producing 22,632 complete cases for adjusted
+modeling.
 
-\subsection{DCST construction}\label{dcst-construction}
+A depth-1 DCST was assigned by the dominant taxon in each sample, and a depth-2
+DCST by the ordered pair formed by the dominant and second-ranked taxa. Because
+assignment depends only on within-sample rank order, the label is unchanged
+whether the input is expressed as raw counts, relative abundances, or any other
+sample-wide rescaling that preserves the order of taxa within each sample. To
+keep the state space interpretable, only dominant patterns observed in at least
+\(n_0 = 50\) samples were promoted to named DCSTs; less prevalent patterns were
+grouped into a rare-dominant category. Associations between DCSTs and phenotype
+labels were first screened with Fisher's exact test and then evaluated with
+covariate-adjusted logistic regression models using the DCST label together with
+available age, sex, and BMI covariates. Multiple testing was controlled with the
+Benjamini-Hochberg procedure (\citeproc{ref-BenjaminiHochberg1995}{Benjamini and
+  Hochberg 1995}), and q-values below 0.05 were treated as statistically
+significant.
 
-A depth-1 DCST was defined by the dominant taxon. A depth-2 DCST was
-defined by the ordered pair consisting of the dominant and second-ranked
-taxa. This construction depends only on within-sample rank order, so the
-resulting label is unchanged by moving between raw counts, relative
-abundances, or any sample-wide \(L_p\) normalization. To keep the
-resulting state space interpretable, low-frequency dominant patterns
-were handled by a separate policy choice. In the software this
-corresponds to \texttt{low.freq.policy}. Under
-\texttt{low.freq.policy\ =\ "rare"} (used here), only dominant patterns
-meeting a minimum prevalence threshold \(n_0\) were promoted to named
-DCSTs, and the rest were grouped into \texttt{RARE\_DOMINANT}. This
-preserves the purity of the named DCSTs because rare cells are not
-absorbed into larger ones. The alternative
-\texttt{low.freq.policy\ =\ "absorb"} merges low-frequency cells into
-larger named states, which can yield a coarser partition but disturbs
-the original dominant structure of those named DCSTs.
-
-\subsection{Association analysis}\label{association-analysis}
-
-We first performed univariate screening with Fisher's exact test. We
-then fit adjusted logistic models for disease indicators using the DCST
-label together with available covariates. For a mathematically oriented
-reader, the odds ratio may be read as follows: an odds ratio above 1
-means the DCST is enriched in the given phenotype relative to the
-reference group, while an odds ratio below 1 means depletion. Multiple
-testing was handled by the Benjamini-Hochberg procedure
-(\citeproc{ref-BenjaminiHochberg1995}{Benjamini and Hochberg 1995}), and
-q-values below 0.05 were treated as statistically notable rather than as
-proof of mechanism.
-
-\subsection{Sensitivity analysis and taxonomy
-comparison}\label{sensitivity-analysis-and-taxonomy-comparison}
-
-Because some nominal gut signals can be driven by oral- or
-skin-associated contaminants, we repeated the adjusted analysis after
-excluding samples dominated by a prespecified contaminant set. We also
-ran a parallel dominant-type analysis under GG2 taxonomy
-(\citeproc{ref-McDonald2024_GG2}{McDonald et al. 2024}) and compared
-dominant-genus assignments between SILVA and GG2 on the overlapping
-sample set.
-
-\subsection{External validation}\label{external-validation}
-
-The validation program now has two layers. The manuscript's main-text
-validation layer uses four completed IBD-relevant cohorts: HMP2 / IBDMDB
-(\texttt{PRJNA398089}), PRJEB84421, Halfvarson 2017, and Gevers 2014.
-HMP2 provides clinically grounded inflammatory bowel disease phenotypes,
-but in the currently available local metadata it is dominated by mucosal
-gut sites and repeated measures. PRJEB84421 provides a stool-based
-inflammatory complement, but is smaller, pediatric, and phenotype-mixed.
-Halfvarson 2017 and Gevers 2014 were reprocessed from raw external 16S
-data with DADA2 and then harmonized into the same validation framework.
-A broader completed-validation layer also includes non-IBD cohorts, but
-those are used mainly to evaluate how broadly the pipeline's positive,
-null, and near-null outcomes generalize beyond the IBD branch.
-
-\subsection{Reproducibility and manuscript reporting
-policy}\label{reproducibility-and-manuscript-reporting-policy}
-
-All manuscript-facing tables, figures, and text updates were generated
-from version-controlled assets in the public \texttt{linf} repository,
-with cohort-scale processing and validation outputs maintained in the
-companion gut-microbiome working tree. External cohorts were interpreted
-in the main text only after quality control, phenotype harmonization,
-and a complete association pass under the same DCST workflow. Cohorts
-still in processing are not treated as positive or negative evidence in
-this draft; instead, the manuscript carries explicit submission-stage
-placeholders so that additional external results can be added without
-blurring completed evidence and pending work.
+Because nominal gut associations can be influenced by oral- or
+skin-associated carryover, we repeated the adjusted analysis after
+excluding samples dominated by a prespecified contaminant set. Taxonomy
+concordance was evaluated by repeating the dominant-state analysis under
+GreenGenes2 taxonomy (\citeproc{ref-McDonald2024_GG2}{McDonald et al.
+2024}) and comparing dominant-genus assignments between SILVA and GG2 on
+the overlapping sample set. External validation in the present analysis
+focused on four IBD-relevant cohorts: HMP2 / IBDMDB
+(\texttt{PRJNA398089}), \texttt{PRJEB84421}, Halfvarson 2017, and Gevers
+2014. Halfvarson 2017 and Gevers 2014 were reprocessed from raw external
+16S data with DADA2, and all validation cohorts were harmonized to the
+same phenotype definitions and DCST association workflow used for the
+discovery analysis. We are also extending this validation framework to
+the Jacobs 2023 IBS cohort (\texttt{PRJNA812699}), treating the 150-bp
+and 250-bp sequencing families as separate validation branches and
+combining them only after taxonomy harmonization rather than at the raw
+ASV level. All manuscript figures and tables were generated from scripts
+built around the \texttt{linf} R package.
 
 \section{Results}\label{cohort-overview}
 
-\subsection{Discovery cohort landscape}\label{shared-agp-overview}
+\subsection{Cohort landscape and association overview}\label{shared-agp-overview}
 
-The Phase 1 discovery analysis used 30,290 quality-controlled AGP gut
-samples. At depth 1 with \(n_0 = 50\), the cohort yielded 40 named DCSTs
-plus \texttt{RARE\_DOMINANT} (1,162 samples). The largest types were
+The discovery cohort comprised 30,290 quality-controlled AGP gut
+samples. At depth 1, with a naming threshold of \(n_0 = 50\), the
+cohort yielded 40 named DCSTs plus a rare-dominant category (1,162
+samples). The largest types were
 \taxon{Bacteroides} (10,358 samples), \taxon{Escherichia-Shigella}
 (6,857), \taxon{Prevotella\_9} (1,870), Enterobacteriaceae (1,564), and
-\taxon{Faecalibacterium} (1,320). In other words, the gut
-landscape is neither one universal dominant state nor an uninterpretable
-spray of rare labels.
+\taxon{Faecalibacterium} (1,320). The dominant-state landscape was
+therefore concentrated in a limited number of common configurations
+rather than diffusely fragmented across many rare labels.
 
-Across the full screen, 59 of 492 univariate Fisher tests were
-significant after correction. The covariate-adjusted depth-1 pass
-yielded 28 significant associations across 452 tests, and 23 of those
-remained significant in the contamination-aware sensitivity analysis.
-Depth 2 added 23 adjusted-significant subtype associations across 1,340
-tests. This common overview is useful because the disease-wise sections
-below should be read against this shared statistical background rather
-than as isolated anecdotes. The twelve most common depth-1 states
-already cover 87.6\% of the retained cohort, so the dominant-state
-picture is concentrated rather than diffusely fragmented (Table 1).
+Across all phenotypes, 59 of 492 univariate Fisher tests remained
+significant after multiple-testing correction. In the covariate-adjusted
+depth-1 analysis, 28 of 452 tests were significant, and 23 of those
+remained significant after the contamination-aware sensitivity analysis.
+Depth 2 contributed 23 additional significant subtype associations
+across 1,340 tests. The twelve most common depth-1 states covered 87.6\%
+of the retained cohort, indicating that a relatively small number of
+dominant configurations accounted for most samples (Table 1).
 
-\textbf{Table 1. Top depth-1 DCSTs in the full AGP cohort.}
-
-\begingroup\small
-
-\begin{longtable}[]{@{}lllll@{}}
-\toprule\noalign{}
+\begin{table}[H]
+\small
+\caption*{\textbf{Table 1.} Top depth-1 DCSTs in the full AGP cohort.}
+\centering
+\begin{tabular}{@{}lllll@{}}
+\toprule
 Rank & DCST & n & Share (\%) & Cumulative (\%) \\
-\midrule\noalign{}
-\endhead
-\bottomrule\noalign{}
-\endlastfoot
+\midrule
 1 & \taxon{Bacteroides} & 10358 & 34.2 & 34.2 \\
 2 & \taxon{Escherichia-Shigella} & 6857 & 22.6 & 56.8 \\
 3 & \taxon{Prevotella\_9} & 1870 & 6.2 & 63.0 \\
@@ -410,9 +354,9 @@ Rank & DCST & n & Share (\%) & Cumulative (\%) \\
 10 & \taxon{Prevotella\_7} & 476 & 1.6 & 84.8 \\
 11 & Unassigned & 444 & 1.5 & 86.2 \\
 12 & Lachnospiraceae & 416 & 1.4 & 87.6 \\
-\end{longtable}
-
-\endgroup
+\bottomrule
+\end{tabular}
+\end{table}
 
 \begin{figure}
 \centering
@@ -435,11 +379,10 @@ indicating no surviving adjusted signal. Panel B shows the strongest
 adjusted associations with 95\% confidence intervals.}
 \end{figure}
 
-Table 2 collects the single strongest adjusted depth-1 signal for each
-phenotype with at least one surviving adjusted association. This is not
-meant to replace the full association screen; it is meant to keep the
-shared overview legible before the disease-wise sections unpack the same
-results in context.
+Table 2 lists the single strongest adjusted depth-1 association for each
+phenotype with at least one surviving adjusted signal. It provides a
+compact summary of the global screen before the phenotype-specific
+sections unpack the results in detail.
 
 \begin{table}[H]
 \footnotesize
@@ -462,17 +405,17 @@ Kidney disease & Enriched & \taxon{Lactobacillus} & 117 & 5.85 (2.26-15.14) & 0.
 \end{tabularx}
 \end{table}
 
-Looking only at the counts, the sensitivity analysis reduces the number
-of adjusted-significant depth-1 associations from 28 to 23. A more
-informative view is to compare which signals are lost, which are
-retained, and which become clearer once likely oral- or skin-associated
-dominants are excluded. Twenty adjusted-significant associations are
-retained, eight are lost, and three become significant only in the clean
-analysis. The lost signals are concentrated in \taxon{Staphylococcus}-
-and \taxon{Streptococcus}-linked contrasts, while the strongest IBD,
+\subsection{Robustness, depth-2 refinement, and taxonomy concordance}\label{robustness-depth2-taxonomy}
+
+Contamination-aware filtering reduced the number of
+adjusted-significant depth-1 associations from 28 to 23. Twenty
+adjusted-significant associations were retained, eight were lost, and
+three became significant only in the clean analysis. The lost signals
+were concentrated in \taxon{Staphylococcus}- and
+\taxon{Streptococcus}-linked contrasts, whereas the strongest IBD,
 allergy, and several \taxon{Bacteroides} / \taxon{Prevotella\_9}
-associations remain in place. Table 3 shows how this transition looks
-phenotype by phenotype rather than only in aggregate.
+associations remained in place. Table 3 summarizes this transition by
+phenotype.
 
 \begin{figure}
 \centering
@@ -506,16 +449,16 @@ Kidney disease & 0 & 2 & 2 & \taxon{Lactobacillus} (3.50 -> 5.85) & -- \\
 \end{tabularx}
 \end{table}
 
-Depth 2 matters most when a broad parent state hides materially
-different substructures. The depth-2 case-study figure makes that
-concrete for the depth-1 \taxon{Bacteroides} state in IBD. The ten most
-common depth-2 children cover 85\% of all \taxon{Bacteroides}-dominant
-samples, yet their IBD odds ratios range from strong enrichment
-(Lachnospiraceae, Enterobacteriaceae) to attenuation or partial
-reversal (\taxon{Faecalibacterium}, \taxon{Agathobacter},
-\taxon{Parabacteroides}). The depth-1 \taxon{Bacteroides} signal
-should therefore be read as an average over heterogeneous subtypes
-rather than as a single ecological state.
+Depth 2 was most informative when a broad parent state concealed
+materially different substructures. This is illustrated by the depth-1
+\taxon{Bacteroides} state in IBD. The ten most common depth-2 children
+covered 85\% of all \taxon{Bacteroides}-dominant samples, yet their IBD
+odds ratios ranged from strong enrichment (Lachnospiraceae,
+Enterobacteriaceae) to attenuation or partial reversal
+(\taxon{Faecalibacterium}, \taxon{Agathobacter},
+\taxon{Parabacteroides}). The depth-1 \taxon{Bacteroides} association
+therefore represented an average over heterogeneous subtypes rather than
+a single ecological state.
 
 \begin{figure}
 \centering
@@ -528,24 +471,15 @@ different adjusted odds ratios, with the dashed line marking the coarser
 depth-1 parent effect (OR 1.56).}
 \end{figure}
 
-\subsection{Taxonomy concordance: SILVA versus
-GreenGenes2}\label{taxonomy-concordance-silva-versus-greengenes2}
-
-An independent dominant-type pass under GG2 identified 59 named depth-1
-DCSTs plus \texttt{RARE\_DOMINANT}. On the overlapping 30,290 samples,
-the exact dominant-genus agreement between SILVA and GG2 was 27,739 /
-30,290 (91.6\%). This does not mean that the taxonomies are
-interchangeable. It does mean that the main dominant-typing picture is
-fairly stable across reference databases, even though some clinically
-relevant groups, especially \taxon{Escherichia-Shigella}, expose
-genuine naming and resolution differences. The new concordance figure
-makes an important distinction explicit: harmonized genus-level
-agreement is high, but exact short-label equality is much lower because
-GG2 splits some large SILVA states, especially \taxon{Bacteroides},
-into multiple named groups and leaves \taxon{Escherichia-Shigella}
-largely unresolved. Table 4A summarizes the headline concordance
-metrics, while Table 4B gives a few representative remappings that
-matter biologically and interpretively.
+A parallel dominant-state analysis under GG2 identified 59 named
+depth-1 DCSTs plus a rare-dominant category. On the 30,290 overlapping
+samples, harmonized dominant-genus agreement between SILVA and GG2 was
+27,739 / 30,290 (91.6\%), whereas exact short-label agreement was much
+lower. The dominant-state landscape was therefore stable at the genus
+level even though several clinically relevant groups, especially
+\taxon{Bacteroides} and \taxon{Escherichia-Shigella}, were relabeled or
+resolved differently. Figure 6 and Tables 4A and 4B summarize these
+concordance patterns.
 
 \begin{figure}
 \centering
@@ -556,101 +490,47 @@ lower because a few large dominant states are reclassified rather than
 contradicted.}
 \end{figure}
 
-\textbf{Table 4A. Agreement metrics for SILVA versus GG2 depth-1 DCST
-assignments.}
+\begin{table}[H]
+\small
+\caption*{\textbf{Table 4A.} Agreement metrics for SILVA versus GG2 depth-1 DCST assignments.}
+\centering
+\begin{tabularx}{\textwidth}{@{} >{\raggedright\arraybackslash}p{0.27\textwidth} >{\raggedright\arraybackslash}p{0.22\textwidth} Y @{}}
+\toprule
+Metric & Value & Interpretation \\
+\midrule
+Overlapping samples & 30,290 & Common sample set available for direct SILVA-GG2 comparison. \\
+Harmonized dominant-genus agreement & 27,739 / 30,290 (91.6\%) & Broad depth-1 landscape is stable after genus-level harmonization. \\
+Exact short-label equality & 4,566 / 30,290 (15.1\%) & Most disagreements are relabelings or taxonomic splits rather than ecological contradictions. \\
+Named depth-1 states & SILVA: 40 + rare; GG2: 59 + rare & GG2 resolves some large SILVA states into more named groups. \\
+\bottomrule
+\end{tabularx}
+\end{table}
 
-\begingroup\small
-
-\begin{longtable}[]{@{}
-  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3333}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3333}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3333}}@{}}
-\toprule\noalign{}
-\begin{minipage}[b]{\linewidth}\raggedright
-Metric
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-Value
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-Interpretation
-\end{minipage} \\
-\midrule\noalign{}
-\endhead
-\bottomrule\noalign{}
-\endlastfoot
-Overlapping samples & 30,290 & Common sample set available for direct
-SILVA-GG2 comparison. \\
-Harmonized dominant-genus agreement & 27,739 / 30,290 (91.6\%) & Broad
-depth-1 landscape is stable after genus-level harmonization. \\
-Exact short-label equality & 4,566 / 30,290 (15.1\%) & Most
-disagreements are relabelings or taxonomic splits rather than ecological
-contradictions. \\
-Named depth-1 states & SILVA: 40 + rare; GG2: 59 + rare & GG2 resolves
-some large SILVA states into more named groups. \\
-\end{longtable}
-
-\endgroup
-
-\textbf{Table 4B. Representative SILVA-to-GG2 remappings.}
-
-\begingroup\small
-
-\begin{longtable}[]{@{}
-  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}@{}}
-\toprule\noalign{}
-\begin{minipage}[b]{\linewidth}\raggedright
-SILVA state
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-Main GG2 destination(s)
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-Row share
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-Reading
-\end{minipage} \\
-\midrule\noalign{}
-\endhead
-\bottomrule\noalign{}
-\endlastfoot
+\begin{table}[H]
+\small
+\caption*{\textbf{Table 4B.} Representative SILVA-to-GG2 remappings.}
+\centering
+\begin{tabularx}{\textwidth}{@{} >{\raggedright\arraybackslash}p{0.21\textwidth} >{\raggedright\arraybackslash}p{0.29\textwidth} >{\raggedright\arraybackslash}p{0.16\textwidth} Y @{}}
+\toprule
+SILVA state & Main GG2 destination(s) & Row share & Reading \\
+\midrule
 \taxon{Akkermansia} & \taxon{Akkermansia} & 99.1\% & Near one-to-one mapping. \\
-\taxon{Faecalibacterium} & \taxon{Faecalibacterium} & 81.7\% & Mostly preserved with
-modest spillover. \\
-\taxon{Prevotella\_9} & \taxon{Prevotella} & 90.5\% & High genus-level concordance
-despite label change. \\
-\taxon{Bacteroides} & \taxon{Phocaeicola\_A}; \taxon{Bacteroides\_H\_857956}; unresolved &
-46.6\%; 17.4\%; 8.4\% & Large SILVA state is split across multiple GG2
-labels. \\
-\taxon{Escherichia-Shigella} & Unresolved & 99.7\% & GG2 leaves this dominant
-state largely unresolved. \\
-Enterobacteriaceae & Enterobacteriaceae\_A\_725029;
-Enterobacterales\_737866 & 92.6\%; 4.3\% & Mostly preserved at
-family/order level with minor split. \\
-\end{longtable}
-
-\endgroup
+\taxon{Faecalibacterium} & \taxon{Faecalibacterium} & 81.7\% & Mostly preserved with modest spillover. \\
+\taxon{Prevotella\_9} & \taxon{Prevotella} & 90.5\% & High genus-level concordance despite label change. \\
+\taxon{Bacteroides} & \taxon{Phocaeicola\_A}; \taxon{Bacteroides\_H\_857956}; unresolved & 46.6\%; 17.4\%; 8.4\% & Large SILVA state is split across multiple GG2 labels. \\
+\taxon{Escherichia-Shigella} & Unresolved & 99.7\% & GG2 leaves this dominant state largely unresolved. \\
+Enterobacteriaceae & Enterobacteriaceae\_A\_725029;\linebreak Enterobacterales\_737866 & 92.6\%; 4.3\% & Mostly preserved at family/order level with minor split. \\
+\bottomrule
+\end{tabularx}
+\end{table}
 
 \clearpage
 
-\section{Phenotype-Resolved Results}\label{disease-wise-results-and-interpretation}
-
-The subsections in this section follow a common pattern. Each begins
-with a brief literature frame, then summarizes the AGP signal across
-SILVA, GG2, depth 2, and sensitivity analysis, and finally interprets
-the result at a level that matches the strength of the evidence. This
-repeated structure is intentional: it lets the reader compare diseases
-without losing track of which claims are strong, which are tentative,
-and which are mainly useful for context. Several AGP phenotypes,
-especially autoimmune disease, seasonal allergies, and lung disease, are
-best understood as discovery-screen labels rather than harmonized
-clinical diagnoses, so their discussion leans more on ecological
-interpretation than on disease-specific inference.
-
-For submission, the main biological emphasis should stay on the clearest
-completed signals: IBD first, then IBS, seasonal allergies, CDI, and
-kidney disease. The remaining phenotypes are still useful because they
-show where the framework becomes hypothesis generating rather than
-stable, but they should not be presented as coequal headline findings.
+Phenotype-specific associations varied substantially in strength and
+interpretability. The clearest and most coherent signal was observed in
+IBD, followed by IBS, seasonal allergies, CDI, and kidney disease,
+whereas several other phenotypes were weaker after covariate adjustment
+or contaminant-aware filtering.
 
 \subsection{Irritable bowel syndrome
 (IBS)}\label{irritable-bowel-syndrome-ibs}
@@ -707,8 +587,8 @@ especially \emph{Faecalibacterium prausnitzii}
 \citeproc{ref-Manichanh2006_CD}{Manichanh et al. 2006}).
 
 
-IBD produced the strongest adjusted depth-1 signal in the entire Phase 1
-scan: \taxon{Morganella} was highly enriched (adjusted OR 16.94, q =
+IBD produced the strongest adjusted depth-1 signal in the study:
+\taxon{Morganella} was highly enriched (adjusted OR 16.94, q =
 4.0e-15). Additional adjusted SILVA signals included enrichment of
 \taxon{Bacteroides}, Lachnospiraceae,
 \taxon{Bifidobacterium}, Enterobacterales, and
@@ -740,16 +620,14 @@ opposite of the classic \taxon{Faecalibacterium}-depletion story;
 rather, it partly reflects loss of protective second-rank partners
 inside Bacteroides-dominant samples.
 
-External validation sharpened this IBD interpretation more than for any
-other phenotype in the paper. HMP2 / IBDMDB
-(\texttt{PRJNA398089}) contributed the clinically grounded inflammatory
-validation arm. After phenotype filtering, the local cohort contained
-166 samples: 45 healthy controls, 81 Crohn's disease samples, and 40
-ulcerative colitis samples. The caveat is ecological: in the current
-local metadata, the retained set is dominated by rectal, ileal, and
-colonic sites and includes repeated measures. At depth 1, the HMP2
-landscape was too sparse to yield strong multiple-testing-corrected
-disease signal. At depth 2, however, a
+External validation was most informative for IBD. HMP2 / IBDMDB
+(\texttt{PRJNA398089}) provided the clinically grounded inflammatory
+validation arm. After phenotype filtering, the retained HMP2 dataset
+contained 166 samples: 45 healthy controls, 81 Crohn's disease samples,
+and 40 ulcerative colitis samples. The available set was dominated by
+rectal, ileal, and colonic samples and included repeated measures. At
+depth 1, the HMP2 landscape was too sparse to yield strong
+multiple-testing-corrected disease signal. At depth 2, however, a
 \taxon{Bacteroides}/\taxon{Faecalibacterium} subtype was depleted in
 \texttt{IBD\_vs\_Healthy} (OR = 0.391, q = 0.016),
 \texttt{UC\_vs\_Healthy} (OR = 0.318, q = 0.032), and
@@ -759,14 +637,15 @@ healthy controls, 24 Crohn's disease samples, and 29 pediatric
 orofacial granulomatosis samples. This cohort is a better ecological
 match to AGP stool than HMP2, but it is smaller and phenotype mixed; its
 strongest signals were therefore more modest and cohort specific, with
-\texttt{RARE\_DOMINANT} enriched in \texttt{OFG\_vs\_Healthy} at depth 1
-(OR = 4.93, q = 0.062) and in the combined inflammatory-versus-healthy
-comparison at depth 2 (OR = 4.94, q = 0.084).
+the rare-dominant category enriched in \texttt{OFG\_vs\_Healthy} at
+depth 1 (OR = 4.93, q = 0.062) and in the combined
+inflammatory-versus-healthy comparison at depth 2 (OR = 4.94, q =
+0.084).
 
-Halfvarson 2017 added the strongest currently completed external
-positive validation. The final IBD-focused branch retained 533 samples
-after QC and 379 taxa after filtering. Unlike HMP2, this cohort yielded
-clear q-significant signal at both depths. At depth 1,
+Halfvarson 2017 provided the strongest external positive validation. The
+final IBD-focused branch retained 533 samples after QC and 379 taxa
+after filtering. Unlike HMP2, this cohort yielded clear q-significant
+signal at both depths. At depth 1,
 \taxon{Segatella} was depleted in \texttt{IBD\_vs\_Healthy} (OR =
 0.136, q = 1.25e-09), \texttt{Crohn\_vs\_Healthy} (OR = 0.139, q =
 2.73e-08), and \texttt{UC\_vs\_Healthy} (OR = 0.133, q = 3.40e-09). At
@@ -774,20 +653,19 @@ depth 2, the clearest replicated signal was depletion of a
 \taxon{Segatella}/\taxon{Faecalibacterium prausnitzii} subtype in
 \texttt{IBD\_vs\_Healthy} (OR = 0.113, q = 6.37e-07) and
 \texttt{UC\_vs\_Healthy} (OR = 0.169, q = 6.17e-05), with a separate
-\texttt{RARE\_DOMINANT} expansion in \texttt{Crohn\_vs\_Healthy} (OR =
-25.26, q = 7.23e-09). Gevers 2014 supplied a stool-only
+rare-dominant expansion in \texttt{Crohn\_vs\_Healthy} (OR = 25.26, q =
+7.23e-09). Gevers 2014 supplied a stool-only
 Crohn-versus-healthy branch that retained 396 samples after QC and 332
-taxa after filtering. This cohort is valuable because it completed the
-same reprocessing and harmonization path as Halfvarson, but in the
-current pass it did not yield q-significant depth-1 or depth-2 DCST
+taxa after filtering. This cohort completed the same reprocessing and
+harmonization path as Halfvarson, but in the present analysis it did not
+yield q-significant depth-1 or depth-2 DCST
 associations. Its strongest depth-1 signal was a
 \taxon{Bacteroides vulgatus} state in \texttt{Crohn\_vs\_Healthy} (OR =
 0.465, q = 0.505), and its strongest depth-2 signal was a
 \taxon{Faecalibacterium prausnitzii}/\taxon{Bacteroides vulgatus} pair (OR =
-= 1.284, q = 1.000). That makes Gevers useful not as a positive
-replicate, but as a completed weak/null control showing that the
-validation pipeline does not produce strong inflammatory signal
-automatically.
+= 1.284, q = 1.000). Gevers therefore serves not as a positive
+replicate, but as a weak/null external control showing that strong
+inflammatory signal does not arise automatically across cohorts.
 
 \textbf{Table 5. IBD-relevant external validation cohort summary.}
 
@@ -802,7 +680,7 @@ Cohort & $n$ & Strongest completed signal & Validation role \\
 HMP2 / IBDMDB & 166 & No q-significant depth-1 signal; depth-2 depletion of a \taxon{Bacteroides}/\taxon{Faecalibacterium} subtype in inflammatory contrasts & Clinically grounded directional IBD validation despite mucosal and repeated-measures caveats \\
 PRJEB84421 / OFGCD-FI-2025 & 73 & Borderline rare-dominant enrichment in OFG and inflammatory contrasts & Stool-based inflammatory complement with pediatric and phenotype-mixed caveats \\
 Halfvarson 2017 & 533 & Depth-1 depletion of \taxon{Segatella} plus depth-2 depletion of a \taxon{Segatella}/\taxon{F.\ prausnitzii} subtype & Strongest completed external positive IBD validation \\
-Gevers 2014 & 396 & Weak/null depth-1 and depth-2 Crohn-vs-healthy signal in the current pass & Completed external weak/null IBD control \\
+Gevers 2014 & 396 & Weak/null depth-1 and depth-2 Crohn-vs-healthy signal in this analysis & Completed external weak/null IBD control \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -837,7 +715,8 @@ not uniform exact replication across every external cohort.
 
 
 The AGP autoimmune phenotype is an umbrella label rather than a single
-disease, so it should be interpreted more cautiously than IBD. Even so,
+disease and therefore requires more cautious interpretation than IBD.
+Even so,
 autoimmune disease is an important category because the literature
 repeatedly links loss of immune-regulatory commensals and expansion of
 pathobionts to altered Treg/Th17 balance
@@ -902,17 +781,17 @@ The reflux results are best interpreted as stool-side correlates of a
 literature that remains centered on esophageal and oral compartments
 rather than stool alone
 (\citeproc{ref-Deshpande2018_esophageal}{Deshpande et al. 2018};
-\citeproc{ref-DeSouza2021_GERD}{D'Souza et al. 2021}). In other words,
-the disease-facing evidence is strongest for compartment-specific shifts
+\citeproc{ref-DeSouza2021_GERD}{D'Souza et al. 2021}). The
+disease-facing evidence is strongest for compartment-specific shifts
 along the reflux-to-Barrett spectrum, whereas the AGP analysis sees only
 a downstream gut-side view. The surviving \taxon{Bacteroides} signal
 therefore supports a modest reflux-spectrum association rather than a
 direct esophageal mechanism. By contrast, the oral-associated taxa are
 more exposed to compartment choice, PPI effects, and oral-esophageal
 carryover (\citeproc{ref-Wang2024_GERD_MR}{K. Wang et al. 2024}). The
-clean analysis strengthens this section by narrowing the manuscript
-claim to one conservative stool-side association instead of leaving a
-mixed oral-plus-esophageal-plus-gut story unresolved.
+clean analysis narrows the interpretation to one conservative stool-side
+association instead of leaving a mixed oral, esophageal, and gut story
+unresolved.
 
 \subsection{Cardiovascular disease}\label{cardiovascular-disease}
 
@@ -934,7 +813,7 @@ aerotolerant taxa. Depth 2 nonetheless yielded a notable
 CVD signal survived the sensitivity analysis.
 
 
-CVD illustrates why the covariate-adjusted pass matters. Without
+CVD illustrates why the covariate-adjusted analysis matters. Without
 adjustment, one could easily overstate the oral-associated signals.
 After adjustment and contaminant-aware filtering, the evidence is much
 weaker, so this section is best read as hypothesis-generating rather
@@ -964,9 +843,8 @@ significance, and nothing survived the sensitivity analysis.
 These results suggest that dominant-state typing captures some
 obesity-related structure, but that the signal is either confounded by
 demographic variables or too diffuse to stabilize at the level of
-top-taxon dominance. That is itself useful: it shows where the DCST
-framework should remain modest rather than forcing every phenotype into
-a clean association story.
+top-taxon dominance. The obesity results therefore mark a boundary of
+the framework rather than a strong disease-specific association.
 
 \subsection{Seasonal allergies}\label{seasonal-allergies}
 
@@ -1151,7 +1029,7 @@ worsen renal decline (\citeproc{ref-Tang2015_TMAO_CKD}{Tang et al.
 
 
 Kidney disease showed no univariate depth-1 signals, but the adjusted
-pass identified strong enrichment of \taxon{Lactobacillus} (adjusted OR
+analysis identified strong enrichment of \taxon{Lactobacillus} (adjusted OR
 5.85, q = 7.8e-03) and \taxon{Prevotella\_7} (adjusted OR 4.57, q =
 1.0e-02). GG2 recovered a compatible pattern through enriched
 \taxon{Prevotella} and a reclassified \taxon{Bacteroides} group. Depth
@@ -1159,8 +1037,8 @@ pass identified strong enrichment of \taxon{Lactobacillus} (adjusted OR
 associations survived sensitivity analysis.
 
 
-Kidney disease offers a useful example of a signal that is statistically
-stronger than its immediate biological label. The CKD literature is most
+Kidney disease illustrates a signal that is statistically stronger than
+its immediate biological label. The CKD literature is most
 coherent at the mechanism layer: depletion of saccharolytic commensals,
 accumulation of uremic-toxin pathways, and the broader
 gut-kidney/cardiorenal axis built around TMAO, rather than any universal
@@ -1168,24 +1046,24 @@ gut-kidney/cardiorenal axis built around TMAO, rather than any universal
 et al. 2015}; \citeproc{ref-Vaziri2013_CKD}{Vaziri et al. 2013}). The
 observed \taxon{Lactobacillus} and \taxon{Prevotella\_7} enrichments
 may therefore encode CKD stage, treatment behavior, probiotic use, or
-compensatory ecology superimposed on a real gut-kidney-axis signal. What
-keeps this section prominent is robustness: unlike several weaker
-phenotypes, the adjusted depth-1 associations survive the clean
-analysis. The manuscript should nonetheless place more weight on the
-shared mechanism story than on any one AGP taxon label.
+compensatory ecology superimposed on a real gut-kidney-axis signal.
+Unlike several weaker phenotypes, however, the adjusted depth-1
+associations survived the clean analysis. Interpretation therefore rests
+more on the shared mechanistic framework than on any single AGP taxon
+label.
 
 \section{Discussion}\label{general-discussion}
 
-For submission, the manuscript's main claim should stay narrower than a
-general disease atlas. The central result is that DCSTs convert a very
-large gut microbiome table into explicit sample-level states that remain
-interpretable after covariate adjustment, contamination-aware filtering,
-taxonomy change, and partially heterogeneous external validation. The
-phenotype-resolved organization matters because it separates strong
-inflammatory signals from weaker or more fragile discovery outcomes
-instead of flattening everything into one pooled odds-ratio screen.
+The main claim of this study is narrower than a general disease atlas.
+DCSTs convert a large gut microbiome table into explicit sample-level
+states that remain interpretable after covariate adjustment,
+contamination-aware filtering, taxonomy change, and external validation.
+That structure is most informative when it separates strong
+inflammatory signals from weaker or more fragile phenotype associations
+rather than flattening the cohort into a single pooled screen.
 
-Several cross-cutting patterns survive this disease-wise reading. First,
+Several cross-cutting patterns emerge from this disease-wise analysis.
+First,
 \taxon{Bacteroides}-dominant structure repeatedly aligns with
 inflammatory or inflammation-adjacent phenotypes, including IBD,
 autoimmune disease, acid reflux, and migraine. Second,
@@ -1234,80 +1112,57 @@ oral and esophageal microbiology rather than stool
 \citeproc{ref-DeSouza2021_GERD}{D'Souza et al. 2021};
 \citeproc{ref-Wang2024_GERD_MR}{K. Wang et al. 2024}).
 
-The expanded validation set sharpens the same picture. Strongest
-completed replication concentrates in the inflammatory branch,
-especially through HMP2 and Halfvarson, while PRJEB84421 and Gevers show
-that ecological match and phenotype definition matter for whether that
-signal survives q-correction. Outside IBD, the completed cohorts are
-mostly null or near-null, with \texttt{GUBA-BD-2024} as the main
-positive non-IBD example. That pattern is useful in itself: the DCST
-pipeline generalizes across cohorts, but strong association replication
-is selective rather than automatic.
+External validation sharpened the same picture. Support concentrated in
+the inflammatory branch, especially through HMP2 and Halfvarson, whereas
+PRJEB84421 and Gevers showed that ecological match, phenotype
+definition, and cohort structure influence whether signal survives
+multiple-testing correction. The validation data therefore support
+structural and directional generalization within IBD more strongly than
+uniform exact replication across external cohorts.
 
-Additional external cohorts are still being processed, and those
-results should be inserted into the matching phenotype subsections in
-the submission version rather than collected into a new standalone
-validation section. A new cohort can strengthen the paper by showing
-positive or directional replication, but a weak/null cohort is also
-informative because it defines the ecological and phenotypic boundary of
-the framework. The manuscript should therefore prefer an honest
-scorecard of completed outcomes over a success-only validation
-narrative.
-
-The paper should still be careful about overclaiming. AGP phenotypes are
-self-reported. Some disease bins are umbrella categories. The analysis
-is cross-sectional, so reverse causation, medication effects, and
-residual confounding remain live possibilities. The sensitivity analysis
-shows that some signals rely on taxa that are plausibly oral or skin
-associated. And the validation cohorts, while valuable, are
-intentionally heterogeneous rather than perfect one-to-one replicas of
-AGP stool. Those limitations argue for a measured conclusion: DCSTs
-organize the data in a biologically useful way, but they do not by
-themselves establish mechanism or causality. For the same reason, the
-phenotype-specific literature discussion should be read as
-mechanistic context for the discovery-screen phenotypes rather than as
-proof that the AGP labels are clinically identical to those
-literature-defined entities. Reflux is the clearest
-compartment-sensitive example, and kidney disease is the clearest
-treatment-sensitive example.
+This study has important limitations. AGP phenotypes are self-reported,
+some outcome categories are heterogeneous umbrella labels, and the
+analysis is cross-sectional, so residual confounding, medication
+effects, and reverse causation remain plausible. The
+contamination-aware sensitivity analysis shows that some signals depend
+on taxa plausibly derived from oral or skin carryover. The validation
+cohorts were intentionally heterogeneous rather than exact replicas of
+AGP stool sampling. Accordingly, DCSTs organize the data in a
+biologically informative way, but they do not by themselves establish
+mechanism or causality. The disease-specific discussions should
+therefore be read as ecological interpretation anchored in existing
+literature rather than as proof that AGP labels are clinically
+identical to the source cohorts cited here.
 
 \section{Conclusion}\label{conclusion}
 
-Taken together, this manuscript supports DCSTs as a reproducible
-analysis layer for large gut microbiome cohorts. The strongest completed
-case is inflammatory disease, especially IBD, where discovery,
-subtype-level refinement, taxonomy concordance, and external validation
-point in the same direction. The broader phenotype screen remains useful
-because it shows which signals are durable and which collapse after
-adjustment or contaminant-aware filtering. As additional external stool
-cohorts finish processing, the key test will not be whether every AGP
-result repeats exactly, but whether the same dominant-state architecture
-and the same inflammatory-versus-fragile boundary recur across
-independent datasets.
+Taken together, these results support DCSTs as a reproducible and
+interpretable analysis layer for large gut microbiome cohorts. The
+strongest evidence concentrated in inflammatory disease, especially IBD,
+where discovery, subtype refinement, taxonomy concordance, and external
+validation converged. The broader phenotype screen remained informative
+because it distinguished associations that were robust to adjustment and
+contaminant-aware filtering from those that were weaker or more context
+dependent. In this setting, DCSTs provide a practical framework for
+sample-level ecological labeling in large microbiome association
+studies.
 
 \section{Data and Code
 Availability}\label{data-and-code-availability}
 
-The manuscript source, manuscript figures, and manuscript table builders
-used for this draft are maintained in the public \texttt{linf}
-repository: \url{https://github.com/pgajer/linf}. The discovery analysis
-is based on the American Gut Project stool cohort (\texttt{PRJEB11419})
-through PRIME-derived species-level abundance tables. The manuscript's
-current validation layer uses \texttt{PRJNA398089} (HMP2 / IBDMDB),
-\texttt{PRJEB84421}, Halfvarson 2017, and Gevers 2014, with additional
-completed non-IBD validation cohorts summarized in the companion
-gut-microbiome working tree. The specific processed result tables used
-to generate the manuscript figures and tables were analyzed in that
-companion working tree during manuscript preparation. Only cohorts with a
-frozen quality-control pass and completed DCST association output are
-interpreted in the current draft; newly processed external cohorts
-should be added to the submission version only after the same workflow
-has been completed for them.
+The manuscript source, figure builders, and analysis scripts are
+maintained in the public \texttt{linf} repository:
+\url{https://github.com/pgajer/linf}. The discovery analysis used the
+American Gut Project stool cohort (\texttt{PRJEB11419}) through
+PRIME-derived species-level abundance tables. External validation in
+this manuscript used \texttt{PRJNA398089} (HMP2 / IBDMDB),
+\texttt{PRJEB84421}, Halfvarson 2017, and Gevers 2014. All manuscript
+figures and tables were generated from repository scripts built around
+the \texttt{linf} R package.
 
 \section{Funding}\label{funding}
 
-Research reported in this publication was supported by grant number
-\texttt{INV-048956} from the Gates Foundation.
+\paperfundingnote
 
 \section{Competing Interests}\label{competing-interests}
 
