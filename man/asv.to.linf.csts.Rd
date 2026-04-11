@@ -4,13 +4,16 @@
 \alias{asv.to.linf.csts}
 \title{From counts -> filter.asv -> L-infinity relatives -> truncated L-infinity CSTs}
 \usage{
-asv.to.linf.csts(S.counts, ...)
+asv.to.linf.csts(S.counts, ..., backend = c("auto", "dense", "sparse"))
 }
 \arguments{
 \item{S.counts}{Numeric matrix of counts (samples x features).}
 
 \item{...}{Arguments passed to \code{filter.asv()} (e.g., \code{min.lib},
 \code{prev.prop}, \code{min.count}, \code{min.rel}).}
+
+\item{backend}{Character. Matrix backend to use: \code{"auto"},
+\code{"dense"}, or \code{"sparse"}.}
 }
 \value{
 A list with:

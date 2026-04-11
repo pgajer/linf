@@ -120,17 +120,19 @@ $L^\infty$-CSTs (DCSTs)** keep only cells above a minimum size threshold
 
 The package supports two policies for handling small cells:
 
-- **"rare"**: small-cell samples are labeled `RARE_DOMINANT`
+- **"pure"**: named DCSTs stay pure, and small-cell samples are labeled `RARE_DOMINANT`
 - **"absorb"**: small-cell samples are reassigned to the nearest kept cell by
   restricted argmax
 
+The legacy policy name `"rare"` is still accepted as a deprecated alias for `"pure"`.
+
 ```{r depth1-dcsts}
-dcst1 <- linf.csts(Z, n0 = 30, low.freq.policy = "rare")
+dcst1 <- linf.csts(Z, n0 = 30, low.freq.policy = "pure")
 
 ## Kept cells
 dcst1$kept.cells.lbl
 
-## DCST assignment (rare policy)
+## DCST assignment (pure policy)
 dcst1_tab <- sort(table(dcst1$cell.label), decreasing = TRUE)
 dcst1_tab
 ```
@@ -180,7 +182,7 @@ reveals sub-community structure.
 
 ```{r depth2-refine}
 dcst2 <- refine.linf.csts(Z, dcst1, n0 = 15, refinement.factor = 2,
-                           low.freq.policy = "rare", verbose = FALSE)
+                           low.freq.policy = "pure", verbose = FALSE)
 
 ## Depth-2 DCST table
 dcst2_tab <- sort(table(dcst2$cell.label), decreasing = TRUE)
@@ -221,7 +223,7 @@ out <- linf.dcst.landmark.pipeline(
   n0.depth1      = 30,
   n0.depth2      = 15,
   refinement.factor = 2,
-  low.freq.policy   = "rare",
+  low.freq.policy   = "pure",
   landmark.view     = "absorb",
   verbose           = FALSE
 )
