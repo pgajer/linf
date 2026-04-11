@@ -177,7 +177,9 @@ contained 40 absorb states at depth 1, 153 at depth 2, 479 at depth 3,
 and 744 at depth 4. We first screened phenotype-by-depth tables with
 adaptive Fisher exact tests and then used both conventional and
 Bayesian follow-up models to estimate state-specific enrichment or
-depletion. The clearest and most biologically coherent branches were
+depletion. Corresponding pure dCST association screens were retained as
+supplementary reference analyses rather than developed in parallel in
+the main text. The clearest and most biologically coherent branches were
 IBD, IBS, autoimmune disease, and two additional non-IBD examples:
 acid reflux and seasonal allergies. IBD showed the strongest structure,
 with a broad \taxon{Bacteroides} signal at depth 1 and progressively
@@ -222,7 +224,11 @@ ordered pair of the two most abundant taxa. Because assignment depends only on
 within-sample rank order, the same label is recovered from counts, proportions,
 or any sample-wide order-preserving normalization. DCSTs therefore provide
 explicit, hierarchical sample-level states that can be read directly from the
-data, rather than inferred from a fitted global partition.
+data, rather than inferred from a fitted global partition. The underlying
+pure dCST construct is simply this ordered dominant label itself. In the
+present manuscript, we focus on an absorb refinement that merges very
+small branches into larger named states so that deeper associations can
+be followed without losing interpretability.
 
 We apply this framework to the gut microbiome, where literature on IBS,
 IBD, autoimmune disease, and cardiometabolic conditions suggests that
@@ -254,7 +260,9 @@ statistical association strength. In this study we use the
 dominance patterns into larger named states rather than pooling them
 into one catch-all rare category, and we complement standard
 association tests with Bayesian models that remain informative for
-rarer deeper states.
+rarer deeper states. The corresponding pure dCST association analyses
+are retained as supplementary reference results rather than carried as a
+second full results stream in the main text.
 
 \begin{figure}
 \centering
@@ -305,6 +313,12 @@ for depths 2 through 6, respectively. Depths 1 through 4 are treated as
 the primary results in this manuscript, with deeper levels used mainly
 to judge whether the hierarchy remained structured.
 
+The pure dCST hierarchy without absorption was retained as a baseline
+reference analysis, but its phenotype-association screens are treated as
+supplementary results. The main inferential workflow reported here is
+therefore absorb based from the cohort overview through the
+phenotype-specific follow-up.
+
 To ask whether a phenotype was associated with the overall absorb-state
 distribution at a given depth, we first applied Fisher's exact test to
 the phenotype-by-state table for that depth. We screened panels with
@@ -334,7 +348,7 @@ project-specific runners maintained in the companion
 
 \section{Results}\label{cohort-overview}
 
-\subsection{Cohort landscape and association overview}\label{shared-agp-overview}
+\subsection{Absorb cohort landscape and association overview}\label{shared-agp-overview}
 
 The discovery cohort comprised 30,290 quality-controlled AGP gut
 samples. Under the absorb policy, the hierarchy contained 40 named
@@ -347,13 +361,15 @@ twelve most common depth-1 absorb states covered 87.3\% of the cohort
 named states the cohort was still dominated by a limited number of
 recurrent ecological configurations.
 
-The absorb policy changed only 3.8\% of depth-1 assignments relative to
-the earlier rare-policy view, but the difference became much more
-important with increasing depth: 18.5\% of samples were reassigned at
-depth 2, 52.0\% at depth 3, and 71.6\% at depth 4. Biologically, this
-is the level at which the absorb policy matters most, because deeper
-rare branches are merged into larger named lineages instead of being
-collapsed into one generic rare bucket. Omnibus phenotype-by-depth
+Relative to the pure hierarchy, only 3.8\% of depth-1 assignments
+changed, but the difference became much more important with increasing
+depth: 18.5\% of samples were reassigned at depth 2, 52.0\% at depth 3,
+and 71.6\% at depth 4. We therefore treat the pure dCST association
+screens as supplementary reference analyses and develop only the absorb
+hierarchy in the main Results. Biologically, this is the level at which
+the absorb policy matters most, because deeper low-frequency branches
+are merged into larger named lineages instead of disappearing into a
+residual tail. Omnibus phenotype-by-depth
 screening showed broad absorb-state structure across the cohort, but the
 most coherent and interpretable depthwise growth in effect size occurred
 in IBD, autoimmune disease, IBS, acid reflux, and seasonal allergies.
@@ -391,9 +407,10 @@ Rank & DCST & n & Share (\%) & Cumulative (\%) \\
 \centering
 \fbox{\parbox{0.9\linewidth}{\textbf{Placeholder for absorb hierarchy overview.}
 Insert an absorb-specific figure showing (i) the depth-1 landscape,
-(ii) the proportion of samples reassigned relative to the rare-policy
-view at depths 1--4, and (iii) depth-wise omnibus effect sizes for the
-key phenotype branches.}}
+(ii) label growth across depths 1--4, and (iii) depth-wise omnibus
+effect sizes for the key phenotype branches. A separate pure-versus-
+absorb comparison figure should be placed in the supplementary
+analyses.}}
 \caption{Placeholder for an absorb-hierarchy overview figure.}
 \end{figure}
 
@@ -419,7 +436,9 @@ signal across many outcomes at depths 1 through 4. We focus detailed
 label-level interpretation on IBS, IBD, autoimmune disease, acid
 reflux, and seasonal allergies because these branches combined clear
 depthwise growth in effect size with the most stable frequentist and
-Bayesian lineage-level estimates.
+Bayesian lineage-level estimates. Full pure dCST-CT association screens
+are not repeated here; they are retained as supplementary reference
+analyses.
 
 \subsection{Irritable bowel syndrome
 (IBS)}\label{irritable-bowel-syndrome-ibs}
@@ -696,7 +715,10 @@ and was not prioritized further after the Batch 1 rerun. Independent
 external validation is being extended for the absorb hierarchy,
 beginning with IBD-focused cohorts and newly harmonized IBS datasets,
 and those analyses will determine how broadly the current discovery
-patterns generalize.
+patterns generalize. Supplementary analyses will also carry the full
+pure dCST-CT association screens and the direct pure-versus-absorb
+comparison so that the main text can stay centered on the absorb
+hierarchy.
 
 \begin{figure}[H]
 \centering
@@ -719,7 +741,11 @@ replaces standard testing, but because it keeps the ecological story
 readable when states become rare. In practice, the frequentist and
 Bayesian analyses agreed closely for the common states, while the
 Bayesian models stayed informative for smaller deeper states such as the
-rare IBD enterobacterial branches.
+rare IBD enterobacterial branches. For that reason, we do not present
+pure and absorb dCST association analyses as co-equal main-text result
+streams. The pure hierarchy remains useful as a baseline and is retained
+in the supplementary analyses, but the biologically interpretable story
+developed in this manuscript belongs to the absorb hierarchy.
 
 Across the five phenotype branches developed here, the biological
 pattern is coherent. IBD remains the strongest inflammatory branch,
@@ -784,7 +810,8 @@ discovery hierarchy was generated with
 frequentist/Bayesian follow-up was generated with
 \texttt{run\_absorb\_label\_followup.R}. Additional external validation
 datasets for the absorb branch are being harmonized in parallel with the
-discovery analyses reported here.
+discovery analyses reported here. The corresponding pure dCST-CT
+association outputs are retained as supplementary reference analyses.
 
 \section{Funding}\label{funding}
 
