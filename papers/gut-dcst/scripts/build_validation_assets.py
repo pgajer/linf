@@ -185,12 +185,12 @@ def interpret_row(rebuilt_q: float, frozen_q: float) -> str:
     rebuilt_sig = pd.notna(rebuilt_q) and rebuilt_q < 0.05
     frozen_sig = pd.notna(frozen_q) and frozen_q < 0.05
     if rebuilt_sig and frozen_sig:
-        return "reproducible and portable"
+        return "positive in rebuilt and frozen modes"
     if rebuilt_sig and not frozen_sig:
-        return "cohort-rebuilt replication only"
+        return "supportive rebuilt replication without matched frozen transfer"
     if not rebuilt_sig and frozen_sig:
-        return "portable AGP transfer despite weak rebuilt screen"
-    return "directional or null external support"
+        return "weaker rebuilt evidence but positive frozen transfer"
+    return "mapped or directional only"
 
 
 def build_table() -> tuple[pd.DataFrame, pd.DataFrame]:

@@ -183,8 +183,9 @@ adaptive Fisher exact tests and then used both conventional and
 Bayesian follow-up models to estimate state-specific enrichment or
 depletion. Corresponding pure dCST association screens were retained as
 supplementary reference analyses rather than developed in parallel in
-the main text. The clearest and most biologically coherent branches were
-IBD, IBS, autoimmune disease, and two additional non-IBD examples:
+the main text. In the discovery cohort, the clearest and most
+biologically coherent branches were IBD, IBS, autoimmune disease, and
+two additional non-IBD examples:
 acid reflux and seasonal allergies. IBD showed the strongest structure,
 with a broad \taxon{Bacteroides} signal at depth 1 and progressively
 stronger \taxon{Bacteroides}-centered lineages at depths 2 to 4; the
@@ -200,10 +201,16 @@ seasonal allergies showed depletion of \taxon{Prevotella\_9}-linked
 backgrounds together with enrichment of enterobacterial lineages. Across
 these phenotype branches, Bayesian estimates closely tracked the
 conventional adjusted odds ratios while remaining informative for rarer
-deeper states.
-Together, these results position absorb DCSTs as a practical,
-biologist-readable framework for large-scale microbiome association
-screens.
+deeper states. External validation then separated framework
+reproducibility from exact label portability: Halfvarson 2017 supported
+the IBD branch strongly in both rebuilt-cohort and frozen-transfer
+analyses, PRJEB84421 provided narrower rebuilt inflammatory support, and
+pooled HMP2 retained a weaker transferred depth-2 IBD signal after
+explicit case coding. Together, these results support absorb DCSTs as a
+practical, biologist-readable framework for large-scale microbiome
+association screens while indicating that exact label transfer remains
+strongest in selected inflammatory cohorts rather than universal across
+all settings.
 
 \textbf{Keywords:} gut microbiome; community typing; dominant-community
 state types; American Gut Project; inflammatory bowel disease; Bayesian
@@ -255,8 +262,9 @@ biology. Rather, we ask whether recurrent dominance patterns can be
 identified deterministically in a cohort of this size, whether the
 resulting labels retain enough ecological meaning to support
 phenotype-specific association screening, and whether the strongest
-signals remain biologically readable after covariate adjustment and
-deeper hierarchical refinement. If so, DCSTs provide a practical
+signals remain biologically readable after covariate adjustment, deeper
+hierarchical refinement, and cross-cohort evaluation. If so, DCSTs
+provide a practical
 analysis layer for large microbiome studies in which interpretability
 and reproducibility matter as much as statistical association strength.
 In this study we use the
@@ -370,8 +378,9 @@ samples were mapped directly onto the AGP-derived absorb hierarchy after
 aligning each cohort's taxa to the AGP retained-feature dictionary. The
 completed validation cohorts included HMP2 / IBDMDB, Halfvarson 2017,
 Gevers 2014, PRJEB84421, and Jacobs 2023 IBS 250bp; the main text
-emphasizes the IBD-focused cohorts, and the full comparison summary is
-given in Supplementary Table S4. All manuscript figures, tables, and
+emphasizes the IBD-focused cohorts because they currently provide the
+clearest external readout, and the full comparison summary is given in
+Supplementary Table S4. All manuscript figures, tables, and
 analysis scripts were generated from workflows built around the
 \texttt{linf} R package, with project-specific runners maintained in
 the companion \texttt{gut\_microbiome} repository.
@@ -573,16 +582,18 @@ Across the completed inflammatory cohorts, rebuilt-cohort validation was
 strongest in Halfvarson 2017, where the \texttt{IBD\_vs\_Healthy},
 \texttt{Crohn\_vs\_Healthy}, and \texttt{UC\_vs\_Healthy} comparisons
 all remained significant after multiple-testing correction. The leading
-rebuilt signals were depth-1 depletion of \taxon{Segatella} sp. in the
-pooled IBD and Crohn comparisons and enrichment of \taxon{Bacteroides}
-\emph{dorei} in ulcerative colitis. PRJEB84421 provided a weaker but
-positive stool-based inflammatory complement through
+rebuilt labels differed across those contrasts but pointed to the same
+broad inflammatory axis: depletion of \taxon{Segatella} sp. in pooled
+IBD and Crohn disease together with enrichment of \taxon{Bacteroides}
+\emph{dorei} in ulcerative colitis. PRJEB84421 provided narrower
+support through
 \texttt{OFG\_vs\_Healthy}, where a depth-2
 \taxon{Faecalibacterium}\dcstsep\taxon{Bacteroides} lineage was depleted
-(q = 0.019). HMP2 / IBDMDB and Gevers 2014 were more mixed in rebuilt
-mode, which is not surprising given repeated sampling, substantial
-clinical heterogeneity, and the more specialized ecology of those
-cohorts.
+(q = 0.019). By contrast, rebuilt \texttt{IBD\_vs\_Healthy} in HMP2 and
+rebuilt \texttt{Crohn\_vs\_Healthy} in Gevers 2014 remained directional
+but did not retain BH-significant absorb states, which is not
+surprising given repeated sampling, substantial clinical heterogeneity,
+and the more specialized ecology of those cohorts.
 
 Frozen transfer was stricter but still informative. Halfvarson remained
 clearly positive when samples were mapped directly onto AGP-defined
@@ -592,13 +603,13 @@ states and depleted \taxon{Faecalibacterium}-linked states. After
 explicitly coding pooled HMP2 inflammatory bowel disease as one case
 label, HMP2 also retained a weaker but significant depth-2 transferred
 \taxon{Bacteroides}\dcstsep\taxon{Faecalibacterium} depletion in
-\texttt{IBD\_vs\_Healthy} (q = 0.027). By contrast, Gevers 2014,
-PRJEB84421, and the current Jacobs IBS cohort mapped well into the AGP
-hierarchy at depths 1 and 2 but did not retain BH-significant
-transferred states. We therefore interpret the present external data as
-strong evidence for framework-level reproducibility, with exact
-label-level portability currently strongest in Halfvarson and partial in
-HMP2 (Figure 4; Supplementary Table S4).
+\texttt{IBD\_vs\_Healthy} (q = 0.027). Gevers 2014 and PRJEB84421 both
+mapped well into the AGP hierarchy but did not retain BH-significant
+transferred states, and the current Jacobs IBS cohort was likewise
+directional at most. We therefore interpret the present external data as
+strongest support for inflammatory framework reproducibility, with exact
+label portability clearly demonstrated in Halfvarson and supported more
+selectively in pooled HMP2 (Figure 4; Supplementary Table S4).
 
 \begin{figure}[H]
 \centering
@@ -611,10 +622,10 @@ cohort validation is broader, whereas frozen transfer is stricter and
 therefore a better test of whether AGP-derived labels themselves can be
 reused across studies. Panel B shows frozen-transfer mapping coverage
 across depths 1 to 4 for the same comparisons. Halfvarson remains
-positive in both modes, HMP2 retains a weaker transferred depth-2
-signal after pooled IBD case coding, and the remaining cohorts map into
-the hierarchy without yet showing equally strong exact-state
-portability.}
+strong in both modes, PRJEB84421 contributes narrower rebuilt
+inflammatory support, HMP2 provides a weaker pooled IBD transfer signal
+after explicit case coding, and the remaining cohorts map into the
+hierarchy without equally strong corrected transferred associations.}
 \end{figure}
 
 These IBD results align well with the established literature. The
@@ -812,7 +823,8 @@ in the supplementary analyses, but the biologically interpretable story
 developed in this manuscript belongs to the absorb hierarchy.
 
 Across the five phenotype branches developed here, the biological
-pattern is coherent. IBD remains the strongest inflammatory branch,
+stories are coherent but not equally mature. IBD remains the strongest
+and best-validated inflammatory branch,
 anchored by a broad \taxon{Bacteroides} background, a set of deeper
 \taxon{Bacteroides}-centered inflammatory lineages, and rare
 enterobacterial states that likely mark more severe dysbiosis. IBS is
@@ -835,16 +847,18 @@ allergies show a more modest but still readable shift away from
 Several limitations remain important. External validation now clarifies
 both the promise and the current boundary of the approach. When
 external cohorts are rebuilt independently, the absorb framework
-reproduces the main inflammatory story most clearly in Halfvarson and
-more modestly in PRJEB84421, while HMP2 and Gevers remain more mixed.
-When the AGP hierarchy is frozen and transferred directly, Halfvarson
-remains clearly positive and HMP2 retains a weaker depth-2 transfer
-signal, but the other cohorts no longer survive multiple-testing
-correction. We therefore interpret the current evidence as stronger for
-framework-level reproducibility than for universal portability of one
-fixed AGP label dictionary. Exact label transferability will need
-broader stool-based validation, especially for IBS and the non-IBD
-branches. AGP phenotypes are also self-reported and cross-sectional, so
+reproduces the inflammatory branch most clearly in Halfvarson and more
+narrowly in PRJEB84421, whereas HMP2 and Gevers contribute only mixed
+or directional rebuilt evidence. When the AGP hierarchy is frozen and
+transferred directly, Halfvarson remains clearly positive and pooled
+HMP2 retains a weaker depth-2 transfer signal, but the other cohorts
+mainly demonstrate mapping coverage rather than BH-significant label
+transfer. We therefore interpret the current evidence as strong for
+IBD-focused framework reproducibility, moderate for portability of
+selected AGP-defined inflammatory states, and still limited for broad
+claims about a universally transferable label dictionary. Exact label
+transferability will need broader stool-based validation, especially
+for IBS and the non-IBD branches. AGP phenotypes are also self-reported and cross-sectional, so
 residual confounding, medication effects, and reverse causation remain
 plausible. Those concerns are especially important for acid reflux and
 cardiometabolic phenotypes. The current evidence nevertheless supports
@@ -858,15 +872,18 @@ Taken together, these results support absorb DCSTs as a reproducible and
 interpretable analysis layer for large gut microbiome cohorts. The
 strongest current evidence lies in the inflammatory branches,
 especially IBD, where the absorb hierarchy resolves a broad dominant
-state into a set of biologically readable deeper lineages. The parallel
-Bayesian analysis strengthens that picture by stabilizing rarer deeper
-states without changing the main biological story. In this setting,
-absorb DCSTs provide a practical way to move from high-dimensional
-abundance tables to sample-level ecological labels that biologists can
-read and compare directly. The added acid-reflux and seasonal-allergy
-results suggest that this framework can also generalize beyond the core
-inflammatory phenotypes when the downstream analysis remains selective
-and biologically grounded.
+state into a set of biologically readable deeper lineages and where
+cross-cohort support is already visible most clearly in Halfvarson and
+more selectively in pooled HMP2 and PRJEB84421. The parallel Bayesian
+analysis strengthens that picture by stabilizing rarer deeper states
+without changing the main biological story. In this setting, absorb
+DCSTs provide a practical way to move from high-dimensional abundance
+tables to sample-level ecological labels that biologists can read and
+compare directly. The added acid-reflux and seasonal-allergy results
+suggest that this framework can also generalize beyond the core
+inflammatory phenotypes when the downstream analysis remains selective,
+biologically grounded, and appropriately cautious about external
+generalization.
 
 \section{Data and Code
 Availability}\label{data-and-code-availability}
