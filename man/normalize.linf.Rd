@@ -4,13 +4,17 @@
 \alias{normalize.linf}
 \title{L-infinity normalization (row-wise)}
 \usage{
-normalize.linf(X, tol = 0)
+normalize.linf(X, tol = 0, backend = c("auto", "dense", "sparse"))
 }
 \arguments{
 \item{X}{Numeric matrix (samples x features).}
 
 \item{tol}{Numeric >= 0. Values with row max <= tol are treated as zero rows.
 Default: 0 (exact zero only).}
+
+\item{backend}{Character. Matrix backend to use: \code{"auto"},
+\code{"dense"}, or \code{"sparse"}. The default \code{"auto"} preserves
+sparse input and otherwise uses the dense path.}
 }
 \value{
 Numeric matrix of same dimensions as X, L-infinity normalized.

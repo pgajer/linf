@@ -18,5 +18,6 @@ A \code{"linf.csts"} object using the "rare" view.
 Returns a copy of a \code{"linf.csts"} object with \code{cell.label} (and, if
 present, \code{cst.levels}) replaced by the precomputed "rare" labeling.
 This does not recompute CSTs; it only switches between labelings already
-stored in the object.
+stored in the object. This explicit rare-bucket view is the active labeling
+used by \code{low.freq.policy = "pure"}.
 }
