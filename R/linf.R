@@ -9,6 +9,9 @@
 #' @param X Numeric matrix (samples x features).
 #' @param tol Numeric >= 0. Values with row max <= tol are treated as zero rows.
 #'   Default: 0 (exact zero only).
+#' @param backend Character. Matrix backend to use: \code{"auto"},
+#'   \code{"dense"}, or \code{"sparse"}. The default \code{"auto"} preserves
+#'   sparse input and otherwise uses the dense path.
 #'
 #' @return Numeric matrix of same dimensions as X, L-infinity normalized.
 #'
@@ -18,18 +21,20 @@
 #' L-infinity cell or CST assignment.
 #'
 #' @export
-normalize.linf <- function(X, tol = 0) {
-  X <- as.matrix(X)
-  storage.mode(X) <- "numeric"
+normalize.linf <- function(X,
+                           tol = 0,
+                           backend = c("auto", "dense", "sparse")) {
+  prep <- linf.prepare.matrix(X, backend = backend, fun.name = "normalize.linf")
+  X <- prep$X
+  backend <- prep$backend
 
-  if (any(!is.finite(X))) {
-    stop("normalize.linf: non-finite entries found")
-  }
-  if (any(X < 0, na.rm = TRUE)) {
-    stop("normalize.linf: negative entries found")
-  }
+  linf.validate.matrix(X, backend = backend, fun.name = "normalize.linf")
   if (!is.numeric(tol) || length(tol) != 1L || tol < 0) {
     stop("normalize.linf: tol must be a single non-negative number")
+  }
+
+  if (backend == "sparse") {
+    return(linf.normalize.sparse(X, tol = tol))
   }
 
   m <- apply(X, 1, max)
@@ -67,6 +72,9 @@ normalize.linf <- function(X, tol = 0) {
 #'   \code{ncol(S)}.
 #' @param tie.method Character. How to resolve ties when assigning L-infinity cells.
 #' @param return.value Logical. If `TRUE`, include a `value` vector with row maxima.
+#' @param backend Character. Matrix backend to use: \code{"auto"},
+#'   \code{"dense"}, or \code{"sparse"}. The default \code{"auto"} preserves
+#'   sparse input and otherwise uses the dense path.
 #'
 #' @return A list with components:
 #' \itemize{
@@ -108,17 +116,25 @@ linf.cells <- function(S,
                        feature.ids = NULL,
                        feature.labels = NULL,
                        tie.method = c("first", "random", "error"),
-                       return.value = FALSE) {
+                       return.value = FALSE,
+                       backend = c("auto", "dense", "sparse")) {
 
   tie.method <- match.arg(tie.method)
+  backend <- linf.resolve.backend(S, backend)
 
-  X <- as.matrix(S)
-  storage.mode(X) <- "numeric"
+  if (backend == "sparse") {
+    return(linf.cells.sparse(
+      S,
+      feature.ids = feature.ids,
+      feature.labels = feature.labels,
+      tie.method = tie.method,
+      return.value = return.value
+    ))
+  }
 
-  if (any(!is.finite(X))) stop("linf.cells: non-finite entries found")
-  if (any(X < 0, na.rm = TRUE)) stop("linf.cells: negative entries found")
-  if (nrow(X) == 0L || ncol(X) == 0L)
-    stop("linf.cells: matrix has zero rows or columns")
+  prep <- linf.prepare.matrix(S, backend = "dense", fun.name = "linf.cells")
+  X <- prep$X
+  linf.validate.matrix(X, backend = "dense", fun.name = "linf.cells")
 
   meta <- resolve.linf.feature.meta(X, feature.ids = feature.ids, feature.labels = feature.labels)
   id.lev <- meta$feature.ids
@@ -162,6 +178,42 @@ linf.cells <- function(S,
   out
 }
 
+linf.normalize.low.freq.policy <- function(low.freq.policy, fun.name) {
+  if (length(low.freq.policy) > 1L) {
+    low.freq.policy <- low.freq.policy[[1L]]
+  }
+
+  low.freq.policy <- match.arg(
+    low.freq.policy,
+    choices = c("pure", "absorb", "rare")
+  )
+
+  if (identical(low.freq.policy, "rare")) {
+    warning(
+      sprintf(
+        '%s: low.freq.policy = "rare" is deprecated; use "pure" instead',
+        fun.name
+      ),
+      call. = FALSE
+    )
+    return("pure")
+  }
+
+  low.freq.policy
+}
+
+linf.active.low.freq.view <- function(low.freq.policy) {
+  if (is.null(low.freq.policy)) {
+    return("active")
+  }
+
+  if (identical(low.freq.policy, "pure") || identical(low.freq.policy, "rare")) {
+    return("rare")
+  }
+
+  low.freq.policy
+}
+
 #' Truncated L-infinity CSTs with configurable low-frequency handling
 #'
 #' @description
@@ -169,7 +221,8 @@ linf.cells <- function(S,
 #' minimum size threshold \code{n0}. Cells with fewer than \code{n0} samples are
 #' handled according to \code{low.freq.policy}:
 #' \itemize{
-#'   \item \code{"rare"}: collapse all low-frequency cells into \code{rare.label}.
+#'   \item \code{"pure"}: keep only cells with size >= \code{n0} as named CSTs and
+#'     collapse all low-frequency cells into \code{rare.label}.
 #'   \item \code{"absorb"}: reassign each low-frequency sample to the kept cell
 #'     with the largest value among the kept set (ties handled by \code{tie.method}).
 #' }
@@ -180,9 +233,10 @@ linf.cells <- function(S,
 #' @param feature.labels Optional character vector of display labels, length
 #'   \code{ncol(S)}.
 #' @param n0 Integer >= 1. Minimum size for a cell to be kept.
-#' @param low.freq.policy Character. One of \code{"rare"} or \code{"absorb"}.
-#'   Default: \code{"rare"}.
-#' @param rare.label Character scalar used when \code{low.freq.policy = "rare"}.
+#' @param low.freq.policy Character. One of \code{"pure"} or \code{"absorb"}.
+#'   Default: \code{"pure"}. The legacy value \code{"rare"} is still accepted as
+#'   a deprecated alias for \code{"pure"}.
+#' @param rare.label Character scalar used when \code{low.freq.policy = "pure"}.
 #'   Default: \code{"RARE_DOMINANT"}.
 #' @param tie.method Character. Tie handling passed to \code{linf.cells()} and used
 #'   during absorb reassignment ("first", "random", "error").
@@ -193,6 +247,9 @@ linf.cells <- function(S,
 #'   \code{\link{linf.landmarks}} when \code{return.landmarks = TRUE}.
 #' @param landmark.view Character. Landmark view passed to
 #'   \code{\link{linf.landmarks}} when \code{return.landmarks = TRUE}.
+#' @param backend Character. Matrix backend to use: \code{"auto"},
+#'   \code{"dense"}, or \code{"sparse"}. The default \code{"auto"} preserves
+#'   sparse input and otherwise uses the dense path.
 #'
 #' @return List with:
 #'   \itemize{
@@ -213,17 +270,21 @@ linf.csts <- function(S,
                       feature.ids = NULL,
                       feature.labels = NULL,
                       n0 = 50,
-                      low.freq.policy = c("rare", "absorb"),
+                      low.freq.policy = c("pure", "absorb"),
                       rare.label = "RARE_DOMINANT",
                       tie.method = c("first", "random", "error"),
                       return.diagnostics = FALSE,
                       return.landmarks = FALSE,
                       landmark.types = c("endpoint.max", "endpoint.min"),
-                      landmark.view = c("active", "rare", "absorb")) {
+                      landmark.view = c("active", "rare", "absorb"),
+                      backend = c("auto", "dense", "sparse")) {
 
-    low.freq.policy <- match.arg(low.freq.policy)
+    low.freq.policy <- linf.normalize.low.freq.policy(low.freq.policy, "linf.csts")
     tie.method <- match.arg(tie.method)
     landmark.view <- match.arg(landmark.view)
+    prep <- linf.prepare.matrix(S, backend = backend, fun.name = "linf.csts")
+    X <- prep$X
+    backend <- prep$backend
 
     if (!is.numeric(n0) || length(n0) != 1L || n0 < 1 || n0 %% 1 != 0) {
         stop("linf.csts: n0 must be integer >= 1")
@@ -232,13 +293,7 @@ linf.csts <- function(S,
         stop("linf.csts: rare.label must be a non-empty character scalar")
     }
 
-    X <- as.matrix(S)
-    storage.mode(X) <- "numeric"
-
-    if (any(!is.finite(X))) stop("linf.csts: non-finite entries found")
-    if (any(X < 0, na.rm = TRUE)) stop("linf.csts: negative entries found")
-    if (nrow(X) == 0L || ncol(X) == 0L)
-        stop("linf.csts: matrix has zero rows or columns")
+    linf.validate.matrix(X, backend = backend, fun.name = "linf.csts")
 
     meta <- resolve.linf.feature.meta(X, feature.ids = feature.ids, feature.labels = feature.labels)
     fid <- meta$feature.ids
@@ -247,7 +302,8 @@ linf.csts <- function(S,
     raw <- linf.cells(X,
                       feature.ids = fid,
                       feature.labels = lev,
-                      tie.method = tie.method)
+                      tie.method = tie.method,
+                      backend = backend)
     tab <- sort(table(raw$label[!is.na(raw$label)]), decreasing = TRUE)
     tab.id <- sort(table(raw$id[!is.na(raw$id)]), decreasing = TRUE)
 
@@ -257,7 +313,7 @@ linf.csts <- function(S,
 
     n <- nrow(X)
 
-    ## Rare-policy labels: keep only cells with size >= n0; everything else -> rare.label
+    ## Pure-policy labels: keep only cells with size >= n0; everything else -> rare.label
     is.kept <- !is.na(raw$label) & (raw$label %in% kept.lbl)
 
     cell.idx.rare <- raw$index
@@ -286,19 +342,29 @@ linf.csts <- function(S,
         to.absorb <- which(!is.kept)
 
         if (length(to.absorb)) {
-            new.idx <- apply(X[to.absorb, , drop = FALSE], 1, function(r) {
-                kvals <- r[kept.idx]
-                m <- max(kvals)
+            if (backend == "sparse") {
+                new.idx <- linf.absorb.sparse(
+                    X,
+                    to.absorb = to.absorb,
+                    kept.idx = kept.idx,
+                    tie.method = tie.method,
+                    fallback.idx = fallback.idx
+                )
+            } else {
+                new.idx <- apply(X[to.absorb, , drop = FALSE], 1, function(r) {
+                    kvals <- r[kept.idx]
+                    m <- max(kvals)
 
-                ## If there is no positive evidence among kept taxa, avoid arbitrary ties
-                if (!is.finite(m) || m <= 0) return(fallback.idx)
+                    ## If there is no positive evidence among kept taxa, avoid arbitrary ties
+                    if (!is.finite(m) || m <= 0) return(fallback.idx)
 
-                j <- kept.idx[kvals == m]
-                if (length(j) == 1L) return(j)
-                if (tie.method == "first") return(j[1L])
-                if (tie.method == "random") return(sample(j, 1L))
-                stop("linf.csts: tie during reassignment and tie.method = 'error'")
-            })
+                    j <- kept.idx[kvals == m]
+                    if (length(j) == 1L) return(j)
+                    if (tie.method == "first") return(j[1L])
+                    if (tie.method == "random") return(sample(j, 1L))
+                    stop("linf.csts: tie during reassignment and tie.method = 'error'")
+                })
+            }
 
             reassigned[to.absorb] <- TRUE
             reassigned.from[to.absorb] <- raw$label[to.absorb]
@@ -320,7 +386,7 @@ linf.csts <- function(S,
     }
 
     ## Select active labeling
-    if (low.freq.policy == "rare") {
+    if (low.freq.policy == "pure") {
         cell.idx <- cell.idx.rare
         cell.id <- cell.id.rare
         cell.lbl <- cell.lbl.rare
@@ -362,6 +428,7 @@ linf.csts <- function(S,
         size.table.id    = tab.id,
         feature.ids      = fid,
         feature.labels   = lev,
+        matrix.backend   = backend,
         n0               = as.integer(n0),
         low.freq.policy  = low.freq.policy,
         rare.label       = rare.label
@@ -392,7 +459,8 @@ linf.csts <- function(S,
             depth = 1L,
             view = landmark.view,
             landmark.types = landmark.types,
-            tie.method = tie.method
+            tie.method = tie.method,
+            backend = backend
         )
     }
 
@@ -408,6 +476,8 @@ linf.csts <- function(S,
 #' @param S.counts Numeric matrix of counts (samples x features).
 #' @param ... Arguments passed to \code{filter.asv()} (e.g., \code{min.lib},
 #'   \code{prev.prop}, \code{min.count}, \code{min.rel}).
+#' @param backend Character. Matrix backend to use: \code{"auto"},
+#'   \code{"dense"}, or \code{"sparse"}.
 #' @return A list with:
 #' \itemize{
 #'   \item \code{filter}: the full result from \code{filter.asv()}.
@@ -423,10 +493,12 @@ linf.csts <- function(S,
 #' apply(res$linf.rel, 1, max)  # should be 1 (or 0 for all-zero rows)
 #'
 #' @export
-asv.to.linf.csts <- function(S.counts, ...) {
+asv.to.linf.csts <- function(S.counts,
+                             ...,
+                             backend = c("auto", "dense", "sparse")) {
   filt <- filter.asv(S.counts, ...)
-  M <- normalize.linf(filt$counts)
-  cst <- linf.csts(M)
+  M <- normalize.linf(filt$counts, backend = backend)
+  cst <- linf.csts(M, backend = backend)
   list(filter = filt, linf.rel = M, csts = cst)
 }
 
@@ -465,7 +537,7 @@ validate.linf.csts <- function(obj) {
 #' label using \code{sep}.
 #'
 #' Low-frequency child cells are handled by \code{low.freq.policy}. When
-#' \code{low.freq.policy = "rare"}, rare buckets at depth >= 2 become
+#' \code{low.freq.policy = "pure"}, rare buckets at depth >= 2 become
 #' parent-prefixed automatically via the hierarchical \code{paste(parent, child, sep = sep)}.
 #'
 #' @param M Numeric matrix (samples x features) used for refinement. Column names
@@ -474,9 +546,14 @@ validate.linf.csts <- function(obj) {
 #' @param n0 Integer >= 1. Minimum size for a child cell to be kept (passed to \code{linf.csts}).
 #' @param refinement.factor Numeric > 0. Auto-refine parent cells with size >= \code{refinement.factor * n0}.
 #' @param sep Character scalar used to concatenate hierarchical labels.
-#' @param low.freq.policy Character. One of \code{"rare"} or \code{"absorb"}. Default: \code{"rare"}.
-#' @param rare.label Character scalar for rare buckets when \code{low.freq.policy = "rare"}.
+#' @param low.freq.policy Character. One of \code{"pure"} or \code{"absorb"}.
+#'   Default: \code{"pure"}. The legacy value \code{"rare"} is still accepted as
+#'   a deprecated alias for \code{"pure"}.
+#' @param rare.label Character scalar for rare buckets when \code{low.freq.policy = "pure"}.
 #' @param verbose Logical. If TRUE, print progress information.
+#' @param backend Character. Matrix backend to use: \code{"auto"},
+#'   \code{"dense"}, or \code{"sparse"}. The default \code{"auto"} inherits the
+#'   backend from \code{M} or from \code{csts} when available.
 #'
 #' @return Updated \code{"linf.csts"} object with \code{cst.depth} increased by one and
 #'   updated \code{cell.label}. Policy-specific views are stored in
@@ -488,13 +565,21 @@ refine.linf.csts <- function(M,
                              n0 = 50,
                              refinement.factor = 2,
                              sep = "__",
-                             low.freq.policy = c("rare", "absorb"),
+                             low.freq.policy = c("pure", "absorb"),
                              rare.label = "RARE_DOMINANT",
-                             verbose = TRUE) {
+                             verbose = TRUE,
+                             backend = c("auto", "dense", "sparse")) {
 
     validate.linf.csts(csts)
 
-    low.freq.policy <- match.arg(low.freq.policy)
+    low.freq.policy <- linf.normalize.low.freq.policy(low.freq.policy, "refine.linf.csts")
+    if (missing(backend) && !is.null(csts$matrix.backend)) {
+        backend <- csts$matrix.backend
+    }
+    prep <- linf.prepare.matrix(M, backend = backend, fun.name = "refine.linf.csts")
+    M <- prep$X
+    backend <- prep$backend
+    linf.validate.matrix(M, backend = backend, fun.name = "refine.linf.csts")
 
     if (!is.numeric(n0) || length(n0) != 1L || n0 < 1 || n0 %% 1 != 0) {
         stop("refine.linf.csts: n0 must be integer >= 1")
@@ -605,7 +690,8 @@ refine.linf.csts <- function(M,
                              feature.labels = csts$feature.labels[-drop.idx],
                              n0 = n0,
                              low.freq.policy = low.freq.policy,
-                             rare.label = rare.label)
+                             rare.label = rare.label,
+                             backend = backend)
 
         sub.ids.rare <- sub.csts$cell.id.rare %||% sub.csts$cell.label.rare
         sub.ids.absorb <- sub.csts$cell.id.absorb %||% sub.csts$cell.label.absorb
@@ -622,13 +708,13 @@ refine.linf.csts <- function(M,
     }
 
     ## Update CST object (store both views; active view chosen by low.freq.policy)
-    csts$cst.id.levels[[depth]] <- if (low.freq.policy == "rare") refined.ids.rare else refined.ids.absorb
+    csts$cst.id.levels[[depth]] <- if (low.freq.policy == "pure") refined.ids.rare else refined.ids.absorb
     csts$cst.id.levels.rare[[depth]] <- refined.ids.rare
     csts$cst.id.levels.absorb[[depth]] <- refined.ids.absorb
     csts$cst.levels.rare[[depth]] <- refined.labels.rare
     csts$cst.levels.absorb[[depth]] <- refined.labels.absorb
 
-    if (low.freq.policy == "rare") {
+    if (low.freq.policy == "pure") {
         refined.labels <- refined.labels.rare
     } else {
         refined.labels <- refined.labels.absorb
@@ -647,6 +733,7 @@ refine.linf.csts <- function(M,
 
     csts$low.freq.policy <- low.freq.policy
     csts$rare.label <- rare.label
+    csts$matrix.backend <- backend
     csts$landmarks <- NULL
 
     class(csts) <- "linf.csts"
@@ -668,9 +755,14 @@ refine.linf.csts <- function(M,
 #' @param n0 Integer >= 1. Minimum size for a child cell to be kept.
 #' @param refinement.factor Numeric > 0. Auto-selection threshold multiplier.
 #' @param sep Character scalar used to concatenate hierarchical labels.
-#' @param low.freq.policy Character. One of \code{"rare"} or \code{"absorb"}. Default: \code{"rare"}.
-#' @param rare.label Character scalar for rare buckets when \code{low.freq.policy = "rare"}.
+#' @param low.freq.policy Character. One of \code{"pure"} or \code{"absorb"}.
+#'   Default: \code{"pure"}. The legacy value \code{"rare"} is still accepted as
+#'   a deprecated alias for \code{"pure"}.
+#' @param rare.label Character scalar for rare buckets when \code{low.freq.policy = "pure"}.
 #' @param verbose Logical. If TRUE, print progress information.
+#' @param backend Character. Matrix backend to use: \code{"auto"},
+#'   \code{"dense"}, or \code{"sparse"}. The default \code{"auto"} inherits the
+#'   backend from \code{M} or from \code{refined} when available.
 #'
 #' @return Updated \code{"linf.csts"} object with \code{cst.depth} increased by one.
 #'
@@ -681,13 +773,21 @@ refine.linf.csts.iter <- function(M,
                                   n0 = 50,
                                   refinement.factor = 5,
                                   sep = "__",
-                                  low.freq.policy = c("rare", "absorb"),
+                                  low.freq.policy = c("pure", "absorb"),
                                   rare.label = "RARE_DOMINANT",
-                                  verbose = TRUE) {
+                                  verbose = TRUE,
+                                  backend = c("auto", "dense", "sparse")) {
 
     validate.linf.csts(refined)
 
-    low.freq.policy <- match.arg(low.freq.policy)
+    low.freq.policy <- linf.normalize.low.freq.policy(low.freq.policy, "refine.linf.csts.iter")
+    if (missing(backend) && !is.null(refined$matrix.backend)) {
+        backend <- refined$matrix.backend
+    }
+    prep <- linf.prepare.matrix(M, backend = backend, fun.name = "refine.linf.csts.iter")
+    M <- prep$X
+    backend <- prep$backend
+    linf.validate.matrix(M, backend = backend, fun.name = "refine.linf.csts.iter")
 
     if (!is.numeric(n0) || length(n0) != 1L || n0 < 1 || n0 %% 1 != 0) {
         stop("refine.linf.csts.iter: n0 must be integer >= 1")
@@ -774,7 +874,8 @@ refine.linf.csts.iter <- function(M,
                              feature.labels = refined$feature.labels[-drop.idx],
                              n0 = n0,
                              low.freq.policy = low.freq.policy,
-                             rare.label = rare.label)
+                             rare.label = rare.label,
+                             backend = backend)
 
         sub.ids.rare <- sub.csts$cell.id.rare %||% sub.csts$cell.label.rare
         sub.ids.absorb <- sub.csts$cell.id.absorb %||% sub.csts$cell.label.absorb
@@ -790,13 +891,13 @@ refine.linf.csts.iter <- function(M,
         new.labels.absorb[idx] <- paste(parent.label.absorb, sub.labels.absorb, sep = sep)
     }
 
-    refined$cst.id.levels[[depth + 1L]] <- if (low.freq.policy == "rare") new.ids.rare else new.ids.absorb
+    refined$cst.id.levels[[depth + 1L]] <- if (low.freq.policy == "pure") new.ids.rare else new.ids.absorb
     refined$cst.id.levels.rare[[depth + 1L]] <- new.ids.rare
     refined$cst.id.levels.absorb[[depth + 1L]] <- new.ids.absorb
     refined$cst.levels.rare[[depth + 1L]] <- new.labels.rare
     refined$cst.levels.absorb[[depth + 1L]] <- new.labels.absorb
 
-    if (low.freq.policy == "rare") {
+    if (low.freq.policy == "pure") {
         new.labels <- new.labels.rare
     } else {
         new.labels <- new.labels.absorb
@@ -814,6 +915,7 @@ refine.linf.csts.iter <- function(M,
 
     refined$low.freq.policy <- low.freq.policy
     refined$rare.label <- rare.label
+    refined$matrix.backend <- backend
     refined$sep <- sep
     refined$landmarks <- NULL
 
@@ -884,7 +986,8 @@ collapse.rare <- function(csts) {
 #' Returns a copy of a \code{"linf.csts"} object with \code{cell.label} (and, if
 #' present, \code{cst.levels}) replaced by the precomputed "rare" labeling.
 #' This does not recompute CSTs; it only switches between labelings already
-#' stored in the object.
+#' stored in the object. This explicit rare-bucket view is the active labeling
+#' used by \code{low.freq.policy = "pure"}.
 #'
 #' @param csts A \code{"linf.csts"} object produced by \code{\link{linf.csts}}
 #'   and optionally refined by \code{\link{refine.linf.csts}} /
@@ -908,7 +1011,7 @@ expand.rare <- function(csts) {
     csts$cell.id <- csts$cell.id.rare
   }
   csts$cell.label <- csts$cell.label.rare
-  csts$low.freq.policy <- "rare"
+  csts$low.freq.policy <- "pure"
 
   if (!is.null(csts$cst.id.levels)) {
     if (is.null(csts$cst.id.levels.rare)) {

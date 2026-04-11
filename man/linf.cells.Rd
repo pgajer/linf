@@ -9,7 +9,8 @@ linf.cells(
   feature.ids = NULL,
   feature.labels = NULL,
   tie.method = c("first", "random", "error"),
-  return.value = FALSE
+  return.value = FALSE,
+  backend = c("auto", "dense", "sparse")
 )
 }
 \arguments{
@@ -24,6 +25,10 @@ length \code{ncol(S)}.}
 \item{tie.method}{Character. How to resolve ties when assigning L-infinity cells.}
 
 \item{return.value}{Logical. If \code{TRUE}, include a \code{value} vector with row maxima.}
+
+\item{backend}{Character. Matrix backend to use: \code{"auto"},
+\code{"dense"}, or \code{"sparse"}. The default \code{"auto"} preserves
+sparse input and otherwise uses the dense path.}
 }
 \value{
 A list with components:
