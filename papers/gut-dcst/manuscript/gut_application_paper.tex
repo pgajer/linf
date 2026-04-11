@@ -145,6 +145,8 @@
 Dominance Patterns in the Human Gut Microbiome}
 \author{\parbox{0.9\textwidth}{\centering Pawel Gajer\thanks{\paperaffiliation}\thanks{Corresponding author: pgajer@gmail.com} and Jacques Ravel\protect\footnotemark[1]}}
 \date{}
+\newif\ifshowbuildstamp
+\showbuildstampfalse
 \providecommand{\manuscriptversion}{unversioned}
 \providecommand{\manuscriptbuildnumber}{NA}
 \providecommand{\manuscriptcommit}{unknown}
@@ -154,6 +156,7 @@ Dominance Patterns in the Human Gut Microbiome}
 \begin{document}
 \maketitle
 \blfootnote{\paperfundingnote}
+\ifshowbuildstamp
 \begin{center}
 \footnotesize
 Version \texttt{\manuscriptversion} \quad | \quad Build
@@ -162,6 +165,7 @@ Version \texttt{\manuscriptversion} \quad | \quad Build
 Built \manuscriptbuilddatetime
 \end{center}
 \vspace{0.35em}
+\fi
 
 \setstretch{1.15}
 \section{Abstract}\label{abstract}
@@ -251,11 +255,11 @@ biology. Rather, we ask whether recurrent dominance patterns can be
 identified deterministically in a cohort of this size, whether the
 resulting labels retain enough ecological meaning to support
 phenotype-specific association screening, and whether the strongest
-signals remain recognizable after covariate adjustment,
-contaminant-aware filtering, taxonomy change, and external validation.
-If so, DCSTs provide a practical analysis layer for large microbiome
-studies in which interpretability and reproducibility matter as much as
-statistical association strength. In this study we use the
+signals remain biologically readable after covariate adjustment and
+deeper hierarchical refinement. If so, DCSTs provide a practical
+analysis layer for large microbiome studies in which interpretability
+and reproducibility matter as much as statistical association strength.
+In this study we use the
 \texttt{absorb} low-frequency policy, which merges very small
 dominance patterns into larger named states rather than pooling them
 into one catch-all rare category, and we complement standard
@@ -298,6 +302,18 @@ available for 27,372 samples (90.4\%), sex for 25,598 (84.5\%), and BMI
 for 26,541 (87.6\%), producing 23,198 complete cases for the absorb
 follow-up models.
 
+Phenotype flags were derived directly from the AGP \texttt{Phenotype}
+metadata field by fixed substring matching. The focal outcomes were
+coded from the phrases \texttt{irritable bowel syndrome},
+\texttt{inflammatory bowel disease}, \texttt{autoimmune},
+\texttt{acid reflux}, and \texttt{seasonal allergies}. Samples without
+the focal phrase served as controls for that outcome, and outcome flags
+were therefore not mutually exclusive. In the filtered cohort, case
+counts were 3,105 for IBS, 1,166 for IBD, 2,872 for autoimmune disease,
+2,859 for acid reflux, and 9,493 for seasonal allergies; corresponding
+complete-case counts after requiring age, sex, and BMI were 2,551, 993,
+2,426, 2,279, and 8,284, respectively (Supplementary Table S1).
+
 Absorb DCSTs were constructed from the within-sample dominance order. A
 depth-1 state is defined by the dominant taxon, and deeper states are
 defined by recursively appending the second-ranked, third-ranked, and
@@ -329,18 +345,26 @@ label-level follow-up in two parallel ways for the phenotype branches
 emphasized in this manuscript: IBD, IBS, autoimmune disease, acid
 reflux, and seasonal allergies. The conventional analysis used Fisher
 tests and logistic regression adjusted for age, sex, and BMI. The
-Bayesian analysis used parallel models to estimate how strongly the data
-supported enrichment or depletion of each state, which was especially
-useful for rarer deeper states. Multiple testing in the conventional
+Bayesian analysis used two complementary models. For unadjusted
+label-level contrasts we used a beta-binomial prevalence model with a
+Jeffreys prior, \(\mathrm{Beta}(0.5, 0.5)\), summarized by the
+posterior median odds ratio, 95\% credible interval, and posterior
+probability that the odds ratio exceeded 1. For adjusted analyses we fit
+Bayesian logistic regression models with \texttt{arm::bayesglm} using
+the same covariates as the frequentist regression and the package's
+default weakly informative prior. Those adjusted Bayesian fits were
+summarized by the exponentiated coefficient estimate, an approximate
+95\% credible interval based on the posterior standard error, and
+\(\Pr(\beta > 0)\) for enrichment. Multiple testing in the conventional
 analyses was controlled with the Benjamini-Hochberg procedure
 (\citeproc{ref-BenjaminiHochberg1995}{Benjamini and Hochberg 1995}).
 
 The analyses reported here emphasize the phenotype branches that
 combined the clearest absorb-hierarchy structure with stable Bayesian
 follow-up: IBD, IBS, autoimmune disease, acid reflux, and seasonal
-allergies. Independent validation of the absorb hierarchy is being
-extended in parallel, including IBD-relevant cohorts carried forward
-from the earlier analysis and newly harmonized IBS datasets. All
+allergies. This manuscript is intentionally centered on the discovery
+cohort; absorb-specific external validation remains a planned next step
+rather than a completed line of evidence for the present paper. All
 manuscript figures, tables, and analysis scripts were generated from
 workflows built around the \texttt{linf} R package, with
 project-specific runners maintained in the companion
@@ -369,7 +393,7 @@ screens as supplementary reference analyses and develop only the absorb
 hierarchy in the main Results. Biologically, this is the level at which
 the absorb policy matters most, because deeper low-frequency branches
 are merged into larger named lineages instead of disappearing into a
-residual tail. Omnibus phenotype-by-depth
+residual tail (Supplementary Table S2). Omnibus phenotype-by-depth
 screening showed broad absorb-state structure across the cohort, but the
 most coherent and interpretable depthwise growth in effect size occurred
 in IBD, autoimmune disease, IBS, acid reflux, and seasonal allergies.
@@ -381,7 +405,7 @@ follow-up on those five branches.
 
 \begin{table}[H]
 \small
-\caption*{\textbf{Table 1.} Top depth-1 absorb DCSTs in the full AGP cohort.}
+\caption{Top depth-1 absorb DCSTs in the full AGP cohort.}
 \centering
 \begin{tabular}{@{}lllll@{}}
 \toprule
@@ -405,13 +429,8 @@ Rank & DCST & n & Share (\%) & Cumulative (\%) \\
 
 \begin{figure}[H]
 \centering
-\fbox{\parbox{0.9\linewidth}{\textbf{Placeholder for absorb hierarchy overview.}
-Insert an absorb-specific figure showing (i) the depth-1 landscape,
-(ii) label growth across depths 1--4, and (iii) depth-wise omnibus
-effect sizes for the key phenotype branches. A separate pure-versus-
-absorb comparison figure should be placed in the supplementary
-analyses.}}
-\caption{Placeholder for an absorb-hierarchy overview figure.}
+\includegraphics[width=0.98\linewidth,height=\textheight,keepaspectratio,alt={Absorb overview figure. Panel A shows the ten largest depth-1 absorb states in the AGP cohort. Panel B shows growth in the number of named absorb states across depths 1 to 6 together with the fraction of assignments that change relative to the pure hierarchy. Panel C shows Cramer's V across depths 1 to 4 for IBD, autoimmune disease, IBS, acid reflux, and seasonal allergies.}]{../assets/figures/FIGURE_2_absorb_overview.png}
+\caption{Overview of the absorb hierarchy in the AGP discovery cohort. Panel A shows the largest named depth-1 absorb states. Panel B shows how the hierarchy expands from depth 1 to depth 6 together with the fraction of samples whose assignments differ from the pure hierarchy. Panel C shows the depthwise omnibus effect size, summarized by Cramer's V, for the five phenotype branches carried forward to label-level follow-up.}
 \end{figure}
 
 \begin{table}[H]
@@ -533,12 +552,8 @@ generic rare bucket.
 
 \begin{figure}[H]
 \centering
-\fbox{\parbox{0.9\linewidth}{\textbf{Placeholder for IBD absorb lineage figure.}
-Insert an absorb-specific lineage panel showing the progression from
-depth-1 \taxon{Bacteroides} to the depth-2 through depth-4 inflammatory
-lineages, together with Bayesian-supported rare enterobacterial states
-such as \taxon{Morganella}.}}
-\caption{Placeholder for an IBD absorb-lineage summary figure.}
+\includegraphics[width=0.98\linewidth,height=\textheight,keepaspectratio,alt={IBD absorb lineage figure. Panel A shows the progression from the broad depth-1 Bacteroides state to deeper Bacteroides-centered inflammatory lineages at depths 2 to 4. Panel B compares frequentist and Bayesian adjusted odds ratios for the main IBD lineage states and for rare enterobacterial states such as Morganella and Proteus.}]{../assets/figures/FIGURE_3_ibd_absorb_lineages.png}
+\caption{IBD is the clearest lineage-resolved example in the absorb hierarchy. Panel A shows the progression from the broad depth-1 \taxon{Bacteroides} state to the depth-2 through depth-4 inflammatory lineages emphasized in the main text. Panel B compares frequentist and Bayesian adjusted odds ratios for representative IBD-associated states. The common lineages are supported by both frameworks, whereas rare enterobacterial states such as \taxon{Morganella} and \taxon{Proteus} remain visible mainly in the Bayesian analysis because the conservative adjusted frequentist model does not estimate stable coefficients for those sparse labels.}
 \end{figure}
 
 These IBD results align well with the established literature. The
@@ -699,7 +714,7 @@ consistent with the idea that the absorb hierarchy can recover a
 readable immune-associated ecological axis outside the core
 gastrointestinal disease phenotypes.
 
-\subsection{Remaining phenotypes and external data}\label{other-phenotypes-and-external-data}
+\subsection{Remaining phenotypes}\label{other-phenotypes}
 
 The phenotype-wide absorb screen was not limited to the five branches
 developed above. Cardiovascular disease, migraine, lung disease, and
@@ -707,27 +722,15 @@ other outcomes also showed strong depth-level shifts in the omnibus
 screen. Cardiovascular disease was especially notable statistically: it
 produced a strong depth-3 and depth-4
 \taxon{Bacteroides}/\taxon{Agathobacter}/\taxon{Faecalibacterium}-centered
-lineage in the Batch 1 follow-up. We keep that branch out of the main
-text for now because it is harder to interpret cleanly in a
+lineage in the absorb follow-up analyses. We keep that branch out of the
+main text because it is harder to interpret cleanly in a
 self-reported cohort with likely medication, diet, and comorbidity
 confounding. Obesity, by contrast, showed little stable adjusted signal
-and was not prioritized further after the Batch 1 rerun. Independent
-external validation is being extended for the absorb hierarchy,
-beginning with IBD-focused cohorts and newly harmonized IBS datasets,
-and those analyses will determine how broadly the current discovery
-patterns generalize. Supplementary analyses will also carry the full
-pure dCST-CT association screens and the direct pure-versus-absorb
-comparison so that the main text can stay centered on the absorb
+and was not prioritized further after the absorb rerun. Supplementary
+analyses carry the phenotype-definition table, the pure-versus-absorb
+depth-change summary, and baseline reference material for the pure dCST
+screens so that the main text can stay centered on the absorb
 hierarchy.
-
-\begin{figure}[H]
-\centering
-\fbox{\parbox{0.9\linewidth}{\textbf{Placeholder for absorb-specific external validation summary.}
-Insert the rerun external-validation figure and table for the absorb
-hierarchy, beginning with the IBD cohorts and the newly harmonized IBS
-validation datasets.}}
-\caption{Placeholder for an absorb-specific external-validation summary.}
-\end{figure}
 
 \section{Discussion}\label{general-discussion}
 
@@ -761,7 +764,7 @@ immune-dysregulation signal even though the AGP autoimmune label is too
 heterogeneous for one disease-specific interpretation. For a biologist,
 the practical message is that absorb DCSTs provide a simple way to name
 recurrent ecological states and then ask whether those states are more
-or less common in cases. The two additional Batch 1 examples broaden
+or less common in cases. The two additional non-IBD examples broaden
 that message. Acid reflux shows that the framework can recover a deeper
 \taxon{Bacteroides}\dcstsep\taxon{Parabacteroides}\dcstsep\taxon{Alistipes}-linked
 branch outside classic inflammatory bowel phenotypes, while seasonal
@@ -769,15 +772,16 @@ allergies show a more modest but still readable shift away from
 \taxon{Prevotella}-linked states and toward enterobacterial lineages.
 
 Several limitations remain important. Absorb-specific external
-validation is still being extended, and the present manuscript develops
-the lineage-level story most fully for IBS, IBD, autoimmune disease,
-acid reflux, and seasonal allergies. AGP phenotypes are also
-self-reported and cross-sectional, so residual confounding, medication
-effects, and reverse causation remain plausible. Those concerns are
-especially important for acid reflux and cardiometabolic phenotypes. The
-current evidence nevertheless supports the absorb framework as a
-biologically interpretable analysis layer and motivates formal testing
-of its generalizability in independent cohorts.
+validation remains future work, and the present manuscript is therefore
+best read as a discovery-cohort analysis that develops the lineage-level
+story most fully for IBS, IBD, autoimmune disease, acid reflux, and
+seasonal allergies. AGP phenotypes are also self-reported and
+cross-sectional, so residual confounding, medication effects, and
+reverse causation remain plausible. Those concerns are especially
+important for acid reflux and cardiometabolic phenotypes. The current
+evidence nevertheless supports the absorb framework as a biologically
+interpretable analysis layer and motivates formal testing of its
+generalizability in independent cohorts.
 
 \section{Conclusion}\label{conclusion}
 
@@ -808,10 +812,10 @@ through PRIME-derived species-level abundance tables. The absorb
 discovery hierarchy was generated with
 \texttt{run\_agp\_absorb\_depthscan.R}, and the phenotype-specific
 frequentist/Bayesian follow-up was generated with
-\texttt{run\_absorb\_label\_followup.R}. Additional external validation
-datasets for the absorb branch are being harmonized in parallel with the
-discovery analyses reported here. The corresponding pure dCST-CT
-association outputs are retained as supplementary reference analyses.
+\texttt{run\_absorb\_label\_followup.R}. Supplementary materials for the
+present manuscript summarize phenotype definitions and sample counts,
+the pure-versus-absorb depth-change summary, and selected reference
+analyses retained outside the main text.
 
 \section{Funding}\label{funding}
 
