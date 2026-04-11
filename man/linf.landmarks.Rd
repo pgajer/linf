@@ -10,7 +10,8 @@ linf.landmarks(
   depth = NULL,
   view = c("active", "rare", "absorb"),
   landmark.types = c("endpoint.max", "endpoint.min", "mean.rep", "median.rep"),
-  tie.method = c("first", "random", "error")
+  tie.method = c("first", "random", "error"),
+  backend = c("auto", "dense", "sparse")
 )
 }
 \arguments{
@@ -30,6 +31,10 @@ linf.landmarks(
 
 \item{tie.method}{Character. Tie handling for landmark selection:
 \code{"first"}, \code{"random"}, or \code{"error"}.}
+
+\item{backend}{Character. Matrix backend to use: \code{"auto"},
+\code{"dense"}, or \code{"sparse"}. The default \code{"auto"} preserves
+sparse input and otherwise uses the dense path.}
 }
 \value{
 A list of class \code{"linf.landmarks"} with components:

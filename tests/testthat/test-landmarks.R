@@ -44,7 +44,7 @@ test_that("linf.csts can attach landmarks and skip rare buckets", {
   out <- linf.csts(
     M,
     n0 = 5,
-    low.freq.policy = "rare",
+    low.freq.policy = "pure",
     return.landmarks = TRUE,
     landmark.types = "endpoint.max",
     landmark.view = "rare"
@@ -76,14 +76,14 @@ test_that("linf.landmarks uses leaf feature ids for refined depth-2 cells", {
     feature.ids = ids,
     feature.labels = labels,
     n0 = 2,
-    low.freq.policy = "rare"
+    low.freq.policy = "pure"
   )
   d2 <- refine.linf.csts(
     M,
     d1,
     n0 = 2,
     refinement.factor = 2,
-    low.freq.policy = "rare",
+    low.freq.policy = "pure",
     verbose = FALSE
   )
   out <- linf.landmarks(M, d2, depth = 2, view = "rare", landmark.types = "endpoint.max")
@@ -108,7 +108,7 @@ test_that("switching CST views updates ids and drops stale attached landmarks", 
   csts <- linf.csts(
     M,
     n0 = 3,
-    low.freq.policy = "rare",
+    low.freq.policy = "pure",
     return.landmarks = TRUE
   )
   collapsed <- collapse.rare(csts)
@@ -116,4 +116,21 @@ test_that("switching CST views updates ids and drops stale attached landmarks", 
   expect_null(collapsed$landmarks)
   expect_identical(collapsed$cell.id, collapsed$cell.id.absorb)
   expect_identical(collapsed$cst.id.levels[[collapsed$cst.depth]], collapsed$cst.id.levels.absorb[[collapsed$cst.depth]])
+})
+
+test_that('low.freq.policy = "rare" is accepted as a deprecated alias for "pure"', {
+  M <- rbind(
+    s1 = c(1.0, 0.2, 0.1),
+    s2 = c(0.9, 0.3, 0.1),
+    s3 = c(0.1, 1.0, 0.1)
+  )
+  colnames(M) <- c("A", "B", "C")
+
+  expect_warning(
+    csts <- linf.csts(M, n0 = 2, low.freq.policy = "rare"),
+    'deprecated; use "pure" instead'
+  )
+
+  expect_identical(csts$low.freq.policy, "pure")
+  expect_identical(csts$cell.label, csts$cell.label.rare)
 })

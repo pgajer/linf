@@ -22,9 +22,10 @@
 #' @param refinement.factor Numeric > 0. Auto-refinement threshold multiplier
 #'   passed to \code{\link{refine.linf.csts}}.
 #' @param sep Character scalar used to join depth-refined CST path tokens.
-#' @param low.freq.policy Character. One of \code{"rare"} or \code{"absorb"}.
+#' @param low.freq.policy Character. One of \code{"pure"} or \code{"absorb"}.
 #'   Controls the active DCST view while still preserving parallel rare/absorb
-#'   views inside the returned CST objects.
+#'   views inside the returned CST objects. The legacy value \code{"rare"} is
+#'   still accepted as a deprecated alias for \code{"pure"}.
 #' @param rare.label Character scalar for rare buckets.
 #' @param depth1.landmark.types Character vector of landmark types for depth 1.
 #' @param depth2.landmark.types Character vector of landmark types for depth 2.
@@ -34,6 +35,8 @@
 #' @param tie.method Character. Tie handling passed through to
 #'   \code{\link{linf.csts}} and \code{\link{linf.landmarks}}.
 #' @param verbose Logical. Passed to \code{\link{refine.linf.csts}}.
+#' @param backend Character. Matrix backend to use: \code{"auto"},
+#'   \code{"dense"}, or \code{"sparse"}.
 #'
 #' @return A named list with components:
 #' \itemize{
@@ -64,7 +67,7 @@
 #'   n0.depth1 = 2,
 #'   n0.depth2 = 2,
 #'   refinement.factor = 2,
-#'   low.freq.policy = "rare",
+#'   low.freq.policy = "pure",
 #'   landmark.view = "absorb",
 #'   verbose = FALSE
 #' )
@@ -81,30 +84,25 @@ linf.dcst.landmark.pipeline <- function(
   n0.depth2 = 25,
   refinement.factor = 2,
   sep = "__",
-  low.freq.policy = c("rare", "absorb"),
+  low.freq.policy = c("pure", "absorb"),
   rare.label = "RARE_DOMINANT",
   depth1.landmark.types = c("endpoint.max", "endpoint.min", "mean.rep", "median.rep"),
   depth2.landmark.types = c("endpoint.max", "endpoint.min", "mean.rep", "median.rep"),
   landmark.view = c("absorb", "active", "rare"),
   tie.method = c("first", "random", "error"),
-  verbose = FALSE
+  verbose = FALSE,
+  backend = c("auto", "dense", "sparse")
 ) {
-  low.freq.policy <- match.arg(low.freq.policy)
+  low.freq.policy <- linf.normalize.low.freq.policy(
+    low.freq.policy,
+    "linf.dcst.landmark.pipeline"
+  )
   landmark.view <- match.arg(landmark.view)
   tie.method <- match.arg(tie.method)
-
-  M <- as.matrix(X)
-  storage.mode(M) <- "numeric"
-
-  if (nrow(M) == 0L || ncol(M) == 0L) {
-    stop("linf.dcst.landmark.pipeline: matrix has zero rows or columns")
-  }
-  if (any(!is.finite(M))) {
-    stop("linf.dcst.landmark.pipeline: non-finite entries found")
-  }
-  if (any(M < 0, na.rm = TRUE)) {
-    stop("linf.dcst.landmark.pipeline: negative entries found")
-  }
+  prep <- linf.prepare.matrix(X, backend = backend, fun.name = "linf.dcst.landmark.pipeline")
+  M <- prep$X
+  backend <- prep$backend
+  linf.validate.matrix(M, backend = backend, fun.name = "linf.dcst.landmark.pipeline")
   if (!is.numeric(n0.depth1) || length(n0.depth1) != 1L || n0.depth1 < 1 || n0.depth1 %% 1 != 0) {
     stop("linf.dcst.landmark.pipeline: n0.depth1 must be integer >= 1")
   }
@@ -122,7 +120,7 @@ linf.dcst.landmark.pipeline <- function(
     stop("linf.dcst.landmark.pipeline: rare.label must be a non-empty character scalar")
   }
 
-  linf.rel <- normalize.linf(M)
+  linf.rel <- normalize.linf(M, backend = backend)
 
   dcst.depth1 <- linf.csts(
     linf.rel,
@@ -131,7 +129,8 @@ linf.dcst.landmark.pipeline <- function(
     n0 = n0.depth1,
     low.freq.policy = low.freq.policy,
     rare.label = rare.label,
-    tie.method = tie.method
+    tie.method = tie.method,
+    backend = backend
   )
 
   dcst.depth2 <- refine.linf.csts(
@@ -142,7 +141,8 @@ linf.dcst.landmark.pipeline <- function(
     sep = sep,
     low.freq.policy = low.freq.policy,
     rare.label = rare.label,
-    verbose = verbose
+    verbose = verbose,
+    backend = backend
   )
 
   landmarks.depth1 <- linf.landmarks(
@@ -151,7 +151,8 @@ linf.dcst.landmark.pipeline <- function(
     depth = 1L,
     view = landmark.view,
     landmark.types = depth1.landmark.types,
-    tie.method = tie.method
+    tie.method = tie.method,
+    backend = backend
   )
 
   landmarks.depth2 <- linf.landmarks(
@@ -160,7 +161,8 @@ linf.dcst.landmark.pipeline <- function(
     depth = 2L,
     view = landmark.view,
     landmark.types = depth2.landmark.types,
-    tie.method = tie.method
+    tie.method = tie.method,
+    backend = backend
   )
 
   list(
@@ -179,7 +181,8 @@ linf.dcst.landmark.pipeline <- function(
       landmark.view = landmark.view,
       depth1.landmark.types = depth1.landmark.types,
       depth2.landmark.types = depth2.landmark.types,
-      tie.method = tie.method
+      tie.method = tie.method,
+      backend = backend
     )
   )
 }

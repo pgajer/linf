@@ -11,9 +11,10 @@ refine.linf.csts.iter(
   n0 = 50,
   refinement.factor = 5,
   sep = "__",
-  low.freq.policy = c("rare", "absorb"),
+  low.freq.policy = c("pure", "absorb"),
   rare.label = "RARE_DOMINANT",
-  verbose = TRUE
+  verbose = TRUE,
+  backend = c("auto", "dense", "sparse")
 )
 }
 \arguments{
@@ -29,11 +30,17 @@ refine.linf.csts.iter(
 
 \item{sep}{Character scalar used to concatenate hierarchical labels.}
 
-\item{low.freq.policy}{Character. One of \code{"rare"} or \code{"absorb"}. Default: \code{"rare"}.}
+\item{low.freq.policy}{Character. One of \code{"pure"} or \code{"absorb"}.
+Default: \code{"pure"}. The legacy value \code{"rare"} is still accepted as
+a deprecated alias for \code{"pure"}.}
 
-\item{rare.label}{Character scalar for rare buckets when \code{low.freq.policy = "rare"}.}
+\item{rare.label}{Character scalar for rare buckets when \code{low.freq.policy = "pure"}.}
 
 \item{verbose}{Logical. If TRUE, print progress information.}
+
+\item{backend}{Character. Matrix backend to use: \code{"auto"},
+\code{"dense"}, or \code{"sparse"}. The default \code{"auto"} inherits the
+backend from \code{M} or from \code{refined} when available.}
 }
 \value{
 Updated \code{"linf.csts"} object with \code{cst.depth} increased by one.

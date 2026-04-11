@@ -1,0 +1,103 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{setspace}
+\setstretch{1.1}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcommand{\taxon}[1]{\emph{#1}}
+\newcommand{\dcstsep}{/\allowbreak}
+\title{Supplementary Materials\\Dominant Community State Types Reveal Disease-Associated Dominance Patterns in the Human Gut Microbiome}
+\author{Pawel Gajer and Jacques Ravel}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section*{Supplementary Methods}
+
+Outcome flags in the AGP discovery cohort were derived directly from the
+\texttt{Phenotype} metadata field by fixed substring matching. The focal
+outcomes used in the main manuscript were IBS (\texttt{irritable bowel
+syndrome}), IBD (\texttt{inflammatory bowel disease}), autoimmune disease
+(\texttt{autoimmune}), acid reflux (\texttt{acid reflux}), and seasonal
+allergies (\texttt{seasonal allergies}). Samples without the focal phrase
+served as controls for that outcome. These outcome flags were therefore
+not mutually exclusive across the discovery cohort.
+
+The adjusted frequentist label-level analyses used logistic regression
+with age, sex, and BMI as covariates. The adjusted Bayesian follow-up
+used \texttt{arm::bayesglm} with the same covariate structure and the
+package's default weakly informative prior. For each label we summarize
+the adjusted Bayesian fit by the exponentiated coefficient estimate, an
+approximate 95\% credible interval based on the posterior standard
+error, and the posterior probability that the label coefficient exceeds
+0. Unadjusted Bayesian prevalence contrasts were estimated separately
+with a beta-binomial model using a Jeffreys prior,
+\(\mathrm{Beta}(0.5,0.5)\).
+
+\section*{Supplementary Tables}
+
+\noindent\textbf{Supplementary Table S1.} Focal phenotype definitions and
+analysis sample sizes in the AGP absorb discovery cohort.
+
+\begin{center}
+\footnotesize
+\begin{tabularx}{\textwidth}{@{} l Y r r r r @{}}
+\toprule
+Phenotype & AGP metadata phrase used for case coding & Cases & Controls & Complete-case cases & Complete-case controls \\
+\midrule
+IBS & \texttt{irritable bowel syndrome} & 3,105 & 27,185 & 2,551 & 20,647 \\
+IBD & \texttt{inflammatory bowel disease} & 1,166 & 29,124 & 993 & 22,205 \\
+Autoimmune disease & \texttt{autoimmune} & 2,872 & 27,418 & 2,426 & 20,772 \\
+Acid reflux & \texttt{acid reflux} & 2,859 & 27,431 & 2,279 & 20,919 \\
+Seasonal allergies & \texttt{seasonal allergies} & 9,493 & 20,797 & 8,284 & 14,914 \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\newpage
+
+\noindent\textbf{Supplementary Table S2.} Growth of the absorb hierarchy and
+divergence from the pure hierarchy.
+
+\begin{center}
+\footnotesize
+\begin{tabularx}{\textwidth}{@{} r r r r Y r r @{}}
+\toprule
+Depth & \(n_0\) & Named states & Median size & Largest state (size) & Assignments changed & Changed (\%) \\
+\midrule
+1 & 50 & 40 & 182 & \taxon{Bacteroides} (10,599) & 1,162 & 3.8 \\
+2 & 25 & 153 & 88 & \shortstack[l]{\taxon{Escherichia-Shigella}\dcstsep\\\taxon{Bacteroides} (3,728)} & 5,593 & 18.5 \\
+3 & 12 & 479 & 39 & \shortstack[l]{\taxon{Bacteroides}\dcstsep\taxon{Faecalibacterium}\dcstsep\\Lachnospiraceae (1,278)} & 15,747 & 52.0 \\
+4 & 10 & 744 & 33 & \shortstack[l]{Eukaryota\dcstsep Unassigned\dcstsep\\Bacteria\dcstsep Mitochondria (332)} & 21,699 & 71.6 \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\bigskip
+
+\noindent\textbf{Supplementary Table S3.} Selected IBD absorb lineages
+highlighting agreement between frequentist and Bayesian follow-up.
+
+\begin{center}
+\footnotesize
+\begin{tabularx}{\textwidth}{@{} Y r r Y Y @{}}
+\toprule
+Label & Depth & \(n\) & Frequentist adjusted OR (95\% CI) & Bayesian adjusted OR (95\% CrI) \\
+\midrule
+\taxon{Bacteroides} & 1 & 10,599 & 1.54 (1.36--1.76) & 1.54 (1.36--1.76) \\
+Enterobacterales & 1 & 103 & 3.23 (1.73--6.04) & 3.13 (1.68--5.84) \\
+\taxon{Morganella} & 1 & 56 & not estimable & 18.99 (10.15--35.53) \\
+\taxon{Proteus} & 1 & 51 & not estimable & 3.40 (1.40--8.27) \\
+\taxon{Bacteroides}\dcstsep Lachnospiraceae & 2 & 1,643 & 3.21 (2.67--3.86) & 3.20 (2.66--3.85) \\
+\taxon{Bacteroides}\dcstsep Lachnospiraceae\dcstsep\taxon{Alistipes} & 3 & 176 & 8.56 (5.92--12.36) & 8.44 (5.85--12.19) \\
+\taxon{Bacteroides}\dcstsep Lachnospiraceae\dcstsep\taxon{Alistipes}\dcstsep\taxon{Faecalibacterium} & 4 & 89 & 5.53 (3.10--9.87) & 5.36 (3.01--9.55) \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\end{document}

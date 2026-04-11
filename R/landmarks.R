@@ -37,7 +37,7 @@ resolve.linf.landmark.view <- function(csts,
                                        view = c("active", "rare", "absorb")) {
   view <- match.arg(view)
   if (view == "active") {
-    return(csts$low.freq.policy %||% "active")
+    return(linf.active.low.freq.view(csts$low.freq.policy %||% "active"))
   }
   view
 }
@@ -149,6 +149,9 @@ empty.linf.landmark.rows <- function() {
 #'   \code{"median.rep"}.
 #' @param tie.method Character. Tie handling for landmark selection:
 #'   \code{"first"}, \code{"random"}, or \code{"error"}.
+#' @param backend Character. Matrix backend to use: \code{"auto"},
+#'   \code{"dense"}, or \code{"sparse"}. The default \code{"auto"} preserves
+#'   sparse input and otherwise uses the dense path.
 #'
 #' @return A list of class \code{"linf.landmarks"} with components:
 #' \itemize{
@@ -167,21 +170,21 @@ linf.landmarks <- function(M,
                                               "endpoint.min",
                                               "mean.rep",
                                               "median.rep"),
-                           tie.method = c("first", "random", "error")) {
+                           tie.method = c("first", "random", "error"),
+                           backend = c("auto", "dense", "sparse")) {
   validate.linf.csts(csts)
 
   view <- match.arg(view)
   tie.method <- match.arg(tie.method)
   landmark.types <- match.arg(landmark.types, several.ok = TRUE)
-
-  X <- as.matrix(M)
-  storage.mode(X) <- "numeric"
-
-  if (any(!is.finite(X))) stop("linf.landmarks: non-finite entries found")
-  if (any(X < 0, na.rm = TRUE)) stop("linf.landmarks: negative entries found")
-  if (nrow(X) == 0L || ncol(X) == 0L) {
-    stop("linf.landmarks: matrix has zero rows or columns")
+  if (missing(backend) && !is.null(csts$matrix.backend)) {
+    backend <- csts$matrix.backend
   }
+
+  prep <- linf.prepare.matrix(M, backend = backend, fun.name = "linf.landmarks")
+  X <- prep$X
+  backend <- prep$backend
+  linf.validate.matrix(X, backend = backend, fun.name = "linf.landmarks")
   if (nrow(X) != length(csts$cell.label)) {
     stop("linf.landmarks: nrow(M) must match the number of samples in csts")
   }
@@ -251,7 +254,7 @@ linf.landmarks <- function(M,
 
     if (!isTRUE(target$computable)) next
 
-    vals <- X[members, target$index]
+    vals <- as.numeric(X[members, target$index, drop = FALSE])
 
     for (landmark.type in landmark.types) {
       if (landmark.type == "endpoint.max") {

@@ -17,7 +17,7 @@ test_that("linf.dcst.landmark.pipeline returns the expected object bundle", {
     n0.depth1 = 2,
     n0.depth2 = 2,
     refinement.factor = 2,
-    low.freq.policy = "rare",
+    low.freq.policy = "pure",
     landmark.view = "absorb",
     verbose = FALSE
   )
@@ -54,7 +54,7 @@ test_that("linf.dcst.landmark.pipeline computes landmark tables for both depths"
     n0.depth1 = 2,
     n0.depth2 = 2,
     refinement.factor = 2,
-    low.freq.policy = "rare",
+    low.freq.policy = "pure",
     landmark.view = "absorb",
     depth1.landmark.types = c("endpoint.max", "mean.rep"),
     depth2.landmark.types = c("endpoint.max", "median.rep"),
@@ -71,7 +71,7 @@ test_that("linf.dcst.landmark.pipeline computes landmark tables for both depths"
   expect_equal(sort(unique(out$landmarks.depth2$landmarks$landmark.type)), c("endpoint.max", "median.rep"))
 })
 
-test_that("linf.dcst.landmark.pipeline respects absorb landmark views under rare policy", {
+test_that("linf.dcst.landmark.pipeline respects absorb landmark views under pure policy", {
   A <- matrix(c(5, 1, 0), nrow = 6, ncol = 3, byrow = TRUE)
   B <- matrix(c(1, 5, 0), nrow = 2, ncol = 3, byrow = TRUE)
   C <- matrix(c(1, 0, 5), nrow = 2, ncol = 3, byrow = TRUE)
@@ -84,14 +84,14 @@ test_that("linf.dcst.landmark.pipeline respects absorb landmark views under rare
     n0.depth1 = 5,
     n0.depth2 = 3,
     refinement.factor = 2,
-    low.freq.policy = "rare",
+    low.freq.policy = "pure",
     landmark.view = "absorb",
     depth1.landmark.types = "endpoint.max",
     depth2.landmark.types = "endpoint.max",
     verbose = FALSE
   )
 
-  expect_identical(out$dcst.depth1$low.freq.policy, "rare")
+  expect_identical(out$dcst.depth1$low.freq.policy, "pure")
   expect_identical(out$landmarks.depth1$view, "absorb")
   expect_identical(out$landmarks.depth2$view, "absorb")
   expect_false(any(out$landmarks.depth1$cells$cell.id == out$dcst.depth1$rare.label))
@@ -117,7 +117,7 @@ test_that("linf.dcst.landmark.pipeline carries feature ids and labels into landm
     n0.depth1 = 2,
     n0.depth2 = 2,
     refinement.factor = 2,
-    low.freq.policy = "rare",
+    low.freq.policy = "pure",
     landmark.view = "absorb",
     depth1.landmark.types = "endpoint.max",
     depth2.landmark.types = "endpoint.max",
