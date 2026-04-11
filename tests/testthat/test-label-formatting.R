@@ -61,7 +61,7 @@ test_that("refine.linf.csts tracks id paths separately from label paths", {
     feature.ids = ids,
     feature.labels = labels,
     n0 = 2,
-    low.freq.policy = "rare"
+    low.freq.policy = "pure"
   )
   d2 <- refine.linf.csts(
     M,
@@ -69,7 +69,7 @@ test_that("refine.linf.csts tracks id paths separately from label paths", {
     n0 = 1,
     refinement.factor = 2,
     sep = "__",
-    low.freq.policy = "rare",
+    low.freq.policy = "pure",
     verbose = FALSE
   )
 
@@ -101,7 +101,7 @@ test_that("refine.linf.csts skips refinement of the synthetic rare bucket", {
     feature.ids = ids,
     feature.labels = labels,
     n0 = 2,
-    low.freq.policy = "rare"
+    low.freq.policy = "pure"
   )
 
   expect_equal(sum(d1$cell.id == d1$rare.label), 4L)
@@ -112,7 +112,7 @@ test_that("refine.linf.csts skips refinement of the synthetic rare bucket", {
     n0 = 2,
     refinement.factor = 2,
     sep = "__",
-    low.freq.policy = "rare",
+    low.freq.policy = "pure",
     verbose = FALSE
   )
 

@@ -9,13 +9,14 @@ linf.csts(
   feature.ids = NULL,
   feature.labels = NULL,
   n0 = 50,
-  low.freq.policy = c("rare", "absorb"),
+  low.freq.policy = c("pure", "absorb"),
   rare.label = "RARE_DOMINANT",
   tie.method = c("first", "random", "error"),
   return.diagnostics = FALSE,
   return.landmarks = FALSE,
   landmark.types = c("endpoint.max", "endpoint.min"),
-  landmark.view = c("active", "rare", "absorb")
+  landmark.view = c("active", "rare", "absorb"),
+  backend = c("auto", "dense", "sparse")
 )
 }
 \arguments{
@@ -29,10 +30,11 @@ length \code{ncol(S)}.}
 
 \item{n0}{Integer >= 1. Minimum size for a cell to be kept.}
 
-\item{low.freq.policy}{Character. One of \code{"rare"} or \code{"absorb"}.
-Default: \code{"rare"}.}
+\item{low.freq.policy}{Character. One of \code{"pure"} or \code{"absorb"}.
+Default: \code{"pure"}. The legacy value \code{"rare"} is still accepted as
+a deprecated alias for \code{"pure"}.}
 
-\item{rare.label}{Character scalar used when \code{low.freq.policy = "rare"}.
+\item{rare.label}{Character scalar used when \code{low.freq.policy = "pure"}.
 Default: \code{"RARE_DOMINANT"}.}
 
 \item{tie.method}{Character. Tie handling passed to \code{linf.cells()} and used
@@ -48,6 +50,10 @@ computed by \code{\link{linf.landmarks}}.}
 
 \item{landmark.view}{Character. Landmark view passed to
 \code{\link{linf.landmarks}} when \code{return.landmarks = TRUE}.}
+
+\item{backend}{Character. Matrix backend to use: \code{"auto"},
+\code{"dense"}, or \code{"sparse"}. The default \code{"auto"} preserves
+sparse input and otherwise uses the dense path.}
 }
 \value{
 List with:
@@ -69,7 +75,8 @@ Computes L-infinity cells (dominant feature per sample) and then applies a
 minimum size threshold \code{n0}. Cells with fewer than \code{n0} samples are
 handled according to \code{low.freq.policy}:
 \itemize{
-\item \code{"rare"}: collapse all low-frequency cells into \code{rare.label}.
+\item \code{"pure"}: keep only cells with size >= \code{n0} as named CSTs and
+collapse all low-frequency cells into \code{rare.label}.
 \item \code{"absorb"}: reassign each low-frequency sample to the kept cell
 with the largest value among the kept set (ties handled by \code{tie.method}).
 }

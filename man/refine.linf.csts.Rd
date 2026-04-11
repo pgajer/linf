@@ -10,9 +10,10 @@ refine.linf.csts(
   n0 = 50,
   refinement.factor = 2,
   sep = "__",
-  low.freq.policy = c("rare", "absorb"),
+  low.freq.policy = c("pure", "absorb"),
   rare.label = "RARE_DOMINANT",
-  verbose = TRUE
+  verbose = TRUE,
+  backend = c("auto", "dense", "sparse")
 )
 }
 \arguments{
@@ -27,11 +28,17 @@ should match feature labels used in CST names.}
 
 \item{sep}{Character scalar used to concatenate hierarchical labels.}
 
-\item{low.freq.policy}{Character. One of \code{"rare"} or \code{"absorb"}. Default: \code{"rare"}.}
+\item{low.freq.policy}{Character. One of \code{"pure"} or \code{"absorb"}.
+Default: \code{"pure"}. The legacy value \code{"rare"} is still accepted as
+a deprecated alias for \code{"pure"}.}
 
-\item{rare.label}{Character scalar for rare buckets when \code{low.freq.policy = "rare"}.}
+\item{rare.label}{Character scalar for rare buckets when \code{low.freq.policy = "pure"}.}
 
 \item{verbose}{Logical. If TRUE, print progress information.}
+
+\item{backend}{Character. Matrix backend to use: \code{"auto"},
+\code{"dense"}, or \code{"sparse"}. The default \code{"auto"} inherits the
+backend from \code{M} or from \code{csts} when available.}
 }
 \value{
 Updated \code{"linf.csts"} object with \code{cst.depth} increased by one and
@@ -45,6 +52,6 @@ the remaining features. The resulting child labels are appended to the parent
 label using \code{sep}.
 
 Low-frequency child cells are handled by \code{low.freq.policy}. When
-\code{low.freq.policy = "rare"}, rare buckets at depth >= 2 become
+\code{low.freq.policy = "pure"}, rare buckets at depth >= 2 become
 parent-prefixed automatically via the hierarchical \code{paste(parent, child, sep = sep)}.
 }
