@@ -14,14 +14,14 @@ BUILD_INFO_TEX="$BUILD_DIR/manuscript_build_info.tex"
 escape_for_tex() {
   local s="$1"
   s=${s//_/\\_}
-  print -r -- "$s"
+  printf '%s\n' "$s"
 }
 
 mkdir -p "$BUILD_DIR"
 
-GIT_VERSION="$(git -C "$REPO_DIR" describe --tags --always --dirty 2>/dev/null || print 'unversioned')"
-GIT_BUILD_NUMBER="$(git -C "$REPO_DIR" rev-list --count HEAD 2>/dev/null || print 'NA')"
-GIT_COMMIT="$(git -C "$REPO_DIR" rev-parse --short HEAD 2>/dev/null || print 'unknown')"
+GIT_VERSION="$(git -C "$REPO_DIR" describe --tags --always --dirty 2>/dev/null || printf '%s\n' 'unversioned')"
+GIT_BUILD_NUMBER="$(git -C "$REPO_DIR" rev-list --count HEAD 2>/dev/null || printf '%s\n' 'NA')"
+GIT_COMMIT="$(git -C "$REPO_DIR" rev-parse --short HEAD 2>/dev/null || printf '%s\n' 'unknown')"
 BUILD_DATETIME="$(date '+%Y-%m-%d %H:%M:%S %Z')"
 
 cat > "$BUILD_INFO_TEX" <<EOF
@@ -41,4 +41,4 @@ cd "$MANUSCRIPT_DIR"
   -outdir="$BUILD_DIR" \
   "$INPUT_TEX"
 
-print "$OUTPUT_PDF"
+printf '%s\n' "$OUTPUT_PDF"
