@@ -181,12 +181,8 @@ contained 40 absorb states at depth 1, 153 at depth 2, 479 at depth 3,
 and 744 at depth 4. We first screened phenotype-by-depth tables with
 adaptive Fisher exact tests and then used both conventional and
 Bayesian follow-up models to estimate state-specific enrichment or
-depletion. Corresponding pure dCST association screens were retained as
-supplementary reference analyses rather than developed in parallel in
-the main text. In the discovery cohort, the clearest and most
-biologically coherent branches were IBD, IBS, autoimmune disease, and
-two additional non-IBD examples:
-acid reflux and seasonal allergies. IBD showed the strongest structure,
+depletion. The strongest and most biologically coherent branch was IBD,
+and the main text therefore centers on inflammatory phenotypes. IBD showed the strongest structure,
 with a broad \taxon{Bacteroides} signal at depth 1 and progressively
 stronger \taxon{Bacteroides}-centered lineages at depths 2 to 4; the
 Bayesian analysis also highlighted rare enterobacterial states such as
@@ -194,12 +190,8 @@ Bayesian analysis also highlighted rare enterobacterial states such as
 \taxon{Escherichia-Shigella}-centered pattern together with depletion of
 \taxon{Faecalibacterium}- and \taxon{Prevotella\_9}-linked states.
 Autoimmune disease showed a parallel inflammatory pattern centered on
-\taxon{Bacteroides} and its deeper lineages. Acid reflux showed a
-\taxon{Bacteroides}-centered branch enriched for
-\taxon{Parabacteroides}- and \taxon{Alistipes}-linked lineages, whereas
-seasonal allergies showed depletion of \taxon{Prevotella\_9}-linked
-backgrounds together with enrichment of enterobacterial lineages. Across
-these phenotype branches, Bayesian estimates closely tracked the
+\taxon{Bacteroides} and its deeper lineages. Across the main-text
+phenotype branches, Bayesian estimates closely tracked the
 conventional adjusted odds ratios while remaining informative for rarer
 deeper states. External validation then separated framework
 reproducibility from exact label portability: Halfvarson 2017 supported
@@ -210,7 +202,8 @@ explicit case coding. Together, these results support absorb DCSTs as a
 practical, biologist-readable framework for large-scale microbiome
 association screens while indicating that exact label transfer remains
 strongest in selected inflammatory cohorts rather than universal across
-all settings.
+all settings. Additional non-IBD branches are summarized in the
+supplement as exploratory extensions of the main inflammatory story.
 
 \textbf{Keywords:} gut microbiome; community typing; dominant-community
 state types; American Gut Project; inflammatory bowel disease; Bayesian
@@ -272,9 +265,9 @@ In this study we use the
 dominance patterns into larger named states rather than pooling them
 into one catch-all rare category, and we complement standard
 association tests with Bayesian models that remain informative for
-rarer deeper states. The corresponding pure dCST association analyses
-are retained as supplementary reference results rather than carried as a
-second full results stream in the main text.
+rarer deeper states. Pure dCST results are used only as a baseline
+comparison in the supplement rather than as a second main-text results
+stream.
 
 \begin{figure}
 \centering
@@ -337,11 +330,10 @@ for depths 2 through 6, respectively. Depths 1 through 4 are treated as
 the primary results in this manuscript, with deeper levels used mainly
 to judge whether the hierarchy remained structured.
 
-The pure dCST hierarchy without absorption was retained as a baseline
-reference analysis, but its phenotype-association screens are treated as
-supplementary results. The main inferential workflow reported here is
-therefore absorb based from the cohort overview through the
-phenotype-specific follow-up.
+The pure dCST hierarchy without absorption served as a baseline
+comparison and is summarized in the supplement. The inferential workflow
+reported here is therefore absorb based from the cohort overview
+through phenotype-specific follow-up.
 
 To ask whether a phenotype was associated with the overall absorb-state
 distribution at a given depth, we first applied Fisher's exact test to
@@ -349,9 +341,8 @@ the phenotype-by-state table for that depth. We screened panels with
 10,000 Monte Carlo draws and reran the strongest panels with 100,000
 draws to obtain finer p-value resolution. We summarize the magnitude of
 these depth-level associations with Cramer's V. We then performed
-label-level follow-up in two parallel ways for the phenotype branches
-emphasized in this manuscript: IBD, IBS, autoimmune disease, acid
-reflux, and seasonal allergies. The conventional analysis used Fisher
+label-level follow-up in two parallel ways for IBD, IBS, autoimmune
+disease, acid reflux, and seasonal allergies. The conventional analysis used Fisher
 tests and logistic regression adjusted for age, sex, and BMI. The
 Bayesian analysis used two complementary models. For unadjusted
 label-level contrasts we used a beta-binomial prevalence model with a
@@ -367,10 +358,10 @@ summarized by the exponentiated coefficient estimate, an approximate
 analyses was controlled with the Benjamini-Hochberg procedure
 (\citeproc{ref-BenjaminiHochberg1995}{Benjamini and Hochberg 1995}).
 
-The analyses reported here emphasize the phenotype branches that
-combined the clearest absorb-hierarchy structure with stable Bayesian
-follow-up: IBD, IBS, autoimmune disease, acid reflux, and seasonal
-allergies. External validation was then carried forward in two
+The results presented in detail here are the branches that combined the
+clearest absorb-hierarchy structure with stable Bayesian follow-up: IBD,
+IBS, and autoimmune disease. Additional non-IBD branches are summarized
+in the supplement. External validation was evaluated in two
 complementary ways. In rebuilt-cohort validation, each external matrix
 was filtered and analyzed independently with the same absorb workflow
 used for the discovery cohort. In frozen-transfer validation, external
@@ -396,126 +387,37 @@ The largest depth-1 states were \taxon{Bacteroides} (10,599 samples),
 \taxon{Escherichia-Shigella} (6,913), \taxon{Prevotella\_9} (1,926),
 Enterobacteriaceae (1,596), and \taxon{Faecalibacterium} (1,405). The
 twelve most common depth-1 absorb states covered 87.3\% of the cohort
-(Table 1), so even after the low-frequency samples were merged into
+(Supplementary Table S5), so even after the low-frequency samples were merged into
 named states the cohort was still dominated by a limited number of
 recurrent ecological configurations.
 
 Relative to the pure hierarchy, only 3.8\% of depth-1 assignments
 changed, but the difference became much more important with increasing
 depth: 18.5\% of samples were reassigned at depth 2, 52.0\% at depth 3,
-and 71.6\% at depth 4. We therefore treat the pure dCST association
-screens as supplementary reference analyses and develop only the absorb
-hierarchy in the main Results. Biologically, this is the level at which
+and 71.6\% at depth 4. Biologically, this is the level at which
 the absorb policy matters most, because deeper low-frequency branches
 are merged into larger named lineages instead of disappearing into a
 residual tail (Supplementary Table S2). Omnibus phenotype-by-depth
 screening showed broad absorb-state structure across the cohort, but the
 most coherent and interpretable depthwise growth in effect size occurred
-in IBD, autoimmune disease, IBS, acid reflux, and seasonal allergies.
+in IBD, autoimmune disease, and IBS, with two additional non-IBD
+examples shown in Figure 2C and summarized in Supplementary Table S6.
 Across depths 1 to 4, Cramer's V increased from 0.11 to 0.35 in IBD,
-from 0.11 to 0.28 in autoimmune disease, from 0.08 to 0.19 in IBS, from
-0.10 to 0.21 in acid reflux, and from 0.10 to 0.20 in seasonal
-allergies. We therefore focused detailed label-level and Bayesian
-follow-up on those five branches.
-
-\begin{table}[H]
-\small
-\caption{Top depth-1 absorb DCSTs in the full AGP cohort.}
-\centering
-\begin{tabular}{@{}lllll@{}}
-\toprule
-Rank & DCST & n & Share (\%) & Cumulative (\%) \\
-\midrule
-1 & \taxon{Bacteroides} & 10599 & 35.0 & 35.0 \\
-2 & \taxon{Escherichia-Shigella} & 6913 & 22.8 & 57.8 \\
-3 & \taxon{Prevotella\_9} & 1926 & 6.4 & 64.2 \\
-4 & Enterobacteriaceae & 1596 & 5.3 & 69.4 \\
-5 & \taxon{Faecalibacterium} & 1405 & 4.6 & 74.1 \\
-6 & \taxon{Streptococcus} & 881 & 2.9 & 77.0 \\
-7 & \taxon{Pseudomonas} & 690 & 2.3 & 79.3 \\
-8 & \taxon{Staphylococcus} & 641 & 2.1 & 81.4 \\
-9 & \taxon{Prevotella\_7} & 498 & 1.6 & 83.0 \\
-10 & Lachnospiraceae & 480 & 1.6 & 84.6 \\
-11 & Unassigned & 464 & 1.5 & 86.1 \\
-12 & \taxon{Akkermansia} & 348 & 1.1 & 87.3 \\
-\bottomrule
-\end{tabular}
-\end{table}
+from 0.11 to 0.28 in autoimmune disease, and from 0.08 to 0.19 in IBS.
+We therefore focus detailed follow-up on those three branches in the
+main manuscript.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.98\linewidth,height=\textheight,keepaspectratio,alt={Absorb overview figure. Panel A shows the ten largest depth-1 absorb states in the AGP cohort. Panel B shows growth in the number of named absorb states across depths 1 to 6 together with the fraction of assignments that change relative to the pure hierarchy. Panel C shows Cramer's V across depths 1 to 4 for IBD, autoimmune disease, IBS, acid reflux, and seasonal allergies.}]{../assets/figures/FIGURE_2_absorb_overview.png}
-\caption{Overview of the absorb hierarchy in the AGP discovery cohort. Panel A shows the largest named depth-1 absorb states. Panel B shows how the hierarchy expands from depth 1 to depth 6 together with the fraction of samples whose assignments differ from the pure hierarchy. Panel C shows the depthwise omnibus effect size, summarized by Cramer's V, for the five phenotype branches carried forward to label-level follow-up.}
+\caption{Overview of the absorb hierarchy in the AGP discovery cohort. Panel A shows the largest named depth-1 absorb states. Panel B shows how the hierarchy expands from depth 1 to depth 6 together with the fraction of samples whose assignments differ from the pure hierarchy. Panel C shows the depthwise omnibus effect size, summarized by Cramer's V, for the three main-text phenotype branches together with two supplementary non-IBD examples.}
 \end{figure}
-
-\begin{table}[H]
-\scriptsize
-\caption{Selected absorb follow-up summary for the phenotype branches emphasized in the main text.}
-\centering
-\begin{tabularx}{\textwidth}{@{} l Y Y Y @{}}
-\toprule
-Phenotype & Strongest depth-1 adjusted signal & Strongest deeper adjusted signal & Bayesian value added \\
-\midrule
-IBS & \taxon{Escherichia-Shigella} enriched (adjusted OR 1.24, q = 0.002) & \taxon{Escherichia-Shigella}\dcstsep\taxon{Bacteroides}\dcstsep Lachnospiraceae enriched at depth 3 (adjusted OR 1.78, q = 0.018) & Bayesian models retained support for several depth-4 lineages even when q-values no longer crossed 0.05. \\
-IBD & \taxon{Bacteroides} enriched (adjusted OR 1.54, q = 8.1e-10) & \taxon{Bacteroides}\dcstsep Lachnospiraceae\dcstsep\taxon{Alistipes} enriched at depth 3 (adjusted OR 8.56, q = 1.5e-28) & Bayesian models highlighted rare enterobacterial states, especially \taxon{Morganella}, that were too small for the conservative adjusted screen. \\
-Autoimmune & \taxon{Bacteroides} enriched (adjusted OR 1.40, q = 1.6e-12) & \taxon{Bacteroides}\dcstsep Lachnospiraceae\dcstsep\taxon{Alistipes} enriched at depth 3 (adjusted OR 5.52, q = 3.9e-21) & Bayesian models supported additional depth-4 \taxon{Bacteroides}-centered lineages beyond the frequentist q-significant set. \\
-Acid reflux & \taxon{Bacteroides} enriched (adjusted OR 1.28, q = 1.75e-05) & \taxon{Bacteroides}\dcstsep\taxon{Parabacteroides}\dcstsep Lachnospiraceae enriched at depth 3 (adjusted OR 2.64, q = 0.00419) & Bayesian models retained support for numerous depth-4 \taxon{Bacteroides}-centered reflux lineages after the frequentist signal thinned. \\
-Seasonal allergies & \taxon{Prevotella\_9} depleted (adjusted OR 0.67, q = 2.77e-08) & \taxon{Escherichia-Shigella}\dcstsep\taxon{Bacteroides} enriched at depth 2 (adjusted OR 1.24, q = 7.42e-06) & Bayesian models clarified the paired pattern of depleted \taxon{Prevotella}-linked states and enriched enterobacterial lineages at depths 3 and 4. \\
-\bottomrule
-\end{tabularx}
-\end{table}
 
 The phenotype-wide absorb screen remained broad, with strong omnibus
 signal across many outcomes at depths 1 through 4. We focus detailed
-label-level interpretation on IBS, IBD, autoimmune disease, acid
-reflux, and seasonal allergies because these branches combined clear
-depthwise growth in effect size with the most stable frequentist and
-Bayesian lineage-level estimates. Full pure dCST-CT association screens
-are not repeated here; they are retained as supplementary reference
-analyses.
-
-\subsection{Irritable bowel syndrome
-(IBS)}\label{irritable-bowel-syndrome-ibs}
-
-
-IBS is a functional gastrointestinal disorder in which the gut
-microbiota has been implicated through immune signaling, short-chain
-fatty acid production, and the microbiota-gut-brain axis
-(\citeproc{ref-Pittayanon2019_IBS}{Pittayanon et al. 2019};
-\citeproc{ref-Dinan2015_IBS}{Dinan and Cryan 2015};
-\citeproc{ref-Cryan2012_gutbrain}{Cryan and Dinan 2012}). Because many
-IBS signatures are subtle rather than catastrophically dysbiotic, it is
-a useful test of whether dominant-state labels retain signal in a noisy
-population cohort.
-
-The absorb hierarchy preserved a moderate but internally consistent IBS
-signal. At depth 1, \taxon{Escherichia-Shigella} was enriched in IBS
-(adjusted OR 1.24, q = 0.002), while \taxon{Staphylococcus},
-\taxon{Faecalibacterium}, and \taxon{Prevotella\_9} were depleted
-(adjusted ORs 0.41, 0.66, and 0.70, respectively). At depth 2, two
-\taxon{Escherichia-Shigella}/\taxon{Bacteroides}-centered states
-remained significant: \taxon{Bacteroides}/\taxon{Escherichia-Shigella}
-(adjusted OR 1.47, q = 0.0046) and
-\taxon{Escherichia-Shigella}/\taxon{Bacteroides} (adjusted OR 1.22, q =
-0.031). By depth 3, the clearest surviving frequentist signal was a
-\taxon{Escherichia-Shigella}/\taxon{Bacteroides}/Lachnospiraceae
-lineage (adjusted OR 1.78, q = 0.018).
-
-The Bayesian follow-up told the same ecological story in a way that was
-easier to read for smaller deeper states. In practical terms, the
-Bayesian model assigns each state a probability of being enriched or
-depleted in cases after accounting for age, sex, and BMI. For IBS, the
-posterior support remained very strong for depletion of
-\taxon{Faecalibacterium}- and \taxon{Prevotella\_9}-linked states and
-for enrichment of several deeper
-\taxon{Escherichia-Shigella}/\taxon{Bacteroides}/Lachnospiraceae
-lineages even after the frequentist q-values became sparse at depth 4.
-Biologically, the absorb IBS branch therefore reads as a relatively mild
-but coherent shift toward enterobacterial dominance together with loss
-of butyrate-associated and \taxon{Prevotella}-associated backgrounds,
-which is compatible with the current IBS literature
-(\citeproc{ref-Pittayanon2019_IBS}{Pittayanon et al. 2019};
-\citeproc{ref-Tap2017_IBS}{Tap et al. 2017}).
+label-level interpretation on IBD, IBS, and autoimmune disease because
+these branches combined clear depthwise growth in effect size with the
+most stable frequentist and Bayesian lineage-level estimates.
 
 \subsection{Inflammatory bowel disease
 (IBD)}\label{inflammatory-bowel-disease-ibd}
@@ -641,6 +543,39 @@ compresses that pattern into an interpretable hierarchy: a broad
 \taxon{Bacteroides}-centered lineages at greater depth, and a small set
 of rare enterobacterial states marking more severe dysbiosis.
 
+\subsection{Irritable bowel syndrome
+(IBS)}\label{irritable-bowel-syndrome-ibs}
+
+
+IBS provides a useful secondary test of the framework because its gut
+microbiome signal is typically subtler than in overt inflammatory bowel
+disease
+(\citeproc{ref-Pittayanon2019_IBS}{Pittayanon et al. 2019};
+\citeproc{ref-Dinan2015_IBS}{Dinan and Cryan 2015};
+\citeproc{ref-Cryan2012_gutbrain}{Cryan and Dinan 2012}). In the absorb
+hierarchy, IBS showed a moderate but internally consistent shift toward
+enterobacterial dominance. At depth 1,
+\taxon{Escherichia-Shigella} was enriched in IBS (adjusted OR 1.24, q =
+0.002), while \taxon{Staphylococcus}, \taxon{Faecalibacterium}, and
+\taxon{Prevotella\_9} were depleted. At depth 2, two
+\taxon{Escherichia-Shigella}/\taxon{Bacteroides}-centered states
+remained significant, and by depth 3 the clearest surviving frequentist
+signal was an
+\taxon{Escherichia-Shigella}/\taxon{Bacteroides}/Lachnospiraceae
+lineage (adjusted OR 1.78, q = 0.018).
+
+The Bayesian follow-up preserved the same ecological pattern at greater
+depth, with strong posterior support for depletion of
+\taxon{Faecalibacterium}- and \taxon{Prevotella\_9}-linked states and
+for enrichment of deeper
+\taxon{Escherichia-Shigella}/\taxon{Bacteroides}/Lachnospiraceae
+lineages even when the frequentist q-values became sparse. Biologically,
+the IBS branch therefore reads as a milder version of inflammatory
+dominance shift rather than as a fully distinct ecological program,
+which is compatible with the current IBS literature
+(\citeproc{ref-Pittayanon2019_IBS}{Pittayanon et al. 2019};
+\citeproc{ref-Tap2017_IBS}{Tap et al. 2017}).
+
 \subsection{Autoimmune diseases}\label{autoimmune-diseases}
 
 
@@ -691,140 +626,23 @@ causal autoimmune taxon
 \citeproc{ref-Atarashi2013_Clostridia_Treg}{Atarashi et al. 2013};
 \citeproc{ref-DeLuca2019_autoimmune}{De Luca and Shoenfeld 2019}).
 
-\subsection{Acid reflux}\label{acid-reflux}
-
-Acid reflux was the clearest additional gastrointestinal branch beyond
-IBS and IBD. Although reflux is not usually framed as a gut-microbiome
-phenotype in the same way as inflammatory bowel disease, recent work
-suggests that altered oral and upper-gastrointestinal microbial
-communities may be linked to esophageal mucosal disease and reflux-like
-syndromes
-(\citeproc{ref-DeSouza2021_GERD}{D'Souza et al. 2021};
-\citeproc{ref-Deshpande2018_esophageal}{Deshpande et al. 2018};
-\citeproc{ref-Wang2024_GERD_MR}{K. Wang et al. 2024}). In the AGP
-screen, the absorb hierarchy recovered a reproducible reflux-associated
-branch that was broader and deeper than would have been obvious from the
-depth-1 labels alone.
-
-At depth 1, acid reflux was associated with enrichment of
-\taxon{Bacteroides} (adjusted OR 1.28, q = 1.75e-05) together with
-depletion of \taxon{Streptococcus} (adjusted OR 0.45, q = 0.00419) and
-\taxon{Staphylococcus} (adjusted OR 0.42, q = 0.0205). At depth 2, the
-signal sharpened into several \taxon{Bacteroides}-centered states:
-\taxon{Bacteroides}\dcstsep\taxon{Parabacteroides} reached adjusted OR 1.96
-(q = 0.000447), \taxon{Prevotella\_9}/\taxon{Bacteroides} reached
-adjusted OR 1.50 (q = 0.0254), and
-\taxon{Bacteroides}\dcstsep\taxon{Alistipes} reached adjusted OR 1.47
-(q = 0.0254). By depth 3, the clearest lineages were
-\taxon{Bacteroides}\dcstsep\taxon{Parabacteroides}\dcstsep Lachnospiraceae (adjusted OR
-2.64, q = 0.00419),
-\taxon{Bacteroides}\dcstsep\taxon{Parabacteroides}\dcstsep\taxon{Alistipes}
-(adjusted OR 2.57, q = 0.00419), and
-\taxon{Bacteroides}\dcstsep Lachnospiraceae\dcstsep\taxon{Parabacteroides}
-(adjusted OR 2.58, q = 0.0254). Two depth-4 descendants remained
-significant after adjustment, including
-\taxon{Bacteroides}\dcstsep Lachnospiraceae\dcstsep\taxon{Parabacteroides}\dcstsep\taxon{Faecalibacterium}
-(adjusted OR 2.58, q = 0.0254).
-
-The Bayesian analysis reinforced this as a lineage rather than a
-collection of isolated hits. It retained support for 25 depth-2, 29
-depth-3, and 24 depth-4 acid-reflux states, including several
-\taxon{Bacteroides}-centered descendants that no longer crossed the
-conventional q-value threshold at greater depth. For a biologist, the
-practical message is that the reflux phenotype in this cohort is not
-captured by one dominant taxon. Instead, it is associated with a deeper
-\taxon{Bacteroides}-centered branch enriched for
-\taxon{Parabacteroides}, \taxon{Alistipes}, and related descendants.
-Because reflux symptoms are self-reported and likely influenced by diet,
-medication, and upper-gastrointestinal factors, we interpret this branch
-as hypothesis-generating rather than disease-specific. Even so, it is a
-useful demonstration that the absorb hierarchy can recover coherent
-non-IBD gastrointestinal structure.
-
-\subsection{Seasonal allergies}\label{seasonal-allergies}
-
-Seasonal allergies provide a complementary immune-linked example. The
-allergy literature has repeatedly connected altered gut-community
-development and fiber-associated microbial metabolism with allergic
-disease, and an earlier AGP analysis also reported adult fecal
-microbiome associations with allergy
-(\citeproc{ref-Hua2016_AGP_allergy}{Hua et al. 2016};
-\citeproc{ref-Hoskinson2023_allergy}{Hoskinson et al. 2023};
-\citeproc{ref-Trompette2014_fiber_asthma}{Trompette et al. 2014}).
-Within the absorb hierarchy, the seasonal-allergy branch was weaker than
-IBD or autoimmune disease but still biologically coherent.
-
-At depth 1, the dominant seasonal-allergy signal was depletion of
-\taxon{Prevotella\_9} (adjusted OR 0.67, q = 2.77e-08), accompanied by
-enrichment of \taxon{Escherichia-Shigella} (adjusted OR 1.11,
-q = 0.0404). At depth 2, the strongest enriched state was
-\taxon{Escherichia-Shigella}\dcstsep\taxon{Bacteroides} (adjusted OR 1.24,
-q = 7.42e-06), while two \taxon{Prevotella\_9}-linked states were
-depleted:
-\taxon{Prevotella\_9}\dcstsep\taxon{Bacteroides} (adjusted OR 0.64,
-q = 0.000215) and
-\taxon{Prevotella\_9}\dcstsep\taxon{Faecalibacterium} (adjusted OR 0.64,
-q = 0.0471). The same paired pattern persisted deeper in the hierarchy.
-At depth 3,
-\taxon{Escherichia-Shigella}\dcstsep\taxon{Bacteroides}\dcstsep\taxon{Faecalibacterium}
-was enriched (adjusted OR 1.35, q = 0.0319), whereas
-\taxon{Prevotella\_9}\dcstsep\taxon{Bacteroides}\dcstsep Lachnospiraceae was depleted
-(adjusted OR 0.51, q = 0.0404). At depth 4, the clearest surviving
-signal remained depletion of the
-\taxon{Prevotella\_9}\dcstsep\taxon{Bacteroides}\dcstsep Lachnospiraceae\dcstsep\taxon{Faecalibacterium}
-lineage (adjusted OR 0.51, q = 0.0404).
-
-The Bayesian layer made this branch easier to read by preserving support
-for both sides of the pattern at greater depth. It highlighted 32
-seasonal-allergy states at depth 2 and 33 states at depths 3 and 4 with
-strong posterior support for enrichment or depletion, even though only a
-small subset remained conventionally q-significant. Biologically, the
-seasonal-allergy branch therefore looks like a shift away from
-\taxon{Prevotella}-linked backgrounds and toward more
-enterobacterial lineages. That interpretation is modest, but it is
-consistent with the idea that the absorb hierarchy can recover a
-readable immune-associated ecological axis outside the core
-gastrointestinal disease phenotypes.
-
-\subsection{Remaining phenotypes}\label{other-phenotypes}
-
-The phenotype-wide absorb screen was not limited to the five branches
-developed above. Cardiovascular disease, migraine, lung disease, and
-other outcomes also showed strong depth-level shifts in the omnibus
-screen. Cardiovascular disease was especially notable statistically: it
-produced a strong depth-3 and depth-4
-\taxon{Bacteroides}/\taxon{Agathobacter}/\taxon{Faecalibacterium}-centered
-lineage in the absorb follow-up analyses. We keep that branch out of the
-main text because it is harder to interpret cleanly in a
-self-reported cohort with likely medication, diet, and comorbidity
-confounding. Obesity, by contrast, showed little stable adjusted signal
-and was not prioritized further after the absorb rerun. Supplementary
-analyses carry the phenotype-definition table, the pure-versus-absorb
-depth-change summary, and baseline reference material for the pure dCST
-screens so that the main text can stay centered on the absorb
-hierarchy.
-
 \section{Discussion}\label{general-discussion}
 
-This absorb-based analysis makes two points. First, merging very small
-dominant states into larger named states is not a cosmetic change. At
-depth 1, the absorb and rare views are still fairly close, but at depths
-2 through 4 the absorb policy preserves interpretable named lineages
-instead of sending a growing fraction of samples into one generic rare
-category. Second, a parallel Bayesian layer is useful not because it
-replaces standard testing, but because it keeps the ecological story
+This absorb-based analysis makes two related points. First, merging very
+small dominant states into larger named states is not a cosmetic change.
+At depth 1, the absorb and pure views remain fairly close, but at
+depths 2 through 4 the absorb policy preserves interpretable named
+lineages instead of sending a growing fraction of samples into a
+residual tail. Second, a parallel Bayesian layer is useful not because
+it replaces standard testing, but because it keeps the ecological story
 readable when states become rare. In practice, the frequentist and
-Bayesian analyses agreed closely for the common states, while the
-Bayesian models stayed informative for smaller deeper states such as the
-rare IBD enterobacterial branches. For that reason, we do not present
-pure and absorb dCST association analyses as co-equal main-text result
-streams. The pure hierarchy remains useful as a baseline and is retained
-in the supplementary analyses, but the biologically interpretable story
-developed in this manuscript belongs to the absorb hierarchy.
+Bayesian analyses agreed closely for common states, while the Bayesian
+models stayed informative for smaller deeper states such as the rare IBD
+enterobacterial branches.
 
-Across the five phenotype branches developed here, the biological
-stories are coherent but not equally mature. IBD remains the strongest
-and best-validated inflammatory branch,
+Across the three phenotype branches developed in the main text, the
+biological pattern is coherent. IBD remains the strongest and
+best-validated inflammatory branch,
 anchored by a broad \taxon{Bacteroides} background, a set of deeper
 \taxon{Bacteroides}-centered inflammatory lineages, and rare
 enterobacterial states that likely mark more severe dysbiosis. IBS is
@@ -837,12 +655,9 @@ immune-dysregulation signal even though the AGP autoimmune label is too
 heterogeneous for one disease-specific interpretation. For a biologist,
 the practical message is that absorb DCSTs provide a simple way to name
 recurrent ecological states and then ask whether those states are more
-or less common in cases. The two additional non-IBD examples broaden
-that message. Acid reflux shows that the framework can recover a deeper
-\taxon{Bacteroides}\dcstsep\taxon{Parabacteroides}\dcstsep\taxon{Alistipes}-linked
-branch outside classic inflammatory bowel phenotypes, while seasonal
-allergies show a more modest but still readable shift away from
-\taxon{Prevotella}-linked states and toward enterobacterial lineages.
+or less common in cases. Additional non-IBD branches were also detected,
+but we treat them as supplementary exploratory examples rather than as
+co-equal pillars of the main submission story.
 
 Several limitations remain important. External validation now clarifies
 both the promise and the current boundary of the approach. When
@@ -858,10 +673,11 @@ IBD-focused framework reproducibility, moderate for portability of
 selected AGP-defined inflammatory states, and still limited for broad
 claims about a universally transferable label dictionary. Exact label
 transferability will need broader stool-based validation, especially
-for IBS and the non-IBD branches. AGP phenotypes are also self-reported and cross-sectional, so
+for IBS and any non-IBD extensions of this framework. AGP phenotypes are
+also self-reported and cross-sectional, so
 residual confounding, medication effects, and reverse causation remain
-plausible. Those concerns are especially important for acid reflux and
-cardiometabolic phenotypes. The current evidence nevertheless supports
+plausible. Those concerns are especially important for supplementary
+non-IBD phenotypes. The current evidence nevertheless supports
 the absorb framework as a biologically interpretable analysis layer and
 motivates broader testing of its generalizability in independent
 cohorts.
@@ -879,11 +695,10 @@ analysis strengthens that picture by stabilizing rarer deeper states
 without changing the main biological story. In this setting, absorb
 DCSTs provide a practical way to move from high-dimensional abundance
 tables to sample-level ecological labels that biologists can read and
-compare directly. The added acid-reflux and seasonal-allergy results
-suggest that this framework can also generalize beyond the core
-inflammatory phenotypes when the downstream analysis remains selective,
-biologically grounded, and appropriately cautious about external
-generalization.
+compare directly. Secondary IBS and autoimmune results suggest that the
+same framework can extend beyond the anchor IBD branch, while broader
+non-IBD examples are best treated as supplementary and
+hypothesis-generating until stronger external support is available.
 
 \section{Data and Code
 Availability}\label{data-and-code-availability}

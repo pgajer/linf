@@ -48,6 +48,39 @@ external taxa to the AGP retained-feature dictionary. The first mode
 tests framework reproducibility; the second tests portability of the
 AGP-defined label dictionary itself.
 
+\section*{Supplementary Results}
+
+\noindent\textbf{Acid reflux.} Acid reflux was the clearest additional
+non-IBD gastrointestinal branch in the AGP screen. At depth 1 it was
+associated with enrichment of \taxon{Bacteroides} (adjusted OR 1.28, q
+= 1.75e-05) together with depletion of \taxon{Streptococcus} and
+\taxon{Staphylococcus}. The signal then sharpened into deeper
+\taxon{Bacteroides}-centered lineages enriched for
+\taxon{Parabacteroides} and \taxon{Alistipes}, including
+\taxon{Bacteroides}\dcstsep\taxon{Parabacteroides}\dcstsep Lachnospiraceae
+(adjusted OR 2.64, q = 0.00419). Bayesian follow-up retained support
+for numerous depth-4 descendants after the frequentist signal thinned.
+Because reflux symptoms are self-reported and likely influenced by diet,
+medication, and upper-gastrointestinal factors, we regard this branch as
+hypothesis-generating rather than disease-specific.
+
+\medskip
+
+\noindent\textbf{Seasonal allergies.} Seasonal allergies provided a
+complementary immune-linked example outside the core inflammatory
+phenotypes. The dominant pattern was depletion of
+\taxon{Prevotella\_9}-linked states together with enrichment of
+enterobacterial lineages. At depth 1,
+\taxon{Prevotella\_9} was depleted (adjusted OR 0.67, q = 2.77e-08),
+whereas \taxon{Escherichia-Shigella} was modestly enriched. At depth 2,
+the strongest enriched state was
+\taxon{Escherichia-Shigella}\dcstsep\taxon{Bacteroides} (adjusted OR
+1.24, q = 7.42e-06), while
+\taxon{Prevotella\_9}\dcstsep\taxon{Bacteroides} was depleted (adjusted
+OR 0.64, q = 0.000215). Bayesian follow-up preserved this paired
+pattern at greater depth, but we interpret the branch as exploratory
+rather than as a fully validated disease axis.
+
 \section*{Supplementary Tables}
 
 \noindent\textbf{Supplementary Table S1.} Focal phenotype definitions and
@@ -128,6 +161,53 @@ HMP2 / IBDMDB & IBD vs healthy & \taxon{Bacteroides}\dcstsep\taxon{Faecalibacter
 Gevers 2014 & Crohn vs healthy & \emph{Faecalibacterium prausnitzii} (depth 1, q = 0.305) & \taxon{Bacteroides}\dcstsep\taxon{Dialister} (depth 2, q = 0.972) & 77.8 & Samples map into the hierarchy, but neither rebuilt nor frozen signals survive correction. \\
 PRJEB84421 & OFG vs healthy & \taxon{Faecalibacterium}\dcstsep\taxon{Bacteroides} (depth 2, q = 0.019) & \taxon{Faecalibacterium} (depth 1, q = 0.282) & 81.6 & Supportive rebuilt inflammatory signal without matched frozen transfer. \\
 Jacobs 2023 IBS 250bp & IBS vs healthy & \emph{Faecalibacterium prausnitzii}\dcstsep\emph{Bacteroides dorei}\dcstsep\emph{Bacteroides ovatus} (depth 4, q = 0.564) & \taxon{Bacteroides}\dcstsep\taxon{Alistipes} (depth 2, q = 0.722) & 93.7 & IBS validation is currently directional at most and remains inconclusive. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\bigskip
+
+\noindent\textbf{Supplementary Table S5.} Top depth-1 absorb DCSTs in the full
+AGP cohort.
+
+\begin{center}
+\footnotesize
+\begin{tabular}{@{}lllll@{}}
+\toprule
+Rank & DCST & n & Share (\%) & Cumulative (\%) \\
+\midrule
+1 & \taxon{Bacteroides} & 10599 & 35.0 & 35.0 \\
+2 & \taxon{Escherichia-Shigella} & 6913 & 22.8 & 57.8 \\
+3 & \taxon{Prevotella\_9} & 1926 & 6.4 & 64.2 \\
+4 & Enterobacteriaceae & 1596 & 5.3 & 69.4 \\
+5 & \taxon{Faecalibacterium} & 1405 & 4.6 & 74.1 \\
+6 & \taxon{Streptococcus} & 881 & 2.9 & 77.0 \\
+7 & \taxon{Pseudomonas} & 690 & 2.3 & 79.3 \\
+8 & \taxon{Staphylococcus} & 641 & 2.1 & 81.4 \\
+9 & \taxon{Prevotella\_7} & 498 & 1.6 & 83.0 \\
+10 & Lachnospiraceae & 480 & 1.6 & 84.6 \\
+11 & Unassigned & 464 & 1.5 & 86.1 \\
+12 & \taxon{Akkermansia} & 348 & 1.1 & 87.3 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\bigskip
+
+\noindent\textbf{Supplementary Table S6.} Selected absorb follow-up summary
+across the main-text and supplementary phenotype branches.
+
+\begin{center}
+\scriptsize
+\begin{tabularx}{\textwidth}{@{} l Y Y Y @{}}
+\toprule
+Phenotype & Strongest depth-1 adjusted signal & Strongest deeper adjusted signal & Bayesian value added \\
+\midrule
+IBD & \taxon{Bacteroides} enriched (adjusted OR 1.54, q = 8.1e-10) & \taxon{Bacteroides}\dcstsep Lachnospiraceae\dcstsep\taxon{Alistipes} enriched at depth 3 (adjusted OR 8.56, q = 1.5e-28) & Bayesian models highlighted rare enterobacterial states, especially \taxon{Morganella}, that were too small for the conservative adjusted screen. \\
+IBS & \taxon{Escherichia-Shigella} enriched (adjusted OR 1.24, q = 0.002) & \taxon{Escherichia-Shigella}\dcstsep\taxon{Bacteroides}\dcstsep Lachnospiraceae enriched at depth 3 (adjusted OR 1.78, q = 0.018) & Bayesian models retained support for several depth-4 lineages even when q-values no longer crossed 0.05. \\
+Autoimmune & \taxon{Bacteroides} enriched (adjusted OR 1.40, q = 1.6e-12) & \taxon{Bacteroides}\dcstsep Lachnospiraceae\dcstsep\taxon{Alistipes} enriched at depth 3 (adjusted OR 5.52, q = 3.9e-21) & Bayesian models supported additional depth-4 \taxon{Bacteroides}-centered lineages beyond the frequentist q-significant set. \\
+Acid reflux & \taxon{Bacteroides} enriched (adjusted OR 1.28, q = 1.75e-05) & \taxon{Bacteroides}\dcstsep\taxon{Parabacteroides}\dcstsep Lachnospiraceae enriched at depth 3 (adjusted OR 2.64, q = 0.00419) & Bayesian models retained support for numerous depth-4 \taxon{Bacteroides}-centered reflux lineages after the frequentist signal thinned. \\
+Seasonal allergies & \taxon{Prevotella\_9} depleted (adjusted OR 0.67, q = 2.77e-08) & \taxon{Escherichia-Shigella}\dcstsep\taxon{Bacteroides} enriched at depth 2 (adjusted OR 1.24, q = 7.42e-06) & Bayesian models clarified the paired pattern of depleted \taxon{Prevotella}-linked states and enriched enterobacterial lineages at depths 3 and 4. \\
 \bottomrule
 \end{tabularx}
 \end{center}
