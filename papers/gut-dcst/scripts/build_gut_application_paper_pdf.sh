@@ -10,6 +10,7 @@ LATEXMK="${LATEXMK:-/Library/TeX/texbin/latexmk}"
 INPUT_TEX="gut_application_paper.tex"
 OUTPUT_PDF="$BUILD_DIR/gut_application_paper.pdf"
 BUILD_INFO_TEX="$BUILD_DIR/manuscript_build_info.tex"
+INCLUDE_BUILD_STAMP="${PAPER_INCLUDE_BUILD_STAMP:-0}"
 
 escape_for_tex() {
   local s="$1"
@@ -30,6 +31,10 @@ cat > "$BUILD_INFO_TEX" <<EOF
 \renewcommand{\manuscriptcommit}{$(escape_for_tex "$GIT_COMMIT")}
 \renewcommand{\manuscriptbuilddatetime}{$(escape_for_tex "$BUILD_DATETIME")}
 EOF
+
+if [[ "$INCLUDE_BUILD_STAMP" == "1" ]]; then
+  printf '%s\n' '\showbuildstamptrue' >> "$BUILD_INFO_TEX"
+fi
 
 cd "$MANUSCRIPT_DIR"
 
