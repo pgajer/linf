@@ -362,13 +362,19 @@ analyses was controlled with the Benjamini-Hochberg procedure
 The analyses reported here emphasize the phenotype branches that
 combined the clearest absorb-hierarchy structure with stable Bayesian
 follow-up: IBD, IBS, autoimmune disease, acid reflux, and seasonal
-allergies. This manuscript is intentionally centered on the discovery
-cohort; absorb-specific external validation remains a planned next step
-rather than a completed line of evidence for the present paper. All
-manuscript figures, tables, and analysis scripts were generated from
-workflows built around the \texttt{linf} R package, with
-project-specific runners maintained in the companion
-\texttt{gut\_microbiome} repository.
+allergies. External validation was then carried forward in two
+complementary ways. In rebuilt-cohort validation, each external matrix
+was filtered and analyzed independently with the same absorb workflow
+used for the discovery cohort. In frozen-transfer validation, external
+samples were mapped directly onto the AGP-derived absorb hierarchy after
+aligning each cohort's taxa to the AGP retained-feature dictionary. The
+completed validation cohorts included HMP2 / IBDMDB, Halfvarson 2017,
+Gevers 2014, PRJEB84421, and Jacobs 2023 IBS 250bp; the main text
+emphasizes the IBD-focused cohorts, and the full comparison summary is
+given in Supplementary Table S4. All manuscript figures, tables, and
+analysis scripts were generated from workflows built around the
+\texttt{linf} R package, with project-specific runners maintained in
+the companion \texttt{gut\_microbiome} repository.
 
 \section{Results}\label{cohort-overview}
 
@@ -554,6 +560,61 @@ generic rare bucket.
 \centering
 \includegraphics[width=0.98\linewidth,height=\textheight,keepaspectratio,alt={IBD absorb lineage figure. Panel A shows the progression from the broad depth-1 Bacteroides state to deeper Bacteroides-centered inflammatory lineages at depths 2 to 4. Panel B compares frequentist and Bayesian adjusted odds ratios for the main IBD lineage states and for rare enterobacterial states such as Morganella and Proteus.}]{../assets/figures/FIGURE_3_ibd_absorb_lineages.png}
 \caption{IBD is the clearest lineage-resolved example in the absorb hierarchy. Panel A shows the progression from the broad depth-1 \taxon{Bacteroides} state to the depth-2 through depth-4 inflammatory lineages emphasized in the main text. Panel B compares frequentist and Bayesian adjusted odds ratios for representative IBD-associated states. The common lineages are supported by both frameworks, whereas rare enterobacterial states such as \taxon{Morganella} and \taxon{Proteus} remain visible mainly in the Bayesian analysis because the conservative adjusted frequentist model does not estimate stable coefficients for those sparse labels.}
+\end{figure}
+
+External validation asked two related but distinct questions. Rebuilt
+cohort validation asked whether the absorb framework rediscovered
+disease-associated dominant states when each external dataset was
+analyzed independently. Frozen-transfer validation then asked whether
+AGP-defined absorb states themselves could be assigned to external
+samples and retain signal without rebuilding the hierarchy.
+
+Across the completed inflammatory cohorts, rebuilt-cohort validation was
+strongest in Halfvarson 2017, where the \texttt{IBD\_vs\_Healthy},
+\texttt{Crohn\_vs\_Healthy}, and \texttt{UC\_vs\_Healthy} comparisons
+all remained significant after multiple-testing correction. The leading
+rebuilt signals were depth-1 depletion of \taxon{Segatella} sp. in the
+pooled IBD and Crohn comparisons and enrichment of \taxon{Bacteroides}
+\emph{dorei} in ulcerative colitis. PRJEB84421 provided a weaker but
+positive stool-based inflammatory complement through
+\texttt{OFG\_vs\_Healthy}, where a depth-2
+\taxon{Faecalibacterium}\dcstsep\taxon{Bacteroides} lineage was depleted
+(q = 0.019). HMP2 / IBDMDB and Gevers 2014 were more mixed in rebuilt
+mode, which is not surprising given repeated sampling, substantial
+clinical heterogeneity, and the more specialized ecology of those
+cohorts.
+
+Frozen transfer was stricter but still informative. Halfvarson remained
+clearly positive when samples were mapped directly onto AGP-defined
+states: pooled IBD, Crohn, and UC comparisons all retained q < 0.001,
+with the transferred signal centered on enriched \taxon{Bacteroides}
+states and depleted \taxon{Faecalibacterium}-linked states. After
+explicitly coding pooled HMP2 inflammatory bowel disease as one case
+label, HMP2 also retained a weaker but significant depth-2 transferred
+\taxon{Bacteroides}\dcstsep\taxon{Faecalibacterium} depletion in
+\texttt{IBD\_vs\_Healthy} (q = 0.027). By contrast, Gevers 2014,
+PRJEB84421, and the current Jacobs IBS cohort mapped well into the AGP
+hierarchy at depths 1 and 2 but did not retain BH-significant
+transferred states. We therefore interpret the present external data as
+strong evidence for framework-level reproducibility, with exact
+label-level portability currently strongest in Halfvarson and partial in
+HMP2 (Figure 4; Supplementary Table S4).
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.98\linewidth,height=\textheight,keepaspectratio,alt={External validation comparison figure. Panel A compares the strongest BH-adjusted signal recovered for each key cohort-comparison under rebuilt-cohort absorb validation and under frozen AGP transfer validation. Panel B shows frozen-transfer mapping coverage across depths 1 to 4 for the same comparisons. Halfvarson stays positive in both modes, HMP2 retains a weaker transferred depth-2 signal, and the other cohorts map into the hierarchy but lose exact-state significance under the frozen transfer test.}]{../assets/figures/FIGURE_4_external_validation_modes.png}
+\caption{External validation separates framework reproducibility from
+exact label portability. Panel A compares the strongest BH-adjusted
+signal recovered for each key cohort-comparison under rebuilt-cohort
+absorb validation and under frozen AGP transfer validation. Rebuilt
+cohort validation is broader, whereas frozen transfer is stricter and
+therefore a better test of whether AGP-derived labels themselves can be
+reused across studies. Panel B shows frozen-transfer mapping coverage
+across depths 1 to 4 for the same comparisons. Halfvarson remains
+positive in both modes, HMP2 retains a weaker transferred depth-2
+signal after pooled IBD case coding, and the remaining cohorts map into
+the hierarchy without yet showing equally strong exact-state
+portability.}
 \end{figure}
 
 These IBD results align well with the established literature. The
@@ -771,17 +832,25 @@ branch outside classic inflammatory bowel phenotypes, while seasonal
 allergies show a more modest but still readable shift away from
 \taxon{Prevotella}-linked states and toward enterobacterial lineages.
 
-Several limitations remain important. Absorb-specific external
-validation remains future work, and the present manuscript is therefore
-best read as a discovery-cohort analysis that develops the lineage-level
-story most fully for IBS, IBD, autoimmune disease, acid reflux, and
-seasonal allergies. AGP phenotypes are also self-reported and
-cross-sectional, so residual confounding, medication effects, and
-reverse causation remain plausible. Those concerns are especially
-important for acid reflux and cardiometabolic phenotypes. The current
-evidence nevertheless supports the absorb framework as a biologically
-interpretable analysis layer and motivates formal testing of its
-generalizability in independent cohorts.
+Several limitations remain important. External validation now clarifies
+both the promise and the current boundary of the approach. When
+external cohorts are rebuilt independently, the absorb framework
+reproduces the main inflammatory story most clearly in Halfvarson and
+more modestly in PRJEB84421, while HMP2 and Gevers remain more mixed.
+When the AGP hierarchy is frozen and transferred directly, Halfvarson
+remains clearly positive and HMP2 retains a weaker depth-2 transfer
+signal, but the other cohorts no longer survive multiple-testing
+correction. We therefore interpret the current evidence as stronger for
+framework-level reproducibility than for universal portability of one
+fixed AGP label dictionary. Exact label transferability will need
+broader stool-based validation, especially for IBS and the non-IBD
+branches. AGP phenotypes are also self-reported and cross-sectional, so
+residual confounding, medication effects, and reverse causation remain
+plausible. Those concerns are especially important for acid reflux and
+cardiometabolic phenotypes. The current evidence nevertheless supports
+the absorb framework as a biologically interpretable analysis layer and
+motivates broader testing of its generalizability in independent
+cohorts.
 
 \section{Conclusion}\label{conclusion}
 
@@ -812,10 +881,16 @@ through PRIME-derived species-level abundance tables. The absorb
 discovery hierarchy was generated with
 \texttt{run\_agp\_absorb\_depthscan.R}, and the phenotype-specific
 frequentist/Bayesian follow-up was generated with
-\texttt{run\_absorb\_label\_followup.R}. Supplementary materials for the
-present manuscript summarize phenotype definitions and sample counts,
-the pure-versus-absorb depth-change summary, and selected reference
-analyses retained outside the main text.
+\texttt{run\_absorb\_label\_followup.R}. External validation assets were
+generated with
+\texttt{run\_external\_case\_control\_validation\_absorb.R} and
+\texttt{run\_external\_case\_control\_validation\_frozen\_agp.R}.
+PRIME-derived HMP2 input exports were generated with
+\texttt{export\_prime\_project\_validation\_inputs.py}. Supplementary
+materials for the present manuscript summarize phenotype definitions
+and sample counts, the pure-versus-absorb depth-change summary,
+selected reference analyses retained outside the main text, and the
+cross-cohort rebuilt-versus-frozen validation comparison.
 
 \section{Funding}\label{funding}
 
