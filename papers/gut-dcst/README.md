@@ -34,6 +34,10 @@ The current journal-target shortlist is tracked in
 The absorb-policy rerun plan is tracked in
 [`ACTION_PLAN_absorb_dcst_rerun_2026-04-10.md`](/Users/pgajer/current_projects/linf/papers/gut-dcst/notes/action_plans/ACTION_PLAN_absorb_dcst_rerun_2026-04-10.md).
 
+The Bayesian expansion plan beyond IBD, IBS, and autoimmune disease is
+tracked in
+[`ACTION_PLAN_bayesian_followup_expansion_2026-04-11.md`](/Users/pgajer/current_projects/linf/papers/gut-dcst/notes/action_plans/ACTION_PLAN_bayesian_followup_expansion_2026-04-11.md).
+
 ## Versioning Policy
 
 - Use git and GitHub for day-to-day version history.

@@ -12,13 +12,14 @@ linf.dcst.landmark.pipeline(
   n0.depth2 = 25,
   refinement.factor = 2,
   sep = "__",
-  low.freq.policy = c("rare", "absorb"),
+  low.freq.policy = c("pure", "absorb"),
   rare.label = "RARE_DOMINANT",
   depth1.landmark.types = c("endpoint.max", "endpoint.min", "mean.rep", "median.rep"),
   depth2.landmark.types = c("endpoint.max", "endpoint.min", "mean.rep", "median.rep"),
   landmark.view = c("absorb", "active", "rare"),
   tie.method = c("first", "random", "error"),
-  verbose = FALSE
+  verbose = FALSE,
+  backend = c("auto", "dense", "sparse")
 )
 }
 \arguments{
@@ -39,9 +40,10 @@ passed to \code{\link{refine.linf.csts}}.}
 
 \item{sep}{Character scalar used to join depth-refined CST path tokens.}
 
-\item{low.freq.policy}{Character. One of \code{"rare"} or \code{"absorb"}.
+\item{low.freq.policy}{Character. One of \code{"pure"} or \code{"absorb"}.
 Controls the active DCST view while still preserving parallel rare/absorb
-views inside the returned CST objects.}
+views inside the returned CST objects. The legacy value \code{"rare"} is
+still accepted as a deprecated alias for \code{"pure"}.}
 
 \item{rare.label}{Character scalar for rare buckets.}
 
@@ -57,6 +59,9 @@ typically requested on the absorb view.}
 \code{\link{linf.csts}} and \code{\link{linf.landmarks}}.}
 
 \item{verbose}{Logical. Passed to \code{\link{refine.linf.csts}}.}
+
+\item{backend}{Character. Matrix backend to use: \code{"auto"},
+\code{"dense"}, or \code{"sparse"}.}
 }
 \value{
 A named list with components:
@@ -100,7 +105,7 @@ out <- linf.dcst.landmark.pipeline(
   n0.depth1 = 2,
   n0.depth2 = 2,
   refinement.factor = 2,
-  low.freq.policy = "rare",
+  low.freq.policy = "pure",
   landmark.view = "absorb",
   verbose = FALSE
 )
