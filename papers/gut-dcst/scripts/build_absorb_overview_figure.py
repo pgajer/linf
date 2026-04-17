@@ -102,7 +102,7 @@ def build_figure() -> None:
         )
     ax_a.text(
         0.995,
-        1.03,
+        0.05,
         "30,290 samples; 40 named absorb states",
         transform=ax_a.transAxes,
         ha="right",
@@ -128,14 +128,6 @@ def build_figure() -> None:
     ax_b2.tick_params(axis="y", labelcolor="#bc6c25")
     ax_b2.spines["top"].set_visible(False)
     ax_b.axvspan(0.85, 4.15, color="#d9ead3", alpha=0.18)
-    ax_b.text(
-        0.03,
-        0.08,
-        "Primary manuscript depths",
-        transform=ax_b.transAxes,
-        fontsize=9,
-        color="#4f4f4f",
-    )
     for x, yv in zip(depths[:4], n_labels[:4]):
         ax_b.text(x, yv + 18, f"{yv}", ha="center", va="bottom", fontsize=8.5, color="#355070")
 

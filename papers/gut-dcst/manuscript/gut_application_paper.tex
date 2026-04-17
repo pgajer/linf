@@ -159,9 +159,7 @@ Dominance Patterns in the Human Gut Microbiome}
 \ifshowbuildstamp
 \begin{center}
 \footnotesize
-Version \texttt{\manuscriptversion} \quad | \quad Build
-\texttt{\manuscriptbuildnumber} \quad | \quad Commit
-\texttt{\manuscriptcommit}\\
+% Version \texttt{\manuscriptversion} \quad | \quad Build \texttt{\manuscriptbuildnumber} \quad | \quad Commit \texttt{\manuscriptcommit}\\
 Built \manuscriptbuilddatetime
 \end{center}
 \vspace{0.35em}
@@ -428,8 +426,8 @@ main manuscript.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.98\linewidth,height=\textheight,keepaspectratio,alt={Absorb overview figure. Panel A shows the ten largest depth-1 absorb states in the AGP cohort. Panel B shows growth in the number of named absorb states across depths 1 to 6 together with the fraction of assignments that change relative to the pure hierarchy. Panel C shows Cramer's V across depths 1 to 4 for IBD, autoimmune disease, and IBS.}]{../assets/figures/FIGURE_2_absorb_overview.png}
-\caption{Overview of the absorb hierarchy in the AGP discovery cohort. Panel A shows the largest named depth-1 absorb states. Panel B shows how the hierarchy expands from depth 1 to depth 6 together with the fraction of samples whose assignments differ from the pure hierarchy. Panel C shows the depthwise omnibus effect size, summarized by Cramer's V, for the three phenotype branches developed in the main text.}
+\includegraphics[width=0.98\linewidth,height=\textheight,keepaspectratio,alt={Absorb overview figure. Panel A shows the ten largest depth-1 absorb states in the AGP cohort. Panel B shows growth in the number of named absorb states across depths 1 to 6 together with the fraction of assignments that change relative to the pure hierarchy; shading marks depths 1 to 4. Panel C shows Cramer's V across depths 1 to 4 for IBD, autoimmune disease, and IBS.}]{../assets/figures/FIGURE_2_absorb_overview.png}
+\caption{Overview of the absorb hierarchy in the AGP discovery cohort. Panel A shows the largest named depth-1 absorb states. Panel B shows how the hierarchy expands from depth 1 to depth 6 together with the fraction of samples whose assignments differ from the pure hierarchy; the shaded region marks depths 1 to 4, which are carried forward in the main-text association summaries. Panel C shows the depthwise omnibus effect size, summarized by Cramer's V, for the three phenotype branches developed in the main text.}
 \end{figure}
 
 The phenotype-wide absorb screen remained broad, with strong omnibus
@@ -519,7 +517,7 @@ them cautiously (Supplementary Table S7).
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.98\linewidth,height=\textheight,keepaspectratio,alt={IBD absorb lineage figure. Panel A shows the progression from the broad depth-1 Bacteroides state to deeper Bacteroides-centered inflammatory lineages at depths 2 to 4. Panel B compares frequentist and Bayesian adjusted odds ratios for the main IBD lineage states and for rare enterobacterial states such as Morganella and Proteus.}]{../assets/figures/FIGURE_3_ibd_absorb_lineages.png}
-\caption{IBD is the clearest lineage-resolved example in the absorb hierarchy. Panel A shows the progression from the broad depth-1 \taxon{Bacteroides} state to the depth-2 through depth-4 inflammatory dCST lineages emphasized in the main text. Panel B compares frequentist and Bayesian adjusted odds ratios for representative IBD-associated states and reports the corresponding IBD/control counts. The common dCST lineages are supported by both frameworks, whereas rare enterobacterial states such as \taxon{Morganella} and \taxon{Proteus} remain visible mainly in the Bayesian analysis because the conservative adjusted frequentist model does not estimate stable coefficients for those sparse labels.}
+\caption{IBD is the clearest lineage-resolved example in the absorb hierarchy. Panel A shows the progression from the broad depth-1 \taxon{Bacteroides} state to the depth-2 through depth-4 inflammatory dCST lineages emphasized in the main text. Panel B compares frequentist and Bayesian adjusted odds ratios for representative IBD-associated states and reports the corresponding IBD/control counts. The common dCST lineages are supported by both frameworks. Rare enterobacterial states, including \taxon{Morganella} and \taxon{Proteus}, are included as sparse-label examples: Bayesian estimates remain finite, whereas the conservative adjusted frequentist screen skips labels with insufficient support.}
 \end{figure}
 
 External validation asked two related but distinct questions. Rebuilt

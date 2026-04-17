@@ -82,7 +82,7 @@ def build_figure() -> None:
     )
 
     fig = plt.figure(figsize=(13.6, 8.8))
-    gs = fig.add_gridspec(1, 2, width_ratios=[0.88, 1.52], wspace=0.34)
+    gs = fig.add_gridspec(1, 2, width_ratios=[0.88, 1.52], wspace=0.55)
 
     ax_a = fig.add_subplot(gs[0, 0])
     ax_b = fig.add_subplot(gs[0, 1])
@@ -93,7 +93,7 @@ def build_figure() -> None:
     box_colors = ["#d9ead3", "#cfe2f3", "#fce5cd", "#ead1dc"]
     y_positions = [0.88, 0.65, 0.42, 0.19]
     x_center = 0.5
-    box_w = 0.78
+    box_w = 0.90
     box_h = 0.14
 
     for idx, (row, y, face) in enumerate(zip(lineage_rows, y_positions, box_colors)):
@@ -135,7 +135,7 @@ def build_figure() -> None:
             )
     ax_b.set_title("B. Counts and adjusted estimates\nfor representative IBD states", loc="left", fontweight="bold")
     y = np.arange(len(forest_rows))[::-1]
-    labels = [wrap_lineage_label(r["label"]) + "\n" + support_label(r) for r in forest_rows]
+    labels = [wrap_lineage_label(r["label"], max_parts_per_line=1) + "\n" + support_label(r) for r in forest_rows]
 
     for i, row in enumerate(forest_rows):
         yy = y[i]
@@ -174,21 +174,11 @@ def build_figure() -> None:
     ax_b.set_xlabel("Adjusted odds ratio")
     ax_b.set_yticks(y)
     ax_b.set_yticklabels(labels)
-    ax_b.tick_params(axis="y", labelsize=9)
+    ax_b.tick_params(axis="y", labelsize=8.6)
     ax_b.grid(axis="x", alpha=0.22, linewidth=0.6)
     ax_b.spines["top"].set_visible(False)
     ax_b.spines["right"].set_visible(False)
-    ax_b.legend(frameon=False, loc="lower right")
-    ax_b.text(
-        0.02,
-        -0.12,
-        "Morganella and Proteus are shown as rare-state examples: Bayesian estimates remain finite,\nwhereas the conservative adjusted frequentist screen skips labels with too little support.",
-        transform=ax_b.transAxes,
-        fontsize=8.8,
-        color="#4f4f4f",
-        va="top",
-    )
-
+    ax_b.legend(frameon=False, loc="upper right")
     OUT_FIG.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(OUT_FIG, dpi=220, bbox_inches="tight", pad_inches=0.04)
     plt.close(fig)

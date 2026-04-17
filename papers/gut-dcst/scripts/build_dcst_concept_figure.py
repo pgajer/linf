@@ -84,14 +84,14 @@ def main() -> None:
         ]
     )
 
-    fig = plt.figure(figsize=(7.0, 4.85))
-    gs = fig.add_gridspec(2, 2, height_ratios=[1.0, 1.0], hspace=0.46, wspace=0.36)
+    fig = plt.figure(figsize=(7.0, 5.25))
+    gs = fig.add_gridspec(2, 2, height_ratios=[1.0, 1.0], hspace=0.72, wspace=0.36)
 
     ax_a = fig.add_subplot(gs[0, 0])
     ax_b = fig.add_subplot(gs[0, 1])
     ax_c = fig.add_subplot(gs[1, 0])
     ax_d = fig.add_subplot(gs[1, 1])
-    fig.subplots_adjust(left=0.075, right=0.985, top=0.94, bottom=0.135, hspace=0.48, wspace=0.34)
+    fig.subplots_adjust(left=0.075, right=0.985, top=0.94, bottom=0.125, hspace=0.74, wspace=0.34)
 
     im = ax_a.imshow(matrix, aspect="auto", cmap="YlOrRd", vmin=0, vmax=0.5)
     ax_a.set_xticks(np.arange(len(taxa)))
@@ -110,55 +110,40 @@ def main() -> None:
     ax_b.set_ylim(0, 1)
     add_panel_label(ax_b, "B")
     ax_b.set_title("Depth-1 dominance sample sets", loc="left", fontweight="bold")
-    draw_box(ax_b, (0.03, 0.70), 0.34, 0.16, "Top taxon\n" + italic_label("Bacteroides"), "#d9ead3", "#6a994e")
-    draw_box(ax_b, (0.03, 0.46), 0.34, 0.16, "Top taxon\n" + italic_label("Faecalibacterium"), "#cfe2f3", "#457b9d")
-    draw_box(ax_b, (0.03, 0.20), 0.34, 0.18, "Top taxon\n" + italic_two_line("Escherichia", "Shigella"), "#fce5cd", "#bc6c25", fontsize=7.2)
-    draw_box(ax_b, (0.55, 0.70), 0.41, 0.16, "Bacteroides DSS\nn = 3", "#d9ead3", "#6a994e", weight="bold")
-    draw_box(ax_b, (0.55, 0.46), 0.41, 0.16, "Faecalibacterium DSS\nn = 2", "#cfe2f3", "#457b9d", weight="bold")
-    draw_box(ax_b, (0.55, 0.20), 0.41, 0.18, "Escherichia-\nShigella DSS\nn = 1", "#fce5cd", "#bc6c25", fontsize=6.8, weight="bold")
-    for y in (0.76, 0.52, 0.28):
-        arrow(ax_b, (0.37, y), (0.55, y))
-    ax_b.text(0.03, 0.05, "DSS: samples with the same top-ranked retained taxon", fontsize=7.0, color="#444444")
+    draw_box(ax_b, (0.01, 0.69), 0.39, 0.18, "Top taxon\n" + italic_label("Bacteroides"), "#d9ead3", "#6a994e")
+    draw_box(ax_b, (0.01, 0.44), 0.39, 0.18, "Top taxon\n" + italic_label("Faecalibacterium"), "#cfe2f3", "#457b9d")
+    draw_box(ax_b, (0.01, 0.17), 0.39, 0.20, "Top taxon\n" + italic_two_line("Escherichia", "Shigella"), "#fce5cd", "#bc6c25", fontsize=7.2)
+    draw_box(ax_b, (0.47, 0.69), 0.52, 0.18, "Bacteroides DSS\nn = 3", "#d9ead3", "#6a994e", weight="bold")
+    draw_box(ax_b, (0.47, 0.44), 0.52, 0.18, "Faecalibacterium DSS\nn = 2", "#cfe2f3", "#457b9d", weight="bold")
+    draw_box(ax_b, (0.47, 0.17), 0.52, 0.20, "Escherichia-\nShigella DSS\nn = 1", "#fce5cd", "#bc6c25", fontsize=6.8, weight="bold")
+    for y in (0.78, 0.53, 0.27):
+        arrow(ax_b, (0.40, y), (0.47, y))
 
     ax_c.axis("off")
     ax_c.set_xlim(0, 1)
     ax_c.set_ylim(0, 1)
     add_panel_label(ax_c, "C")
     ax_c.set_title("Low-frequency policy", loc="left", fontweight="bold")
-    draw_box(ax_c, (0.04, 0.64), 0.30, 0.16, "Small DSS\nn < n0", "#fff2cc", "#bf9000")
-    draw_box(ax_c, (0.54, 0.76), 0.40, 0.13, "Pure dCST:\nrare/residual bucket", "#eeeeee", "#6c757d", fontsize=7.4, weight="bold")
-    draw_box(ax_c, (0.54, 0.47), 0.40, 0.14, "Absorb dCST:\nnearest retained state", "#eaf4f4", "#4d908e", fontsize=7.1, weight="bold")
-    arrow(ax_c, (0.34, 0.73), (0.54, 0.825))
-    arrow(ax_c, (0.34, 0.66), (0.54, 0.54))
-    draw_box(ax_c, (0.07, 0.22), 0.33, 0.13, "Retained DSS\nn >= n0", "#e2f0d9", "#6a994e")
-    draw_box(ax_c, (0.55, 0.22), 0.33, 0.13, "Named dCST", "#edf6f9", "#457b9d", fontsize=7.8, weight="bold")
-    arrow(ax_c, (0.40, 0.285), (0.55, 0.285))
-    ax_c.text(
-        0.04,
-        0.03,
-        "The main analyses use the absorb policy.",
-        fontsize=7.2,
-        color="#444444",
-    )
+    draw_box(ax_c, (0.03, 0.62), 0.36, 0.20, "Small DSS\nn < n0", "#fff2cc", "#bf9000")
+    draw_box(ax_c, (0.47, 0.73), 0.51, 0.17, "Pure dCST:\nrare/residual bucket", "#eeeeee", "#6c757d", fontsize=7.4, weight="bold")
+    draw_box(ax_c, (0.47, 0.43), 0.51, 0.18, "Absorb dCST:\nnearest retained state", "#eaf4f4", "#4d908e", fontsize=7.1, weight="bold")
+    arrow(ax_c, (0.39, 0.74), (0.47, 0.815))
+    arrow(ax_c, (0.39, 0.67), (0.47, 0.52))
+    draw_box(ax_c, (0.04, 0.19), 0.40, 0.16, "Retained DSS\nn >= n0", "#e2f0d9", "#6a994e")
+    draw_box(ax_c, (0.52, 0.19), 0.41, 0.16, "Named dCST", "#edf6f9", "#457b9d", fontsize=7.8, weight="bold")
+    arrow(ax_c, (0.44, 0.27), (0.52, 0.27))
 
     ax_d.axis("off")
     ax_d.set_xlim(0, 1)
     ax_d.set_ylim(0, 1)
     add_panel_label(ax_d, "D")
     ax_d.set_title("Depth-2 dCST lineages", loc="left", fontweight="bold")
-    draw_box(ax_d, (0.04, 0.68), 0.38, 0.16, "Parent DSS\n" + italic_label("Bacteroides"), "#d9ead3", "#6a994e", weight="bold")
-    draw_box(ax_d, (0.56, 0.78), 0.40, 0.13, italic_label("Bacteroides") + " /\n" + italic_label("Faecalibacterium"), "#cfe2f3", "#457b9d", fontsize=7.5)
-    draw_box(ax_d, (0.56, 0.56), 0.40, 0.13, italic_label("Bacteroides") + " /\n" + italic_label("Alistipes"), "#ead1dc", "#8e7cc3", fontsize=7.5)
-    arrow(ax_d, (0.42, 0.755), (0.56, 0.845))
-    arrow(ax_d, (0.42, 0.735), (0.56, 0.625))
-    draw_box(ax_d, (0.08, 0.20), 0.86, 0.16, "Ordered path:\nparent dominant taxon / next dominant taxon", "#f6f1e8", "#b08968", fontsize=7.0)
-    ax_d.text(
-        0.05,
-        0.04,
-        "A dCST lineage is not a phylogenetic lineage.",
-        fontsize=7.2,
-        color="#444444",
-    )
+    draw_box(ax_d, (0.03, 0.67), 0.43, 0.18, "Parent DSS\n" + italic_label("Bacteroides"), "#d9ead3", "#6a994e", weight="bold")
+    draw_box(ax_d, (0.52, 0.76), 0.47, 0.16, italic_label("Bacteroides") + " /\n" + italic_label("Faecalibacterium"), "#cfe2f3", "#457b9d", fontsize=7.5)
+    draw_box(ax_d, (0.52, 0.53), 0.47, 0.16, italic_label("Bacteroides") + " /\n" + italic_label("Alistipes"), "#ead1dc", "#8e7cc3", fontsize=7.5)
+    arrow(ax_d, (0.46, 0.76), (0.52, 0.84))
+    arrow(ax_d, (0.46, 0.74), (0.52, 0.61))
+    draw_box(ax_d, (0.06, 0.18), 0.91, 0.20, "Ordered path:\nparent dominant taxon / next dominant taxon", "#f6f1e8", "#b08968", fontsize=7.0)
 
     OUT.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(OUT, dpi=340, bbox_inches="tight", pad_inches=0.04)
