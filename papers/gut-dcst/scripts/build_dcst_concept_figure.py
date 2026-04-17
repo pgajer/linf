@@ -1,34 +1,19 @@
-from pathlib import Path
+from __future__ import annotations
 
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.patches import FancyArrowPatch, Rectangle
 
 from paper_paths import FIGURES_DIR
+from taxon_formatting import italicize_taxa_mpl
 
 OUT = FIGURES_DIR / "FIGURE_1_dcst_conceptual_schematic.png"
 
 
-def draw_bars(ax, values, colors, title, xlabel_text, annotate=None):
-    x = np.arange(len(values))
-    ax.bar(x, values, color=colors, edgecolor="#2f2f2f", linewidth=0.8)
-    ax.set_xticks(x)
-    ax.set_xticklabels(["Taxon A", "Taxon B", "Taxon C", "Taxon D"], rotation=20, ha="right")
-    ax.set_ylim(0, max(1.08, max(values) * 1.18))
-    ax.set_title(title, fontsize=12, pad=10, weight="bold")
-    ax.set_xlabel(xlabel_text, fontsize=10)
-    ax.grid(axis="y", alpha=0.25, linewidth=0.6)
-    ax.spines["top"].set_visible(False)
-    ax.spines["right"].set_visible(False)
-    if annotate:
-        for idx, txt in annotate:
-            ax.text(idx, values[idx] + 0.04, txt, ha="center", va="bottom", fontsize=9)
-
-
-def add_panel_label(ax, label):
+def add_panel_label(ax, label: str) -> None:
     ax.text(
-        -0.13,
-        1.08,
+        -0.08,
+        1.05,
         label,
         transform=ax.transAxes,
         fontsize=13,
@@ -38,104 +23,145 @@ def add_panel_label(ax, label):
     )
 
 
-def main():
+def draw_box(ax, xy, w, h, text, face, edge="#4f4f4f", fontsize=8.0, weight=None):
+    patch = Rectangle(xy, w, h, facecolor=face, edgecolor=edge, linewidth=1.2)
+    ax.add_patch(patch)
+    ax.text(
+        xy[0] + w / 2,
+        xy[1] + h / 2,
+        text,
+        ha="center",
+        va="center",
+        fontsize=fontsize,
+        fontweight=weight,
+        linespacing=1.05,
+    )
+    return patch
+
+
+def arrow(ax, start, end):
+    ax.add_patch(
+        FancyArrowPatch(
+            start,
+            end,
+            arrowstyle="-|>",
+            mutation_scale=14,
+            color="#6c757d",
+            linewidth=1.2,
+        )
+    )
+
+
+def italic_label(label: str) -> str:
+    return italicize_taxa_mpl(label)
+
+
+def italic_two_line(first: str, second: str) -> str:
+    return italic_label(first) + "-\n" + italic_label(second)
+
+
+def main() -> None:
     plt.rcParams.update(
         {
-            "font.size": 10,
-            "axes.titlesize": 12,
-            "axes.labelsize": 10,
+            "font.size": 8.0,
+            "axes.titlesize": 8.4,
+            "axes.labelsize": 7.5,
             "figure.facecolor": "white",
             "axes.facecolor": "#fcfcfb",
         }
     )
 
-    raw = np.array([420, 280, 180, 120])
-    colors = ["#335c67", "#7cb518", "#ff9f1c", "#c8553d"]
-
-    fig = plt.figure(figsize=(13, 6.7))
-    gs = fig.add_gridspec(2, 2, height_ratios=[1, 0.95], hspace=0.42, wspace=0.28)
-
-    ax1 = fig.add_subplot(gs[0, 0])
-    draw_bars(
-        ax1,
-        raw,
-        colors,
-        "Sample abundance profile",
-        r"Example sample vector $x = (420,\, 280,\, 180,\, 120)$",
+    taxa = ["Bacteroides", "Faecalibacterium", "Escherichia-Shigella", "Alistipes"]
+    samples = [f"S{i}" for i in range(1, 7)]
+    matrix = np.array(
+        [
+            [0.48, 0.22, 0.10, 0.20],
+            [0.42, 0.31, 0.09, 0.18],
+            [0.38, 0.13, 0.16, 0.33],
+            [0.18, 0.49, 0.12, 0.21],
+            [0.15, 0.40, 0.28, 0.17],
+            [0.20, 0.12, 0.48, 0.20],
+        ]
     )
-    add_panel_label(ax1, "A")
 
-    ax2 = fig.add_subplot(gs[0, 1])
-    draw_bars(
-        ax2,
-        raw,
-        colors,
-        "Within-sample dominance order",
-        "Only the rank order matters:\nTaxon A > Taxon B > Taxon C > Taxon D",
-        annotate=[(0, "1st"), (1, "2nd"), (2, "3rd"), (3, "4th")],
-    )
-    add_panel_label(ax2, "B")
+    fig = plt.figure(figsize=(7.0, 4.85))
+    gs = fig.add_gridspec(2, 2, height_ratios=[1.0, 1.0], hspace=0.46, wspace=0.36)
 
-    ax3 = fig.add_subplot(gs[1, 0])
-    ax3.axis("off")
-    add_panel_label(ax3, "C")
-    box_fc = "#f6f1e8"
-    box_ec = "#b08968"
-    text_color = "#2f2f2f"
+    ax_a = fig.add_subplot(gs[0, 0])
+    ax_b = fig.add_subplot(gs[0, 1])
+    ax_c = fig.add_subplot(gs[1, 0])
+    ax_d = fig.add_subplot(gs[1, 1])
+    fig.subplots_adjust(left=0.075, right=0.985, top=0.94, bottom=0.135, hspace=0.48, wspace=0.34)
 
-    left = Rectangle((0.04, 0.46), 0.40, 0.30, facecolor=box_fc, edgecolor=box_ec, linewidth=1.5)
-    right = Rectangle((0.54, 0.46), 0.40, 0.30, facecolor="#edf6f9", edgecolor="#4d908e", linewidth=1.5)
-    ax3.add_patch(left)
-    ax3.add_patch(right)
-    ax3.text(0.24, 0.61, "Largest coordinate\nTaxon A", ha="center", va="center", fontsize=12, color=text_color)
-    ax3.text(0.74, 0.61, "Depth-1 DCST A", ha="center", va="center", fontsize=12.6, weight="bold", color="#1d3557")
-    arrow = FancyArrowPatch((0.44, 0.61), (0.54, 0.61), arrowstyle="simple", mutation_scale=18, color="#6c757d")
-    ax3.add_patch(arrow)
+    im = ax_a.imshow(matrix, aspect="auto", cmap="YlOrRd", vmin=0, vmax=0.5)
+    ax_a.set_xticks(np.arange(len(taxa)))
+    ax_a.set_xticklabels([italic_label(t) for t in taxa], rotation=28, ha="right", fontsize=6.4)
+    ax_a.set_yticks(np.arange(len(samples)))
+    ax_a.set_yticklabels(samples, fontsize=6.6)
+    ax_a.set_title("Toy gut abundance table", loc="left", fontweight="bold")
+    ax_a.set_xlabel("Taxa")
+    ax_a.set_ylabel("Samples")
+    add_panel_label(ax_a, "A")
+    cbar = fig.colorbar(im, ax=ax_a, fraction=0.046, pad=0.02)
+    cbar.set_label("Relative abundance", fontsize=7.0)
 
-    ax4 = fig.add_subplot(gs[1, 1])
-    ax4.axis("off")
-    add_panel_label(ax4, "D")
-    box1 = Rectangle((0.02, 0.46), 0.22, 0.26, facecolor=box_fc, edgecolor=box_ec, linewidth=1.5)
-    box2 = Rectangle((0.34, 0.46), 0.22, 0.26, facecolor="#e9f5db", edgecolor="#6a994e", linewidth=1.5)
-    box3 = Rectangle((0.65, 0.46), 0.29, 0.26, facecolor="#edf6f9", edgecolor="#4d908e", linewidth=1.5)
-    for patch in (box1, box2, box3):
-        ax4.add_patch(patch)
-    ax4.text(
-        0.13,
-        0.59,
-        "Top rank\nTaxon A",
-        ha="center",
-        va="center",
-        fontsize=10.8,
-        linespacing=1.05,
-        color=text_color,
+    ax_b.axis("off")
+    ax_b.set_xlim(0, 1)
+    ax_b.set_ylim(0, 1)
+    add_panel_label(ax_b, "B")
+    ax_b.set_title("Depth-1 dominance sample sets", loc="left", fontweight="bold")
+    draw_box(ax_b, (0.03, 0.70), 0.34, 0.16, "Top taxon\n" + italic_label("Bacteroides"), "#d9ead3", "#6a994e")
+    draw_box(ax_b, (0.03, 0.46), 0.34, 0.16, "Top taxon\n" + italic_label("Faecalibacterium"), "#cfe2f3", "#457b9d")
+    draw_box(ax_b, (0.03, 0.20), 0.34, 0.18, "Top taxon\n" + italic_two_line("Escherichia", "Shigella"), "#fce5cd", "#bc6c25", fontsize=7.2)
+    draw_box(ax_b, (0.55, 0.70), 0.41, 0.16, "Bacteroides DSS\nn = 3", "#d9ead3", "#6a994e", weight="bold")
+    draw_box(ax_b, (0.55, 0.46), 0.41, 0.16, "Faecalibacterium DSS\nn = 2", "#cfe2f3", "#457b9d", weight="bold")
+    draw_box(ax_b, (0.55, 0.20), 0.41, 0.18, "Escherichia-\nShigella DSS\nn = 1", "#fce5cd", "#bc6c25", fontsize=6.8, weight="bold")
+    for y in (0.76, 0.52, 0.28):
+        arrow(ax_b, (0.37, y), (0.55, y))
+    ax_b.text(0.03, 0.05, "DSS: samples with the same top-ranked retained taxon", fontsize=7.0, color="#444444")
+
+    ax_c.axis("off")
+    ax_c.set_xlim(0, 1)
+    ax_c.set_ylim(0, 1)
+    add_panel_label(ax_c, "C")
+    ax_c.set_title("Low-frequency policy", loc="left", fontweight="bold")
+    draw_box(ax_c, (0.04, 0.64), 0.30, 0.16, "Small DSS\nn < n0", "#fff2cc", "#bf9000")
+    draw_box(ax_c, (0.54, 0.76), 0.40, 0.13, "Pure dCST:\nrare/residual bucket", "#eeeeee", "#6c757d", fontsize=7.4, weight="bold")
+    draw_box(ax_c, (0.54, 0.47), 0.40, 0.14, "Absorb dCST:\nnearest retained state", "#eaf4f4", "#4d908e", fontsize=7.1, weight="bold")
+    arrow(ax_c, (0.34, 0.73), (0.54, 0.825))
+    arrow(ax_c, (0.34, 0.66), (0.54, 0.54))
+    draw_box(ax_c, (0.07, 0.22), 0.33, 0.13, "Retained DSS\nn >= n0", "#e2f0d9", "#6a994e")
+    draw_box(ax_c, (0.55, 0.22), 0.33, 0.13, "Named dCST", "#edf6f9", "#457b9d", fontsize=7.8, weight="bold")
+    arrow(ax_c, (0.40, 0.285), (0.55, 0.285))
+    ax_c.text(
+        0.04,
+        0.03,
+        "The main analyses use the absorb policy.",
+        fontsize=7.2,
+        color="#444444",
     )
-    ax4.text(
-        0.45,
-        0.59,
-        "Second rank\nTaxon B",
-        ha="center",
-        va="center",
-        fontsize=10.8,
-        linespacing=1.05,
-        color=text_color,
+
+    ax_d.axis("off")
+    ax_d.set_xlim(0, 1)
+    ax_d.set_ylim(0, 1)
+    add_panel_label(ax_d, "D")
+    ax_d.set_title("Depth-2 dCST lineages", loc="left", fontweight="bold")
+    draw_box(ax_d, (0.04, 0.68), 0.38, 0.16, "Parent DSS\n" + italic_label("Bacteroides"), "#d9ead3", "#6a994e", weight="bold")
+    draw_box(ax_d, (0.56, 0.78), 0.40, 0.13, italic_label("Bacteroides") + " /\n" + italic_label("Faecalibacterium"), "#cfe2f3", "#457b9d", fontsize=7.5)
+    draw_box(ax_d, (0.56, 0.56), 0.40, 0.13, italic_label("Bacteroides") + " /\n" + italic_label("Alistipes"), "#ead1dc", "#8e7cc3", fontsize=7.5)
+    arrow(ax_d, (0.42, 0.755), (0.56, 0.845))
+    arrow(ax_d, (0.42, 0.735), (0.56, 0.625))
+    draw_box(ax_d, (0.08, 0.20), 0.86, 0.16, "Ordered path:\nparent dominant taxon / next dominant taxon", "#f6f1e8", "#b08968", fontsize=7.0)
+    ax_d.text(
+        0.05,
+        0.04,
+        "A dCST lineage is not a phylogenetic lineage.",
+        fontsize=7.2,
+        color="#444444",
     )
-    ax4.text(
-        0.795,
-        0.59,
-        "Depth-2\nDCST A__B",
-        ha="center",
-        va="center",
-        fontsize=11.2,
-        linespacing=1.0,
-        weight="bold",
-        color="#1d3557",
-    )
-    ax4.add_patch(FancyArrowPatch((0.24, 0.59), (0.34, 0.59), arrowstyle="-|>", mutation_scale=16, color="#6c757d"))
-    ax4.add_patch(FancyArrowPatch((0.56, 0.59), (0.65, 0.59), arrowstyle="-|>", mutation_scale=16, color="#6c757d"))
 
     OUT.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(OUT, dpi=220, bbox_inches="tight", pad_inches=0.04)
+    fig.savefig(OUT, dpi=340, bbox_inches="tight", pad_inches=0.04)
     plt.close(fig)
 
 

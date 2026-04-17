@@ -44,6 +44,13 @@ def wrap_lineage_label(label: str, max_parts_per_line: int = 2) -> str:
     return "\n".join(chunks)
 
 
+def support_label(row: pd.Series) -> str:
+    cases = int(row["n_cases_in_label_all"])
+    controls = int(row["n_controls_in_label_all"])
+    total = int(row["n_label_all"])
+    return f"n={total}; IBD/control={cases}/{controls}"
+
+
 def build_figure() -> None:
     df = load_results()
 
@@ -126,9 +133,9 @@ def build_figure() -> None:
                 xytext=(x_center, y - box_h / 2),
                 arrowprops=dict(arrowstyle="-|>", color="#5f5f5f", linewidth=1.5),
             )
-    ax_b.set_title("B. Bayesian estimates rescue\nrarer inflammatory states", loc="left", fontweight="bold")
+    ax_b.set_title("B. Counts and adjusted estimates\nfor representative IBD states", loc="left", fontweight="bold")
     y = np.arange(len(forest_rows))[::-1]
-    labels = [wrap_lineage_label(r["label"]) + f"  (n={int(r['n_label_all'])})" for r in forest_rows]
+    labels = [wrap_lineage_label(r["label"]) + "\n" + support_label(r) for r in forest_rows]
 
     for i, row in enumerate(forest_rows):
         yy = y[i]
@@ -175,7 +182,7 @@ def build_figure() -> None:
     ax_b.text(
         0.02,
         -0.12,
-        "Morganella and Proteus remain visible only in the Bayesian layer because their\nrare depth-1 states are too sparse for the conservative adjusted frequentist model.",
+        "Morganella and Proteus are shown as rare-state examples: Bayesian estimates remain finite,\nwhereas the conservative adjusted frequentist screen skips labels with too little support.",
         transform=ax_b.transAxes,
         fontsize=8.8,
         color="#4f4f4f",

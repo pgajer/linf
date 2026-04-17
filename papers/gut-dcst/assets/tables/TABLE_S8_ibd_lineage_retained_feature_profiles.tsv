@@ -1,0 +1,5 @@
+label	depth	n_total	n_ibd	n_control	median_Bacteroides_all_pct	median_Bacteroides_ibd_pct	median_Lachnospiraceae_all_pct	median_Lachnospiraceae_ibd_pct	median_Alistipes_all_pct	median_Alistipes_ibd_pct	median_Faecalibacterium_all_pct	median_Faecalibacterium_ibd_pct
+Bacteroides	1	10599	511	10088	32.0	24.3	4.7	7.1	2.5	4.3	5.7	4.9
+Bacteroides/Lachnospiraceae	2	1643	163	1480	31.8	20.4	10.1	10.6	2.2	5.3	5.3	4.9
+Bacteroides/Lachnospiraceae/Alistipes	3	176	49	127	30.9	18.2	9.6	10.5	6.6	7.9	3.7	4.9
+Bacteroides/Lachnospiraceae/Alistipes/Faecalibacterium	4	89	16	73	31.2	21.9	9.4	10.1	6.7	8.4	4.5	6.2
