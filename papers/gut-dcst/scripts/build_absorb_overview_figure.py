@@ -22,8 +22,6 @@ FOCAL_OUTCOMES = [
     ("IBD", "IBD", "#8c1c13"),
     ("Autoimmune", "Autoimmune", "#355070"),
     ("IBS", "IBS", "#6a994e"),
-    ("Acid_reflux", "Acid reflux", "#bc6c25"),
-    ("Seasonal_allergies", "Seasonal allergies", "#7b2cbf"),
 ]
 
 
@@ -157,7 +155,7 @@ def build_figure() -> None:
     ax_c.set_xlabel("Hierarchy depth")
     ax_c.set_ylabel("Cramer's V")
     ax_c.set_ylim(0.05, 0.38)
-    ax_c.set_title("C. The clearest absorb-state growth occurs in five focal phenotype branches", loc="left", fontweight="bold")
+    ax_c.set_title("C. Absorb-state association strengthens in the main inflammatory branches", loc="left", fontweight="bold")
     ax_c.grid(axis="y", alpha=0.22, linewidth=0.6)
     ax_c.spines["top"].set_visible(False)
     ax_c.spines["right"].set_visible(False)

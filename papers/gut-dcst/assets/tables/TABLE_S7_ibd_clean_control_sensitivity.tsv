@@ -1,0 +1,5 @@
+label	depth	primary_cases_controls	primary_adj_or_q	clean_cases_controls	clean_adj_or_q	clean_bayes_or
+Bacteroides	1	511/10088	1.54, q=8.1e-10	511/5409	1.59, q=1.1e-10	1.59
+Bacteroides/Lachnospiraceae	2	163/1480	3.21, q=2.6e-33	163/791	3.15, q=1.5e-28	3.14
+Bacteroides/Lachnospiraceae/Alistipes	3	49/127	8.56, q=1.5e-28	49/55	10.15, q=6.2e-22	9.94
+Bacteroides/Lachnospiraceae/Alistipes/Faecalibacterium	4	16/73	5.53, q=1.1e-07	16/35	not estimable	5.68
