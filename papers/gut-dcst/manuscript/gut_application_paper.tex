@@ -179,22 +179,24 @@ labels depend on choices about data transformation, distance metric,
 clustering model, and the number of clusters. We therefore applied
 dominant-community state types (dCSTs), a deterministic rank-based
 description of retained-feature dominance, to 30,290 quality-controlled
-American Gut Project stool samples from a 34,711-sample SILVA
-species-level table. The strongest disease-contextual signal was
+American Gut Project stool samples from a 34,711-sample SILVA gut
+abundance table. The strongest disease-contextual signal was
 self-reported IBD. A broad \taxon{Bacteroides} enrichment at depth 1
 resolved into progressively stronger \taxon{Bacteroides}-centered dCST
 dominance-lineages at depths 2 to 4, while Bayesian models retained finite
 estimates for exploratory rare enterobacterial states. The IBD signal was
-robust to a stricter control definition, and external validation
-separated two forms of reproducibility: Halfvarson 2017 supported the IBD
-association in both rebuilt-cohort analyses and direct transfer of
-AGP-derived absorb dCST labels, PRJEB84421
-provided narrower rebuilt inflammatory support, and pooled HMP2 retained
-a weaker transferred depth-2 IBD signal after explicit case coding. IBS
-and autoimmune disease showed weaker but directionally related dominance
-patterns. These results support dCSTs as an interpretable framework for
-resolving IBD-associated gut microbiome dominance structure, with broader
-gut-outcome applications remaining more exploratory.
+robust to a stricter control definition and to coarse antibiotic-status
+sensitivity analyses. External validation separated two forms of
+reproducibility: sample-level Halfvarson 2017 analyses supported both
+rebuilt-cohort and direct AGP-derived label-transfer signals,
+PRJEB84421 provided narrower rebuilt inflammatory support, and pooled
+HMP2 retained a weaker depth-2 transferred IBD signal that persisted in a
+first-sample-per-subject sensitivity analysis. IBS and autoimmune disease
+showed weaker but directionally related dominance patterns. These results
+support dCSTs as an interpretable framework for resolving
+IBD-associated gut microbiome dominance structure, while broader
+gut-outcome applications and universal label portability remain
+exploratory.
 
 \textbf{Keywords:} gut microbiome; inflammatory bowel disease;
 dysbiosis; enterotypes; dominant-community state types; Bayesian
@@ -303,28 +305,30 @@ depth-1 \taxon{Bacteroides} enrichment resolved into deeper
 \taxon{Bacteroides}-centered dominance-lineages, while sparse enterobacterial
 states required more cautious interpretation. Frequentist and Bayesian analyses
 agreed for common IBD-associated states, and Bayesian models provided
-finite estimates for sparse states that were too small for conservative
-adjusted frequentist follow-up. External validation supported
+finite estimates for sparse states that were outside the primary
+adjusted frequentist screen. External validation supported
 reproducibility of IBD-associated dominance patterns most clearly in
-Halfvarson 2017, with more selective transferred support in HMP2 /
-IBDMDB and narrower rebuilt-cohort support in PRJEB84421. Accordingly,
+sample-level Halfvarson 2017 analyses, with more selective
+subject-level-stable transferred support in HMP2 / IBDMDB and narrower
+rebuilt-cohort support in PRJEB84421. Accordingly,
 the manuscript emphasizes IBD-associated dominance structure, while IBS
 and autoimmune disease are treated as related, hypothesis-generating
 extensions.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.98\linewidth,height=\textheight,keepaspectratio,alt={IBD overview figure. Panel A shows that Cramer's V increases most strongly across depths 1 to 4 for IBD compared with autoimmune disease and IBS. Panel B shows frequentist and Bayesian adjusted odds ratios for representative common IBD dominance-lineages and rare enterobacterial states. Panel C compares rebuilt-cohort external validation with direct transfer of AGP-derived absorb dCST labels.}]{../assets/figures/FIGURE_2_ibd_results_overview.png}
+\includegraphics[width=0.98\linewidth,height=\textheight,keepaspectratio,alt={IBD overview figure. Panel A shows that Cramer's V increases most strongly across depths 1 to 4 for IBD compared with autoimmune disease and IBS. Panel B shows frequentist and Bayesian adjusted odds ratios for representative common IBD dominance-lineages and rare enterobacterial states. Panel C compares sample-level rebuilt-cohort external validation with direct transfer of AGP-derived absorb dCST labels.}]{../assets/figures/FIGURE_2_ibd_results_overview.png}
 \caption{Overview of IBD-associated dominance-state structure. Panel A
 shows that IBD had the strongest depth-resolved absorb dCST association
 among the main gut or immune-associated phenotype analyses. Panel B
 summarizes representative common IBD dominance-lineages and sparse enterobacterial
 states using frequentist and Bayesian adjusted odds ratios. Panel C
-summarizes external validation: rebuilt-cohort analyses test whether
+summarizes sample-level external validation: rebuilt-cohort analyses test whether
 disease-associated dominance structure is rediscovered within each
 cohort, whereas direct transfer of AGP-derived absorb dCST labels tests
 whether discovery-cohort labels remain informative without rebuilding the
-hierarchy. The dashed line marks q = 0.05.}
+hierarchy. Subject-level validation sensitivity is reported in the text
+and supplement. The dashed line marks q = 0.05.}
 \end{figure}
 
 \section{Results}\label{cohort-overview}
@@ -392,7 +396,7 @@ especially \emph{Faecalibacterium prausnitzii}
 \citeproc{ref-Manichanh2006_CD}{Manichanh et al. 2006}).
 
 IBD produced the strongest absorb dCST structure in the cohort. In the
-conservative adjusted depth-1 screen, the clearest frequentist signals
+primary adjusted depth-1 screen, the clearest frequentist signals
 were enrichment of \taxon{Bacteroides} (adjusted OR 1.54, q =
 8.1e-10), \taxon{Bifidobacterium} (adjusted OR 3.38, q =
 2.2e-04), Enterobacterales (adjusted OR 3.23, q = 0.0016), and
@@ -400,15 +404,16 @@ Lachnospiraceae (adjusted OR 1.99, q = 0.0030), together with
 depletion of \taxon{Prevotella\_9} (adjusted OR 0.44, q =
 2.2e-04). The Bayesian layer recovered the same common-state picture,
 but it also highlighted very rare enterobacterial states that were too
-small for the conservative adjusted frequentist screen. In particular,
+small for the primary adjusted frequentist screen. In particular,
 \taxon{Morganella} showed a Bayesian adjusted OR of 18.99
 (95\% credible interval 10.15--35.53) and \taxon{Proteus} showed a
 Bayesian adjusted OR of 3.40 (95\% credible interval 1.40--8.27), both
 with near-complete posterior support for enrichment in IBD. These
 rare-state examples were small: \taxon{Morganella} contained 22 IBD
 samples and 34 controls, and \taxon{Proteus} contained 6 IBD samples and
-45 controls. We therefore treat them as biologically suggestive
-rare-state signals rather than as stand-alone biomarkers.
+45 controls. We therefore treat them as exploratory facultative-anaerobe
+or Enterobacterales-linked rare-state signals rather than as stand-alone
+biomarkers or as evidence of disease severity.
 
 Hierarchical refinement strengthened the IBD-associated signal.
 At depth 2, \taxon{Bacteroides}\dcstsep Lachnospiraceae reached adjusted
@@ -450,10 +455,26 @@ dominance-lineage at depth 3 (adjusted OR 10.15, q = 6.2e-22). The
 depth-4
 \taxon{Bacteroides}\dcstsep Lachnospiraceae\dcstsep\taxon{Alistipes}\dcstsep\taxon{Faecalibacterium}
 dominance-lineage retained a finite Bayesian estimate but became too small for the
-conservative adjusted frequentist screen. The rare \taxon{Morganella}
+primary adjusted frequentist screen. The rare \taxon{Morganella}
 and \taxon{Proteus} states likewise fell below the prespecified support
 threshold in this sensitivity analysis, reinforcing the need to interpret
 them cautiously (Supplementary Table S7).
+
+Coarse antibiotic-status sensitivity analyses supported the same
+calibration. Among age-, sex-, and BMI-complete samples, adding the AGP
+\texttt{Antibiotic\_Status} field as a covariate or excluding samples
+reporting antibiotic use in the previous week, month, or six months did
+not attenuate the leading \taxon{Bacteroides}-centered IBD signals. The
+depth-2 \taxon{Bacteroides}\dcstsep Lachnospiraceae dominance-lineage,
+for example, had adjusted OR 3.21 in the age/sex/BMI model, 3.26 after
+including coarse antibiotic status, and 3.44 after excluding recent
+antibiotic users. These analyses do not replace detailed medication,
+treatment, or disease-activity data, but they make recent antibiotic use
+an unlikely sole explanation for the main AGP IBD result
+(Supplementary Table S9). The selected IBD labels were also stable when
+compared against the pure-policy dCST baseline, indicating that the
+primary \taxon{Bacteroides}-centered findings are not artifacts of the
+absorb low-frequency policy (Supplementary Table S12).
 
 \begin{figure}[H]
 \centering
@@ -467,7 +488,7 @@ representative IBD-associated dominance-lineages and reports the corresponding
 IBD/control counts. The common dominance-lineages are supported by both the
 frequentist and Bayesian analyses. Rare enterobacterial dominance-lineages, including \taxon{Morganella}
 and \taxon{Proteus}, are included as sparse-label examples: Bayesian
-estimates remain finite, whereas the conservative adjusted frequentist
+estimates remain finite, whereas the primary adjusted frequentist
 screen skips labels with insufficient support.}
 \end{figure}
 
@@ -513,6 +534,22 @@ with exact label portability clearly demonstrated in Halfvarson and
 supported more selectively in pooled HMP2 (Figure 4; Supplementary Table
 S4).
 
+Because Halfvarson and HMP2 contain repeated samples, we also repeated
+the leading validation summaries after retaining one detected sample per
+subject. This sensitivity analysis narrowed the interpretation. The
+Halfvarson sample-level transfer results remained strongest overall, but
+the pooled IBD and Crohn transfer contrasts attenuated to suggestive
+rather than corrected-significant subject-level evidence, whereas the UC
+transfer signal remained significant (q = 0.0029). In HMP2, the
+transferred depth-2 \taxon{Bacteroides}\dcstsep\taxon{Faecalibacterium}
+signal remained significant in the subject-level sensitivity analysis
+(q = 0.012). Direct transfer also showed phenotype-associated mapping
+differences in Halfvarson, especially at deeper depths, where IBD cases
+mapped more often than controls. We therefore treat direct AGP-derived
+label transfer as strongest when both the association and the mapping
+diagnostics are favorable, and we avoid interpreting nonmapping as
+biological absence (Supplementary Tables S10 and S11).
+
 \begin{table}[H]
 \footnotesize
 \caption{External validation summary for the main IBD-centered
@@ -526,8 +563,8 @@ directly to external samples.}
 \toprule
 Cohort & Validation context & Evidence summary & Interpretation \\
 \midrule
-Halfvarson 2017 & Stool IBD, Crohn, and UC comparisons versus healthy controls; longitudinal sampling. & Corrected rebuilt-cohort and AGP-derived label-transfer signals in all three inflammatory comparisons. & Strongest evidence for both dominance-pattern reproducibility and label portability. \\
-HMP2 / IBDMDB & Pooled IBD versus healthy after explicit case recoding; mucosal gut-site samples with repeated longitudinal sampling. & Rebuilt mode was directional only, but AGP-derived label transfer retained a weaker depth-2 \taxon{Bacteroides}\dcstsep\taxon{Faecalibacterium} signal (q = 0.027). & Selective transfer support, not a broad independent rediscovery. \\
+Halfvarson 2017 & Stool IBD, Crohn, and UC comparisons versus healthy controls; longitudinal sampling. & Sample-level rebuilt-cohort and AGP-derived label-transfer signals in all three inflammatory comparisons; subject-level sensitivity attenuated pooled IBD and Crohn transfer but retained UC transfer. & Strongest sample-level evidence, with subject-level checks supporting a calibrated label-portability claim. \\
+HMP2 / IBDMDB & Pooled IBD versus healthy after explicit case recoding; mucosal gut-site samples with repeated longitudinal sampling. & Rebuilt mode was directional only, but AGP-derived label transfer retained a weaker depth-2 \taxon{Bacteroides}\dcstsep\taxon{Faecalibacterium} signal at sample level and after one-sample-per-subject sensitivity. & Selective transfer support, not a broad independent rediscovery. \\
 PRJEB84421 & Orofacial granulomatosis versus healthy controls. & Rebuilt depth-2 \taxon{Faecalibacterium}\dcstsep\taxon{Bacteroides} depletion retained significance (q = 0.019), but AGP-derived label transfer did not. & Narrow inflammatory support without label-level portability. \\
 Gevers 2014 & Pediatric stool Crohn disease versus healthy controls. & Samples mapped into the AGP hierarchy, but neither rebuilt-cohort nor AGP-derived label-transfer tests retained corrected absorb dCST dominance-lineage signal. & Informative mapping but not a positive replication. \\
 Jacobs 2023 IBS 250bp & Baseline IBS versus healthy controls. & Directional at most, with no corrected AGP-derived label-transfer signal. & IBS validation remains inconclusive. \\
@@ -537,11 +574,11 @@ Jacobs 2023 IBS 250bp & Baseline IBS versus healthy controls. & Directional at m
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.98\linewidth,height=\textheight,keepaspectratio,alt={External validation comparison figure. Panel A compares the strongest BH-adjusted signal recovered for each key cohort-comparison under rebuilt-cohort absorb validation and direct AGP-derived absorb dCST label transfer. Panel B shows AGP-derived hierarchy mapping coverage across depths 1 to 4 for the same comparisons. Halfvarson stays positive in both modes, HMP2 retains a weaker transferred depth-2 signal, and the other cohorts map into the hierarchy but lose exact-state significance when AGP-derived labels are assigned directly.}]{../assets/figures/FIGURE_4_external_validation_modes.png}
+\includegraphics[width=0.98\linewidth,height=\textheight,keepaspectratio,alt={External validation comparison figure. Panel A compares the strongest BH-adjusted sample-level signal recovered for each key cohort-comparison under rebuilt-cohort absorb validation and direct AGP-derived absorb dCST label transfer. Panel B shows AGP-derived hierarchy mapping coverage across depths 1 to 4 for the same comparisons. Halfvarson stays positive in both sample-level modes, HMP2 retains a weaker transferred depth-2 signal, and the other cohorts map into the hierarchy but lose exact-state significance when AGP-derived labels are assigned directly.}]{../assets/figures/FIGURE_4_external_validation_modes.png}
 \caption{External validation separates reproducibility of the
 IBD-associated dominance pattern from exact label portability. The figure
 summarizes the validation modes reported in Table 1. Panel A compares the strongest BH-adjusted
-signal recovered for each key cohort-comparison under rebuilt-cohort
+sample-level signal recovered for each key cohort-comparison under rebuilt-cohort
 absorb validation and direct AGP-derived absorb dCST label transfer.
 Rebuilt cohort validation is broader, whereas direct AGP-derived label
 transfer is stricter and therefore a better test of whether
@@ -566,7 +603,9 @@ inflammatory facultative taxa
 compresses that pattern into an interpretable hierarchy: a broad
 \taxon{Bacteroides} background, IBD-associated
 \taxon{Bacteroides}-centered dominance-lineages at greater depth, and a small set
-of rare enterobacterial states that may mark more severe dysbiosis.
+of sparse enterobacterial states that remain exploratory because
+disease activity and severity measures were not available in the AGP
+discovery metadata.
 
 \subsection{Irritable bowel syndrome
 (IBS)}\label{irritable-bowel-syndrome-ibs}
@@ -653,7 +692,7 @@ inflammatory ecological axis rather than one causal autoimmune taxon
 \section{Materials and Methods}\label{methods}
 
 The discovery analysis used AGP gut samples from the PRIME-derived SILVA
-species-level abundance table (\citeproc{ref-McDonald2018_AGP}{McDonald
+gut-project abundance table (\citeproc{ref-McDonald2018_AGP}{McDonald
 et al. 2018}; \citeproc{ref-Quast2013_SILVA}{Quast et al. 2013}). We
 restricted the analysis to the 34,711 AGP rows present in the PRIME
 gut-project abundance table. Samples with total library size below
@@ -686,10 +725,15 @@ counts were 3,105 for IBS, 1,166 for IBD, 2,872 for autoimmune disease,
 complete-case counts after requiring age, sex, and BMI were 2,551, 993,
 2,426, 2,279, and 8,284, respectively (Supplementary Table S1). For the
 AGP discovery cohort, IBD subtype, disease activity, medication exposure,
-and recent antibiotic exposure were not consistently available in a form
-that supported reliable adjustment; the discovery IBD analyses are
+and detailed treatment histories were not available in a form that
+supported clinical subtype modeling; the discovery IBD analyses are
 therefore interpreted as self-reported phenotype associations rather than
-as treatment-naive clinical subtype analyses.
+as treatment-naive clinical subtype analyses. The coarser AGP
+\texttt{Antibiotic\_Status} field was available for 22,939 of 23,198
+age/sex/BMI complete-case samples and was used in sensitivity analyses
+that either added antibiotic status as a categorical covariate or
+excluded samples reporting antibiotic use in the previous week, month, or
+six months (Supplementary Table S9).
 
 Absorb-policy dCSTs were constructed from the within-sample dominance
 order (Figure 1). A depth-1 state is defined by the dominant retained
@@ -738,6 +782,11 @@ interval based on the posterior standard error, and \(\Pr(\beta > 0)\)
 for enrichment. Multiple testing in the conventional analyses was
 controlled with the Benjamini-Hochberg procedure
 (\citeproc{ref-BenjaminiHochberg1995}{Benjamini and Hochberg 1995}).
+We treat BH-adjusted frequentist results as the primary evidence for
+screen-level discovery and use Bayesian estimates as complementary
+stabilized summaries, especially for sparse labels where maximum
+likelihood estimates can be unstable or prespecified support filters
+exclude labels from the primary adjusted screen.
 
 The results presented in detail here are the phenotype analyses that combined the
 clearest absorb dCST structure with stable Bayesian follow-up of
@@ -746,7 +795,10 @@ Additional non-IBD analyses are summarized in the supplement. As a
 control-definition sensitivity check for the
 primary IBD analysis, we repeated the IBD follow-up after excluding non-IBD
 controls with the other AGP phenotype strings analyzed in this study
-(IBS, autoimmune disease, acid reflux, or seasonal allergies). External validation
+(IBS, autoimmune disease, acid reflux, or seasonal allergies). Selected
+IBD labels were also compared under the absorb and pure-policy
+hierarchies to check whether the main signals depended on absorption of
+low-frequency dominance patterns (Supplementary Table S12). External validation
 was evaluated in two complementary ways. In rebuilt-cohort validation,
 each external matrix was filtered and analyzed independently with the
 same absorb workflow used for the discovery cohort. In direct
@@ -755,7 +807,11 @@ the AGP-derived absorb dCST hierarchy after aligning each cohort's taxa to the A
 retained-feature dictionary. The completed validation cohorts included
 HMP2 / IBDMDB, Halfvarson 2017, Gevers 2014, PRJEB84421, and Jacobs 2023
 IBS 250bp; the main text emphasizes the IBD-focused cohorts because they
-provided the clearest external readout, and the full comparison
+provided the clearest external readout. For cohorts with repeated
+subjects, we repeated leading validation tests after retaining one
+detected sample per subject, and for direct AGP-derived label transfer
+we summarized case/control mapping rates by depth (Supplementary Tables
+S10 and S11). The full comparison
 summary is given in Supplementary Table S4. All manuscript figures,
 tables, and analysis scripts were generated from workflows built around
 the \texttt{linf} R package, with project-specific runners maintained in
@@ -768,8 +824,8 @@ consistent with established dysbiosis biology and interpretable at the
 level of individual samples. The central pattern is a broad
 \taxon{Bacteroides} background that resolves into deeper
 \taxon{Bacteroides}-centered dominance-lineages, together with sparse
-enterobacterial states that may mark more severe dysbiosis but remain
-exploratory because of their small support. These labels should not be
+enterobacterial states that remain exploratory because of their small
+support and the absence of AGP disease-activity metadata. These labels should not be
 interpreted as evidence that dominant taxa alone explain IBD. Rather,
 they provide a
 compact way to name recurrent ecological contexts in which IBD cases are
@@ -807,7 +863,12 @@ rebuilt evidence. When external samples are assigned directly to the
 AGP-derived absorb dCST hierarchy, Halfvarson remains clearly positive
 and pooled HMP2 retains a weaker depth-2 transfer signal, but the other
 cohorts mainly demonstrate mapping coverage rather than BH-significant
-label transfer. We therefore
+label transfer. Repeated-subject sensitivity analyses further calibrate
+this conclusion: some Halfvarson transferred comparisons attenuate when
+only one sample per detected subject is retained, whereas the HMP2
+depth-2 transferred signal remains significant. Mapping balance also
+matters, because deeper AGP-derived labels map differently by case
+status in Halfvarson. We therefore
 interpret the current evidence as strong for IBD-focused
 dominance-pattern reproducibility, moderate for portability of selected AGP-defined
 inflammatory states, and still limited for broad claims about a
@@ -816,7 +877,8 @@ will need broader stool-based validation, especially for IBS and any
 non-IBD extensions of this approach. AGP phenotypes are also
 self-reported and cross-sectional, so
 residual confounding, medication effects, antibiotic exposure, and
-reverse causation remain plausible. The dCST labels are also
+reverse causation remain plausible even though the leading IBD signals
+were robust to the coarse antibiotic-status checks available here. The dCST labels are also
 retained-feature labels constructed after prevalence filtering, and some
 low-resolution or potential non-gut labels appear in the full hierarchy;
 those states are retained for transparent accounting but require caution
@@ -849,7 +911,7 @@ project-specific discovery and follow-up runners are maintained in the
 public \texttt{gut\_microbiome} repository:
 \url{https://github.com/pgajer/gut_microbiome}. The discovery analysis
 used the American Gut Project stool cohort (\texttt{PRJEB11419}) through
-PRIME-derived species-level abundance tables. The main project scripts
+PRIME-derived gut abundance tables. The main project scripts
 are:
 
 \begin{itemize}
@@ -868,13 +930,17 @@ generated PRIME-derived HMP2 input exports.
 \item \path{build_ibd_dominance_lineage_profile_table.py}, which generated the
 retained-feature abundance profile table for the main IBD dCST
 dominance-lineages.
+\item \path{build_ibd_reviewer_sensitivity_assets.R}, which generated
+the antibiotic-status, subject-level validation, mapping-balance,
+absorb-policy robustness, and taxonomic-rank sensitivity tables added
+for reviewer calibration.
 \end{itemize}
 
 Supplementary materials summarize phenotype definitions and sample
 counts, the pure-versus-absorb depth-change summary, IBD sensitivity
 analyses, retained-feature dominance-lineage profiles, selected reference analyses
-retained outside the main text, and the cross-cohort validation
-comparison.
+retained outside the main text, and the cross-cohort validation and
+mapping-balance comparisons.
 
 \section{Funding}\label{funding}
 

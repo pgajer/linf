@@ -10,6 +10,7 @@
 \newcolumntype{Y}{>{\raggedright\arraybackslash}X}
 \newcommand{\taxon}[1]{\emph{#1}}
 \newcommand{\dcstsep}{/\allowbreak}
+\newcommand{\agpantibioticstatus}{\texttt{Antibiotic\_\allowbreak Status}}
 \title{Supplementary Materials\\Inflammatory Bowel Disease-Associated Dominance States in the Human Gut Microbiome}
 \author{Pawel Gajer and Jacques Ravel}
 \date{}
@@ -39,11 +40,15 @@ labels.
 
 The AGP discovery phenotype labels are self-reported and do not provide a
 uniform treatment-naive clinical IBD classification. IBD subtype, disease
-activity, medication exposure, and recent antibiotic exposure were not
-consistently available for adjusted discovery modeling. The AGP
-associations are therefore interpreted as phenotype-screening results and
-are paired with external validation rather than treated as clinical
-mechanistic estimates on their own.
+activity, and detailed medication exposure were not consistently
+available for adjusted discovery modeling. The coarser AGP
+\agpantibioticstatus{} field was available for most age/sex/BMI
+complete-case samples and was used in sensitivity analyses that either
+added antibiotic status as a categorical covariate or excluded samples
+reporting antibiotic use in the previous week, month, or six months. The
+AGP associations are therefore interpreted as phenotype-screening
+results and are paired with external validation rather than treated as
+clinical mechanistic estimates on their own.
 
 The adjusted frequentist label-level analyses used logistic regression
 with age, sex, and BMI as covariates. The adjusted Bayesian follow-up
@@ -54,7 +59,9 @@ approximate 95\% credible interval based on the posterior standard
 error, and the posterior probability that the label coefficient exceeds
 0. Unadjusted Bayesian prevalence contrasts were estimated separately
 with a beta-binomial model using a Jeffreys prior,
-\(\mathrm{Beta}(0.5,0.5)\).
+\(\mathrm{Beta}(0.5,0.5)\). BH-adjusted frequentist results are treated
+as the primary screen-level evidence, whereas Bayesian estimates are used
+as complementary stabilized summaries for sparse labels.
 
 External validation was evaluated in two complementary modes. In the
 rebuilt-cohort mode, each external count matrix was filtered and
@@ -64,7 +71,12 @@ external samples were mapped onto the AGP-derived absorb dCST hierarchy after al
 external taxa to the AGP retained-feature dictionary. The first mode
 tests whether disease-associated dominance structure is reproducible
 when rebuilt within a cohort; the second tests portability of the
-AGP-defined label dictionary itself.
+AGP-defined label dictionary itself. Because some external datasets have
+repeated samples per subject, we also repeated leading validation tests
+after retaining one detected sample per subject. For direct AGP-derived
+label transfer, we additionally summarized case/control mapping rates by
+depth so that label-transfer associations could be interpreted alongside
+mapping balance.
 
 \section*{Supplementary Results}
 
@@ -160,8 +172,8 @@ Label & Depth & \(n\) & Frequentist adjusted OR (95\% CI) & Bayesian adjusted OR
 \midrule
 \taxon{Bacteroides} & 1 & 10,599 & 1.54 (1.36--1.76) & 1.54 (1.36--1.76) \\
 Enterobacterales & 1 & 103 & 3.23 (1.73--6.04) & 3.13 (1.68--5.84) \\
-\taxon{Morganella} & 1 & 56 & not estimable & 18.99 (10.15--35.53) \\
-\taxon{Proteus} & 1 & 51 & not estimable & 3.40 (1.40--8.27) \\
+\taxon{Morganella} & 1 & 56 & not included in primary adjusted screen & 18.99 (10.15--35.53) \\
+\taxon{Proteus} & 1 & 51 & not included in primary adjusted screen & 3.40 (1.40--8.27) \\
 \taxon{Bacteroides}\dcstsep Lachnospiraceae & 2 & 1,643 & 3.21 (2.67--3.86) & 3.20 (2.66--3.85) \\
 \taxon{Bacteroides}\dcstsep Lachnospiraceae\dcstsep\taxon{Alistipes} & 3 & 176 & 8.56 (5.92--12.36) & 8.44 (5.85--12.19) \\
 \taxon{Bacteroides}\dcstsep Lachnospiraceae\dcstsep\taxon{Alistipes}\dcstsep\taxon{Faecalibacterium} & 4 & 89 & 5.53 (3.10--9.87) & 5.36 (3.01--9.55) \\
@@ -274,7 +286,7 @@ supplementary phenotype branches.
 \toprule
 Phenotype & Strongest depth-1 adjusted signal & Strongest deeper adjusted signal & Bayesian value added \\
 \midrule
-IBD & \taxon{Bacteroides} enriched (adjusted OR 1.54, q = 8.1e-10) & \taxon{Bacteroides}\dcstsep Lachnospiraceae\dcstsep\taxon{Alistipes} enriched at depth 3 (adjusted OR 8.56, q = 1.5e-28) & Bayesian models highlighted rare enterobacterial states, especially \taxon{Morganella}, that were too small for the conservative adjusted screen. \\
+IBD & \taxon{Bacteroides} enriched (adjusted OR 1.54, q = 8.1e-10) & \taxon{Bacteroides}\dcstsep Lachnospiraceae\dcstsep\taxon{Alistipes} enriched at depth 3 (adjusted OR 8.56, q = 1.5e-28) & Bayesian models highlighted rare enterobacterial states, especially \taxon{Morganella}, that were outside the primary adjusted screen. \\
 IBS & \taxon{Escherichia-Shigella} enriched (adjusted OR 1.24, q = 0.002) & \taxon{Escherichia-Shigella}\dcstsep\taxon{Bacteroides}\dcstsep Lachnospiraceae enriched at depth 3 (adjusted OR 1.78, q = 0.018) & Bayesian models retained support for several depth-4 dominance-lineages even when q-values no longer crossed 0.05. \\
 Autoimmune & \taxon{Bacteroides} enriched (adjusted OR 1.40, q = 1.6e-12) & \taxon{Bacteroides}\dcstsep Lachnospiraceae\dcstsep\taxon{Alistipes} enriched at depth 3 (adjusted OR 5.52, q = 3.9e-21) & Bayesian models supported additional depth-4 \taxon{Bacteroides}-centered dominance-lineages beyond the frequentist q-significant set. \\
 Acid reflux & \taxon{Bacteroides} enriched (adjusted OR 1.28, q = 1.75e-05) & \taxon{Bacteroides}\dcstsep\taxon{Parabacteroides}\dcstsep Lachnospiraceae enriched at depth 3 (adjusted OR 2.64, q = 0.00419) & Bayesian models retained support for numerous depth-4 \taxon{Bacteroides}-centered reflux dominance-lineages after the frequentist signal thinned. \\
@@ -297,8 +309,8 @@ analysis retained all 1,166 IBD cases and 16,175 cleaner controls.
 Label & Depth & Primary analysis & Cleaner-control sensitivity & Interpretation \\
 \midrule
 \taxon{Bacteroides} & 1 & 511/10,088 cases/controls; adjusted OR 1.54, q = 8.1e-10. & 511/5,409; adjusted OR 1.59, q = 1.1e-10. & Stable broad IBD signal. \\
-\taxon{Morganella} & 1 & 22/34; adjusted frequentist model not estimable; Bayesian adjusted OR 18.99. & Below support threshold after control exclusion. & Rare-state signal remains exploratory. \\
-\taxon{Proteus} & 1 & 6/45; adjusted frequentist model not estimable; Bayesian adjusted OR 3.40. & Below support threshold after control exclusion. & Rare-state signal remains exploratory. \\
+\taxon{Morganella} & 1 & 22/34; not included in the primary adjusted frequentist screen; Bayesian adjusted OR 18.99. & Below support threshold after control exclusion. & Rare-state signal remains exploratory. \\
+\taxon{Proteus} & 1 & 6/45; not included in the primary adjusted frequentist screen; Bayesian adjusted OR 3.40. & Below support threshold after control exclusion. & Rare-state signal remains exploratory. \\
 \taxon{Bacteroides}\dcstsep Lachnospiraceae & 2 & 163/1,480; adjusted OR 3.21, q = 2.6e-33. & 163/791; adjusted OR 3.15, q = 1.5e-28. & Stable deeper IBD dCST dominance-lineage. \\
 \taxon{Bacteroides}\dcstsep Lachnospiraceae\dcstsep\taxon{Alistipes} & 3 & 49/127; adjusted OR 8.56, q = 1.5e-28. & 49/55; adjusted OR 10.15, q = 6.2e-22. & Stable deeper IBD dCST dominance-lineage. \\
 \taxon{Bacteroides}\dcstsep Lachnospiraceae\dcstsep\taxon{Alistipes}\dcstsep\taxon{Faecalibacterium} & 4 & 16/73; adjusted OR 5.53, q = 1.1e-07. & 16/35; frequentist model skipped; Bayesian adjusted OR 5.68. & Direction retained, but depth-4 support becomes sparse. \\
@@ -325,6 +337,127 @@ Label & Depth & IBD/control & \taxon{Bacteroides} & Lachnospiraceae & \taxon{Ali
 \taxon{Bacteroides}\dcstsep Lachnospiraceae & 2 & 163/1,480 & 31.8 (20.4) & 10.1 (10.6) & 2.2 (5.3) & 5.3 (4.9) \\
 \taxon{Bacteroides}\dcstsep Lachnospiraceae\dcstsep\taxon{Alistipes} & 3 & 49/127 & 30.9 (18.2) & 9.6 (10.5) & 6.6 (7.9) & 3.7 (4.9) \\
 \taxon{Bacteroides}\dcstsep Lachnospiraceae\dcstsep\taxon{Alistipes}\dcstsep\taxon{Faecalibacterium} & 4 & 16/73 & 31.2 (21.9) & 9.4 (10.1) & 6.7 (8.4) & 4.5 (6.2) \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\newpage
+
+\noindent\textbf{Supplementary Table S9.} Antibiotic-status sensitivity
+for selected IBD dCST dominance-lineages. Values are adjusted odds
+ratios and selected-label BH-adjusted q-values. The three columns compare
+the age/sex/BMI complete-case model, the same model with coarse AGP
+antibiotic status added as a categorical covariate, and a
+model excluding samples reporting antibiotic use in the previous week,
+month, or six months.
+
+\begin{center}
+\scriptsize
+\begin{tabularx}{\textwidth}{@{} Y r Y Y Y @{}}
+\toprule
+Label & Depth & Age/sex/BMI & Plus antibiotic status & Excluding recent antibiotics \\
+\midrule
+\taxon{Bacteroides} & 1 & OR 1.54; q = 6.7e-11 & OR 1.58; q = 9.5e-12 & OR 1.69; q = 1.5e-12 \\
+\taxon{Bacteroides}\dcstsep Lachnospiraceae & 2 & OR 3.21; q = 1.4e-34 & OR 3.26; q = 3.4e-35 & OR 3.44; q = 3.5e-33 \\
+\taxon{Bacteroides}\dcstsep Lachnospiraceae\dcstsep\taxon{Alistipes} & 3 & OR 8.56; q = 8.0e-30 & OR 8.64; q = 1.4e-29 & OR 10.04; q = 2.6e-30 \\
+\taxon{Bacteroides}\dcstsep Lachnospiraceae\dcstsep\taxon{Alistipes}\dcstsep\taxon{Faecalibacterium} & 4 & OR 5.53; q = 8.5e-09 & OR 5.67; q = 7.0e-09 & OR 6.51; q = 2.3e-09 \\
+\taxon{Morganella} & 1 & OR 19.77; q = 3.2e-20 & OR 19.20; q = 4.1e-19 & OR 19.42; q = 2.0e-18 \\
+\taxon{Proteus} & 1 & OR 3.63; q = 0.0047 & OR 3.75; q = 0.0040 & OR 6.46; q = 0.00048 \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\bigskip
+
+\noindent\textbf{Supplementary Table S10.} First-sample-per-subject
+sensitivity for external validation. Values show the sample-level
+BH-adjusted q-value followed by the corresponding q-value after retaining
+one detected sample per subject for the same leading label.
+
+\begin{center}
+\scriptsize
+\begin{tabularx}{\textwidth}{@{} l l Y Y Y @{}}
+\toprule
+Cohort & Comparison & Rebuilt-cohort q & AGP-derived label-transfer q & Interpretation \\
+\midrule
+Halfvarson 2017 & IBD vs healthy & 3.0e-09 \(\rightarrow\) 0.219 & 6.8e-05 \(\rightarrow\) 0.097 & Strong sample-level support; subject-level pooled transfer becomes suggestive. \\
+Halfvarson 2017 & Crohn vs healthy & 2.6e-05 \(\rightarrow\) 0.102 & 6.5e-04 \(\rightarrow\) 0.466 & Sample-level support attenuates after repeated-sample reduction. \\
+Halfvarson 2017 & UC vs healthy & 3.3e-09 \(\rightarrow\) 0.075 & 3.0e-07 \(\rightarrow\) 0.0029 & Transferred UC label remains significant at subject level. \\
+HMP2 / IBDMDB & IBD vs healthy & 0.240 \(\rightarrow\) 0.075 & 0.027 \(\rightarrow\) 0.012 & Selective transferred depth-2 signal persists at subject level. \\
+Gevers 2014 & Crohn vs healthy & 0.305 \(\rightarrow\) 0.291 & 0.972 \(\rightarrow\) 1.000 & No corrected signal in either validation mode. \\
+PRJEB84421 & OFG vs healthy & 0.019 \(\rightarrow\) 0.019 & 0.282 \(\rightarrow\) 0.282 & Rebuilt support is unchanged because repeated subjects were not detected. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\bigskip
+
+\noindent\textbf{Supplementary Table S11.} Mapping-balance checks for
+direct AGP-derived label transfer. Coverage is the percentage of cases or
+controls that could be assigned an AGP-derived absorb dCST label at the
+specified depth.
+
+\begin{center}
+\scriptsize
+\begin{tabularx}{\textwidth}{@{} l r r r r Y @{}}
+\toprule
+Cohort comparison & Depth & Case coverage (\%) & Control coverage (\%) & Fisher p & Interpretation \\
+\midrule
+Halfvarson IBD vs healthy & 2 & 93.5 & 81.5 & 0.0047 & Cases mapped more often than controls. \\
+Halfvarson IBD vs healthy & 4 & 60.3 & 40.7 & 0.0083 & Deeper transfer has case/control mapping imbalance. \\
+Halfvarson UC vs healthy & 2 & 96.4 & 81.5 & 2.9e-04 & UC transfer is strong but mapping is phenotype-associated. \\
+Halfvarson UC vs healthy & 4 & 67.0 & 40.7 & 3.7e-04 & Deeper UC transfer requires cautious interpretation. \\
+HMP2 IBD vs healthy & 2 & 100.0 & 95.6 & 0.072 & High, nearly balanced depth-2 mapping. \\
+HMP2 IBD vs healthy & 4 & 52.1 & 66.7 & 0.114 & Deeper mapping drops and reverses direction. \\
+Gevers Crohn vs healthy & 2 & 77.7 & 78.8 & 1.000 & Balanced mapping but no transferred association. \\
+PRJEB84421 OFG vs healthy & 2 & 79.3 & 85.0 & 0.720 & Balanced mapping but no transferred association. \\
+Jacobs IBS vs healthy & 2 & 92.9 & 94.2 & 0.783 & Balanced mapping; IBS transfer remains inconclusive. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\bigskip
+
+\noindent\textbf{Supplementary Table S12.} Absorb-policy robustness for
+selected IBD labels. Values compare the absorb dCST view used in the
+main manuscript with the pure-policy baseline before low-frequency
+dominance patterns are absorbed into retained named states.
+
+\begin{center}
+\scriptsize
+\begin{tabularx}{\textwidth}{@{} Y r Y Y @{}}
+\toprule
+Label & Depth & Absorb view & Pure-policy baseline \\
+\midrule
+\taxon{Bacteroides} & 1 & OR 1.47; q = 3.4e-10 & OR 1.46; q = 1.1e-09 \\
+\taxon{Bacteroides}\dcstsep Lachnospiraceae & 2 & OR 3.04; q = 2.9e-28 & OR 3.18; q = 7.0e-30 \\
+\taxon{Bacteroides}\dcstsep Lachnospiraceae\dcstsep\taxon{Alistipes} & 3 & OR 10.01; q = 5.4e-28 & OR 10.44; q = 7.2e-26 \\
+\taxon{Bacteroides}\dcstsep Lachnospiraceae\dcstsep\taxon{Alistipes}\dcstsep\taxon{Faecalibacterium} & 4 & OR 5.54; q = 3.2e-07 & OR 8.15; q = 9.6e-07 \\
+\taxon{Morganella} & 1 & OR 16.45; q = 7.7e-17 & OR 18.04; q = 1.8e-17 \\
+\taxon{Proteus} & 1 & OR 3.34; q = 0.013 & OR 3.34; q = 0.013 \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\bigskip
+
+\noindent\textbf{Supplementary Table S13.} Taxonomic-rank transparency
+for selected IBD label components. The dCST labels use the deepest
+informative retained-feature annotation, so labels can mix taxonomic
+ranks.
+
+\begin{center}
+\footnotesize
+\begin{tabularx}{\textwidth}{@{} l l Y @{}}
+\toprule
+Component & Rank used by retained feature & SILVA lineage summary \\
+\midrule
+\taxon{Bacteroides} & Genus & Bacteroidota; Bacteroidia; Bacteroidales; Bacteroidaceae \\
+Lachnospiraceae & Family & Firmicutes; Clostridia; Lachnospirales \\
+\taxon{Alistipes} & Genus & Bacteroidota; Bacteroidia; Bacteroidales; Rikenellaceae \\
+\taxon{Faecalibacterium} & Genus & Firmicutes; Clostridia; Oscillospirales; Ruminococcaceae \\
+\taxon{Morganella} & Genus & Proteobacteria; Gammaproteobacteria; Enterobacterales; Morganellaceae \\
+\taxon{Proteus} & Genus & Proteobacteria; Gammaproteobacteria; Enterobacterales; Morganellaceae \\
 \bottomrule
 \end{tabularx}
 \end{center}
