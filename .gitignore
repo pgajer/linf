@@ -67,6 +67,18 @@ dev/
 papers/**/build/
 papers/**/.DS_Store
 
+# LaTeX manuscript build artefacts
+papers/**/manuscript/.auctex-auto/
+papers/**/manuscript/*.aux
+papers/**/manuscript/*.fdb_latexmk
+papers/**/manuscript/*.fls
+papers/**/manuscript/*.log
+papers/**/manuscript/*.out
+papers/**/manuscript/*.pdf
+papers/**/manuscript/*.synctex.gz
+papers/**/manuscript/*.toc
+papers/**/manuscript/*.xdv
+
 # Private explorations
 notes/explorations/bacteria_cell_wall/
 
