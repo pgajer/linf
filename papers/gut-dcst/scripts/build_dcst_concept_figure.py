@@ -137,7 +137,7 @@ def main() -> None:
     ax_d.set_xlim(0, 1)
     ax_d.set_ylim(0, 1)
     add_panel_label(ax_d, "D")
-    ax_d.set_title("Depth-2 dCST lineages", loc="left", fontweight="bold")
+    ax_d.set_title("Depth-2 dCST dominance-lineages", loc="left", fontweight="bold")
     draw_box(ax_d, (0.03, 0.67), 0.43, 0.18, "Parent DSS\n" + italic_label("Bacteroides"), "#d9ead3", "#6a994e", weight="bold")
     draw_box(ax_d, (0.52, 0.76), 0.47, 0.16, italic_label("Bacteroides") + " /\n" + italic_label("Faecalibacterium"), "#cfe2f3", "#457b9d", fontsize=7.5)
     draw_box(ax_d, (0.52, 0.53), 0.47, 0.16, italic_label("Bacteroides") + " /\n" + italic_label("Alistipes"), "#ead1dc", "#8e7cc3", fontsize=7.5)

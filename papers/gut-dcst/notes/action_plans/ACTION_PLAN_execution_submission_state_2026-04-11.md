@@ -13,7 +13,7 @@ Execution choices for this pass:
 - Branches moved out of the main text: acid reflux and seasonal allergies.
 - Main-text section removed entirely: “Remaining phenotypes.”
 - Main-text display-item reduction:
-  - move the top depth-1 absorb-state table out of the main text;
+  - move the top depth-1 absorb dCST dominance-lineage table out of the main text;
   - move the multi-phenotype summary table out of the main text;
   - retain the absorb overview figure, IBD lineage figure, and validation figure.
 

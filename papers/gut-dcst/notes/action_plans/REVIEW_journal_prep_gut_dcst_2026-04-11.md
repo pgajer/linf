@@ -58,7 +58,7 @@ Key locations:
 
 ### 4. Moderate: methods are reproducible, but the manuscript still mixes scientific method with project framing
 
-The core methods are now reasonably reproducible, especially for phenotype definition, absorb hierarchy construction, Bayesian follow-up, and external validation. However, parts of Methods still read as manuscript-management explanation rather than pure scientific method, especially around pure-versus-absorb placement and local script ecosystem framing. The scientific object of each test is clearer than before, but the section could still be cleaner and more journal-efficient.
+The core methods are now reasonably reproducible, especially for phenotype definition, absorb dCST hierarchy construction, Bayesian follow-up, and external validation. However, parts of Methods still read as manuscript-management explanation rather than pure scientific method, especially around pure-versus-absorb placement and local script ecosystem framing. The scientific object of each test is clearer than before, but the section could still be cleaner and more journal-efficient.
 
 Key locations:
 
@@ -98,7 +98,7 @@ Key locations:
 
 ### 8. Minor: the supplement is useful but should become more curated and less summary-like over time
 
-The supplement is now carrying appropriate material, especially phenotype definitions, pure-versus-absorb divergence, selected IBD lineage detail, and the rebuilt-versus-frozen validation comparison. The current S4 interpretation column is helpful, but as the manuscript tightens it should evolve toward a stable reviewer-facing support document rather than a running summary of current project interpretations.
+The supplement is now carrying appropriate material, especially phenotype definitions, pure-versus-absorb divergence, selected IBD lineage detail, and the rebuilt-cohort versus direct AGP-derived label-transfer validation comparison. The current S4 interpretation column is helpful, but as the manuscript tightens it should evolve toward a stable reviewer-facing support document rather than a running summary of current project interpretations.
 
 Key locations:
 
@@ -113,7 +113,7 @@ At the manuscript’s current state, the following belong in the main text:
 
 - the deterministic/absorb dCST concept and rationale;
 - the AGP gut cohort definition and primary methods;
-- the absorb hierarchy overview;
+- the absorb dCST hierarchy overview;
 - IBD as the anchor phenotype;
 - the external-validation story for the inflammatory branch;
 - at most one or two secondary phenotype branches, with IBS and autoimmune disease the strongest candidates if breadth is retained.
@@ -125,7 +125,7 @@ The following belong in the supplement by default:
 - pure dCST reference analyses;
 - detailed pure-versus-absorb comparison material;
 - dense Bayesian summary tables;
-- the full rebuilt-versus-frozen external-validation comparison;
+- the full rebuilt-cohort versus direct AGP-derived label-transfer external-validation comparison;
 - additional phenotype branches not chosen as core stories, especially acid reflux and seasonal allergies if the paper is narrowed;
 - any retained high-level summary table that duplicates the results narrative.
 

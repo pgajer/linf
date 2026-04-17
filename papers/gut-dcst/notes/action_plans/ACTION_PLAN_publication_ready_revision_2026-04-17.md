@@ -31,7 +31,7 @@ Execution plan and status:
   Added explicit IBD/control support for the rare enterobacterial examples and framed them as suggestive sparse-state signals rather than stand-alone biomarkers.
 
 - [x] Run and report an IBD-focused control-definition sensitivity check addressing AGP self-report and non-mutually exclusive phenotype controls.
-  Re-ran the IBD absorb follow-up after excluding non-IBD controls carrying any other focal AGP phenotype string. Added the result to the IBD Results text and Supplementary Table S7.
+  Re-ran the IBD absorb-policy dCST dominance-lineage follow-up after excluding non-IBD controls carrying any other AGP phenotype string analyzed in this study (IBS, autoimmune disease, acid reflux, or seasonal allergies). Added the result to the IBD Results text and Supplementary Table S7.
 
 - [x] Simplify Figure 1 using the CT-paper logic without importing the dense CT schematic wholesale.
   Rebuilt Figure 1 as a gut-facing dCST schematic covering a toy abundance table, dominance sample sets, pure versus absorb handling of small states, and depth-2 dominance-lineages.
@@ -43,10 +43,10 @@ Execution plan and status:
   Added IBD/control counts to the representative IBD-state estimates and sharpened the caption around common versus rare-state interpretation.
 
 - [x] Add a compact main-text external-validation table and calibrate Figure 4 as supporting visualization rather than the only validation summary.
-  Added a main-text validation table distinguishing rebuilt-cohort and frozen-transfer validation, then revised the Figure 4 caption so it supports rather than overstates label portability.
+  Added a main-text validation table distinguishing rebuilt-cohort validation from direct AGP-derived label transfer, then revised the Figure 4 caption so it supports rather than overstates label portability.
 
-- [x] Split the cramped supplement validation table into rebuilt-cohort and frozen-transfer summaries.
-  Reorganized the supplement validation material into separate rebuilt and frozen-transfer tables for readability.
+- [x] Split the cramped supplement validation table into rebuilt-cohort and direct AGP-derived label-transfer summaries.
+  Reorganized the supplement validation material into separate rebuilt and direct AGP-derived label-transfer tables for readability.
 
 - [x] Clean Data and Code Availability formatting.
   Reworked the section into a compact reproducibility-facing list and used path formatting for long script names.
@@ -59,7 +59,7 @@ Execution plan and status:
 
 Items not fully resolvable by manuscript editing alone:
 
-- Future external-validation datasets may strengthen or weaken the story. The current manuscript should remain calibrated as strong for IBD framework reproducibility, moderate for selected frozen-label portability, and limited for broad universal dictionary claims.
+- Future external-validation datasets may strengthen or weaken the story. The current manuscript should remain calibrated as strong for IBD framework reproducibility, moderate for selected AGP-derived label portability, and limited for broad universal dictionary claims.
 - The HMP2 pooled IBD comparison remains weaker than Halfvarson in the current processed subset. The manuscript treats it as useful but not decisive transfer support.
 - IBS and autoimmune disease remain secondary branches until outcome-specific external validation is available.
 

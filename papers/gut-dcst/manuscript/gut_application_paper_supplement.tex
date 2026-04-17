@@ -20,13 +20,14 @@
 \section*{Supplementary Methods}
 
 Outcome flags in the AGP discovery cohort were derived directly from the
-\texttt{Phenotype} metadata field by fixed substring matching. The focal
-outcomes used in the main manuscript were IBS (\texttt{irritable bowel
+\texttt{Phenotype} metadata field by fixed substring matching. The five
+outcome variables analyzed in the main manuscript were IBS (\texttt{irritable bowel
 syndrome}), IBD (\texttt{inflammatory bowel disease}), autoimmune disease
 (\texttt{autoimmune}), acid reflux (\texttt{acid reflux}), and seasonal
-allergies (\texttt{seasonal allergies}). Samples without the focal phrase
-served as controls for that outcome. These outcome flags were therefore
-not mutually exclusive across the discovery cohort.
+allergies (\texttt{seasonal allergies}). For each outcome, samples
+without the corresponding outcome-defining phrase served as controls.
+These outcome flags were therefore not mutually exclusive across the
+discovery cohort.
 
 dCST construction was applied after the discovery feature-retention
 filter described in the main manuscript. The labels should therefore be
@@ -58,8 +59,8 @@ with a beta-binomial model using a Jeffreys prior,
 External validation was evaluated in two complementary modes. In the
 rebuilt-cohort mode, each external count matrix was filtered and
 analyzed independently with the same absorb workflow used for the AGP
-discovery cohort. In the frozen-transfer mode, external samples were
-mapped directly onto the AGP-derived absorb hierarchy after aligning the
+discovery cohort. In the direct AGP-derived label-transfer mode,
+external samples were mapped onto the AGP-derived absorb dCST hierarchy after aligning the
 external taxa to the AGP retained-feature dictionary. The first mode
 tests whether disease-associated dominance structure is reproducible
 when rebuilt within a cohort; the second tests portability of the
@@ -72,7 +73,7 @@ non-IBD gastrointestinal branch in the AGP screen. At depth 1 it was
 associated with enrichment of \taxon{Bacteroides} (adjusted OR 1.28, q
 = 1.75e-05) together with depletion of \taxon{Streptococcus} and
 \taxon{Staphylococcus}. The signal then sharpened into deeper
-\taxon{Bacteroides}-centered lineages enriched for
+\taxon{Bacteroides}-centered dominance-lineages enriched for
 \taxon{Parabacteroides} and \taxon{Alistipes}, including
 \taxon{Bacteroides}\dcstsep\taxon{Parabacteroides}\dcstsep Lachnospiraceae
 (adjusted OR 2.64, q = 0.00419). Bayesian follow-up retained support
@@ -87,7 +88,7 @@ hypothesis-generating rather than disease-specific.
 complementary immune-linked example outside the core inflammatory
 phenotypes. The dominant pattern was depletion of
 \taxon{Prevotella\_9}-linked states together with enrichment of
-enterobacterial lineages. At depth 1,
+enterobacterial dominance-lineages. At depth 1,
 \taxon{Prevotella\_9} was depleted (adjusted OR 0.67, q = 2.77e-08),
 whereas \taxon{Escherichia-Shigella} was modestly enriched. At depth 2,
 the strongest enriched state was
@@ -100,8 +101,9 @@ rather than as a fully validated disease axis.
 
 \section*{Supplementary Tables}
 
-\noindent\textbf{Supplementary Table S1.} Focal phenotype definitions and
-analysis sample sizes in the AGP absorb discovery cohort.
+\noindent\textbf{Supplementary Table S1.} Definitions and analysis sample
+sizes for the five AGP phenotype indicators analyzed in the main
+manuscript.
 
 \begin{center}
 \footnotesize
@@ -120,7 +122,7 @@ Seasonal allergies & \texttt{seasonal allergies} & 9,493 & 20,797 & 8,284 & 14,9
 
 \newpage
 
-\noindent\textbf{Supplementary Table S2.} Growth of the absorb hierarchy and
+\noindent\textbf{Supplementary Table S2.} Growth of the absorb dCST hierarchy and
 divergence from the pure hierarchy.
 
 \begin{center}
@@ -146,7 +148,8 @@ text.
 
 \bigskip
 
-\noindent\textbf{Supplementary Table S3.} Selected IBD absorb lineages
+\noindent\textbf{Supplementary Table S3.} Selected IBD absorb
+dominance-lineages
 highlighting agreement between frequentist and Bayesian follow-up.
 
 \begin{center}
@@ -191,22 +194,22 @@ Jacobs 2023 IBS 250bp & IBS vs healthy & \emph{Faecalibacterium prausnitzii}\dcs
 
 \medskip
 
-\noindent\textbf{Supplementary Table S4B.} Frozen AGP transfer validation
-summary. External samples were mapped onto the AGP-derived absorb
+\noindent\textbf{Supplementary Table S4B.} Direct AGP-derived label-transfer
+validation summary. External samples were mapped onto the AGP-derived absorb dCST
 hierarchy, testing portability of the AGP label dictionary.
 
 \begin{center}
 \footnotesize
 \begin{tabularx}{\textwidth}{@{} l l Y r Y @{}}
 \toprule
-Cohort & Comparison & Best frozen-transfer signal & Depth-2 coverage (\%) & Interpretation \\
+Cohort & Comparison & Best AGP-derived label-transfer signal & Depth-2 coverage (\%) & Interpretation \\
 \midrule
 Halfvarson 2017 & IBD vs healthy & \taxon{Bacteroides} (depth 1, q = 6.8e-05) & 92.3 & Strong transferred pooled-IBD signal. \\
 Halfvarson 2017 & Crohn vs healthy & \taxon{Faecalibacterium} (depth 1, q = 6.5e-04) & 87.8 & Strong transferred Crohn signal. \\
 Halfvarson 2017 & UC vs healthy & \taxon{Bacteroides} (depth 1, q = 2.96e-07) & 94.0 & Strong transferred UC signal. \\
 HMP2 / IBDMDB & IBD vs healthy & \taxon{Bacteroides}\dcstsep\taxon{Faecalibacterium} (depth 2, q = 0.027) & 98.8 & Weaker but positive pooled-IBD transfer after explicit case coding. \\
 Gevers 2014 & Crohn vs healthy & \taxon{Bacteroides}\dcstsep\taxon{Dialister} (depth 2, q = 0.972) & 77.8 & Samples map into the hierarchy, but no corrected transferred signal. \\
-PRJEB84421 & OFG vs healthy & \taxon{Faecalibacterium} (depth 1, q = 0.282) & 81.6 & No matched frozen-transfer signal. \\
+PRJEB84421 & OFG vs healthy & \taxon{Faecalibacterium} (depth 1, q = 0.282) & 81.6 & No matched AGP-derived label-transfer signal. \\
 Jacobs 2023 IBS 250bp & IBS vs healthy & \taxon{Bacteroides}\dcstsep\taxon{Alistipes} (depth 2, q = 0.722) & 93.7 & IBS validation remains inconclusive. \\
 \bottomrule
 \end{tabularx}
@@ -261,8 +264,9 @@ Rank & dCST & n & Share (\%) & Cumulative (\%) \\
 
 \bigskip
 
-\noindent\textbf{Supplementary Table S6.} Selected absorb follow-up summary
-across the main-text and supplementary phenotype branches.
+\noindent\textbf{Supplementary Table S6.} Selected absorb-policy dCST
+dominance-lineage follow-up summary across the main-text and
+supplementary phenotype branches.
 
 \begin{center}
 \scriptsize
@@ -271,10 +275,10 @@ across the main-text and supplementary phenotype branches.
 Phenotype & Strongest depth-1 adjusted signal & Strongest deeper adjusted signal & Bayesian value added \\
 \midrule
 IBD & \taxon{Bacteroides} enriched (adjusted OR 1.54, q = 8.1e-10) & \taxon{Bacteroides}\dcstsep Lachnospiraceae\dcstsep\taxon{Alistipes} enriched at depth 3 (adjusted OR 8.56, q = 1.5e-28) & Bayesian models highlighted rare enterobacterial states, especially \taxon{Morganella}, that were too small for the conservative adjusted screen. \\
-IBS & \taxon{Escherichia-Shigella} enriched (adjusted OR 1.24, q = 0.002) & \taxon{Escherichia-Shigella}\dcstsep\taxon{Bacteroides}\dcstsep Lachnospiraceae enriched at depth 3 (adjusted OR 1.78, q = 0.018) & Bayesian models retained support for several depth-4 lineages even when q-values no longer crossed 0.05. \\
-Autoimmune & \taxon{Bacteroides} enriched (adjusted OR 1.40, q = 1.6e-12) & \taxon{Bacteroides}\dcstsep Lachnospiraceae\dcstsep\taxon{Alistipes} enriched at depth 3 (adjusted OR 5.52, q = 3.9e-21) & Bayesian models supported additional depth-4 \taxon{Bacteroides}-centered lineages beyond the frequentist q-significant set. \\
-Acid reflux & \taxon{Bacteroides} enriched (adjusted OR 1.28, q = 1.75e-05) & \taxon{Bacteroides}\dcstsep\taxon{Parabacteroides}\dcstsep Lachnospiraceae enriched at depth 3 (adjusted OR 2.64, q = 0.00419) & Bayesian models retained support for numerous depth-4 \taxon{Bacteroides}-centered reflux lineages after the frequentist signal thinned. \\
-Seasonal allergies & \taxon{Prevotella\_9} depleted (adjusted OR 0.67, q = 2.77e-08) & \taxon{Escherichia-Shigella}\dcstsep\taxon{Bacteroides} enriched at depth 2 (adjusted OR 1.24, q = 7.42e-06) & Bayesian models clarified the paired pattern of depleted \taxon{Prevotella}-linked states and enriched enterobacterial lineages at depths 3 and 4. \\
+IBS & \taxon{Escherichia-Shigella} enriched (adjusted OR 1.24, q = 0.002) & \taxon{Escherichia-Shigella}\dcstsep\taxon{Bacteroides}\dcstsep Lachnospiraceae enriched at depth 3 (adjusted OR 1.78, q = 0.018) & Bayesian models retained support for several depth-4 dominance-lineages even when q-values no longer crossed 0.05. \\
+Autoimmune & \taxon{Bacteroides} enriched (adjusted OR 1.40, q = 1.6e-12) & \taxon{Bacteroides}\dcstsep Lachnospiraceae\dcstsep\taxon{Alistipes} enriched at depth 3 (adjusted OR 5.52, q = 3.9e-21) & Bayesian models supported additional depth-4 \taxon{Bacteroides}-centered dominance-lineages beyond the frequentist q-significant set. \\
+Acid reflux & \taxon{Bacteroides} enriched (adjusted OR 1.28, q = 1.75e-05) & \taxon{Bacteroides}\dcstsep\taxon{Parabacteroides}\dcstsep Lachnospiraceae enriched at depth 3 (adjusted OR 2.64, q = 0.00419) & Bayesian models retained support for numerous depth-4 \taxon{Bacteroides}-centered reflux dominance-lineages after the frequentist signal thinned. \\
+Seasonal allergies & \taxon{Prevotella\_9} depleted (adjusted OR 0.67, q = 2.77e-08) & \taxon{Escherichia-Shigella}\dcstsep\taxon{Bacteroides} enriched at depth 2 (adjusted OR 1.24, q = 7.42e-06) & Bayesian models clarified the paired pattern of depleted \taxon{Prevotella}-linked states and enriched enterobacterial dominance-lineages at depths 3 and 4. \\
 \bottomrule
 \end{tabularx}
 \end{center}
@@ -282,7 +286,7 @@ Seasonal allergies & \taxon{Prevotella\_9} depleted (adjusted OR 0.67, q = 2.77e
 \bigskip
 
 \noindent\textbf{Supplementary Table S7.} IBD sensitivity analysis after
-excluding non-IBD controls carrying any other focal AGP phenotype string
+excluding non-IBD controls carrying any other AGP phenotype string
 (IBS, autoimmune disease, acid reflux, or seasonal allergies). The
 analysis retained all 1,166 IBD cases and 16,175 cleaner controls.
 
@@ -295,8 +299,8 @@ Label & Depth & Primary analysis & Cleaner-control sensitivity & Interpretation 
 \taxon{Bacteroides} & 1 & 511/10,088 cases/controls; adjusted OR 1.54, q = 8.1e-10. & 511/5,409; adjusted OR 1.59, q = 1.1e-10. & Stable broad IBD signal. \\
 \taxon{Morganella} & 1 & 22/34; adjusted frequentist model not estimable; Bayesian adjusted OR 18.99. & Below support threshold after control exclusion. & Rare-state signal remains exploratory. \\
 \taxon{Proteus} & 1 & 6/45; adjusted frequentist model not estimable; Bayesian adjusted OR 3.40. & Below support threshold after control exclusion. & Rare-state signal remains exploratory. \\
-\taxon{Bacteroides}\dcstsep Lachnospiraceae & 2 & 163/1,480; adjusted OR 3.21, q = 2.6e-33. & 163/791; adjusted OR 3.15, q = 1.5e-28. & Stable deeper IBD dCST lineage. \\
-\taxon{Bacteroides}\dcstsep Lachnospiraceae\dcstsep\taxon{Alistipes} & 3 & 49/127; adjusted OR 8.56, q = 1.5e-28. & 49/55; adjusted OR 10.15, q = 6.2e-22. & Stable deeper IBD dCST lineage. \\
+\taxon{Bacteroides}\dcstsep Lachnospiraceae & 2 & 163/1,480; adjusted OR 3.21, q = 2.6e-33. & 163/791; adjusted OR 3.15, q = 1.5e-28. & Stable deeper IBD dCST dominance-lineage. \\
+\taxon{Bacteroides}\dcstsep Lachnospiraceae\dcstsep\taxon{Alistipes} & 3 & 49/127; adjusted OR 8.56, q = 1.5e-28. & 49/55; adjusted OR 10.15, q = 6.2e-22. & Stable deeper IBD dCST dominance-lineage. \\
 \taxon{Bacteroides}\dcstsep Lachnospiraceae\dcstsep\taxon{Alistipes}\dcstsep\taxon{Faecalibacterium} & 4 & 16/73; adjusted OR 5.53, q = 1.1e-07. & 16/35; frequentist model skipped; Bayesian adjusted OR 5.68. & Direction retained, but depth-4 support becomes sparse. \\
 \bottomrule
 \end{tabularx}
@@ -304,10 +308,10 @@ Label & Depth & Primary analysis & Cleaner-control sensitivity & Interpretation 
 
 \bigskip
 
-\noindent\textbf{Supplementary Table S8.} Retained-feature abundance
-profiles for the main IBD dCST lineages. Values are median retained-feature
+\noindent\textbf{Supplementary Table S8.} Retained-feature profiles for
+selected IBD dCST dominance-lineages. Values are median retained-feature
 relative abundances (\%) within samples assigned to each label; the IBD-case
-median is shown in parentheses. This table clarifies that a dCST lineage
+median is shown in parentheses. This table clarifies that a dCST dominance-lineage
 is an ordered retained-feature context rather than a claim that each
 component is globally enriched in IBD.
 

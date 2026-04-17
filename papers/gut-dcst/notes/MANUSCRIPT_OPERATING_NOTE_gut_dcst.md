@@ -61,7 +61,7 @@ The main text should retain only the following:
 - the biological and conceptual motivation for deterministic gut community states;
 - the AGP discovery cohort and phenotype definitions needed to understand the paper;
 - the absorb dCST hierarchy as the primary analytical framework;
-- the main cohort overview that establishes why the absorb hierarchy matters;
+- the main cohort overview that establishes why the absorb dCST hierarchy matters;
 - IBD as the anchor phenotype branch;
 - at most one or two secondary phenotype branches that materially strengthen the paper rather than broaden it for its own sake;
 - external validation only to the extent that it calibrates the central inflammatory claim;
@@ -74,7 +74,7 @@ The supplement should hold the following unless they become central:
 - pure dCST association results and pure-versus-absorb comparison tables;
 - expanded phenotype-screen summaries;
 - dense Bayesian follow-up tables;
-- full rebuilt-versus-frozen external-validation matrices;
+- full rebuilt-cohort versus direct AGP-derived label-transfer external-validation matrices;
 - deeper lineage inventories that support but do not anchor the main argument;
 - additional phenotype branches such as acid reflux, seasonal allergies, and other non-IBD examples unless they are explicitly retained as one of the few main-text secondary stories;
 - expanded methods details that aid reproducibility but would interrupt the main narrative.

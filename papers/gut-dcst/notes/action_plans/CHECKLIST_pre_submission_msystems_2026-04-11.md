@@ -20,7 +20,7 @@ execution effort.
 
 ## Tier 2: High-impact scientific fixes
 
-- Add explicit phenotype-definition rules for the focal AGP outcomes.
+- Add explicit phenotype-definition rules for the AGP outcomes analyzed in the manuscript.
 - Add per-phenotype sample counts:
   - total filtered samples
   - case counts

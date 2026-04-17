@@ -16,7 +16,7 @@ RUN_DIR = (
     / "runs"
     / "2026-04-11-absorb-depthscan-adaptive"
 )
-OUT_FIG = FIGURES_DIR / "FIGURE_2_absorb_overview.png"
+OUT_FIG = FIGURES_DIR / "SUPP_FIGURE_absorb_overview.png"
 
 FOCAL_OUTCOMES = [
     ("IBD", "IBD", "#8c1c13"),
@@ -86,7 +86,7 @@ def build_figure() -> None:
     ax_a.set_yticklabels(top_labels)
     ax_a.invert_yaxis()
     ax_a.set_xlabel("Samples")
-    ax_a.set_title("A. Dominant absorb states at depth 1", loc="left", fontweight="bold")
+    ax_a.set_title("A. Dominant absorb dCST dominance-lineages at depth 1", loc="left", fontweight="bold")
     ax_a.grid(axis="x", alpha=0.22, linewidth=0.6)
     ax_a.spines["top"].set_visible(False)
     ax_a.spines["right"].set_visible(False)
@@ -103,7 +103,7 @@ def build_figure() -> None:
     ax_a.text(
         0.995,
         0.05,
-        "30,290 samples; 40 named absorb states",
+        "30,290 samples; 40 named absorb dCST dominance-lineages",
         transform=ax_a.transAxes,
         ha="right",
         va="bottom",
@@ -116,7 +116,7 @@ def build_figure() -> None:
     share_changed = depth_summary["share_changed_from_rare_view"].to_numpy() * 100.0
     ax_b.plot(depths, n_labels, marker="o", color="#355070", linewidth=2.4, ms=6)
     ax_b.set_xlabel("Hierarchy depth")
-    ax_b.set_ylabel("Named absorb states", color="#355070")
+    ax_b.set_ylabel("Named absorb dCST dominance-lineages", color="#355070")
     ax_b.tick_params(axis="y", labelcolor="#355070")
     ax_b.set_xticks(depths)
     ax_b.set_title("B. Hierarchy growth and divergence from the pure view", loc="left", fontweight="bold")

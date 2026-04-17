@@ -18,7 +18,7 @@ ASSIGNMENTS_PATH = (
     GUT_ROOT
     / "outputs/dcst_analysis/runs/2026-04-11-absorb-depthscan-adaptive/agp_absorb_assignments.tsv.gz"
 )
-OUT = ROOT / "papers/gut-dcst/assets/tables/TABLE_S8_ibd_lineage_retained_feature_profiles.tsv"
+OUT = ROOT / "papers/gut-dcst/assets/tables/TABLE_S8_ibd_dominance_lineage_retained_feature_profiles.tsv"
 
 LINEAGES = [
     ("Bacteroides", 1, "Bacteroides"),

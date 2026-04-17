@@ -14,7 +14,7 @@ Rerun the gut-paper DCST analyses using the absorb low-frequency policy and
 test whether the hierarchy supports scientifically useful refinement beyond the
 currently reported depth 2.
 
-This is not a cosmetic relabeling exercise. The absorb hierarchy must be built
+This is not a cosmetic relabeling exercise. The absorb dCST hierarchy must be built
 from the start and then refined recursively, because deeper absorb-only splits
 are not recoverable by simply switching a rare-built hierarchy to the absorb
 view afterward.
@@ -26,7 +26,7 @@ rare-policy paper results as the baseline comparator.
 
 The main idea borrowed from the CT-clearance report is:
 
-- build one absorb hierarchy recursively,
+- build one absorb dCST hierarchy recursively,
 - summarize structure by depth before making phenotype claims,
 - use omnibus depth-level tests as the gatekeeper for going deeper,
 - then do focused label-level and biological follow-up only where the deeper
@@ -127,7 +127,7 @@ Deliverables:
 
 Goal:
 
-- generate one recursive absorb hierarchy on the AGP discovery table using the
+- generate one recursive absorb dCST hierarchy on the AGP discovery table using the
   same sample and feature filtering as the current paper.
 
 Tasks:
@@ -137,7 +137,7 @@ Tasks:
 - apply the current discovery filters:
   - minimum library size `>= 1000`
   - feature retention at count `>= 2` in at least `5%` of retained samples
-- build the absorb hierarchy from depth 1 to depth 6 using the fixed schedule
+- build the absorb dCST hierarchy from depth 1 to depth 6 using the fixed schedule
   above.
 - save both active labels and policy-specific views at every depth.
 
@@ -314,8 +314,8 @@ Tasks:
 
 - identify the best supported absorb lineage, almost certainly starting with the
   IBD branch.
-- compare the focal child against the remainder of its parent lineage.
-- if depth 4 is supported, repeat one step deeper only for that focal lineage.
+- compare the selected child dCST state against the remainder of its parent dominance-lineage.
+- if depth 4 is supported, repeat one step deeper only for that selected dominance-lineage.
 - keep this as a phenotype-specific lineage analysis, not a full feature
   discovery project.
 
@@ -335,12 +335,12 @@ Decision rule:
 
 Goal:
 
-- test whether the absorb hierarchy is stable across SILVA and GG2 after
+- test whether the absorb dCST hierarchy is stable across SILVA and GG2 after
   harmonization.
 
 Tasks:
 
-- rebuild the absorb hierarchy on the overlapping GG2 table.
+- rebuild the absorb dCST hierarchy on the overlapping GG2 table.
 - compare SILVA and GG2 absorb labels at depths 1 to 3.
 - summarize exact-label agreement, harmonized agreement, and large-state
   relabeling patterns.
@@ -404,7 +404,7 @@ Tasks:
 
 - compare label counts, omnibus support, strongest phenotype hits, and the fate
   of the current `RARE_DOMINANT` signals.
-- track where the rare-policy tail is redistributed in the absorb hierarchy.
+- track where the rare-policy tail is redistributed in the absorb dCST hierarchy.
 
 Recommended outputs:
 
@@ -425,7 +425,7 @@ the new primary analysis for the manuscript.
 5. Stop-go decision on whether depth 3 and depth 4 deserve inferential follow-up
 6. Package 4: label-level association reruns
 7. Package 5: contamination-aware rerun
-8. Package 6: focal lineage follow-up
+8. Package 6: selected dominance-lineage follow-up
 9. Package 7: taxonomy concordance rerun
 10. Package 8: external validation rerun
 11. Package 9: rare-versus-absorb comparison
@@ -469,7 +469,7 @@ If absorb outperforms rare:
 If absorb is informative but not clearly better:
 
 - keep the current rare-policy paper as the main text,
-- report absorb as a structural supplement with selected lineage follow-up.
+- report absorb-policy dCSTs as a structural supplement with selected dominance-lineage follow-up.
 
 If absorb fails to add stable signal:
 

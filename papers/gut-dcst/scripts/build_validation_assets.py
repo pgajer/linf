@@ -185,11 +185,11 @@ def interpret_row(rebuilt_q: float, frozen_q: float) -> str:
     rebuilt_sig = pd.notna(rebuilt_q) and rebuilt_q < 0.05
     frozen_sig = pd.notna(frozen_q) and frozen_q < 0.05
     if rebuilt_sig and frozen_sig:
-        return "positive in rebuilt and frozen modes"
+        return "positive in rebuilt and AGP-derived label-transfer modes"
     if rebuilt_sig and not frozen_sig:
-        return "supportive rebuilt replication without matched frozen transfer"
+        return "supportive rebuilt replication without matched AGP-derived label transfer"
     if not rebuilt_sig and frozen_sig:
-        return "weaker rebuilt evidence but positive frozen transfer"
+        return "weaker rebuilt evidence but positive AGP-derived label transfer"
     return "mapped or directional only"
 
 
@@ -298,12 +298,12 @@ def build_figure(table: pd.DataFrame, coverage: pd.DataFrame) -> None:
         ax1.plot([rx, fx], [yi, yi], color="#b0b0b0", linewidth=1.5, zorder=1)
 
     ax1.scatter(rebuilt_x, y, s=55, color="#4c78a8", label="Rebuilt absorb", zorder=3)
-    ax1.scatter(frozen_x, y, s=55, color="#f58518", label="Frozen AGP transfer", zorder=3)
+    ax1.scatter(frozen_x, y, s=55, color="#f58518", label="AGP-derived label transfer", zorder=3)
     ax1.axvline(-math.log10(0.05), color="black", linestyle="--", linewidth=1)
     ax1.set_yticks(y)
     ax1.set_yticklabels(labels, fontsize=9)
     ax1.set_xlabel(r"Best signal strength ($-\log_{10}(q)$)")
-    ax1.set_title("A. Rebuilt-cohort validation is broader than frozen AGP transfer", fontsize=12)
+    ax1.set_title("A. Rebuilt-cohort validation is broader than AGP-derived label transfer", fontsize=12)
     ax1.grid(axis="x", alpha=0.25)
     ax1.legend(loc="lower right", frameon=False)
 
@@ -328,7 +328,7 @@ def build_figure(table: pd.DataFrame, coverage: pd.DataFrame) -> None:
     ax2.set_xlim(1, 4)
     ax2.set_xticks([1, 2, 3, 4])
     ax2.set_ylim(0, 105)
-    ax2.set_ylabel("Frozen-transfer mapping coverage (%)")
+    ax2.set_ylabel("AGP-derived hierarchy mapping coverage (%)")
     ax2.set_xlabel("Depth")
     ax2.set_title("B. Most cohorts map well at depth 1-2, then diverge at deeper levels", fontsize=12)
     ax2.grid(alpha=0.25)

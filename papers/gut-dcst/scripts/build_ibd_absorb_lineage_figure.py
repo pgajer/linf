@@ -17,7 +17,7 @@ RUN_DIR = (
     / "2026-04-11-absorb-depthscan-adaptive"
     / "ibd_label_followup"
 )
-OUT_FIG = FIGURES_DIR / "FIGURE_3_ibd_absorb_lineages.png"
+OUT_FIG = FIGURES_DIR / "FIGURE_3_ibd_absorb_dominance_lineages.png"
 
 
 def load_results() -> pd.DataFrame:
@@ -87,7 +87,7 @@ def build_figure() -> None:
     ax_a = fig.add_subplot(gs[0, 0])
     ax_b = fig.add_subplot(gs[0, 1])
 
-    ax_a.set_title("A. IBD signal resolves into\na deeper absorb lineage", loc="left", fontweight="bold")
+    ax_a.set_title("A. IBD signal resolves into\na deeper absorb dominance-lineage", loc="left", fontweight="bold")
     ax_a.set_axis_off()
 
     box_colors = ["#d9ead3", "#cfe2f3", "#fce5cd", "#ead1dc"]

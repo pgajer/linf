@@ -32,7 +32,7 @@ Current interpretation:
 
 ## Purpose
 
-Extend the absorb frequentist/Bayesian follow-up beyond IBD, IBS, and
+Extend the absorb-policy dCST dominance-lineage frequentist/Bayesian follow-up beyond IBD, IBS, and
 autoimmune disease in a controlled way so that:
 
 - the downstream pipeline becomes broadly reusable across projects,
@@ -243,7 +243,7 @@ Preferred structure after expansion:
   - complete label-level result tables
 
 The paper should stay selective. The goal is not to narrate every phenotype
-with a significant omnibus test. The goal is to show that the absorb hierarchy
+with a significant omnibus test. The goal is to show that the absorb dCST hierarchy
 and Bayesian follow-up form a reusable, biologically interpretable downstream
 analysis framework.
 

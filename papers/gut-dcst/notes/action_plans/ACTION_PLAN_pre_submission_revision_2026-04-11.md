@@ -17,14 +17,14 @@ issues identified in the pre-submission review.
 
 2. Methods and reproducibility upgrade
    - Status: completed
-   - Add phenotype definition rules and sample counts for focal outcomes.
+   - Add phenotype definition rules and sample counts for the AGP outcomes analyzed in the manuscript.
    - Add a reproducible description of the frequentist and Bayesian follow-up
      models, including covariates and decision summaries.
 
 3. Figure and table cleanup
    - Status: completed
    - Build a real absorb overview figure from the depth-scan outputs.
-   - Build a real IBD lineage figure from the absorb follow-up outputs.
+   - Build a real IBD dominance-lineage figure from the absorb-policy dCST follow-up outputs.
    - Remove the external-validation placeholder from the main text.
    - Fix table numbering and PDF presentation issues.
 

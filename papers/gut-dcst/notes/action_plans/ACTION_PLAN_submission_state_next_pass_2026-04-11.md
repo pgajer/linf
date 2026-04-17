@@ -105,7 +105,7 @@ Make the supplement a stable support document rather than a storage layer for ev
 
 Edits to make:
 
-- Keep phenotype definitions, sample sizes, pure-versus-absorb divergence, selected IBD lineage detail, and rebuilt-versus-frozen external validation.
+- Keep phenotype definitions, sample sizes, pure-versus-absorb divergence, selected IBD lineage detail, and rebuilt-cohort versus direct AGP-derived label-transfer external validation.
 - Move any high-density summary tables out of the main text if they mainly duplicate narrative.
 - If acid reflux and seasonal allergies leave the main text, give them short, self-contained supplementary sections or tables.
 - Keep interpretation fields concise and reviewer-facing rather than note-like.
