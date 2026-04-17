@@ -309,7 +309,7 @@ def build_figure(table: pd.DataFrame, coverage: pd.DataFrame) -> None:
 
     for yi, fx, i in zip(y, frozen_x, order):
         q_label = table.loc[i, "frozen_best_q"]
-        ax1.text(fx + 0.08, yi, f"q={q_label}", va="center", fontsize=8, color="#444444")
+        ax1.text(fx + 0.08, yi + 0.16, f"q={q_label}", va="bottom", fontsize=8, color="#444444")
 
     for spec in KEY_COMPARISONS:
         sub = coverage[
