@@ -1,0 +1,13 @@
+cohort	comparison	mode	depth	sample_best_label	sample_or	sample_q	n_samples	n_subjects	repeated_subjects	first_subject_mapped_n	first_subject_label_n	first_subject_label_cases	first_subject_label_controls	first_subject_or	first_subject_q
+Halfvarson IBD	IBD_vs_Healthy	rebuilt_cohort	1	Segatella sp.	0.147542365736447	3.00202302289842e-09	533	118	99	118	20	16	4	0.219122135662299	0.218832761085333
+Halfvarson IBD	IBD_vs_Healthy	agp_label_transfer	1	Bacteroides	3.92283628779979	6.80394687845266e-05	533	118	99	118	78	76	2	7.90659143172263	0.0974877043254283
+Halfvarson Crohn	Crohn_vs_Healthy	rebuilt_cohort	1	Segatella sp.	0.259602649006622	2.59651716570937e-05	254	58	47	58	13	9	4	0.289033869028568	0.102491753130386
+Halfvarson Crohn	Crohn_vs_Healthy	agp_label_transfer	1	Faecalibacterium	0.126943005181347	0.000653605982385388	254	58	47	58	3	1	2	0.0789054767838527	0.46551724137931
+Halfvarson UC	UC_vs_Healthy	rebuilt_cohort	1	Bacteroides dorei	6.67613636363636	3.26090641695839e-09	333	69	61	69	55	50	5	3.89593550022057	0.0749765959936596
+Halfvarson UC	UC_vs_Healthy	agp_label_transfer	1	Bacteroides	5.73571428571429	2.95890092060045e-07	333	69	61	69	53	51	2	18.5359754261784	0.00290405283952023
+HMP2 IBD	IBD_vs_Healthy	rebuilt_cohort	2	Bacteroides__Faecalibacterium	0.505952380952381	0.240497512542494	166	81	67	81	38	23	15	0.302813752106246	0.0750392379926832
+HMP2 IBD	IBD_vs_Healthy	agp_label_transfer	2	Bacteroides__Faecalibacterium	0.287390029325513	0.0272014655045266	166	81	67	80	24	11	13	0.145485025680096	0.0117455689122645
+Gevers Crohn	Crohn_vs_Healthy	rebuilt_cohort	1	Faecalibacterium prausnitzii	1.68378378378378	0.304791116127766	396	363	8	363	173	162	11	1.82704095960808	0.290545871273949
+Gevers Crohn	Crohn_vs_Healthy	agp_label_transfer	2	Bacteroides__Dialister	0.195151515151515	0.971741613435424	396	363	8	281	9	6	3	0.177991963002288	1
+PRJEB84421 OFG	OFG_vs_Healthy	rebuilt_cohort	2	Faecalibacterium__Bacteroides	0.0905349794238683	0.0185878715840889	49	49	0	49	11	2	9	0.0957212041704796	0.0185878715840889
+PRJEB84421 OFG	OFG_vs_Healthy	agp_label_transfer	1	Faecalibacterium	0.253968253968254	0.281630135865632	49	49	0	49	20	8	12	0.261861307978434	0.281630135865632
