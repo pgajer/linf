@@ -125,7 +125,7 @@
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same}
 \hypersetup{
-  pdftitle={Inflammatory Bowel Disease-Associated Dominance States in the Human Gut Microbiome},
+  pdftitle={Interpretable Dominant-Taxon States for Characterizing IBD and Related Gut Microbiome Dysbiosis},
   colorlinks=true,
   linkcolor={blue},
   filecolor={Maroon},
@@ -141,8 +141,8 @@
   \endgroup
 }
 
-\title{Inflammatory Bowel Disease-Associated Dominance States in the
-Human Gut Microbiome}
+\title{Interpretable Dominant-Taxon States for Characterizing IBD and
+Related Gut Microbiome Dysbiosis}
 \author{\parbox{0.9\textwidth}{\centering Pawel Gajer\thanks{\paperaffiliation} and Jacques Ravel\protect\footnotemark[1]}}
 \date{}
 \newif\ifshowbuildstamp
@@ -168,26 +168,28 @@ Built \manuscriptbuilddatetime
 \setstretch{1.15}
 \section{Abstract}\label{abstract}
 
-Inflammatory bowel disease (IBD) is associated with heterogeneous gut
-microbiome dysbiosis, including loss or redistribution of obligate
-anaerobic commensals and expansion of facultative or
-inflammation-associated taxa. A practical
-challenge is to summarize these shifts as sample-level ecological states
-that remain interpretable across large cohorts. Gut enterotypes provide
-one such summary, but they are clustering-defined constructs whose
-labels depend on choices about data transformation, distance metric,
-clustering model, and the number of clusters. We therefore applied
-dominant-community state types (dCSTs), a deterministic rank-based
-description of retained-feature dominance, to 30,290 quality-controlled
-American Gut Project stool samples from a 34,711-sample SILVA gut
-abundance table. Self-reported IBD was the strongest phenotype-level
-signal. The key IBD-associated pattern was an ordered
-\taxon{Bacteroides}/Lachnospiraceae/\taxon{Alistipes}
-dominance-lineage, which sharpened the broader depth-1
-\taxon{Bacteroides} enrichment into a more specific IBD-associated
-ecological state. Bayesian models also retained finite estimates for
-sparse \taxon{Morganella} and \taxon{Proteus} states, which are treated
-as exploratory enterobacterial signals. The IBD signal was
+Inflammatory bowel disease (IBD) has repeatedly been associated with
+heterogeneous gut microbiome dysbiosis, including loss or redistribution
+of obligate anaerobic commensals and expansion of facultative or
+inflammation-associated taxa. The practical challenge addressed here is
+not whether these broad taxonomic shifts occur, but whether they can be
+summarized as sample-level ecological states that remain interpretable
+across large cohorts. Gut enterotypes provide one such summary, but they
+are clustering-defined constructs whose labels depend on choices about
+data transformation, distance metric, clustering model, and the number of
+clusters. We therefore applied dominant-community state types (dCSTs), a
+deterministic rank-based description of retained-feature dominance, to
+30,290 quality-controlled American Gut Project stool samples from a
+34,711-sample SILVA gut abundance table. Self-reported IBD showed the
+strongest phenotype-level association with the dominance-state
+hierarchy. The central IBD result was that the familiar broad
+\taxon{Bacteroides}-associated dysbiosis pattern resolved into an
+ordered \taxon{Bacteroides}/Lachnospiraceae/\taxon{Alistipes}
+dominance-lineage, providing a more specific sample-level description of
+IBD-associated ecological context rather than implying that the named
+taxa are newly discovered IBD markers. Bayesian models also provided stabilized estimates for sparse
+\taxon{Morganella} and \taxon{Proteus} states, which are treated as
+exploratory enterobacterial signals. The IBD dominance-state summary was
 robust to a stricter control definition and to coarse antibiotic-status
 sensitivity analyses. External validation separated two forms of
 reproducibility: sample-level Halfvarson 2017 analyses supported both
@@ -196,10 +198,10 @@ PRJEB84421 provided narrower rebuilt inflammatory support, and pooled
 HMP2 retained a weaker depth-2 transferred IBD signal that persisted in a
 first-sample-per-subject sensitivity analysis. IBS and autoimmune disease
 showed weaker but directionally related dominance patterns. These results
-support dCSTs as an interpretable framework for resolving
-IBD-associated gut microbiome dominance structure, while broader
-gut-outcome applications and universal label portability remain
-exploratory.
+support dCSTs as an interpretable framework for organizing established
+IBD-associated dysbiosis into deterministic dominance-lineage states,
+while broader gut-outcome applications and universal label portability
+remain exploratory.
 
 \textbf{Keywords:} gut microbiome; inflammatory bowel disease;
 dysbiosis; enterotypes; dominant-community state types; Bayesian
@@ -220,20 +222,20 @@ disease-associated community shifts are repeatedly observed, but they are
 heterogeneous and difficult to translate into sample-level ecological
 labels that can be compared across cohorts.
 
-In IBD, landmark studies have shown that dysbiosis is not characterized
-by one universal microbial signature. Instead, IBD often involves
-reduced diversity, depletion or redistribution of butyrate-associated
-obligate anaerobes, and expansion of facultative or
-inflammation-associated taxa
+In IBD, the existence of microbiome dysbiosis is no longer the central
+question. Landmark studies have shown that IBD is not characterized by
+one universal microbial signature, but often involves reduced diversity,
+depletion or redistribution of butyrate-associated obligate anaerobes,
+and expansion of facultative or inflammation-associated taxa
 (\citeproc{ref-Frank2007_IBD}{Frank et al. 2007};
 \citeproc{ref-Gevers2014_CD}{Gevers et al. 2014};
 \citeproc{ref-LloydPrice2019_IBD}{Lloyd-Price et al. 2019};
 \citeproc{ref-Sokol2008_Fprausnitzii}{Sokol et al. 2008};
 \citeproc{ref-Manichanh2006_CD}{Manichanh et al. 2006}). These
-observations motivated a more modest question than a diagnostic-test
-claim: can microbiome composition be summarized into transparent
-dominance states that capture IBD-associated ecology and can be compared
-across cohorts?
+observations motivate a practical representation question rather than a
+new diagnostic-test claim: can established but heterogeneous
+IBD-associated microbiome shifts be summarized into transparent
+sample-level dominance states that can be compared across cohorts?
 
 Gut enterotypes were introduced to provide such labels by compressing
 high-dimensional gut abundance profiles into a small number of
@@ -299,11 +301,12 @@ category. Pure-policy dCST results are used only as a baseline
 comparison in the supplement rather than as a second main-text results
 analysis.
 
-Figure 2 previews the IBD-centered result: self-reported IBD had the
-strongest depth-resolved dCST signal, with a broad
-\taxon{Bacteroides} state resolving into more specific
-\taxon{Bacteroides}-centered dominance-lineages and the strongest
-external support coming from IBD-focused validation cohorts.
+Figure 2 previews how the dCST framework organizes the IBD-centered
+result: self-reported IBD had the strongest depth-resolved association
+with the dominance-state hierarchy, with a broad \taxon{Bacteroides}
+state resolving into more specific \taxon{Bacteroides}-centered
+dominance-lineages and the strongest external support coming from
+IBD-focused validation cohorts.
 
 \begin{figure}[H]
 \centering
@@ -326,7 +329,7 @@ and supplement. The dashed line marks q = 0.05.}
 \subsection{Outcome-wide discovery overview}\label{outcome-wide-discovery-overview}
 
 The discovery analysis asked whether interpretable dominance states
-could recover disease-associated gut ecology in 30,290
+could organize disease-associated gut ecology in 30,290
 quality-controlled AGP stool samples. The absorb dCST hierarchy
 contained 40 named states at depth 1, 153 at depth 2, 479 at depth 3,
 and 744 at depth 4. The largest depth-1 states were
@@ -345,8 +348,8 @@ deeper levels, \emph{Eukaryota}/\emph{Unassigned}/Bacteria/Mitochondria
 unsupervised hierarchy for transparent accounting, but they are not used
 as primary biological evidence for the IBD interpretation.
 
-The depthwise phenotype screen identified IBD as the clearest
-outcome-level signal. Across depths 1 to 4, Cramer's V increased from
+The depthwise phenotype screen showed that IBD provided the clearest
+outcome-level association with the dominance-state hierarchy. Across depths 1 to 4, Cramer's V increased from
 0.11 to 0.35 in IBD, compared with 0.11 to 0.28 in autoimmune disease
 and 0.08 to 0.19 in IBS. Because IBD combined the largest depthwise
 growth in effect size, the clearest dominance-lineage-level
@@ -384,8 +387,9 @@ samples and 34 controls, and \taxon{Proteus} contained 6 IBD samples and
 or Enterobacterales-linked rare-state signals rather than as stand-alone
 biomarkers or as evidence of disease severity.
 
-Hierarchical refinement strengthened the IBD-associated signal.
-At depth 2, \taxon{Bacteroides}\dcstsep Lachnospiraceae reached adjusted
+Hierarchical refinement organized the broad IBD-associated pattern into
+more specific dominance-lineage summaries. At depth 2,
+\taxon{Bacteroides}\dcstsep Lachnospiraceae reached adjusted
 OR 3.21 (q = 2.6e-33), \taxon{Bacteroides}\dcstsep[\emph{Eubacterium}]
 \emph{eligens} group reached adjusted OR 22.50 (q = 5.0e-24), and
 \taxon{Bacteroides}\dcstsep Enterobacteriaceae reached adjusted OR 2.73
@@ -411,7 +415,8 @@ state remains a \taxon{Bacteroides}-first retained-feature context;
 IBD literature often reports depletion of \emph{F. prausnitzii} or
 butyrate-associated commensals.
 
-The IBD result was also robust to a stricter control definition. After
+The IBD-associated dominance-state summary was also robust to a stricter
+control definition. After
 removing non-IBD controls who carried any of the other AGP phenotype
 strings analyzed in this study (IBS, autoimmune disease, acid reflux, or
 seasonal allergies), the analysis retained all 1,166 IBD cases and 16,175
@@ -519,7 +524,7 @@ biological absence (Supplementary Tables S10 and S11).
 \begin{table}[H]
 \footnotesize
 \caption{External validation summary for the main IBD-centered
-dominance-state claims. Rebuilt validation tests whether disease-linked
+dominance-state summaries. Rebuilt validation tests whether disease-linked
 dominance structure is rediscovered when the hierarchy is fit within an
 external cohort; direct AGP-derived label transfer tests whether the
 discovery-cohort labels themselves remain informative when assigned
@@ -554,12 +559,13 @@ comparisons.}
 (IBS)}\label{irritable-bowel-syndrome-ibs}
 
 
-IBS was analyzed as a secondary gut phenotype because its microbiome
-signal is typically subtler than in overt inflammatory bowel disease
+IBS was included as a secondary, hypothesis-generating gut phenotype
+because its microbiome signal is typically subtler than in overt
+inflammatory bowel disease
 (\citeproc{ref-Pittayanon2019_IBS}{Pittayanon et al. 2019};
 \citeproc{ref-Dinan2015_IBS}{Dinan and Cryan 2015};
 \citeproc{ref-Cryan2012_gutbrain}{Cryan and Dinan 2012}). In the absorb dCST
-structure, IBS showed a moderate but internally consistent shift toward
+structure, IBS showed a modest but internally consistent shift toward
 enterobacterial dominance. At depth 1,
 \taxon{Escherichia-Shigella} was enriched in IBS (adjusted OR 1.24, q =
 0.002), while \taxon{Staphylococcus}, \taxon{Faecalibacterium}, and
@@ -575,9 +581,10 @@ depth, with strong posterior support for depletion of
 \taxon{Faecalibacterium}- and \taxon{Prevotella\_9}-linked states and
 for enrichment of deeper
 \taxon{Escherichia-Shigella}/\taxon{Bacteroides}/Lachnospiraceae
-dominance-lineages even when the frequentist q-values became sparse. These results
-are consistent with a milder dysbiosis-associated dominance shift rather
-than a distinct ecological program, in line with the current IBS
+dominance-lineages even when the frequentist q-values became sparse.
+These secondary results are consistent with a milder dysbiosis-associated
+dominance shift rather than evidence for a distinct IBS-specific
+ecological program, in line with the current IBS
 literature
 (\citeproc{ref-Pittayanon2019_IBS}{Pittayanon et al. 2019};
 \citeproc{ref-Tap2017_IBS}{Tap et al. 2017}).
@@ -596,7 +603,8 @@ pathobionts to altered Treg/Th17 balance
 \citeproc{ref-DeLuca2019_autoimmune}{De Luca and Shoenfeld 2019};
 \citeproc{ref-Vatanen2018_T1D}{Vatanen et al. 2018}).
 
-Autoimmune disease showed an absorb pattern compatible with
+The broad AGP autoimmune phenotype provided a secondary, exploratory
+immune-associated comparison. Its absorb pattern was compatible with
 inflammation-associated dysbiosis but more heterogeneous than IBD. At depth 1, the dominant
 signals were enrichment of \taxon{Bacteroides} (adjusted OR 1.40, q =
 1.6e-12) together with depletion of \taxon{Prevotella\_9},
@@ -757,26 +765,27 @@ the companion \texttt{gut\_microbiome} repository.
 
 \section{Discussion}\label{general-discussion}
 
-This study identifies IBD-associated gut dominance states that are
-consistent with established dysbiosis biology and interpretable at the
-level of individual samples. The central pattern is a broad
-\taxon{Bacteroides} background that resolves into deeper
-\taxon{Bacteroides}-centered dominance-lineages, together with sparse
-enterobacterial states that remain exploratory because of their small
-support and the absence of AGP disease-activity metadata. These labels
-should not be interpreted as evidence that dominant taxa alone explain
-IBD. Rather, they provide a compact way to name recurrent ecological
-contexts in which IBD cases are overrepresented.
+This study does not identify a new IBD dysbiosis axis. Instead, it
+represents established IBD-associated gut dysbiosis as dominance states
+that are interpretable at the level of individual samples. The central
+pattern is a broad \taxon{Bacteroides} background that resolves into
+deeper \taxon{Bacteroides}-centered dominance-lineages, together with
+sparse enterobacterial states that remain exploratory because of their
+small support and the absence of AGP disease-activity metadata. These
+labels should not be interpreted as evidence that dominant taxa alone
+explain IBD. Rather, they provide a compact way to name recurrent
+ecological contexts in which IBD cases are overrepresented.
 
-Two analytical choices were important for interpretability. The absorb
-policy preserved named deeper dominance-lineages instead of sending a
-growing fraction of samples into a residual tail, and the Bayesian layer
-kept sparse-label estimates finite while leaving BH-adjusted
-frequentist results as the primary discovery framework. The secondary
-IBS and autoimmune analyses provide related gut-outcome context rather
-than co-equal discovery claims; both were directionally compatible with
-inflammation-associated dysbiosis but weaker or more heterogeneous than
-IBD.
+The contribution of this application is therefore representational and
+analytical. The deterministic dCST label provides a rank-based
+sample-level state, the absorb hierarchy preserves named deeper
+dominance-lineages instead of sending a growing fraction of samples into
+a residual tail, and the Bayesian layer keeps sparse-label estimates
+finite while leaving BH-adjusted frequentist results as the primary
+discovery framework. The secondary IBS and autoimmune analyses provide
+related gut-outcome context rather than co-equal discovery claims; both
+were directionally compatible with published dysbiosis patterns but
+weaker or more heterogeneous than IBD.
 
 Several limitations remain important. External validation supports
 IBD-focused dominance-pattern reproducibility more strongly than
@@ -804,10 +813,10 @@ independent cohorts.
 \section{Conclusion}\label{conclusion}
 
 Taken together, these results support dCSTs as a compact, interpretable
-way to summarize IBD-associated dominance structure in the human gut
-microbiome. The current evidence is strongest for IBD, more selective
-for cross-cohort label portability, and exploratory for broader
-gut-outcome applications.
+way to summarize established IBD-associated gut dysbiosis as
+sample-level dominance structure. The current evidence is strongest for
+IBD, more selective for cross-cohort label portability, and exploratory
+for broader gut-outcome applications.
 
 \section{Data and Code
 Availability}\label{data-and-code-availability}
