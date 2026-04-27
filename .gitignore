@@ -65,11 +65,15 @@ dev/
 
 # Paper workspaces
 papers/**/build/
+papers/**/build_xelatex_only/
 papers/**/.DS_Store
+papers/*/*.pdf
 
 # LaTeX manuscript build artefacts
 papers/**/manuscript/.auctex-auto/
 papers/**/manuscript/*.aux
+papers/**/manuscript/*.bbl
+papers/**/manuscript/*.blg
 papers/**/manuscript/*.fdb_latexmk
 papers/**/manuscript/*.fls
 papers/**/manuscript/*.log

@@ -1,0 +1,6 @@
+Cohort	samples_and_labels	context_and_caveat
+Halfvarson 2017	533 pooled IBD-vs-healthy samples (479/54); subset contrasts used 200/54 Crohn-vs-healthy and 279/54 UC-vs-healthy samples.	Stool, longitudinal IBD cohort; 118 detected subjects, 99 with repeated samples.
+HMP2 / IBDMDB	166 pooled IBD-vs-healthy samples (121/45); subset contrasts used 81/45 Crohn-vs-healthy and 40/45 UC-vs-healthy samples.	Mucosal gut-site IBDMDB samples; 81 detected subjects, 67 with repeated samples.
+Gevers 2014	396 Crohn-vs-healthy samples (363/33).	Pediatric stool Crohn disease comparison; 363 detected subjects, 8 with repeated samples.
+PRJEB84421	49 OFG-vs-healthy samples (29/20).	Stool-based pediatric-onset orofacial granulomatosis comparison; no repeated subjects detected.
+Jacobs 2023 IBS 250bp	239 IBS-vs-healthy baseline stool samples (85/154).	250bp IBS validation subset; no repeated subjects detected.

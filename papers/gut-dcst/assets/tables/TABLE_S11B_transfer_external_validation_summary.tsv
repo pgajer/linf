@@ -1,0 +1,8 @@
+Cohort	Comparison	best_signal	depth2_coverage	interpretation
+Halfvarson 2017	IBD vs healthy	\emph{Segatella sp.} (depth 1, q = 1.3e-08)	99.249530956848	Corrected AGP-derived pooled-IBD transfer detected.
+Halfvarson 2017	Crohn vs healthy	\emph{Segatella sp.} (depth 1, q = 4.1e-07)	98.4251968503937	Corrected AGP-derived Crohn transfer detected.
+Halfvarson 2017	UC vs healthy	\emph{Segatella sp.} (depth 1, q = 5.7e-08)	100	Corrected AGP-derived UC transfer detected.
+HMP2 / IBDMDB	IBD vs healthy	\emph{Alistipes sp.} (depth 1, q = 0.742)	0	Limited mapping constrains transferred signal detection.
+Gevers 2014	Crohn vs healthy	\emph{Segatella sp.}\dcstsep \emph{Faecalibacterium prausnitzii}\dcstsep \emph{UCG-002 sp.} (depth 4, q = 0.757)	86.6161616161616	Samples map into the hierarchy, but no corrected transferred signal.
+PRJEB84421	OFG vs healthy	\emph{Blautia sp.} (depth 1, q = 0.002)	34.6938775510204	Corrected AGP-derived transfer detected.
+Jacobs 2023 IBS 250bp	IBS vs healthy	\emph{Faecalibacterium prausnitzii}\dcstsep \emph{Akkermansia muciniphila} (depth 2, q = 0.925)	89.9581589958159	Samples map into the hierarchy, but no corrected transferred signal.

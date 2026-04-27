@@ -21,3 +21,31 @@ GUT_MICROBIOME_ROOT = CURRENT_PROJECTS_ROOT / "gut_microbiome"
 
 DCST_ANALYSIS_DIR = GUT_MICROBIOME_ROOT / "outputs" / "dcst_analysis"
 DCST_VALIDATION_DIR = GUT_MICROBIOME_ROOT / "outputs" / "dcst_validation"
+
+CANONICAL_AGP_RUN_DIR = (
+    DCST_ANALYSIS_DIR
+    / "runs"
+    / "2026-04-26-agp-silva-local-qza-absorb-depth4-n0_50_25_25_25"
+)
+CANONICAL_TRANSFER_ROOT = (
+    DCST_VALIDATION_DIR
+    / "frozen_agp_silva_local_qza_2026-04-26_n0_50_25_25_25"
+)
+COMPARISON_TRANSFER_ROOT = (
+    DCST_VALIDATION_DIR
+    / "frozen_agp_silva_local_qza_2026-04-26"
+)
+CANONICAL_AGP_METADATA_PATH = (
+    GUT_MICROBIOME_ROOT
+    / "outputs"
+    / "agp_silva_taxonomy"
+    / "2026-04-26-redbiom-md5-sequence-map"
+    / "agp_all_good_depthscan_metadata.tsv.gz"
+)
+CANONICAL_AGP_COUNTS_PATH = (
+    GUT_MICROBIOME_ROOT
+    / "outputs"
+    / "agp_silva_taxonomy"
+    / "2026-04-26-redbiom-md5-sequence-map"
+    / "agp_silva_collapsed_counts.tsv.gz"
+)

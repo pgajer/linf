@@ -1,0 +1,7 @@
+label_short	depth	label	n_ibd	n_control	ordered_components	median_all_pct	median_ibd_pct
+[Eubacterium] eligens group eligens	1	[Eubacterium] eligens group eligens	86	25	\emph{[Eubacterium] eligens group eligens}	100.0	100.0
+Alistipes sp.	1	Alistipes sp.	28	101	\emph{Alistipes sp.}	100.0	100.0
+Segatella sp.	1	Segatella sp.	84	2473	\emph{Segatella sp.}	100.0	100.0
+[Eubacterium] eligens group eligens / Bacteroides dorei	2	[Eubacterium] eligens group eligens__Bacteroides dorei	86	25	\emph{[Eubacterium] eligens group eligens}; \emph{Bacteroides dorei}	63.4; 36.6	59.6; 40.4
+Bacteroides dorei / [Eubacterium] eligens group eligens	3	Bacteroides dorei__[Eubacterium] eligens group eligens	54	34	\emph{Bacteroides dorei}; \emph{[Eubacterium] eligens group eligens}	63.9; 36.1	57.6; 42.4
+Alistipes sp. / Bacteroides dorei	4	Alistipes sp.__Bacteroides dorei	28	101	\emph{Alistipes sp.}; \emph{Bacteroides dorei}	68.6; 31.4	65.2; 34.8

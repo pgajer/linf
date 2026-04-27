@@ -1,0 +1,13 @@
+label_short	depth	label	view	n_label	label_cases	label_controls	fisher_or	p_value	q_value_selected_labels
+[Eubacterium] eligens group eligens	1	[Eubacterium] eligens group eligens	absorb	111	86	25	69.0815887027788	3.38345260894297e-89	1.01503578268289e-88
+[Eubacterium] eligens group eligens	1	[Eubacterium] eligens group eligens	rare_policy	104	82	22	74.6135486148777	3.16085521141728e-86	1.89651312685037e-85
+Alistipes sp.	1	Alistipes sp.	absorb	129	28	101	5.28818128042707	5.01750333515944e-11	6.02100400219132e-11
+Alistipes sp.	1	Alistipes sp.	rare_policy	122	27	95	5.41774836120562	6.89925121487692e-11	1.03488768223154e-10
+Segatella sp.	1	Segatella sp.	absorb	2557	84	2473	0.609589714228019	5.64853855155977e-06	5.64853855155977e-06
+Segatella sp.	1	Segatella sp.	rare_policy	2501	81	2420	0.600668303879628	4.51763366441524e-06	5.42116039729829e-06
+[Eubacterium] eligens group eligens / Bacteroides dorei	2	[Eubacterium] eligens group eligens__Bacteroides dorei	absorb	111	86	25	69.0815887027788	3.38345260894297e-89	1.01503578268289e-88
+[Eubacterium] eligens group eligens / Bacteroides dorei	2	[Eubacterium] eligens group eligens__Bacteroides dorei	rare_policy	40	36	4	173.430347335468	1.10163420020131e-42	2.20326840040261e-42
+Bacteroides dorei / [Eubacterium] eligens group eligens	3	Bacteroides dorei__[Eubacterium] eligens group eligens	absorb	88	54	34	31.0190866184325	1.97925796589077e-47	3.95851593178153e-47
+Bacteroides dorei / [Eubacterium] eligens group eligens	3	Bacteroides dorei__[Eubacterium] eligens group eligens	rare_policy	83	53	30	34.500211872428	6.32397875752712e-48	1.89719362725814e-47
+Alistipes sp. / Bacteroides dorei	4	Alistipes sp.__Bacteroides dorei	absorb	129	28	101	5.28818128042707	5.01750333515944e-11	6.02100400219132e-11
+Alistipes sp. / Bacteroides dorei	4	Alistipes sp.__Bacteroides dorei	rare_policy	34	5	29	3.2373997863487	0.0272058646021064	0.0272058646021064
