@@ -20,4 +20,10 @@
 ^Meta$
 ^notes$
 ^papers$
+^data-raw$
+^\.claude$
+^dcst_depth2_distribution\.png$
+^dcst_disease_heatmap\.png$
+^dcst_size_distribution\.png$
+^dominance_strength_distribution\.png$
 ^\.\.Rcheck$
