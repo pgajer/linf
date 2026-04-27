@@ -1,6 +1,9 @@
 #!/bin/zsh
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+. "$SCRIPT_DIR/setup_tool_paths.sh"
+
 usage() {
   cat <<'EOF'
 Usage:
@@ -28,7 +31,6 @@ if [[ -z "$LABEL" ]]; then
   exit 1
 fi
 
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PAPER_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 MANUSCRIPT_DIR="$PAPER_DIR/manuscript"
 BUILD_DIR="$PAPER_DIR/build"

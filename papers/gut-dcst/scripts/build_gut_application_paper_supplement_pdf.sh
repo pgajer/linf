@@ -2,11 +2,12 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+. "$SCRIPT_DIR/setup_tool_paths.sh"
 PAPER_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 REPO_DIR="$(cd "$PAPER_DIR/../.." && pwd)"
 MANUSCRIPT_DIR="$PAPER_DIR/manuscript"
 BUILD_DIR="$PAPER_DIR/build"
-LATEXMK="${LATEXMK:-/Library/TeX/texbin/latexmk}"
+XELATEX="${XELATEX:-/Library/TeX/texbin/xelatex}"
 INPUT_TEX="gut_application_paper_supplement.tex"
 OUTPUT_PDF="$BUILD_DIR/gut_application_paper_supplement.pdf"
 BUILD_INFO_TEX="$BUILD_DIR/manuscript_build_info.tex"
@@ -19,6 +20,10 @@ escape_for_tex() {
 }
 
 mkdir -p "$BUILD_DIR"
+
+Rscript "$SCRIPT_DIR/build_ibd_reviewer_sensitivity_assets.R"
+Rscript "$SCRIPT_DIR/build_calprotectin_context_models.R"
+python3 "$SCRIPT_DIR/build_external_validation_association_tables.py"
 
 GIT_VERSION="$(git -C "$REPO_DIR" describe --tags --always --dirty 2>/dev/null || printf '%s\n' 'unversioned')"
 GIT_BUILD_NUMBER="$(git -C "$REPO_DIR" rev-list --count HEAD 2>/dev/null || printf '%s\n' 'NA')"
@@ -38,12 +43,18 @@ fi
 
 cd "$MANUSCRIPT_DIR"
 
-"$LATEXMK" \
-  -xelatex \
+"$XELATEX" \
   -interaction=nonstopmode \
   -halt-on-error \
   -file-line-error \
-  -outdir="$BUILD_DIR" \
+  -output-directory="$BUILD_DIR" \
+  "$INPUT_TEX"
+
+"$XELATEX" \
+  -interaction=nonstopmode \
+  -halt-on-error \
+  -file-line-error \
+  -output-directory="$BUILD_DIR" \
   "$INPUT_TEX"
 
 printf '%s\n' "$OUTPUT_PDF"

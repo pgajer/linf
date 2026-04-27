@@ -1,0 +1,10 @@
+cohort	comparison	depth	mapped_total	mapped_cases	mapped_controls	mapping_rate_total	mapping_rate_cases	mapping_rate_controls	mapped_vs_unmapped_p	interpretation
+Halfvarson 2017	IBD vs healthy	2	529	475	54	0.99249530956848	0.991649269311065	1	1	Approx. balanced
+Halfvarson 2017	IBD vs healthy	4	512	458	54	0.960600375234522	0.95615866388309	1	0.152390992857229	Approx. balanced
+Halfvarson 2017	UC vs healthy	2	333	279	54	1	1	1	1	Approx. balanced
+Halfvarson 2017	UC vs healthy	4	325	271	54	0.975975975975976	0.971326164874552	1	0.362933382449635	Approx. balanced
+HMP2 / IBDMDB	IBD vs healthy	2	0	0	0	0	0	0	1	Approx. balanced
+HMP2 / IBDMDB	IBD vs healthy	4	0	0	0	0	0	0	1	Approx. balanced
+Gevers 2014	Crohn vs healthy	2	343	310	33	0.866161616161616	0.853994490358127	1	0.0134168630113346	Controls higher
+PRJEB84421	OFG vs healthy	2	17	14	3	0.346938775510204	0.482758620689655	0.15	0.0309720141003857	Cases higher
+Jacobs 2023 IBS 250bp	IBS vs healthy	2	215	78	137	0.899581589958159	0.917647058823529	0.88961038961039	0.653737015331474	Approx. balanced

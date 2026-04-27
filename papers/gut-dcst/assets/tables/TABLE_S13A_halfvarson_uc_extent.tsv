@@ -1,0 +1,350 @@
+label	n_label	n_cases	n_controls	total_cases	total_controls	or	ci_low	ci_high	p_value	q_value	mode	depth	analysis
+Bacteroides dorei	248	96	152	120	173	0.553772297639923	0.276442517286931	1.10155768088536	0.0719089700568966	0.0719089700568967	Rebuilt	1	uc_extent
+Segatella sp.	45	24	21	120	173	1.80579636117917	0.907805389905923	3.61738856169529	0.0719089700568967	0.0719089700568967	Rebuilt	1	uc_extent
+Segatella sp.__Faecalibacterium prausnitzii	45	24	21	120	173	1.80579636117917	0.907805389905923	3.61738856169529	0.0719089700568967	0.236740935689634	Rebuilt	2	uc_extent
+Bacteroides dorei__Faecalibacterium prausnitzii	98	33	65	120	173	0.631231609034648	0.366796709501979	1.07381441265179	0.078913645229878	0.236740935689634	Rebuilt	2	uc_extent
+Bacteroides dorei__Akkermansia muciniphila	14	8	6	120	173	1.983340659123	0.585482858565754	7.13531393742529	0.266976627900619	0.533953255801237	Rebuilt	2	uc_extent
+Bacteroides dorei__Bacteroides stercoris	26	10	16	120	173	0.892417445342086	0.348061798997882	2.18293468465317	0.837433705968429	1	Rebuilt	2	uc_extent
+Bacteroides dorei__Bacteroides uniformis	77	32	45	120	173	1.03424457026958	0.586799862034195	1.81005546266122	0.893650031130843	1	Rebuilt	2	uc_extent
+Bacteroides dorei__Agathobacter faecis	33	13	20	120	173	0.929652732619057	0.40605681905125	2.06251258157478	1	1	Rebuilt	2	uc_extent
+Segatella sp.__Faecalibacterium prausnitzii__Escherichia-Shigella coli	10	0	10	120	173	0	0	0.621953400622906	0.00636420573939742	0.0890988803515639	Rebuilt	3	uc_extent
+Segatella sp.__Faecalibacterium prausnitzii__Bifidobacterium breve	4	4	0	120	173	Inf	0.963585719653564	Inf	0.0273057819471477	0.141996783507093	Rebuilt	3	uc_extent
+Bacteroides dorei__Bacteroides uniformis__Bacteroides cellulosilyticus	11	1	10	120	173	0.137638965973891	0.00313483531816931	0.9908022637374	0.0304278821800913	0.141996783507093	Rebuilt	3	uc_extent
+Segatella sp.__Faecalibacterium prausnitzii__Bacteroides dorei	23	14	9	120	173	2.39929202627529	0.929062080553895	6.52481085422211	0.0489482657468275	0.171318930113896	Rebuilt	3	uc_extent
+Segatella sp.__Faecalibacterium prausnitzii__Prevotellaceae fam.	8	6	2	120	173	4.47753762180856	0.783099183025754	46.1159347613759	0.0673243739824255	0.180226703424472	Rebuilt	3	uc_extent
+Bacteroides dorei__Faecalibacterium prausnitzii__Bacteroides uniformis	75	24	51	120	173	0.599073030247808	0.327803724146272	1.07284526169555	0.0772400157533453	0.180226703424472	Rebuilt	3	uc_extent
+Bacteroides dorei__Faecalibacterium prausnitzii__Muribaculaceae fam.	11	2	9	120	173	0.309898852780496	0.0320185153328917	1.53609444161973	0.209436808053876	0.367312472540938	Rebuilt	3	uc_extent
+Bacteroides dorei__Faecalibacterium prausnitzii__Bacteroides thetaiotaomicron	12	7	5	120	173	2.07610197060915	0.551672851240776	8.51206556016908	0.240313198485695	0.367312472540938	Rebuilt	3	uc_extent
+Bacteroides dorei__Akkermansia muciniphila	14	8	6	120	173	1.983340659123	0.585482858565754	7.13531393742529	0.266976627900619	0.367312472540938	Rebuilt	3	uc_extent
+Bacteroides dorei__Bacteroides uniformis__Bacteroides eggerthii	8	5	3	120	173	2.45605333735484	0.467474779077348	16.1241945458523	0.279255739551707	0.367312472540938	Rebuilt	3	uc_extent
+Bacteroides dorei__Bacteroides uniformis__Bacteroides ovatus	38	19	19	120	173	1.52246028584824	0.723665113554747	3.20483518858378	0.288602656996451	0.367312472540938	Rebuilt	3	uc_extent
+Bacteroides dorei__Bacteroides uniformis__Faecalibacterium prausnitzii	20	7	13	120	173	0.76311291487539	0.249529775991976	2.13554491782317	0.643778970395612	0.751075465461547	Rebuilt	3	uc_extent
+Bacteroides dorei__Bacteroides stercoris__Bacteroides uniformis	26	10	16	120	173	0.892417445342086	0.348061798997882	2.18293468465317	0.837433705968429	0.901851683350616	Rebuilt	3	uc_extent
+Bacteroides dorei__Agathobacter faecis	33	13	20	120	173	0.929652732619057	0.40605681905125	2.06251258157478	1	1	Rebuilt	3	uc_extent
+Segatella sp.__Faecalibacterium prausnitzii__Escherichia-Shigella coli	10	0	10	120	173	0	0	0.621953400622906	0.00636420573939742	0.108191497569756	Rebuilt	4	uc_extent
+Segatella sp.__Faecalibacterium prausnitzii__Bifidobacterium breve	4	4	0	120	173	Inf	0.963585719653564	Inf	0.0273057819471477	0.172424665687184	Rebuilt	4	uc_extent
+Bacteroides dorei__Bacteroides uniformis__Bacteroides cellulosilyticus__Bacteroides ovatus	11	1	10	120	173	0.137638965973891	0.00313483531816931	0.9908022637374	0.0304278821800913	0.172424665687184	Rebuilt	4	uc_extent
+Segatella sp.__Faecalibacterium prausnitzii__Bacteroides dorei	23	14	9	120	173	2.39929202627529	0.929062080553895	6.52481085422211	0.0489482657468275	0.208030129424017	Rebuilt	4	uc_extent
+Segatella sp.__Faecalibacterium prausnitzii__Prevotellaceae fam.	8	6	2	120	173	4.47753762180856	0.783099183025754	46.1159347613759	0.0673243739824255	0.228902871540247	Rebuilt	4	uc_extent
+Bacteroides dorei__Faecalibacterium prausnitzii__Bacteroides uniformis__Bacteroides sp.	6	0	6	120	173	0	0	1.20858899657047	0.084746518017462	0.240115134382809	Rebuilt	4	uc_extent
+Bacteroides dorei__Faecalibacterium prausnitzii__Bacteroides uniformis__Bacteroides ovatus	16	4	12	120	173	0.46375932007669	0.106313517129466	1.57997025792306	0.203777729816222	0.408853764078306	Rebuilt	4	uc_extent
+Bacteroides dorei__Faecalibacterium prausnitzii__Muribaculaceae fam.	11	2	9	120	173	0.309898852780496	0.0320185153328917	1.53609444161973	0.209436808053876	0.408853764078306	Rebuilt	4	uc_extent
+Bacteroides dorei__Faecalibacterium prausnitzii__Bacteroides thetaiotaomicron	12	7	5	120	173	2.07610197060915	0.551672851240776	8.51206556016908	0.240313198485695	0.408853764078306	Rebuilt	4	uc_extent
+Bacteroides dorei__Akkermansia muciniphila	14	8	6	120	173	1.983340659123	0.585482858565754	7.13531393742529	0.266976627900619	0.408853764078306	Rebuilt	4	uc_extent
+Bacteroides dorei__Bacteroides uniformis__Bacteroides eggerthii	8	5	3	120	173	2.45605333735484	0.467474779077348	16.1241945458523	0.279255739551707	0.408853764078306	Rebuilt	4	uc_extent
+Bacteroides dorei__Bacteroides uniformis__Bacteroides ovatus	38	19	19	120	173	1.52246028584824	0.723665113554747	3.20483518858378	0.288602656996451	0.408853764078306	Rebuilt	4	uc_extent
+Bacteroides dorei__Faecalibacterium prausnitzii__Bacteroides uniformis__UCG-002 sp.	28	9	19	120	173	0.658092276426162	0.252281701549946	1.59511611872968	0.419612298498085	0.548723774959035	Rebuilt	4	uc_extent
+Bacteroides dorei__Bacteroides uniformis__Faecalibacterium prausnitzii	20	7	13	120	173	0.76311291487539	0.249529775991976	2.13554491782317	0.643778970395612	0.781731606908957	Rebuilt	4	uc_extent
+Bacteroides dorei__Faecalibacterium prausnitzii__Bacteroides uniformis__Bifidobacterium breve	25	11	14	120	173	1.14559169201515	0.452229493043341	2.83257753084975	0.832431666152073	0.889773312591456	Rebuilt	4	uc_extent
+Bacteroides dorei__Bacteroides stercoris__Bacteroides uniformis__Faecalibacterium prausnitzii	26	10	16	120	173	0.892417445342086	0.348061798997882	2.18293468465317	0.837433705968429	0.889773312591456	Rebuilt	4	uc_extent
+Bacteroides dorei__Agathobacter faecis__Faecalibacterium prausnitzii	33	13	20	120	173	0.929652732619057	0.40605681905125	2.06251258157478	1	1	Rebuilt	4	uc_extent
+Faecalibacterium prausnitzii	35	22	13	120	173	2.75300848318989	1.26041205832551	6.24190053933241	0.00601081649067357	0.186335311210881	AGP transfer	1	uc_extent
+Bacteroides dorei	107	36	71	120	173	0.616718223041432	0.363159973071124	1.03690611439518	0.0642108197291768	0.65678551463533	AGP transfer	1	uc_extent
+Bacteroides sartorii	3	3	0	120	173	Inf	0.599784817283204	Inf	0.0676809979886569	0.65678551463533	AGP transfer	1	uc_extent
+Akkermansia sp.	6	0	6	120	173	0	0	1.20858899657047	0.084746518017462	0.65678551463533	AGP transfer	1	uc_extent
+Agathobacter faecis	18	4	14	120	173	0.392748875446032	0.0917429020990879	1.29315568691352	0.136681135237734	0.739164991350694	AGP transfer	1	uc_extent
+Blautia sp.	4	0	4	120	173	0	0	2.17376928740279	0.147111659087267	0.739164991350694	AGP transfer	1	uc_extent
+Bacteroides thetaiotaomicron	2	2	0	120	173	Inf	0.2714110839486	Inf	0.166908223853383	0.739164991350694	AGP transfer	1	uc_extent
+Christensenellaceae R-7 group sp.	3	0	3	120	173	0	0	3.4832330786806	0.272055729580626	0.793515358361775	AGP transfer	1	uc_extent
+Ruminococcus bromii	4	3	1	120	173	4.38869857679287	0.347584958315639	232.545798602904	0.308612523253304	0.793515358361775	AGP transfer	1	uc_extent
+Segatella sp.	37	18	19	120	173	1.42852294535667	0.671525327933647	3.03043758828102	0.371670922518712	0.793515358361775	AGP transfer	1	uc_extent
+Bacteroides sp.	6	1	5	120	173	0.283350346026384	0.00592533828829517	2.5786539311653	0.406325259903992	0.793515358361775	AGP transfer	1	uc_extent
+Bacteroides eggerthii	1	1	0	120	173	Inf	0.0369655669561544	Inf	0.409556313993174	0.793515358361775	AGP transfer	1	uc_extent
+Enterobacterales ord.	1	1	0	120	173	Inf	0.0369655669561544	Inf	0.409556313993174	0.793515358361775	AGP transfer	1	uc_extent
+Enterobacteriaceae fam.	1	1	0	120	173	Inf	0.0369655669561544	Inf	0.409556313993174	0.793515358361775	AGP transfer	1	uc_extent
+Parabacteroides distasonis	1	1	0	120	173	Inf	0.0369655669561544	Inf	0.409556313993174	0.793515358361775	AGP transfer	1	uc_extent
+Prevotellaceae fam.	1	1	0	120	173	Inf	0.0369655669561544	Inf	0.409556313993174	0.793515358361775	AGP transfer	1	uc_extent
+Akkermansia muciniphila	7	4	3	120	173	1.94947944497029	0.323331634485844	13.5576577579881	0.450030290196689	0.820643470358669	AGP transfer	1	uc_extent
+Bacteroides fragilis	3	2	1	120	173	2.90456699552038	0.149620578739704	172.790403750696	0.569737407174803	0.981214423467716	AGP transfer	1	uc_extent
+UCG-002 sp.	11	5	6	120	173	1.20933875370173	0.28478702999673	4.88179120801069	0.763836541067506	1	AGP transfer	1	uc_extent
+CAG-352 bromii	4	2	2	120	173	1.44724749996817	0.103555895267552	20.2215962639021	1	1	AGP transfer	1	uc_extent
+[Eubacterium] coprostanoligenes group fam.	3	1	2	120	173	0.719269374516094	0.0120838109878706	13.9631196056898	1	1	AGP transfer	1	uc_extent
+Alistipes onderdonkii	1	0	1	120	173	0	0	56.1765258025399	1	1	AGP transfer	1	uc_extent
+Bacteroides caccae	5	2	3	120	173	0.960579568465808	0.0790707061600306	8.52048199812389	1	1	AGP transfer	1	uc_extent
+Bacteroides cellulosilyticus	3	1	2	120	173	0.719269374516094	0.0120838109878706	13.9631196056898	1	1	AGP transfer	1	uc_extent
+Bacteroides ovatus	10	4	6	120	173	0.959899521991671	0.194803495665673	4.15029938840609	1	1	AGP transfer	1	uc_extent
+Bifidobacterium breve	6	2	4	120	173	0.716889488464125	0.0638472870292962	5.09483410159318	1	1	AGP transfer	1	uc_extent
+Clostridia UCG-014 ord.	1	0	1	120	173	0	0	56.1765258025399	1	1	AGP transfer	1	uc_extent
+Gemmiger sp.	2	1	1	120	173	1.4434921149417	0.0182685715136712	114.007790619003	1	1	AGP transfer	1	uc_extent
+Lachnospiraceae fam.	1	0	1	120	173	0	0	56.1765258025399	1	1	AGP transfer	1	uc_extent
+Muribaculaceae fam.	5	2	3	120	173	0.960579568465808	0.0790707061600306	8.52048199812389	1	1	AGP transfer	1	uc_extent
+Prevotellaceae NK3B31 group sp.	1	0	1	120	173	0	0	56.1765258025399	1	1	AGP transfer	1	uc_extent
+Bacteroides dorei__Akkermansia muciniphila	6	6	0	120	173	Inf	1.7423361314633	Inf	0.00437643131457794	0.332608779907924	AGP transfer	2	uc_extent
+Bacteroides dorei__Faecalibacterium prausnitzii	25	4	21	120	173	0.250584951923165	0.0609007765803298	0.770835055072777	0.0095951709879754	0.364616497543065	AGP transfer	2	uc_extent
+Faecalibacterium prausnitzii__Bacteroides dorei	14	10	4	120	173	3.82324389043677	1.06958404691277	17.1150192952892	0.0243195977772302	0.518809856995807	AGP transfer	2	uc_extent
+Segatella sp.__Prevotellaceae fam.	4	4	0	120	173	Inf	0.963585719653564	Inf	0.0273057819471477	0.518809856995807	AGP transfer	2	uc_extent
+Bacteroides dorei__Muribaculaceae fam.	3	3	0	120	173	Inf	0.599784817283204	Inf	0.0676809979886569	0.55152282664596	AGP transfer	2	uc_extent
+Bacteroides sartorii__Bacteroides dorei	3	3	0	120	173	Inf	0.599784817283204	Inf	0.0676809979886569	0.55152282664596	AGP transfer	2	uc_extent
+Bacteroides dorei__Bacteroides ovatus	17	3	14	120	173	0.292249574351526	0.0526649726022721	1.08066586831376	0.0722658019625536	0.55152282664596	AGP transfer	2	uc_extent
+Bacteroides dorei__Bifidobacterium breve	5	0	5	120	173	0	0	1.55985038193537	0.0810195984171258	0.55152282664596	AGP transfer	2	uc_extent
+Bacteroides sp.__Faecalibacterium prausnitzii	5	0	5	120	173	0	0	1.55985038193537	0.0810195984171258	0.55152282664596	AGP transfer	2	uc_extent
+Akkermansia sp.__Bacteroides dorei	6	0	6	120	173	0	0	1.20858899657047	0.084746518017462	0.55152282664596	AGP transfer	2	uc_extent
+Agathobacter faecis__Bacteroides dorei	9	1	8	120	173	0.174082522671837	0.00387842364404044	1.32758477977983	0.0871636807432377	0.55152282664596	AGP transfer	2	uc_extent
+Bacteroides dorei__Bacteroides cellulosilyticus	9	1	8	120	173	0.174082522671837	0.00387842364404044	1.32758477977983	0.0871636807432377	0.55152282664596	AGP transfer	2	uc_extent
+Bacteroides dorei__Bacteroides thetaiotaomicron	7	5	2	120	173	3.70089055913226	0.593645086691979	39.4900531363075	0.126843092505956	0.55152282664596	AGP transfer	2	uc_extent
+Bacteroides dorei__Alistipes onderdonkii	4	0	4	120	173	0	0	2.17376928740279	0.147111659087267	0.55152282664596	AGP transfer	2	uc_extent
+Bacteroides dorei__UCG-002 sp.	4	0	4	120	173	0	0	2.17376928740279	0.147111659087267	0.55152282664596	AGP transfer	2	uc_extent
+Blautia sp.	4	0	4	120	173	0	0	2.17376928740279	0.147111659087267	0.55152282664596	AGP transfer	2	uc_extent
+Bacteroides dorei__Bacteroides eggerthii	5	4	1	120	173	5.89760526056305	0.574218589562442	293.297289631575	0.162747976909454	0.55152282664596	AGP transfer	2	uc_extent
+Akkermansia muciniphila__Clostridia UCG-014 ord.	2	2	0	120	173	Inf	0.2714110839486	Inf	0.166908223853383	0.55152282664596	AGP transfer	2	uc_extent
+Akkermansia muciniphila__UCG-002 sp.	2	2	0	120	173	Inf	0.2714110839486	Inf	0.166908223853383	0.55152282664596	AGP transfer	2	uc_extent
+Bacteroides dorei__Dialister invisus	2	2	0	120	173	Inf	0.2714110839486	Inf	0.166908223853383	0.55152282664596	AGP transfer	2	uc_extent
+Bacteroides fragilis__Bacteroides dorei	2	2	0	120	173	Inf	0.2714110839486	Inf	0.166908223853383	0.55152282664596	AGP transfer	2	uc_extent
+Bacteroides thetaiotaomicron__Bacteroides ovatus	2	2	0	120	173	Inf	0.2714110839486	Inf	0.166908223853383	0.55152282664596	AGP transfer	2	uc_extent
+Faecalibacterium prausnitzii__Dialister invisus	2	2	0	120	173	Inf	0.2714110839486	Inf	0.166908223853383	0.55152282664596	AGP transfer	2	uc_extent
+Segatella sp.__Bacteroides dorei	6	4	2	120	173	2.93732229243605	0.413307238722091	32.9685722687608	0.231176529482883	0.73205901002913	AGP transfer	2	uc_extent
+Christensenellaceae R-7 group sp.__Bacteroides dorei	3	0	3	120	173	0	0	3.4832330786806	0.272055729580626	0.759177557645884	AGP transfer	2	uc_extent
+Segatella sp.__Agathobacter faecis	3	0	3	120	173	0	0	3.4832330786806	0.272055729580626	0.759177557645884	AGP transfer	2	uc_extent
+Faecalibacterium prausnitzii__Agathobacter faecis	4	3	1	120	173	4.38869857679287	0.347584958315639	232.545798602904	0.308612523253304	0.759177557645884	AGP transfer	2	uc_extent
+Faecalibacterium prausnitzii__UCG-002 sp.	4	3	1	120	173	4.38869857679287	0.347584958315639	232.545798602904	0.308612523253304	0.759177557645884	AGP transfer	2	uc_extent
+Ruminococcus bromii	4	3	1	120	173	4.38869857679287	0.347584958315639	232.545798602904	0.308612523253304	0.759177557645884	AGP transfer	2	uc_extent
+Faecalibacterium prausnitzii__Blautia sp.	5	3	2	120	173	2.18633075043993	0.246505027984493	26.556497861538	0.403043380339889	0.759177557645884	AGP transfer	2	uc_extent
+Bacteroides dorei__Bacteroides fragilis	1	1	0	120	173	Inf	0.0369655669561544	Inf	0.409556313993174	0.759177557645884	AGP transfer	2	uc_extent
+Bacteroides dorei__Bacteroides intestinalis	1	1	0	120	173	Inf	0.0369655669561544	Inf	0.409556313993174	0.759177557645884	AGP transfer	2	uc_extent
+Bacteroides dorei__Clostridia UCG-014 ord.	1	1	0	120	173	Inf	0.0369655669561544	Inf	0.409556313993174	0.759177557645884	AGP transfer	2	uc_extent
+Bacteroides eggerthii__Bacteroides dorei	1	1	0	120	173	Inf	0.0369655669561544	Inf	0.409556313993174	0.759177557645884	AGP transfer	2	uc_extent
+Bacteroides sp.__Bacteroides dorei	1	1	0	120	173	Inf	0.0369655669561544	Inf	0.409556313993174	0.759177557645884	AGP transfer	2	uc_extent
+Enterobacterales ord.__Bacteroides dorei	1	1	0	120	173	Inf	0.0369655669561544	Inf	0.409556313993174	0.759177557645884	AGP transfer	2	uc_extent
+Enterobacteriaceae fam.__Bacteroides dorei	1	1	0	120	173	Inf	0.0369655669561544	Inf	0.409556313993174	0.759177557645884	AGP transfer	2	uc_extent
+Faecalibacterium prausnitzii__Bifidobacterium breve	1	1	0	120	173	Inf	0.0369655669561544	Inf	0.409556313993174	0.759177557645884	AGP transfer	2	uc_extent
+Parabacteroides distasonis__Bacteroides dorei	1	1	0	120	173	Inf	0.0369655669561544	Inf	0.409556313993174	0.759177557645884	AGP transfer	2	uc_extent
+Prevotellaceae fam.__Bacteroides dorei	1	1	0	120	173	Inf	0.0369655669561544	Inf	0.409556313993174	0.759177557645884	AGP transfer	2	uc_extent
+Segatella sp.__UCG-002 sp.	1	1	0	120	173	Inf	0.0369655669561544	Inf	0.409556313993174	0.759177557645884	AGP transfer	2	uc_extent
+Akkermansia muciniphila__Bacillota phy.	2	0	2	120	173	0	0	7.67750225602122	0.514703819720417	0.850380223885906	AGP transfer	2	uc_extent
+Bacteroides caccae__Akkermansia muciniphila	2	0	2	120	173	0	0	7.67750225602122	0.514703819720417	0.850380223885906	AGP transfer	2	uc_extent
+Bacteroides dorei__Parabacteroides distasonis	2	0	2	120	173	0	0	7.67750225602122	0.514703819720417	0.850380223885906	AGP transfer	2	uc_extent
+Faecalibacterium prausnitzii__Gemmiger sp.	2	0	2	120	173	0	0	7.67750225602122	0.514703819720417	0.850380223885906	AGP transfer	2	uc_extent
+Muribaculaceae fam.__Faecalibacterium prausnitzii	2	0	2	120	173	0	0	7.67750225602122	0.514703819720417	0.850380223885906	AGP transfer	2	uc_extent
+Bacteroides caccae__Bacteroides dorei	3	2	1	120	173	2.90456699552038	0.149620578739704	172.790403750696	0.569737407174803	0.883674345822143	AGP transfer	2	uc_extent
+Muribaculaceae fam.__Bacteroides dorei	3	2	1	120	173	2.90456699552038	0.149620578739704	172.790403750696	0.569737407174803	0.883674345822143	AGP transfer	2	uc_extent
+UCG-002 sp.__Bacteroides dorei	3	2	1	120	173	2.90456699552038	0.149620578739704	172.790403750696	0.569737407174803	0.883674345822143	AGP transfer	2	uc_extent
+Bifidobacterium breve__Faecalibacterium prausnitzii	4	1	3	120	173	0.477283074865296	0.00900127458292983	6.02615707835329	0.6468879410607	0.983269670412264	AGP transfer	2	uc_extent
+Bacteroides dorei__Agathobacter faecis	8	4	4	120	173	1.45495240488372	0.265367391210279	7.97875088939808	0.720343570120733	1	AGP transfer	2	uc_extent
+Agathobacter faecis__Faecalibacterium prausnitzii	9	3	6	120	173	0.714468906417059	0.113367371634636	3.42568923871835	0.741685771348361	1	AGP transfer	2	uc_extent
+CAG-352 bromii	4	2	2	120	173	1.44724749996817	0.103555895267552	20.2215962639021	1	1	AGP transfer	2	uc_extent
+UCG-002 sp.__Faecalibacterium prausnitzii	8	3	5	120	173	0.861991999245198	0.131298919445036	4.52872980900038	1	1	AGP transfer	2	uc_extent
+[Eubacterium] coprostanoligenes group fam.	3	1	2	120	173	0.719269374516094	0.0120838109878706	13.9631196056898	1	1	AGP transfer	2	uc_extent
+Akkermansia muciniphila__Bacteroides dorei	1	0	1	120	173	0	0	56.1765258025399	1	1	AGP transfer	2	uc_extent
+Alistipes onderdonkii__Bacteroides dorei	1	0	1	120	173	0	0	56.1765258025399	1	1	AGP transfer	2	uc_extent
+Bacteroides cellulosilyticus__Bacteroides dorei	3	1	2	120	173	0.719269374516094	0.0120838109878706	13.9631196056898	1	1	AGP transfer	2	uc_extent
+Bacteroides dorei__[Eubacterium] coprostanoligenes group fam.	1	0	1	120	173	0	0	56.1765258025399	1	1	AGP transfer	2	uc_extent
+Bacteroides dorei__CAG-352 bromii	1	0	1	120	173	0	0	56.1765258025399	1	1	AGP transfer	2	uc_extent
+Bacteroides dorei__Gemmiger sp.	2	1	1	120	173	1.4434921149417	0.0182685715136712	114.007790619003	1	1	AGP transfer	2	uc_extent
+Bacteroides dorei__Massiliprevotella massiliensis	1	0	1	120	173	0	0	56.1765258025399	1	1	AGP transfer	2	uc_extent
+Bacteroides dorei__Ruminococcus sp.	1	0	1	120	173	0	0	56.1765258025399	1	1	AGP transfer	2	uc_extent
+Bacteroides dorei__Segatella sp.	1	0	1	120	173	0	0	56.1765258025399	1	1	AGP transfer	2	uc_extent
+Bacteroides fragilis__Faecalibacterium prausnitzii	1	0	1	120	173	0	0	56.1765258025399	1	1	AGP transfer	2	uc_extent
+Bacteroides ovatus__Bacteroides dorei	9	4	5	120	173	1.15802811735332	0.224827828534354	5.50597859765804	1	1	AGP transfer	2	uc_extent
+Bacteroides ovatus__Bacteroides fragilis	1	0	1	120	173	0	0	56.1765258025399	1	1	AGP transfer	2	uc_extent
+Bifidobacterium breve__Bacteroides dorei	2	1	1	120	173	1.4434921149417	0.0182685715136712	114.007790619003	1	1	AGP transfer	2	uc_extent
+Clostridia UCG-014 ord.__Bacteroides dorei	1	0	1	120	173	0	0	56.1765258025399	1	1	AGP transfer	2	uc_extent
+Faecalibacterium prausnitzii__Bacteroides ovatus	1	0	1	120	173	0	0	56.1765258025399	1	1	AGP transfer	2	uc_extent
+Faecalibacterium prausnitzii__CAG-352 bromii	1	0	1	120	173	0	0	56.1765258025399	1	1	AGP transfer	2	uc_extent
+Faecalibacterium prausnitzii__Clostridia UCG-014 ord.	1	0	1	120	173	0	0	56.1765258025399	1	1	AGP transfer	2	uc_extent
+Gemmiger sp.	2	1	1	120	173	1.4434921149417	0.0182685715136712	114.007790619003	1	1	AGP transfer	2	uc_extent
+Lachnospiraceae fam.__Faecalibacterium prausnitzii	1	0	1	120	173	0	0	56.1765258025399	1	1	AGP transfer	2	uc_extent
+Prevotellaceae NK3B31 group sp.__Faecalibacterium prausnitzii	1	0	1	120	173	0	0	56.1765258025399	1	1	AGP transfer	2	uc_extent
+Segatella sp.__Faecalibacterium prausnitzii	23	9	14	120	173	0.921087969022907	0.33900597438491	2.37809347612863	1	1	AGP transfer	2	uc_extent
+Bacteroides dorei__Akkermansia muciniphila__Faecalibacterium prausnitzii	6	6	0	120	173	Inf	1.7423361314633	Inf	0.00437643131457794	0.442019562772372	AGP transfer	3	uc_extent
+Faecalibacterium prausnitzii__Bacteroides dorei__Agathobacter faecis	7	6	1	120	173	8.99210465351708	1.06959569020375	417.888564666165	0.0202047787171281	0.702405442049652	AGP transfer	3	uc_extent
+Segatella sp.__Prevotellaceae fam.__Faecalibacterium prausnitzii	4	4	0	120	173	Inf	0.963585719653564	Inf	0.0273057819471477	0.702405442049652	AGP transfer	3	uc_extent
+Bacteroides dorei__Muribaculaceae fam.__Faecalibacterium prausnitzii	3	3	0	120	173	Inf	0.599784817283204	Inf	0.0676809979886569	0.702405442049652	AGP transfer	3	uc_extent
+Bacteroides sartorii__Bacteroides dorei	3	3	0	120	173	Inf	0.599784817283204	Inf	0.0676809979886569	0.702405442049652	AGP transfer	3	uc_extent
+Bacteroides dorei__Bacteroides ovatus__Agathobacter faecis	5	0	5	120	173	0	0	1.55985038193537	0.0810195984171258	0.702405442049652	AGP transfer	3	uc_extent
+Bacteroides dorei__Bifidobacterium breve	5	0	5	120	173	0	0	1.55985038193537	0.0810195984171258	0.702405442049652	AGP transfer	3	uc_extent
+Bacteroides sp.__Faecalibacterium prausnitzii__Bacteroides dorei	5	0	5	120	173	0	0	1.55985038193537	0.0810195984171258	0.702405442049652	AGP transfer	3	uc_extent
+Akkermansia sp.__Bacteroides dorei	6	0	6	120	173	0	0	1.20858899657047	0.084746518017462	0.702405442049652	AGP transfer	3	uc_extent
+Agathobacter faecis__Bacteroides dorei__Faecalibacterium prausnitzii	9	1	8	120	173	0.174082522671837	0.00387842364404044	1.32758477977983	0.0871636807432377	0.702405442049652	AGP transfer	3	uc_extent
+Bacteroides dorei__Bacteroides cellulosilyticus__Faecalibacterium prausnitzii	9	1	8	120	173	0.174082522671837	0.00387842364404044	1.32758477977983	0.0871636807432377	0.702405442049652	AGP transfer	3	uc_extent
+Bacteroides dorei__Bacteroides thetaiotaomicron__Faecalibacterium prausnitzii	7	5	2	120	173	3.70089055913226	0.593645086691979	39.4900531363075	0.126843092505956	0.702405442049652	AGP transfer	3	uc_extent
+Bacteroides dorei__Alistipes onderdonkii	4	0	4	120	173	0	0	2.17376928740279	0.147111659087267	0.702405442049652	AGP transfer	3	uc_extent
+Bacteroides dorei__UCG-002 sp.__Faecalibacterium prausnitzii	4	0	4	120	173	0	0	2.17376928740279	0.147111659087267	0.702405442049652	AGP transfer	3	uc_extent
+Blautia sp.	4	0	4	120	173	0	0	2.17376928740279	0.147111659087267	0.702405442049652	AGP transfer	3	uc_extent
+Bacteroides dorei__Bacteroides ovatus__Faecalibacterium prausnitzii	8	1	7	120	173	0.200111941681025	0.00438987154746245	1.59089239694498	0.147146548242225	0.702405442049652	AGP transfer	3	uc_extent
+Bacteroides dorei__Bacteroides eggerthii	5	4	1	120	173	5.89760526056305	0.574218589562442	293.297289631575	0.162747976909454	0.702405442049652	AGP transfer	3	uc_extent
+Akkermansia muciniphila__Clostridia UCG-014 ord.	2	2	0	120	173	Inf	0.2714110839486	Inf	0.166908223853383	0.702405442049652	AGP transfer	3	uc_extent
+Akkermansia muciniphila__UCG-002 sp.	2	2	0	120	173	Inf	0.2714110839486	Inf	0.166908223853383	0.702405442049652	AGP transfer	3	uc_extent
+Bacteroides dorei__Dialister invisus	2	2	0	120	173	Inf	0.2714110839486	Inf	0.166908223853383	0.702405442049652	AGP transfer	3	uc_extent
+Bacteroides fragilis__Bacteroides dorei	2	2	0	120	173	Inf	0.2714110839486	Inf	0.166908223853383	0.702405442049652	AGP transfer	3	uc_extent
+Bacteroides thetaiotaomicron__Bacteroides ovatus	2	2	0	120	173	Inf	0.2714110839486	Inf	0.166908223853383	0.702405442049652	AGP transfer	3	uc_extent
+Faecalibacterium prausnitzii__Agathobacter faecis__Christensenellaceae R-7 group sp.	2	2	0	120	173	Inf	0.2714110839486	Inf	0.166908223853383	0.702405442049652	AGP transfer	3	uc_extent
+Faecalibacterium prausnitzii__Dialister invisus	2	2	0	120	173	Inf	0.2714110839486	Inf	0.166908223853383	0.702405442049652	AGP transfer	3	uc_extent
+Bacteroides dorei__Agathobacter faecis__Faecalibacterium prausnitzii	6	4	2	120	173	2.93732229243605	0.413307238722091	32.9685722687608	0.231176529482883	0.8980319029912	AGP transfer	3	uc_extent
+Segatella sp.__Bacteroides dorei__Faecalibacterium prausnitzii	6	4	2	120	173	2.93732229243605	0.413307238722091	32.9685722687608	0.231176529482883	0.8980319029912	AGP transfer	3	uc_extent
+Christensenellaceae R-7 group sp.__Bacteroides dorei	3	0	3	120	173	0	0	3.4832330786806	0.272055729580626	0.919226393629124	AGP transfer	3	uc_extent
+Segatella sp.__Agathobacter faecis__Faecalibacterium prausnitzii	3	0	3	120	173	0	0	3.4832330786806	0.272055729580626	0.919226393629124	AGP transfer	3	uc_extent
+Faecalibacterium prausnitzii__Bacteroides dorei__UCG-002 sp.	4	3	1	120	173	4.38869857679287	0.347584958315639	232.545798602904	0.308612523253304	0.919226393629124	AGP transfer	3	uc_extent
+Faecalibacterium prausnitzii__UCG-002 sp.	4	3	1	120	173	4.38869857679287	0.347584958315639	232.545798602904	0.308612523253304	0.919226393629124	AGP transfer	3	uc_extent
+Ruminococcus bromii	4	3	1	120	173	4.38869857679287	0.347584958315639	232.545798602904	0.308612523253304	0.919226393629124	AGP transfer	3	uc_extent
+Segatella sp.__Faecalibacterium prausnitzii__Bacteroides dorei	17	9	8	120	173	1.6692350434342	0.552903297202648	5.13785349433333	0.319476681678881	0.919226393629124	AGP transfer	3	uc_extent
+Faecalibacterium prausnitzii__Blautia sp.	5	3	2	120	173	2.18633075043993	0.246505027984493	26.556497861538	0.403043380339889	0.919226393629124	AGP transfer	3	uc_extent
+Bacteroides dorei__Bacteroides fragilis	1	1	0	120	173	Inf	0.0369655669561544	Inf	0.409556313993174	0.919226393629124	AGP transfer	3	uc_extent
+Bacteroides dorei__Bacteroides intestinalis	1	1	0	120	173	Inf	0.0369655669561544	Inf	0.409556313993174	0.919226393629124	AGP transfer	3	uc_extent
+Bacteroides dorei__Bacteroides ovatus__Bacteroides fragilis	1	1	0	120	173	Inf	0.0369655669561544	Inf	0.409556313993174	0.919226393629124	AGP transfer	3	uc_extent
+Bacteroides dorei__Clostridia UCG-014 ord.__Faecalibacterium prausnitzii	1	1	0	120	173	Inf	0.0369655669561544	Inf	0.409556313993174	0.919226393629124	AGP transfer	3	uc_extent
+Bacteroides eggerthii__Bacteroides dorei	1	1	0	120	173	Inf	0.0369655669561544	Inf	0.409556313993174	0.919226393629124	AGP transfer	3	uc_extent
+Bacteroides sp.__Bacteroides dorei__Bacteroides ovatus	1	1	0	120	173	Inf	0.0369655669561544	Inf	0.409556313993174	0.919226393629124	AGP transfer	3	uc_extent
+Enterobacterales ord.__Bacteroides dorei	1	1	0	120	173	Inf	0.0369655669561544	Inf	0.409556313993174	0.919226393629124	AGP transfer	3	uc_extent
+Enterobacteriaceae fam.__Bacteroides dorei__Faecalibacterium prausnitzii	1	1	0	120	173	Inf	0.0369655669561544	Inf	0.409556313993174	0.919226393629124	AGP transfer	3	uc_extent
+Faecalibacterium prausnitzii__Bifidobacterium breve	1	1	0	120	173	Inf	0.0369655669561544	Inf	0.409556313993174	0.919226393629124	AGP transfer	3	uc_extent
+Parabacteroides distasonis__Bacteroides dorei	1	1	0	120	173	Inf	0.0369655669561544	Inf	0.409556313993174	0.919226393629124	AGP transfer	3	uc_extent
+Prevotellaceae fam.__Bacteroides dorei	1	1	0	120	173	Inf	0.0369655669561544	Inf	0.409556313993174	0.919226393629124	AGP transfer	3	uc_extent
+Segatella sp.__UCG-002 sp.	1	1	0	120	173	Inf	0.0369655669561544	Inf	0.409556313993174	0.919226393629124	AGP transfer	3	uc_extent
+Akkermansia muciniphila__Bacillota phy.	2	0	2	120	173	0	0	7.67750225602122	0.514703819720417	0.928305103424324	AGP transfer	3	uc_extent
+Bacteroides caccae__Akkermansia muciniphila	2	0	2	120	173	0	0	7.67750225602122	0.514703819720417	0.928305103424324	AGP transfer	3	uc_extent
+Bacteroides dorei__Agathobacter faecis__Bacteroides ovatus	2	0	2	120	173	0	0	7.67750225602122	0.514703819720417	0.928305103424324	AGP transfer	3	uc_extent
+Bacteroides dorei__Faecalibacterium prausnitzii__Bacteroides thetaiotaomicron	2	0	2	120	173	0	0	7.67750225602122	0.514703819720417	0.928305103424324	AGP transfer	3	uc_extent
+Bacteroides dorei__Faecalibacterium prausnitzii__Christensenellaceae R-7 group sp.	2	0	2	120	173	0	0	7.67750225602122	0.514703819720417	0.928305103424324	AGP transfer	3	uc_extent
+Bacteroides dorei__Parabacteroides distasonis	2	0	2	120	173	0	0	7.67750225602122	0.514703819720417	0.928305103424324	AGP transfer	3	uc_extent
+Faecalibacterium prausnitzii__Gemmiger sp.	2	0	2	120	173	0	0	7.67750225602122	0.514703819720417	0.928305103424324	AGP transfer	3	uc_extent
+Muribaculaceae fam.__Faecalibacterium prausnitzii	2	0	2	120	173	0	0	7.67750225602122	0.514703819720417	0.928305103424324	AGP transfer	3	uc_extent
+Segatella sp.__Faecalibacterium prausnitzii__Agathobacter faecis	2	0	2	120	173	0	0	7.67750225602122	0.514703819720417	0.928305103424324	AGP transfer	3	uc_extent
+Segatella sp.__Faecalibacterium prausnitzii__Prevotellaceae fam.	2	0	2	120	173	0	0	7.67750225602122	0.514703819720417	0.928305103424324	AGP transfer	3	uc_extent
+Segatella sp.__Faecalibacterium prausnitzii__UCG-002 sp.	2	0	2	120	173	0	0	7.67750225602122	0.514703819720417	0.928305103424324	AGP transfer	3	uc_extent
+Bacteroides caccae__Bacteroides dorei	3	2	1	120	173	2.90456699552038	0.149620578739704	172.790403750696	0.569737407174803	0.975313188553476	AGP transfer	3	uc_extent
+Muribaculaceae fam.__Bacteroides dorei	3	2	1	120	173	2.90456699552038	0.149620578739704	172.790403750696	0.569737407174803	0.975313188553476	AGP transfer	3	uc_extent
+UCG-002 sp.__Bacteroides dorei	3	2	1	120	173	2.90456699552038	0.149620578739704	172.790403750696	0.569737407174803	0.975313188553476	AGP transfer	3	uc_extent
+Bifidobacterium breve__Faecalibacterium prausnitzii	4	1	3	120	173	0.477283074865296	0.00900127458292983	6.02615707835329	0.6468879410607	1	AGP transfer	3	uc_extent
+Agathobacter faecis__Faecalibacterium prausnitzii__Bacteroides dorei	5	1	4	120	173	0.356120934187864	0.00715491640121576	3.65742781216569	0.651775305198268	1	AGP transfer	3	uc_extent
+Bacteroides dorei__Faecalibacterium prausnitzii__Agathobacter faecis	5	1	4	120	173	0.356120934187864	0.00715491640121576	3.65742781216569	0.651775305198268	1	AGP transfer	3	uc_extent
+Agathobacter faecis__Faecalibacterium prausnitzii__Gemmiger sp.	4	2	2	120	173	1.44724749996817	0.103555895267552	20.2215962639021	1	1	AGP transfer	3	uc_extent
+CAG-352 bromii	4	2	2	120	173	1.44724749996817	0.103555895267552	20.2215962639021	1	1	AGP transfer	3	uc_extent
+UCG-002 sp.__Faecalibacterium prausnitzii	8	3	5	120	173	0.861991999245198	0.131298919445036	4.52872980900038	1	1	AGP transfer	3	uc_extent
+[Eubacterium] coprostanoligenes group fam.	3	1	2	120	173	0.719269374516094	0.0120838109878706	13.9631196056898	1	1	AGP transfer	3	uc_extent
+Akkermansia muciniphila__Bacteroides dorei__Bacteroides caccae	1	0	1	120	173	0	0	56.1765258025399	1	1	AGP transfer	3	uc_extent
+Alistipes onderdonkii__Bacteroides dorei	1	0	1	120	173	0	0	56.1765258025399	1	1	AGP transfer	3	uc_extent
+Bacteroides cellulosilyticus__Bacteroides dorei__Faecalibacterium prausnitzii	3	1	2	120	173	0.719269374516094	0.0120838109878706	13.9631196056898	1	1	AGP transfer	3	uc_extent
+Bacteroides dorei__[Eubacterium] coprostanoligenes group fam.	1	0	1	120	173	0	0	56.1765258025399	1	1	AGP transfer	3	uc_extent
+Bacteroides dorei__Bacteroides ovatus__Akkermansia muciniphila	1	0	1	120	173	0	0	56.1765258025399	1	1	AGP transfer	3	uc_extent
+Bacteroides dorei__Bacteroides ovatus__Bacteroides sartorii	2	1	1	120	173	1.4434921149417	0.0182685715136712	114.007790619003	1	1	AGP transfer	3	uc_extent
+Bacteroides dorei__CAG-352 bromii	1	0	1	120	173	0	0	56.1765258025399	1	1	AGP transfer	3	uc_extent
+Bacteroides dorei__Faecalibacterium prausnitzii__[Eubacterium] eligens group eligens	1	0	1	120	173	0	0	56.1765258025399	1	1	AGP transfer	3	uc_extent
+Bacteroides dorei__Faecalibacterium prausnitzii__[Eubacterium] siraeum group siraeum	1	0	1	120	173	0	0	56.1765258025399	1	1	AGP transfer	3	uc_extent
+Bacteroides dorei__Faecalibacterium prausnitzii__Bacteroides cellulosilyticus	1	0	1	120	173	0	0	56.1765258025399	1	1	AGP transfer	3	uc_extent
+Bacteroides dorei__Faecalibacterium prausnitzii__Bacteroides ovatus	6	2	4	120	173	0.716889488464125	0.0638472870292962	5.09483410159318	1	1	AGP transfer	3	uc_extent
+Bacteroides dorei__Faecalibacterium prausnitzii__Bacteroides sartorii	1	0	1	120	173	0	0	56.1765258025399	1	1	AGP transfer	3	uc_extent
+Bacteroides dorei__Faecalibacterium prausnitzii__Clostridia UCG-014 ord.	1	0	1	120	173	0	0	56.1765258025399	1	1	AGP transfer	3	uc_extent
+Bacteroides dorei__Faecalibacterium prausnitzii__Gemmiger sp.	1	0	1	120	173	0	0	56.1765258025399	1	1	AGP transfer	3	uc_extent
+Bacteroides dorei__Faecalibacterium prausnitzii__Muribaculaceae fam.	1	0	1	120	173	0	0	56.1765258025399	1	1	AGP transfer	3	uc_extent
+Bacteroides dorei__Faecalibacterium prausnitzii__Segatella sp.	1	0	1	120	173	0	0	56.1765258025399	1	1	AGP transfer	3	uc_extent
+Bacteroides dorei__Faecalibacterium prausnitzii__UCG-002 sp.	2	1	1	120	173	1.4434921149417	0.0182685715136712	114.007790619003	1	1	AGP transfer	3	uc_extent
+Bacteroides dorei__Gemmiger sp.	2	1	1	120	173	1.4434921149417	0.0182685715136712	114.007790619003	1	1	AGP transfer	3	uc_extent
+Bacteroides dorei__Massiliprevotella massiliensis	1	0	1	120	173	0	0	56.1765258025399	1	1	AGP transfer	3	uc_extent
+Bacteroides dorei__Ruminococcus sp.	1	0	1	120	173	0	0	56.1765258025399	1	1	AGP transfer	3	uc_extent
+Bacteroides dorei__Segatella sp.__Faecalibacterium prausnitzii	1	0	1	120	173	0	0	56.1765258025399	1	1	AGP transfer	3	uc_extent
+Bacteroides fragilis__Faecalibacterium prausnitzii	1	0	1	120	173	0	0	56.1765258025399	1	1	AGP transfer	3	uc_extent
+Bacteroides ovatus__Bacteroides dorei__Faecalibacterium prausnitzii	9	4	5	120	173	1.15802811735332	0.224827828534354	5.50597859765804	1	1	AGP transfer	3	uc_extent
+Bacteroides ovatus__Bacteroides fragilis	1	0	1	120	173	0	0	56.1765258025399	1	1	AGP transfer	3	uc_extent
+Bifidobacterium breve__Bacteroides dorei	2	1	1	120	173	1.4434921149417	0.0182685715136712	114.007790619003	1	1	AGP transfer	3	uc_extent
+Clostridia UCG-014 ord.__Bacteroides dorei	1	0	1	120	173	0	0	56.1765258025399	1	1	AGP transfer	3	uc_extent
+Faecalibacterium prausnitzii__Agathobacter faecis__Bacteroides dorei	2	1	1	120	173	1.4434921149417	0.0182685715136712	114.007790619003	1	1	AGP transfer	3	uc_extent
+Faecalibacterium prausnitzii__Bacteroides dorei__Bacteroides ovatus	2	1	1	120	173	1.4434921149417	0.0182685715136712	114.007790619003	1	1	AGP transfer	3	uc_extent
+Faecalibacterium prausnitzii__Bacteroides dorei__Lachnospiraceae fam.	1	0	1	120	173	0	0	56.1765258025399	1	1	AGP transfer	3	uc_extent
+Faecalibacterium prausnitzii__Bacteroides ovatus	1	0	1	120	173	0	0	56.1765258025399	1	1	AGP transfer	3	uc_extent
+Faecalibacterium prausnitzii__CAG-352 bromii	1	0	1	120	173	0	0	56.1765258025399	1	1	AGP transfer	3	uc_extent
+Faecalibacterium prausnitzii__Clostridia UCG-014 ord.	1	0	1	120	173	0	0	56.1765258025399	1	1	AGP transfer	3	uc_extent
+Gemmiger sp.	2	1	1	120	173	1.4434921149417	0.0182685715136712	114.007790619003	1	1	AGP transfer	3	uc_extent
+Lachnospiraceae fam.__Faecalibacterium prausnitzii__Bacteroides dorei	1	0	1	120	173	0	0	56.1765258025399	1	1	AGP transfer	3	uc_extent
+Prevotellaceae NK3B31 group sp.__Faecalibacterium prausnitzii	1	0	1	120	173	0	0	56.1765258025399	1	1	AGP transfer	3	uc_extent
+Bacteroides dorei__Akkermansia muciniphila__Faecalibacterium prausnitzii	6	6	0	115	170	Inf	1.78895246646358	Inf	0.00398613246314836	0.406585511241132	AGP transfer	4	uc_extent
+Faecalibacterium prausnitzii__Bacteroides dorei__Agathobacter faecis	7	6	1	115	170	9.23746923700302	1.0980576732187	429.44787336774	0.0185590898553036	0.688380281690141	AGP transfer	4	uc_extent
+Segatella sp.__Prevotellaceae fam.__Faecalibacterium prausnitzii	4	4	0	115	170	Inf	0.988739527802743	Inf	0.0256862327764547	0.688380281690141	AGP transfer	4	uc_extent
+Bacteroides dorei__Muribaculaceae fam.__Faecalibacterium prausnitzii	3	3	0	115	170	Inf	0.615257074997141	Inf	0.0646742646692879	0.688380281690141	AGP transfer	4	uc_extent
+Bacteroides sartorii__Bacteroides dorei	3	3	0	115	170	Inf	0.615257074997141	Inf	0.0646742646692879	0.688380281690141	AGP transfer	4	uc_extent
+Bacteroides dorei__Bacteroides ovatus__Agathobacter faecis	5	0	5	115	170	0	0	1.59955832044356	0.0838629673994277	0.688380281690141	AGP transfer	4	uc_extent
+Bacteroides dorei__Bifidobacterium breve	5	0	5	115	170	0	0	1.59955832044356	0.0838629673994277	0.688380281690141	AGP transfer	4	uc_extent
+Bacteroides sp.__Faecalibacterium prausnitzii__Bacteroides dorei	5	0	5	115	170	0	0	1.59955832044356	0.0838629673994277	0.688380281690141	AGP transfer	4	uc_extent
+Akkermansia sp.__Bacteroides dorei	6	0	6	115	170	0	0	1.23932072311609	0.0843885016182564	0.688380281690141	AGP transfer	4	uc_extent
+Agathobacter faecis__Bacteroides dorei__Faecalibacterium prausnitzii__Bacteroides ovatus	9	1	8	115	170	0.178423704959608	0.00397336758651596	1.36169764157361	0.0891892565015663	0.688380281690141	AGP transfer	4	uc_extent
+Bacteroides dorei__Bacteroides cellulosilyticus__Faecalibacterium prausnitzii	9	1	8	115	170	0.178423704959608	0.00397336758651596	1.36169764157361	0.0891892565015663	0.688380281690141	AGP transfer	4	uc_extent
+Bacteroides dorei__Bacteroides ovatus__Faecalibacterium prausnitzii__Agathobacter faecis	8	1	7	115	170	0.205123526064081	0.00449785153058848	1.63180248557243	0.149040865092582	0.688380281690141	AGP transfer	4	uc_extent
+Bacteroides dorei__Alistipes onderdonkii	4	0	4	115	170	0	0	2.22923744296567	0.150471305071953	0.688380281690141	AGP transfer	4	uc_extent
+Bacteroides dorei__UCG-002 sp.__Faecalibacterium prausnitzii	4	0	4	115	170	0	0	2.22923744296567	0.150471305071953	0.688380281690141	AGP transfer	4	uc_extent
+Blautia sp.	4	0	4	115	170	0	0	2.22923744296567	0.150471305071953	0.688380281690141	AGP transfer	4	uc_extent
+Bacteroides dorei__Bacteroides eggerthii	5	4	1	115	170	6.05400312575166	0.589123739484118	301.177853467847	0.161561536296177	0.688380281690141	AGP transfer	4	uc_extent
+Akkermansia muciniphila__Clostridia UCG-014 ord.	2	2	0	115	170	Inf	0.278347353742798	Inf	0.161971830985916	0.688380281690141	AGP transfer	4	uc_extent
+Akkermansia muciniphila__UCG-002 sp.	2	2	0	115	170	Inf	0.278347353742798	Inf	0.161971830985916	0.688380281690141	AGP transfer	4	uc_extent
+Bacteroides dorei__Dialister invisus	2	2	0	115	170	Inf	0.278347353742798	Inf	0.161971830985916	0.688380281690141	AGP transfer	4	uc_extent
+Bacteroides fragilis__Bacteroides dorei	2	2	0	115	170	Inf	0.278347353742798	Inf	0.161971830985916	0.688380281690141	AGP transfer	4	uc_extent
+Bacteroides thetaiotaomicron__Bacteroides ovatus	2	2	0	115	170	Inf	0.278347353742798	Inf	0.161971830985916	0.688380281690141	AGP transfer	4	uc_extent
+Faecalibacterium prausnitzii__Agathobacter faecis__Christensenellaceae R-7 group sp.	2	2	0	115	170	Inf	0.278347353742798	Inf	0.161971830985916	0.688380281690141	AGP transfer	4	uc_extent
+Faecalibacterium prausnitzii__Dialister invisus	2	2	0	115	170	Inf	0.278347353742798	Inf	0.161971830985916	0.688380281690141	AGP transfer	4	uc_extent
+Segatella sp.__Bacteroides dorei__Faecalibacterium prausnitzii__Clostridia UCG-014 ord.	2	2	0	115	170	Inf	0.278347353742798	Inf	0.161971830985916	0.688380281690141	AGP transfer	4	uc_extent
+Christensenellaceae R-7 group sp.__Bacteroides dorei	3	0	3	115	170	0	0	3.57210244091963	0.275389177168273	0.914619883040936	AGP transfer	4	uc_extent
+Segatella sp.__Agathobacter faecis__Faecalibacterium prausnitzii	3	0	3	115	170	0	0	3.57210244091963	0.275389177168273	0.914619883040936	AGP transfer	4	uc_extent
+Bacteroides dorei__Bacteroides thetaiotaomicron__Faecalibacterium prausnitzii__Bacteroides ovatus	4	3	1	115	170	4.50350750924532	0.356515227925558	238.70428319353	0.306423432643285	0.914619883040936	AGP transfer	4	uc_extent
+Faecalibacterium prausnitzii__Bacteroides dorei__UCG-002 sp.	4	3	1	115	170	4.50350750924532	0.356515227925558	238.70428319353	0.306423432643285	0.914619883040936	AGP transfer	4	uc_extent
+Faecalibacterium prausnitzii__UCG-002 sp.	4	3	1	115	170	4.50350750924532	0.356515227925558	238.70428319353	0.306423432643285	0.914619883040936	AGP transfer	4	uc_extent
+Ruminococcus bromii	4	3	1	115	170	4.50350750924532	0.356515227925558	238.70428319353	0.306423432643285	0.914619883040936	AGP transfer	4	uc_extent
+Segatella sp.__Faecalibacterium prausnitzii__Bacteroides dorei__Agathobacter faecis	17	9	8	115	170	1.71591555542175	0.567707719353709	5.28761193906316	0.313288898053785	0.914619883040936	AGP transfer	4	uc_extent
+Faecalibacterium prausnitzii__Blautia sp.	5	3	2	115	170	2.24345484417524	0.252811690106391	27.2621333167614	0.396044717431009	0.914619883040936	AGP transfer	4	uc_extent
+Bacteroides dorei__Agathobacter faecis__Faecalibacterium prausnitzii__Bacteroides sp.	1	1	0	115	170	Inf	0.0379038863815737	Inf	0.403508771929825	0.914619883040936	AGP transfer	4	uc_extent
+Bacteroides dorei__Bacteroides fragilis	1	1	0	115	170	Inf	0.0379038863815737	Inf	0.403508771929825	0.914619883040936	AGP transfer	4	uc_extent
+Bacteroides dorei__Bacteroides intestinalis	1	1	0	115	170	Inf	0.0379038863815737	Inf	0.403508771929825	0.914619883040936	AGP transfer	4	uc_extent
+Bacteroides dorei__Bacteroides ovatus__Bacteroides fragilis	1	1	0	115	170	Inf	0.0379038863815737	Inf	0.403508771929825	0.914619883040936	AGP transfer	4	uc_extent
+Bacteroides dorei__Clostridia UCG-014 ord.__Faecalibacterium prausnitzii	1	1	0	115	170	Inf	0.0379038863815737	Inf	0.403508771929825	0.914619883040936	AGP transfer	4	uc_extent
+Bacteroides eggerthii__Bacteroides dorei	1	1	0	115	170	Inf	0.0379038863815737	Inf	0.403508771929825	0.914619883040936	AGP transfer	4	uc_extent
+Bacteroides sp.__Bacteroides dorei__Bacteroides ovatus	1	1	0	115	170	Inf	0.0379038863815737	Inf	0.403508771929825	0.914619883040936	AGP transfer	4	uc_extent
+Enterobacterales ord.__Bacteroides dorei	1	1	0	115	170	Inf	0.0379038863815737	Inf	0.403508771929825	0.914619883040936	AGP transfer	4	uc_extent
+Enterobacteriaceae fam.__Bacteroides dorei__Faecalibacterium prausnitzii	1	1	0	115	170	Inf	0.0379038863815737	Inf	0.403508771929825	0.914619883040936	AGP transfer	4	uc_extent
+Faecalibacterium prausnitzii__Bifidobacterium breve	1	1	0	115	170	Inf	0.0379038863815737	Inf	0.403508771929825	0.914619883040936	AGP transfer	4	uc_extent
+Parabacteroides distasonis__Bacteroides dorei	1	1	0	115	170	Inf	0.0379038863815737	Inf	0.403508771929825	0.914619883040936	AGP transfer	4	uc_extent
+Prevotellaceae fam.__Bacteroides dorei	1	1	0	115	170	Inf	0.0379038863815737	Inf	0.403508771929825	0.914619883040936	AGP transfer	4	uc_extent
+Segatella sp.__UCG-002 sp.	1	1	0	115	170	Inf	0.0379038863815737	Inf	0.403508771929825	0.914619883040936	AGP transfer	4	uc_extent
+Akkermansia muciniphila__Bacillota phy.	2	0	2	115	170	0	0	7.87312285604693	0.516926118112182	0.941544000847188	AGP transfer	4	uc_extent
+Bacteroides caccae__Akkermansia muciniphila	2	0	2	115	170	0	0	7.87312285604693	0.516926118112182	0.941544000847188	AGP transfer	4	uc_extent
+Bacteroides dorei__Agathobacter faecis__Bacteroides ovatus	2	0	2	115	170	0	0	7.87312285604693	0.516926118112182	0.941544000847188	AGP transfer	4	uc_extent
+Bacteroides dorei__Faecalibacterium prausnitzii__Bacteroides thetaiotaomicron	2	0	2	115	170	0	0	7.87312285604693	0.516926118112182	0.941544000847188	AGP transfer	4	uc_extent
+Bacteroides dorei__Faecalibacterium prausnitzii__Christensenellaceae R-7 group sp.	2	0	2	115	170	0	0	7.87312285604693	0.516926118112182	0.941544000847188	AGP transfer	4	uc_extent
+Bacteroides dorei__Parabacteroides distasonis	2	0	2	115	170	0	0	7.87312285604693	0.516926118112182	0.941544000847188	AGP transfer	4	uc_extent
+Faecalibacterium prausnitzii__Gemmiger sp.	2	0	2	115	170	0	0	7.87312285604693	0.516926118112182	0.941544000847188	AGP transfer	4	uc_extent
+Muribaculaceae fam.__Faecalibacterium prausnitzii	2	0	2	115	170	0	0	7.87312285604693	0.516926118112182	0.941544000847188	AGP transfer	4	uc_extent
+Segatella sp.__Faecalibacterium prausnitzii__Agathobacter faecis__Bacteroides dorei	2	0	2	115	170	0	0	7.87312285604693	0.516926118112182	0.941544000847188	AGP transfer	4	uc_extent
+Segatella sp.__Faecalibacterium prausnitzii__Prevotellaceae fam.	2	0	2	115	170	0	0	7.87312285604693	0.516926118112182	0.941544000847188	AGP transfer	4	uc_extent
+Segatella sp.__Faecalibacterium prausnitzii__UCG-002 sp.	2	0	2	115	170	0	0	7.87312285604693	0.516926118112182	0.941544000847188	AGP transfer	4	uc_extent
+Bacteroides caccae__Bacteroides dorei	3	2	1	115	170	2.97955200936671	0.153429908107258	177.30081868473	0.567281876118156	0.98072459939071	AGP transfer	4	uc_extent
+Muribaculaceae fam.__Bacteroides dorei	3	2	1	115	170	2.97955200936671	0.153429908107258	177.30081868473	0.567281876118156	0.98072459939071	AGP transfer	4	uc_extent
+UCG-002 sp.__Bacteroides dorei	3	2	1	115	170	2.97955200936671	0.153429908107258	177.30081868473	0.567281876118156	0.98072459939071	AGP transfer	4	uc_extent
+Bifidobacterium breve__Faecalibacterium prausnitzii	4	1	3	115	170	0.489417168257621	0.0092267849355244	6.18219407102842	0.650142793457233	1	AGP transfer	4	uc_extent
+Agathobacter faecis__Faecalibacterium prausnitzii__Bacteroides dorei	5	1	4	115	170	0.365144484391615	0.0073333708226674	3.75214006819358	0.651387836896886	1	AGP transfer	4	uc_extent
+Bacteroides dorei__Faecalibacterium prausnitzii__Agathobacter faecis__Bacteroides ovatus	5	1	4	115	170	0.365144484391615	0.0073333708226674	3.75214006819358	0.651387836896886	1	AGP transfer	4	uc_extent
+UCG-002 sp.__Faecalibacterium prausnitzii	8	3	5	115	170	0.884278725174682	0.134618520645366	4.64952437483234	1	1	AGP transfer	4	uc_extent
+[Eubacterium] coprostanoligenes group fam.	3	1	2	115	170	0.737604815342673	0.0123878760372041	14.3240318453381	1	1	AGP transfer	4	uc_extent
+Bacteroides cellulosilyticus__Bacteroides dorei__Faecalibacterium prausnitzii	3	1	2	115	170	0.737604815342673	0.0123878760372041	14.3240318453381	1	1	AGP transfer	4	uc_extent
+Bacteroides dorei__Faecalibacterium prausnitzii__Bacteroides ovatus__Agathobacter faecis	6	2	4	115	170	0.73528197507542	0.0654543244053081	5.22880312113861	1	1	AGP transfer	4	uc_extent
+Akkermansia muciniphila__Bacteroides dorei__Bacteroides caccae	1	0	1	115	170	0	0	57.6011859067687	1	1	AGP transfer	4	uc_extent
+Alistipes onderdonkii__Bacteroides dorei	1	0	1	115	170	0	0	57.6011859067687	1	1	AGP transfer	4	uc_extent
+Bacteroides dorei__[Eubacterium] coprostanoligenes group fam.	1	0	1	115	170	0	0	57.6011859067687	1	1	AGP transfer	4	uc_extent
+Bacteroides dorei__Bacteroides ovatus__Akkermansia muciniphila	1	0	1	115	170	0	0	57.6011859067687	1	1	AGP transfer	4	uc_extent
+Bacteroides dorei__Bacteroides ovatus__Bacteroides sartorii	2	1	1	115	170	1.48032174761632	0.0187302266636047	116.941188137744	1	1	AGP transfer	4	uc_extent
+Bacteroides dorei__CAG-352 bromii	1	0	1	115	170	0	0	57.6011859067687	1	1	AGP transfer	4	uc_extent
+Bacteroides dorei__Faecalibacterium prausnitzii__[Eubacterium] eligens group eligens	1	0	1	115	170	0	0	57.6011859067687	1	1	AGP transfer	4	uc_extent
+Bacteroides dorei__Faecalibacterium prausnitzii__[Eubacterium] siraeum group siraeum	1	0	1	115	170	0	0	57.6011859067687	1	1	AGP transfer	4	uc_extent
+Bacteroides dorei__Faecalibacterium prausnitzii__Bacteroides cellulosilyticus	1	0	1	115	170	0	0	57.6011859067687	1	1	AGP transfer	4	uc_extent
+Bacteroides dorei__Faecalibacterium prausnitzii__Bacteroides sartorii	1	0	1	115	170	0	0	57.6011859067687	1	1	AGP transfer	4	uc_extent
+Bacteroides dorei__Faecalibacterium prausnitzii__Clostridia UCG-014 ord.	1	0	1	115	170	0	0	57.6011859067687	1	1	AGP transfer	4	uc_extent
+Bacteroides dorei__Faecalibacterium prausnitzii__Gemmiger sp.	1	0	1	115	170	0	0	57.6011859067687	1	1	AGP transfer	4	uc_extent
+Bacteroides dorei__Faecalibacterium prausnitzii__Muribaculaceae fam.	1	0	1	115	170	0	0	57.6011859067687	1	1	AGP transfer	4	uc_extent
+Bacteroides dorei__Faecalibacterium prausnitzii__Segatella sp.	1	0	1	115	170	0	0	57.6011859067687	1	1	AGP transfer	4	uc_extent
+Bacteroides dorei__Faecalibacterium prausnitzii__UCG-002 sp.	2	1	1	115	170	1.48032174761632	0.0187302266636047	116.941188137744	1	1	AGP transfer	4	uc_extent
+Bacteroides dorei__Gemmiger sp.	2	1	1	115	170	1.48032174761632	0.0187302266636047	116.941188137744	1	1	AGP transfer	4	uc_extent
+Bacteroides dorei__Massiliprevotella massiliensis	1	0	1	115	170	0	0	57.6011859067687	1	1	AGP transfer	4	uc_extent
+Bacteroides dorei__Ruminococcus sp.	1	0	1	115	170	0	0	57.6011859067687	1	1	AGP transfer	4	uc_extent
+Bacteroides dorei__Segatella sp.__Faecalibacterium prausnitzii	1	0	1	115	170	0	0	57.6011859067687	1	1	AGP transfer	4	uc_extent
+Bacteroides fragilis__Faecalibacterium prausnitzii	1	0	1	115	170	0	0	57.6011859067687	1	1	AGP transfer	4	uc_extent
+Bacteroides ovatus__Bacteroides fragilis	1	0	1	115	170	0	0	57.6011859067687	1	1	AGP transfer	4	uc_extent
+Bifidobacterium breve__Bacteroides dorei	2	1	1	115	170	1.48032174761632	0.0187302266636047	116.941188137744	1	1	AGP transfer	4	uc_extent
+Clostridia UCG-014 ord.__Bacteroides dorei	1	0	1	115	170	0	0	57.6011859067687	1	1	AGP transfer	4	uc_extent
+Faecalibacterium prausnitzii__Agathobacter faecis__Bacteroides dorei	2	1	1	115	170	1.48032174761632	0.0187302266636047	116.941188137744	1	1	AGP transfer	4	uc_extent
+Faecalibacterium prausnitzii__Bacteroides dorei__Bacteroides ovatus	2	1	1	115	170	1.48032174761632	0.0187302266636047	116.941188137744	1	1	AGP transfer	4	uc_extent
+Faecalibacterium prausnitzii__Bacteroides dorei__Lachnospiraceae fam.	1	0	1	115	170	0	0	57.6011859067687	1	1	AGP transfer	4	uc_extent
+Faecalibacterium prausnitzii__Bacteroides ovatus	1	0	1	115	170	0	0	57.6011859067687	1	1	AGP transfer	4	uc_extent
+Faecalibacterium prausnitzii__CAG-352 bromii	1	0	1	115	170	0	0	57.6011859067687	1	1	AGP transfer	4	uc_extent
+Faecalibacterium prausnitzii__Clostridia UCG-014 ord.	1	0	1	115	170	0	0	57.6011859067687	1	1	AGP transfer	4	uc_extent
+Gemmiger sp.	2	1	1	115	170	1.48032174761632	0.0187302266636047	116.941188137744	1	1	AGP transfer	4	uc_extent
+Lachnospiraceae fam.__Faecalibacterium prausnitzii__Bacteroides dorei	1	0	1	115	170	0	0	57.6011859067687	1	1	AGP transfer	4	uc_extent
+Prevotellaceae NK3B31 group sp.__Faecalibacterium prausnitzii	1	0	1	115	170	0	0	57.6011859067687	1	1	AGP transfer	4	uc_extent
+Agathobacter faecis__Faecalibacterium prausnitzii__Gemmiger sp.	4	2	2	115	170	1.48456867016402	0.106181826409412	20.7523363819618	1	1	AGP transfer	4	uc_extent
+Bacteroides ovatus__Bacteroides dorei__Faecalibacterium prausnitzii__Agathobacter faecis	9	4	5	115	170	1.18844981258705	0.230564633730279	5.65489793504154	1	1	AGP transfer	4	uc_extent
+CAG-352 bromii	4	2	2	115	170	1.48456867016402	0.106181826409412	20.7523363819618	1	1	AGP transfer	4	uc_extent
+Segatella sp.__Bacteroides dorei__Faecalibacterium prausnitzii__Agathobacter faecis	4	2	2	115	170	1.48456867016402	0.106181826409412	20.7523363819618	1	1	AGP transfer	4	uc_extent

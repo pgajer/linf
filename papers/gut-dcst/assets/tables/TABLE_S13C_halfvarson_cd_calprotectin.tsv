@@ -1,0 +1,252 @@
+label	n_label	n_cases	n_controls	total_cases	total_controls	or	ci_low	ci_high	p_value	q_value	mode	depth	analysis
+Bacteroides dorei	153	83	70	103	99	1.71461933402225	0.853364890746493	3.50020305837103	0.139054786452148	0.139054786452149	Rebuilt	1	cd_calprotectin
+Segatella sp.	49	20	29	103	99	0.583219832039426	0.285697710482372	1.17183166409065	0.139054786452149	0.139054786452149	Rebuilt	1	cd_calprotectin
+Bacteroides dorei__Bacteroides uniformis	30	21	9	103	99	2.54939679247557	1.04718673443794	6.7020941914274	0.029346669935509	0.176080019613054	Rebuilt	2	cd_calprotectin
+Bacteroides dorei__Bacteroides ovatus	28	19	9	103	99	2.25300117461357	0.91075562274415	5.98579063549929	0.0671288176990438	0.201386453097131	Rebuilt	2	cd_calprotectin
+Segatella sp.__Faecalibacterium prausnitzii	49	20	29	103	99	0.583219832039426	0.285697710482372	1.17183166409065	0.139054786452149	0.278109572904297	Rebuilt	2	cd_calprotectin
+Bacteroides dorei__Escherichia-Shigella coli	40	17	23	103	99	0.65457606407156	0.30344229668703	1.388833181606	0.289595698687013	0.421074382287177	Rebuilt	2	cd_calprotectin
+Bacteroides dorei__Bifidobacterium breve	20	8	12	103	99	0.612018236867191	0.206534705690668	1.71741949192389	0.350895318572648	0.421074382287177	Rebuilt	2	cd_calprotectin
+Bacteroides dorei__Faecalibacterium prausnitzii	35	18	17	103	99	1.02135009812966	0.461248247261542	2.26951192179532	1	1	Rebuilt	2	cd_calprotectin
+Segatella sp.__Faecalibacterium prausnitzii__Escherichia-Shigella coli	14	2	12	103	99	0.144747514575504	0.0153099574076411	0.676922844245697	0.00488744633080635	0.0439870169772572	Rebuilt	3	cd_calprotectin
+Bacteroides dorei__Bacteroides uniformis	30	21	9	103	99	2.54939679247557	1.04718673443794	6.7020941914274	0.029346669935509	0.132060014709791	Rebuilt	3	cd_calprotectin
+Bacteroides dorei__Bacteroides ovatus	28	19	9	103	99	2.25300117461357	0.91075562274415	5.98579063549929	0.0671288176990438	0.201386453097131	Rebuilt	3	cd_calprotectin
+Segatella sp.__Faecalibacterium prausnitzii__Bifidobacterium breve	14	10	4	103	99	2.54255396923542	0.702279716335805	11.5046806212585	0.165380938841173	0.372107112392639	Rebuilt	3	cd_calprotectin
+Bacteroides dorei__Escherichia-Shigella coli	40	17	23	103	99	0.65457606407156	0.30344229668703	1.388833181606	0.289595698687013	0.49292430597567	Rebuilt	3	cd_calprotectin
+Bacteroides dorei__Bifidobacterium breve	20	8	12	103	99	0.612018236867191	0.206534705690668	1.71741949192389	0.350895318572648	0.49292430597567	Rebuilt	3	cd_calprotectin
+Segatella sp.__Faecalibacterium prausnitzii__Bacteroides dorei	15	6	9	103	99	0.620024899653059	0.174261960062726	2.04068531297592	0.429426897206189	0.49292430597567	Rebuilt	3	cd_calprotectin
+Segatella sp.__Faecalibacterium prausnitzii__Prevotellaceae fam.	6	2	4	103	99	0.472004437539416	0.0417908027626332	3.38020620643216	0.43815493864504	0.49292430597567	Rebuilt	3	cd_calprotectin
+Bacteroides dorei__Faecalibacterium prausnitzii__Bacteroides stercoris	35	18	17	103	99	1.02135009812966	0.461248247261542	2.26951192179532	1	1	Rebuilt	3	cd_calprotectin
+Segatella sp.__Faecalibacterium prausnitzii__Escherichia-Shigella coli	14	2	12	103	99	0.144747514575504	0.0153099574076411	0.676922844245697	0.00488744633080635	0.0537619096388699	Rebuilt	4	cd_calprotectin
+Bacteroides dorei__Bacteroides uniformis	30	21	9	103	99	2.54939679247557	1.04718673443794	6.7020941914274	0.029346669935509	0.1614066846453	Rebuilt	4	cd_calprotectin
+Bacteroides dorei__Bacteroides ovatus	28	19	9	103	99	2.25300117461357	0.91075562274415	5.98579063549929	0.0671288176990438	0.246138998229827	Rebuilt	4	cd_calprotectin
+Segatella sp.__Faecalibacterium prausnitzii__Bifidobacterium breve	14	10	4	103	99	2.54255396923542	0.702279716335805	11.5046806212585	0.165380938841173	0.454797581813226	Rebuilt	4	cd_calprotectin
+Bacteroides dorei__Escherichia-Shigella coli__Bacteroides fragilis	12	4	8	103	99	0.46131813964171	0.0982713668967883	1.79197225257907	0.244459209879125	0.537810261734074	Rebuilt	4	cd_calprotectin
+Bacteroides dorei__Bifidobacterium breve	20	8	12	103	99	0.612018236867191	0.206534705690668	1.71741949192389	0.350895318572648	0.60246304063693	Rebuilt	4	cd_calprotectin
+Segatella sp.__Faecalibacterium prausnitzii__Bacteroides dorei	15	6	9	103	99	0.620024899653059	0.174261960062726	2.04068531297592	0.429426897206189	0.60246304063693	Rebuilt	4	cd_calprotectin
+Segatella sp.__Faecalibacterium prausnitzii__Prevotellaceae fam.	6	2	4	103	99	0.472004437539416	0.0417908027626332	3.38020620643216	0.43815493864504	0.60246304063693	Rebuilt	4	cd_calprotectin
+Bacteroides dorei__Escherichia-Shigella coli__Bacteroides ovatus	28	13	15	103	99	0.809741934659656	0.332887536006671	1.94588708448567	0.68550090873021	0.812117081653319	Rebuilt	4	cd_calprotectin
+Bacteroides dorei__Faecalibacterium prausnitzii__Bacteroides stercoris__Agathobacter faecis	16	9	7	103	99	1.25693093475633	0.397571499424989	4.15116308613846	0.796057878258751	0.812117081653319	Rebuilt	4	cd_calprotectin
+Bacteroides dorei__Faecalibacterium prausnitzii__Bacteroides stercoris__Bacteroides ovatus	19	9	10	103	99	0.852804505024859	0.291650535354639	2.45750095779011	0.812117081653319	0.812117081653319	Rebuilt	4	cd_calprotectin
+Bacteroides fragilis	14	3	11	103	99	0.241553141797815	0.0419406260135292	0.953911594168774	0.0266921360656357	0.477252822409669	AGP transfer	1	cd_calprotectin
+Lachnospiraceae fam.	10	2	8	103	99	0.226713133874351	0.0228888623295572	1.17676461292525	0.0549240264926137	0.477252822409669	AGP transfer	1	cd_calprotectin
+[Eubacterium] coprostanoligenes group fam.	5	5	0	103	99	Inf	0.897373419731599	Inf	0.0596566028012086	0.477252822409669	AGP transfer	1	cd_calprotectin
+Bacteroides eggerthii	3	0	3	103	99	0	0	2.31139330063774	0.115892566868627	0.594283604881294	AGP transfer	1	cd_calprotectin
+Bacteroides dorei	51	31	20	103	99	1.69619708656211	0.850806642917073	3.44138522873812	0.144448476497929	0.594283604881294	AGP transfer	1	cd_calprotectin
+Segatella sp.	27	10	17	103	99	0.520343852416336	0.200849331042325	1.28230887965746	0.148570901220323	0.594283604881294	AGP transfer	1	cd_calprotectin
+Parabacteroides distasonis	2	0	2	103	99	0	0	5.1086887462477	0.238953746120881	0.657504556425792	AGP transfer	1	cd_calprotectin
+Agathobacter faecis	3	3	0	103	99	Inf	0.399368479286597	Inf	0.246564208659672	0.657504556425792	AGP transfer	1	cd_calprotectin
+Akkermansia muciniphila	3	3	0	103	99	Inf	0.399368479286597	Inf	0.246564208659672	0.657504556425792	AGP transfer	1	cd_calprotectin
+Bacteroides ovatus	14	9	5	103	99	1.79487356474333	0.517187304891159	7.08250279649223	0.408335935929484	0.79633515590365	AGP transfer	1	cd_calprotectin
+Faecalibacterium prausnitzii	18	11	7	103	99	1.56794780194067	0.527894895062556	4.99424786210766	0.461447657191913	0.79633515590365	AGP transfer	1	cd_calprotectin
+Bacteroides caccae	1	0	1	103	99	0	0	37.4859242054981	0.49009900990099	0.79633515590365	AGP transfer	1	cd_calprotectin
+Christensenellaceae R-7 group sp.	1	0	1	103	99	0	0	37.4859242054981	0.49009900990099	0.79633515590365	AGP transfer	1	cd_calprotectin
+Gemmiger sp.	1	0	1	103	99	0	0	37.4859242054981	0.49009900990099	0.79633515590365	AGP transfer	1	cd_calprotectin
+Prevotellaceae fam.	2	2	0	103	99	Inf	0.180764954373744	Inf	0.497709472439781	0.79633515590365	AGP transfer	1	cd_calprotectin
+Bacteroides sp.	3	1	2	103	99	0.47718682832585	0.00798847280284269	9.30356459182561	0.615747746416433	0.904327608190205	AGP transfer	1	cd_calprotectin
+Bifidobacterium breve	20	9	11	103	99	0.766972316482561	0.266968386116705	2.1465910676104	0.641594432960132	0.904327608190205	AGP transfer	1	cd_calprotectin
+UCG-002 sp.	5	2	3	103	99	0.635085818894563	0.0520041698428202	5.66959585559862	0.678245706142654	0.904327608190205	AGP transfer	1	cd_calprotectin
+Blautia sp.	10	6	4	103	99	1.46630401930139	0.335583759643732	7.29496981743532	0.748110124649518	0.944981210083601	AGP transfer	1	cd_calprotectin
+Alistipes onderdonkii	1	1	0	103	99	Inf	0.0246448806979075	Inf	1	1	AGP transfer	1	cd_calprotectin
+CAG-352 bromii	2	1	1	103	99	0.960962687102343	0.0121299221017221	76.135622902168	1	1	AGP transfer	1	cd_calprotectin
+Clostridia UCG-014 ord.	2	1	1	103	99	0.960962687102343	0.0121299221017221	76.135622902168	1	1	AGP transfer	1	cd_calprotectin
+Enterococcus faecium	1	1	0	103	99	Inf	0.0246448806979075	Inf	1	1	AGP transfer	1	cd_calprotectin
+Gemmiger formicilis	3	2	1	103	99	1.93447009715063	0.0992202060237026	115.56116120938	1	1	AGP transfer	1	cd_calprotectin
+Segatella sp.__Bacteroides dorei	10	1	9	102	96	0.0965906150723301	0.0021674252989782	0.720932317531637	0.00813698307113456	0.455671051983535	AGP transfer	2	cd_calprotectin
+Lachnospiraceae fam.__Faecalibacterium prausnitzii	8	1	7	102	96	0.126951696703136	0.00277114000093175	1.01887474758652	0.0308784097642208	0.864595473398183	AGP transfer	2	cd_calprotectin
+[Eubacterium] coprostanoligenes group fam.	5	5	0	102	96	Inf	0.878677832350272	Inf	0.0599200171353906	0.876547577481256	AGP transfer	2	cd_calprotectin
+Bacteroides dorei__Bacteroides ovatus	15	11	4	102	96	2.76678343380699	0.783243731267316	12.358736452027	0.107010343443216	0.876547577481256	AGP transfer	2	cd_calprotectin
+Bacteroides dorei__Blautia sp.	3	0	3	102	96	0	0	2.26253449981212	0.112133455135631	0.876547577481256	AGP transfer	2	cd_calprotectin
+Bacteroides eggerthii__Bacteroides dorei	3	0	3	102	96	0	0	2.26253449981212	0.112133455135631	0.876547577481256	AGP transfer	2	cd_calprotectin
+Segatella sp.__Prevotellaceae fam.	3	0	3	102	96	0	0	2.26253449981212	0.112133455135631	0.876547577481256	AGP transfer	2	cd_calprotectin
+Bacteroides fragilis__Bacteroides dorei	11	3	8	102	96	0.335090489997215	0.0555530336063489	1.45112046988359	0.125221082497322	0.876547577481256	AGP transfer	2	cd_calprotectin
+Bacteroides dorei__Bacteroides sp.	2	0	2	102	96	0	0	5.00172379903527	0.233810183048762	1	AGP transfer	2	cd_calprotectin
+Bacteroides fragilis__Faecalibacterium prausnitzii	2	0	2	102	96	0	0	5.00172379903527	0.233810183048762	1	AGP transfer	2	cd_calprotectin
+Parabacteroides distasonis__Bacteroides dorei	2	0	2	102	96	0	0	5.00172379903527	0.233810183048762	1	AGP transfer	2	cd_calprotectin
+Bacteroides dorei__Faecalibacterium prausnitzii	9	3	6	102	96	0.45630701563172	0.0717488953933935	2.21139517249561	0.319975492267794	1	AGP transfer	2	cd_calprotectin
+Bacteroides dorei__Clostridia UCG-014 ord.	1	0	1	102	96	0	0	36.7063393576324	0.484848484848485	1	AGP transfer	2	cd_calprotectin
+Christensenellaceae R-7 group sp.__Bacteroides dorei	1	0	1	102	96	0	0	36.7063393576324	0.484848484848485	1	AGP transfer	2	cd_calprotectin
+Faecalibacterium prausnitzii__Butyrivibrio crossotus	1	0	1	102	96	0	0	36.7063393576324	0.484848484848485	1	AGP transfer	2	cd_calprotectin
+Gemmiger sp.	1	0	1	102	96	0	0	36.7063393576324	0.484848484848485	1	AGP transfer	2	cd_calprotectin
+Segatella sp.__Agathobacter faecis	1	0	1	102	96	0	0	36.7063393576324	0.484848484848485	1	AGP transfer	2	cd_calprotectin
+Agathobacter faecis__Bacteroides dorei	2	2	0	102	96	Inf	0.176991859404891	Inf	0.497923396400554	1	AGP transfer	2	cd_calprotectin
+Akkermansia muciniphila__Bacteroides dorei	2	2	0	102	96	Inf	0.176991859404891	Inf	0.497923396400554	1	AGP transfer	2	cd_calprotectin
+Bacteroides dorei__Bacteroides caccae	2	2	0	102	96	Inf	0.176991859404891	Inf	0.497923396400554	1	AGP transfer	2	cd_calprotectin
+Bacteroides dorei__Bacteroides cellulosilyticus	2	2	0	102	96	Inf	0.176991859404891	Inf	0.497923396400554	1	AGP transfer	2	cd_calprotectin
+Bacteroides dorei__Paraprevotella sp.	2	2	0	102	96	Inf	0.176991859404891	Inf	0.497923396400554	1	AGP transfer	2	cd_calprotectin
+Prevotellaceae fam.__Bacteroides dorei	2	2	0	102	96	Inf	0.176991859404891	Inf	0.497923396400554	1	AGP transfer	2	cd_calprotectin
+Faecalibacterium prausnitzii__Bacteroides dorei	9	6	3	102	96	1.93125518630101	0.398505690399956	12.28179582671	0.499484891354249	1	AGP transfer	2	cd_calprotectin
+Segatella sp.__Faecalibacterium prausnitzii	9	6	3	102	96	1.93125518630101	0.398505690399956	12.28179582671	0.499484891354249	1	AGP transfer	2	cd_calprotectin
+Bacteroides sp.__Bacteroides dorei	3	1	2	102	96	0.467092714893053	0.00781747335782752	9.10958769708171	0.611915278340224	1	AGP transfer	2	cd_calprotectin
+Faecalibacterium prausnitzii__Blautia sp.	3	1	2	102	96	0.467092714893053	0.00781747335782752	9.10958769708171	0.611915278340224	1	AGP transfer	2	cd_calprotectin
+UCG-002 sp.__Bacteroides dorei	5	2	3	102	96	0.621489865721207	0.0508681457643128	5.55084196605958	0.67514275656288	1	AGP transfer	2	cd_calprotectin
+Bifidobacterium breve__Faecalibacterium prausnitzii	7	3	4	102	96	0.698241795592638	0.0996280362581789	4.24739718429696	0.714461213406994	1	AGP transfer	2	cd_calprotectin
+Bacteroides ovatus__Bacteroides dorei	10	6	4	102	96	1.43489465813258	0.328145671882696	7.14354566625335	0.748669216399327	1	AGP transfer	2	cd_calprotectin
+Blautia sp.	10	6	4	102	96	1.43489465813258	0.328145671882696	7.14354566625335	0.748669216399327	1	AGP transfer	2	cd_calprotectin
+Bifidobacterium breve__Bacteroides dorei	13	6	7	102	96	0.795568948077341	0.212142877114166	2.88257383055504	0.778213867572862	1	AGP transfer	2	cd_calprotectin
+Agathobacter faecis__Faecalibacterium prausnitzii	1	1	0	102	96	Inf	0.0241323446475758	Inf	1	1	AGP transfer	2	cd_calprotectin
+Akkermansia muciniphila__Faecalibacterium prausnitzii	1	1	0	102	96	Inf	0.0241323446475758	Inf	1	1	AGP transfer	2	cd_calprotectin
+Alistipes onderdonkii__Bacteroides dorei	1	1	0	102	96	Inf	0.0241323446475758	Inf	1	1	AGP transfer	2	cd_calprotectin
+Bacteroides dorei__Agathobacter faecis	1	1	0	102	96	Inf	0.0241323446475758	Inf	1	1	AGP transfer	2	cd_calprotectin
+Bacteroides dorei__Bacteroides eggerthii	2	1	1	102	96	0.940857793104599	0.0118740815842039	74.5601953926106	1	1	AGP transfer	2	cd_calprotectin
+Bacteroides dorei__Bacteroides fragilis	1	1	0	102	96	Inf	0.0241323446475758	Inf	1	1	AGP transfer	2	cd_calprotectin
+Bacteroides dorei__Bacteroides sartorii	2	1	1	102	96	0.940857793104599	0.0118740815842039	74.5601953926106	1	1	AGP transfer	2	cd_calprotectin
+Bacteroides dorei__Bacteroides thetaiotaomicron	1	1	0	102	96	Inf	0.0241323446475758	Inf	1	1	AGP transfer	2	cd_calprotectin
+Bacteroides dorei__Bifidobacterium breve	3	2	1	102	96	1.89408377892229	0.0971185370946918	113.181226894724	1	1	AGP transfer	2	cd_calprotectin
+Bacteroides dorei__CAG-352 bromii	1	1	0	102	96	Inf	0.0241323446475758	Inf	1	1	AGP transfer	2	cd_calprotectin
+Bacteroides dorei__Lachnospiraceae fam.	1	1	0	102	96	Inf	0.0241323446475758	Inf	1	1	AGP transfer	2	cd_calprotectin
+Bacteroides dorei__Parabacteroides distasonis	3	2	1	102	96	1.89408377892229	0.0971185370946918	113.181226894724	1	1	AGP transfer	2	cd_calprotectin
+Bacteroides ovatus__Bacteroides fragilis	3	2	1	102	96	1.89408377892229	0.0971185370946918	113.181226894724	1	1	AGP transfer	2	cd_calprotectin
+Bacteroides ovatus__Faecalibacterium prausnitzii	1	1	0	102	96	Inf	0.0241323446475758	Inf	1	1	AGP transfer	2	cd_calprotectin
+CAG-352 bromii	2	1	1	102	96	0.940857793104599	0.0118740815842039	74.5601953926106	1	1	AGP transfer	2	cd_calprotectin
+Clostridia UCG-014 ord.__Bacteroides dorei	2	1	1	102	96	0.940857793104599	0.0118740815842039	74.5601953926106	1	1	AGP transfer	2	cd_calprotectin
+Enterococcus faecium	1	1	0	102	96	Inf	0.0241323446475758	Inf	1	1	AGP transfer	2	cd_calprotectin
+Faecalibacterium prausnitzii__Agathobacter faecis	1	1	0	102	96	Inf	0.0241323446475758	Inf	1	1	AGP transfer	2	cd_calprotectin
+Faecalibacterium prausnitzii__Bacteroides ovatus	2	1	1	102	96	0.940857793104599	0.0118740815842039	74.5601953926106	1	1	AGP transfer	2	cd_calprotectin
+Faecalibacterium prausnitzii__Christensenellaceae R-7 group sp.	1	1	0	102	96	Inf	0.0241323446475758	Inf	1	1	AGP transfer	2	cd_calprotectin
+Faecalibacterium prausnitzii__Segatella sp.	1	1	0	102	96	Inf	0.0241323446475758	Inf	1	1	AGP transfer	2	cd_calprotectin
+Gemmiger formicilis	3	2	1	102	96	1.89408377892229	0.0971185370946918	113.181226894724	1	1	AGP transfer	2	cd_calprotectin
+Segatella sp.__Dialister invisus	3	2	1	102	96	1.89408377892229	0.0971185370946918	113.181226894724	1	1	AGP transfer	2	cd_calprotectin
+Segatella sp.__UCG-002 sp.	1	1	0	102	96	Inf	0.0241323446475758	Inf	1	1	AGP transfer	2	cd_calprotectin
+Segatella sp.__Bacteroides dorei__Faecalibacterium prausnitzii	9	1	8	100	94	0.109571142758109	0.00242797590476252	0.844646673505877	0.0158664983749799	1	AGP transfer	3	cd_calprotectin
+Lachnospiraceae fam.__Faecalibacterium prausnitzii__Bacteroides dorei	8	1	7	100	94	0.126630393322416	0.0027630770673088	1.01695756768072	0.0307263855478258	1	AGP transfer	3	cd_calprotectin
+[Eubacterium] coprostanoligenes group fam.	5	5	0	100	94	Inf	0.877904095061277	Inf	0.0598788429769632	1	AGP transfer	3	cd_calprotectin
+Bacteroides dorei__Blautia sp.	3	0	3	100	94	0	0	2.25936114752732	0.111876368783719	1	AGP transfer	3	cd_calprotectin
+Bacteroides eggerthii__Bacteroides dorei	3	0	3	100	94	0	0	2.25936114752732	0.111876368783719	1	AGP transfer	3	cd_calprotectin
+Segatella sp.__Prevotellaceae fam.__Faecalibacterium prausnitzii	3	0	3	100	94	0	0	2.25936114752732	0.111876368783719	1	AGP transfer	3	cd_calprotectin
+Bacteroides fragilis__Bacteroides dorei	11	3	8	100	94	0.334268230307355	0.0553802237215002	1.44877237368946	0.12482759777669	1	AGP transfer	3	cd_calprotectin
+Bacteroides dorei__Bacteroides sp.__Bacteroides sartorii	2	0	2	100	94	0	0	4.99523843193229	0.233481117461674	1	AGP transfer	3	cd_calprotectin
+Bacteroides dorei__Faecalibacterium prausnitzii__Agathobacter faecis	2	0	2	100	94	0	0	4.99523843193229	0.233481117461674	1	AGP transfer	3	cd_calprotectin
+Bacteroides fragilis__Faecalibacterium prausnitzii	2	0	2	100	94	0	0	4.99523843193229	0.233481117461674	1	AGP transfer	3	cd_calprotectin
+Parabacteroides distasonis__Bacteroides dorei	2	0	2	100	94	0	0	4.99523843193229	0.233481117461674	1	AGP transfer	3	cd_calprotectin
+Bacteroides dorei__Bacteroides ovatus__Faecalibacterium prausnitzii	5	4	1	100	94	3.85125466915246	0.372156525207984	192.662681431331	0.369692663920546	1	AGP transfer	3	cd_calprotectin
+Faecalibacterium prausnitzii__Bacteroides dorei__Bacteroides ovatus	7	5	2	100	94	2.41085444735926	0.382972752555809	25.9256338500282	0.446115892583591	1	AGP transfer	3	cd_calprotectin
+Bacteroides dorei__Bacteroides ovatus__Bacteroides thetaiotaomicron	1	0	1	100	94	0	0	36.660455261133	0.484536082474227	1	AGP transfer	3	cd_calprotectin
+Bacteroides dorei__Bacteroides sartorii__Bacteroides ovatus	1	0	1	100	94	0	0	36.660455261133	0.484536082474227	1	AGP transfer	3	cd_calprotectin
+Bacteroides dorei__Clostridia UCG-014 ord.__Faecalibacterium prausnitzii	1	0	1	100	94	0	0	36.660455261133	0.484536082474227	1	AGP transfer	3	cd_calprotectin
+Bacteroides dorei__Faecalibacterium prausnitzii__Bacteroides cellulosilyticus	1	0	1	100	94	0	0	36.660455261133	0.484536082474227	1	AGP transfer	3	cd_calprotectin
+Bacteroides dorei__Faecalibacterium prausnitzii__Bacteroides eggerthii	1	0	1	100	94	0	0	36.660455261133	0.484536082474227	1	AGP transfer	3	cd_calprotectin
+Bacteroides sp.__Bacteroides dorei__Bacteroides ovatus	1	0	1	100	94	0	0	36.660455261133	0.484536082474227	1	AGP transfer	3	cd_calprotectin
+Christensenellaceae R-7 group sp.__Bacteroides dorei	1	0	1	100	94	0	0	36.660455261133	0.484536082474227	1	AGP transfer	3	cd_calprotectin
+Faecalibacterium prausnitzii__Butyrivibrio crossotus	1	0	1	100	94	0	0	36.660455261133	0.484536082474227	1	AGP transfer	3	cd_calprotectin
+Gemmiger sp.	1	0	1	100	94	0	0	36.660455261133	0.484536082474227	1	AGP transfer	3	cd_calprotectin
+Segatella sp.__Agathobacter faecis__Faecalibacterium prausnitzii	1	0	1	100	94	0	0	36.660455261133	0.484536082474227	1	AGP transfer	3	cd_calprotectin
+Agathobacter faecis__Bacteroides dorei__Faecalibacterium prausnitzii	2	2	0	100	94	Inf	0.176774282890503	Inf	0.497890069974894	1	AGP transfer	3	cd_calprotectin
+Akkermansia muciniphila__Bacteroides dorei__Bacteroides caccae	2	2	0	100	94	Inf	0.176774282890503	Inf	0.497890069974894	1	AGP transfer	3	cd_calprotectin
+Bacteroides dorei__Bacteroides caccae__Faecalibacterium prausnitzii	2	2	0	100	94	Inf	0.176774282890503	Inf	0.497890069974894	1	AGP transfer	3	cd_calprotectin
+Bacteroides dorei__Bacteroides cellulosilyticus__Faecalibacterium prausnitzii	2	2	0	100	94	Inf	0.176774282890503	Inf	0.497890069974894	1	AGP transfer	3	cd_calprotectin
+Bacteroides dorei__Bacteroides ovatus__Bacteroides fragilis	2	2	0	100	94	Inf	0.176774282890503	Inf	0.497890069974894	1	AGP transfer	3	cd_calprotectin
+Bacteroides dorei__Paraprevotella sp.	2	2	0	100	94	Inf	0.176774282890503	Inf	0.497890069974894	1	AGP transfer	3	cd_calprotectin
+Prevotellaceae fam.__Bacteroides dorei	2	2	0	100	94	Inf	0.176774282890503	Inf	0.497890069974894	1	AGP transfer	3	cd_calprotectin
+Bacteroides dorei__Faecalibacterium prausnitzii__Bacteroides ovatus	3	1	2	100	94	0.466429738201795	0.007804208314852	9.09953581858448	0.611649350996208	1	AGP transfer	3	cd_calprotectin
+Faecalibacterium prausnitzii__Blautia sp.	3	1	2	100	94	0.466429738201795	0.007804208314852	9.09953581858448	0.611649350996208	1	AGP transfer	3	cd_calprotectin
+Bacteroides dorei__Bacteroides ovatus__Agathobacter faecis	4	3	1	100	94	2.86228002196897	0.225224525611421	152.470578164403	0.621815598352328	1	AGP transfer	3	cd_calprotectin
+UCG-002 sp.__Bacteroides dorei	5	2	3	100	94	0.620570872307359	0.0507708712736971	5.54530984055651	0.674894110864282	1	AGP transfer	3	cd_calprotectin
+Bifidobacterium breve__Faecalibacterium prausnitzii	7	3	4	100	94	0.69717830241824	0.0994202176269194	4.24352077613346	0.714219370109619	1	AGP transfer	3	cd_calprotectin
+Bacteroides ovatus__Bacteroides dorei__Faecalibacterium prausnitzii	8	5	3	100	94	1.59271555618365	0.29997822740729	10.5534495645777	0.721860563422196	1	AGP transfer	3	cd_calprotectin
+Blautia sp.	10	6	4	100	94	1.43352051877365	0.327574906713862	7.14174139783272	0.748583288715024	1	AGP transfer	3	cd_calprotectin
+Bifidobacterium breve__Bacteroides dorei	13	6	7	100	94	0.794263615216346	0.211607250527582	2.88047683385459	0.777969800711752	1	AGP transfer	3	cd_calprotectin
+Segatella sp.__Faecalibacterium prausnitzii__Bacteroides dorei	5	3	2	100	94	1.42012796208035	0.158922660403585	17.3562184979396	1	1	AGP transfer	3	cd_calprotectin
+Agathobacter faecis__Faecalibacterium prausnitzii__Bacteroides dorei	1	1	0	100	94	Inf	0.0241021782288896	Inf	1	1	AGP transfer	3	cd_calprotectin
+Akkermansia muciniphila__Faecalibacterium prausnitzii	1	1	0	100	94	Inf	0.0241021782288896	Inf	1	1	AGP transfer	3	cd_calprotectin
+Alistipes onderdonkii__Bacteroides dorei	1	1	0	100	94	Inf	0.0241021782288896	Inf	1	1	AGP transfer	3	cd_calprotectin
+Bacteroides dorei__Agathobacter faecis__Faecalibacterium prausnitzii	1	1	0	100	94	Inf	0.0241021782288896	Inf	1	1	AGP transfer	3	cd_calprotectin
+Bacteroides dorei__Bacteroides eggerthii	2	1	1	100	94	0.939668379988493	0.0118566280412389	74.4815839648365	1	1	AGP transfer	3	cd_calprotectin
+Bacteroides dorei__Bacteroides fragilis	1	1	0	100	94	Inf	0.0241021782288896	Inf	1	1	AGP transfer	3	cd_calprotectin
+Bacteroides dorei__Bacteroides ovatus__Bacteroides caccae	2	1	1	100	94	0.939668379988493	0.0118566280412389	74.4815839648365	1	1	AGP transfer	3	cd_calprotectin
+Bacteroides dorei__Bacteroides ovatus__Parabacteroides distasonis	1	1	0	100	94	Inf	0.0241021782288896	Inf	1	1	AGP transfer	3	cd_calprotectin
+Bacteroides dorei__Bacteroides sartorii__Faecalibacterium prausnitzii	1	1	0	100	94	Inf	0.0241021782288896	Inf	1	1	AGP transfer	3	cd_calprotectin
+Bacteroides dorei__Bifidobacterium breve	3	2	1	100	94	1.89193805553795	0.0969778354890157	113.084624083154	1	1	AGP transfer	3	cd_calprotectin
+Bacteroides dorei__CAG-352 bromii	1	1	0	100	94	Inf	0.0241021782288896	Inf	1	1	AGP transfer	3	cd_calprotectin
+Bacteroides dorei__Faecalibacterium prausnitzii__Bacteroides sartorii	1	1	0	100	94	Inf	0.0241021782288896	Inf	1	1	AGP transfer	3	cd_calprotectin
+Bacteroides dorei__Faecalibacterium prausnitzii__Christensenellaceae R-7 group sp.	1	1	0	100	94	Inf	0.0241021782288896	Inf	1	1	AGP transfer	3	cd_calprotectin
+Bacteroides dorei__Lachnospiraceae fam.	1	1	0	100	94	Inf	0.0241021782288896	Inf	1	1	AGP transfer	3	cd_calprotectin
+Bacteroides dorei__Parabacteroides distasonis	3	2	1	100	94	1.89193805553795	0.0969778354890157	113.084624083154	1	1	AGP transfer	3	cd_calprotectin
+Bacteroides ovatus__Bacteroides fragilis	3	2	1	100	94	1.89193805553795	0.0969778354890157	113.084624083154	1	1	AGP transfer	3	cd_calprotectin
+Bacteroides ovatus__Faecalibacterium prausnitzii	1	1	0	100	94	Inf	0.0241021782288896	Inf	1	1	AGP transfer	3	cd_calprotectin
+Bacteroides sp.__Bacteroides dorei__Bacteroides sartorii	2	1	1	100	94	0.939668379988493	0.0118566280412389	74.4815839648365	1	1	AGP transfer	3	cd_calprotectin
+CAG-352 bromii	2	1	1	100	94	0.939668379988493	0.0118566280412389	74.4815839648365	1	1	AGP transfer	3	cd_calprotectin
+Clostridia UCG-014 ord.__Bacteroides dorei	2	1	1	100	94	0.939668379988493	0.0118566280412389	74.4815839648365	1	1	AGP transfer	3	cd_calprotectin
+Enterococcus faecium	1	1	0	100	94	Inf	0.0241021782288896	Inf	1	1	AGP transfer	3	cd_calprotectin
+Faecalibacterium prausnitzii__Agathobacter faecis__Bacteroides dorei	1	1	0	100	94	Inf	0.0241021782288896	Inf	1	1	AGP transfer	3	cd_calprotectin
+Faecalibacterium prausnitzii__Bacteroides dorei__Bacteroides sartorii	2	1	1	100	94	0.939668379988493	0.0118566280412389	74.4815839648365	1	1	AGP transfer	3	cd_calprotectin
+Faecalibacterium prausnitzii__Bacteroides ovatus	2	1	1	100	94	0.939668379988493	0.0118566280412389	74.4815839648365	1	1	AGP transfer	3	cd_calprotectin
+Faecalibacterium prausnitzii__Christensenellaceae R-7 group sp.__Bacteroides dorei	1	1	0	100	94	Inf	0.0241021782288896	Inf	1	1	AGP transfer	3	cd_calprotectin
+Faecalibacterium prausnitzii__Segatella sp.__Bacteroides dorei	1	1	0	100	94	Inf	0.0241021782288896	Inf	1	1	AGP transfer	3	cd_calprotectin
+Gemmiger formicilis	3	2	1	100	94	1.89193805553795	0.0969778354890157	113.084624083154	1	1	AGP transfer	3	cd_calprotectin
+Segatella sp.__Dialister invisus	3	2	1	100	94	1.89193805553795	0.0969778354890157	113.084624083154	1	1	AGP transfer	3	cd_calprotectin
+Segatella sp.__Faecalibacterium prausnitzii__Agathobacter faecis	1	1	0	100	94	Inf	0.0241021782288896	Inf	1	1	AGP transfer	3	cd_calprotectin
+Segatella sp.__Faecalibacterium prausnitzii__Prevotellaceae fam.	2	1	1	100	94	0.939668379988493	0.0118566280412389	74.4815839648365	1	1	AGP transfer	3	cd_calprotectin
+Segatella sp.__Faecalibacterium prausnitzii__UCG-002 sp.	1	1	0	100	94	Inf	0.0241021782288896	Inf	1	1	AGP transfer	3	cd_calprotectin
+Segatella sp.__UCG-002 sp.	1	1	0	100	94	Inf	0.0241021782288896	Inf	1	1	AGP transfer	3	cd_calprotectin
+Segatella sp.__Bacteroides dorei__Faecalibacterium prausnitzii__Agathobacter faecis	6	0	6	97	94	0	0	0.798556345293216	0.0130710767736038	0.941117527699474	AGP transfer	4	cd_calprotectin
+Lachnospiraceae fam.__Faecalibacterium prausnitzii__Bacteroides dorei	8	1	7	97	94	0.130581869506688	0.00284837706119724	1.04917595407351	0.0329786551205513	1	AGP transfer	4	cd_calprotectin
+[Eubacterium] coprostanoligenes group fam.	5	5	0	97	94	Inf	0.905916199327368	Inf	0.0593893109737695	1	AGP transfer	4	cd_calprotectin
+Bacteroides dorei__Blautia sp.	3	0	3	97	94	0	0	2.32975502078022	0.117259991164648	1	AGP transfer	4	cd_calprotectin
+Bacteroides eggerthii__Bacteroides dorei	3	0	3	97	94	0	0	2.32975502078022	0.117259991164648	1	AGP transfer	4	cd_calprotectin
+Segatella sp.__Prevotellaceae fam.__Faecalibacterium prausnitzii	3	0	3	97	94	0	0	2.32975502078022	0.117259991164648	1	AGP transfer	4	cd_calprotectin
+Bacteroides fragilis__Bacteroides dorei	11	3	8	97	94	0.34490564722697	0.0571163534837087	1.49568424762241	0.129417218542091	1	AGP transfer	4	cd_calprotectin
+Bacteroides dorei__Bacteroides sp.__Bacteroides sartorii	2	0	2	97	94	0	0	5.15040732339724	0.240892807936071	1	AGP transfer	4	cd_calprotectin
+Bacteroides dorei__Faecalibacterium prausnitzii__Agathobacter faecis__Bacteroides ovatus	2	0	2	97	94	0	0	5.15040732339724	0.240892807936071	1	AGP transfer	4	cd_calprotectin
+Bacteroides fragilis__Faecalibacterium prausnitzii	2	0	2	97	94	0	0	5.15040732339724	0.240892807936071	1	AGP transfer	4	cd_calprotectin
+Parabacteroides distasonis__Bacteroides dorei	2	0	2	97	94	0	0	5.15040732339724	0.240892807936071	1	AGP transfer	4	cd_calprotectin
+Faecalibacterium prausnitzii__Bacteroides dorei__Bacteroides ovatus	7	5	2	97	94	2.48882659374123	0.395181959438409	26.7716256998365	0.444771086286331	1	AGP transfer	4	cd_calprotectin
+Bacteroides dorei__Bacteroides ovatus__Bacteroides thetaiotaomicron	1	0	1	97	94	0	0	37.7943140947788	0.492146596858639	1	AGP transfer	4	cd_calprotectin
+Bacteroides dorei__Bacteroides sartorii__Bacteroides ovatus	1	0	1	97	94	0	0	37.7943140947788	0.492146596858639	1	AGP transfer	4	cd_calprotectin
+Bacteroides dorei__Clostridia UCG-014 ord.__Faecalibacterium prausnitzii	1	0	1	97	94	0	0	37.7943140947788	0.492146596858639	1	AGP transfer	4	cd_calprotectin
+Bacteroides dorei__Faecalibacterium prausnitzii__Bacteroides cellulosilyticus	1	0	1	97	94	0	0	37.7943140947788	0.492146596858639	1	AGP transfer	4	cd_calprotectin
+Bacteroides dorei__Faecalibacterium prausnitzii__Bacteroides eggerthii	1	0	1	97	94	0	0	37.7943140947788	0.492146596858639	1	AGP transfer	4	cd_calprotectin
+Bacteroides sp.__Bacteroides dorei__Bacteroides ovatus	1	0	1	97	94	0	0	37.7943140947788	0.492146596858639	1	AGP transfer	4	cd_calprotectin
+Christensenellaceae R-7 group sp.__Bacteroides dorei	1	0	1	97	94	0	0	37.7943140947788	0.492146596858639	1	AGP transfer	4	cd_calprotectin
+Faecalibacterium prausnitzii__Butyrivibrio crossotus	1	0	1	97	94	0	0	37.7943140947788	0.492146596858639	1	AGP transfer	4	cd_calprotectin
+Gemmiger sp.	1	0	1	97	94	0	0	37.7943140947788	0.492146596858639	1	AGP transfer	4	cd_calprotectin
+Segatella sp.__Agathobacter faecis__Faecalibacterium prausnitzii	1	0	1	97	94	0	0	37.7943140947788	0.492146596858639	1	AGP transfer	4	cd_calprotectin
+Segatella sp.__Bacteroides dorei__Faecalibacterium prausnitzii__Clostridia UCG-014 ord.	1	0	1	97	94	0	0	37.7943140947788	0.492146596858639	1	AGP transfer	4	cd_calprotectin
+Agathobacter faecis__Bacteroides dorei__Faecalibacterium prausnitzii__Bacteroides ovatus	2	2	0	97	94	Inf	0.182274579110852	Inf	0.497492422154864	1	AGP transfer	4	cd_calprotectin
+Akkermansia muciniphila__Bacteroides dorei__Bacteroides caccae	2	2	0	97	94	Inf	0.182274579110852	Inf	0.497492422154864	1	AGP transfer	4	cd_calprotectin
+Bacteroides dorei__Bacteroides caccae__Faecalibacterium prausnitzii	2	2	0	97	94	Inf	0.182274579110852	Inf	0.497492422154864	1	AGP transfer	4	cd_calprotectin
+Bacteroides dorei__Bacteroides cellulosilyticus__Faecalibacterium prausnitzii	2	2	0	97	94	Inf	0.182274579110852	Inf	0.497492422154864	1	AGP transfer	4	cd_calprotectin
+Bacteroides dorei__Bacteroides ovatus__Bacteroides fragilis	2	2	0	97	94	Inf	0.182274579110852	Inf	0.497492422154864	1	AGP transfer	4	cd_calprotectin
+Bacteroides dorei__Paraprevotella sp.	2	2	0	97	94	Inf	0.182274579110852	Inf	0.497492422154864	1	AGP transfer	4	cd_calprotectin
+Prevotellaceae fam.__Bacteroides dorei	2	2	0	97	94	Inf	0.182274579110852	Inf	0.497492422154864	1	AGP transfer	4	cd_calprotectin
+Bacteroides dorei__Faecalibacterium prausnitzii__Bacteroides ovatus__Agathobacter faecis	3	1	2	97	94	0.480955223387602	0.00804539490935043	9.38512235081495	0.617137083546563	1	AGP transfer	4	cd_calprotectin
+Faecalibacterium prausnitzii__Blautia sp.	3	1	2	97	94	0.480955223387602	0.00804539490935043	9.38512235081495	0.617137083546563	1	AGP transfer	4	cd_calprotectin
+Bacteroides dorei__Bacteroides ovatus__Agathobacter faecis	4	3	1	97	94	2.95285655187392	0.232285418621947	157.331577774595	0.621210093296067	1	AGP transfer	4	cd_calprotectin
+Bacteroides dorei__Bacteroides ovatus__Faecalibacterium prausnitzii__Agathobacter faecis	4	3	1	97	94	2.95285655187392	0.232285418621947	157.331577774595	0.621210093296067	1	AGP transfer	4	cd_calprotectin
+UCG-002 sp.__Bacteroides dorei	5	2	3	97	94	0.640085995973711	0.0523522644468418	5.72175768024223	0.679277708227508	1	AGP transfer	4	cd_calprotectin
+Bifidobacterium breve__Faecalibacterium prausnitzii	7	3	4	97	94	0.719329085381965	0.102533462863406	4.38033550572607	0.717883687086028	1	AGP transfer	4	cd_calprotectin
+Blautia sp.	10	6	4	97	94	1.4804840513671	0.338105935841388	7.37798952105845	0.747543099883469	1	AGP transfer	4	cd_calprotectin
+Bifidobacterium breve__Bacteroides dorei	13	6	7	97	94	0.820322258059639	0.218410853717631	2.97702252626946	0.780356121789963	1	AGP transfer	4	cd_calprotectin
+Agathobacter faecis__Faecalibacterium prausnitzii__Bacteroides dorei	1	1	0	97	94	Inf	0.0248476305035798	Inf	1	1	AGP transfer	4	cd_calprotectin
+Akkermansia muciniphila__Faecalibacterium prausnitzii	1	1	0	97	94	Inf	0.0248476305035798	Inf	1	1	AGP transfer	4	cd_calprotectin
+Alistipes onderdonkii__Bacteroides dorei	1	1	0	97	94	Inf	0.0248476305035798	Inf	1	1	AGP transfer	4	cd_calprotectin
+Bacteroides dorei__Bacteroides eggerthii	2	1	1	97	94	0.968903461486812	0.0122231031606486	76.80754226667	1	1	AGP transfer	4	cd_calprotectin
+Bacteroides dorei__Bacteroides fragilis	1	1	0	97	94	Inf	0.0248476305035798	Inf	1	1	AGP transfer	4	cd_calprotectin
+Bacteroides dorei__Bacteroides ovatus__Bacteroides caccae	2	1	1	97	94	0.968903461486812	0.0122231031606486	76.80754226667	1	1	AGP transfer	4	cd_calprotectin
+Bacteroides dorei__Bacteroides ovatus__Parabacteroides distasonis	1	1	0	97	94	Inf	0.0248476305035798	Inf	1	1	AGP transfer	4	cd_calprotectin
+Bacteroides dorei__Bacteroides sartorii__Faecalibacterium prausnitzii	1	1	0	97	94	Inf	0.0248476305035798	Inf	1	1	AGP transfer	4	cd_calprotectin
+Bacteroides dorei__Bifidobacterium breve	3	2	1	97	94	1.95127077906969	0.099995745989125	116.652678405239	1	1	AGP transfer	4	cd_calprotectin
+Bacteroides dorei__CAG-352 bromii	1	1	0	97	94	Inf	0.0248476305035798	Inf	1	1	AGP transfer	4	cd_calprotectin
+Bacteroides dorei__Faecalibacterium prausnitzii__Bacteroides sartorii	1	1	0	97	94	Inf	0.0248476305035798	Inf	1	1	AGP transfer	4	cd_calprotectin
+Bacteroides dorei__Faecalibacterium prausnitzii__Christensenellaceae R-7 group sp.	1	1	0	97	94	Inf	0.0248476305035798	Inf	1	1	AGP transfer	4	cd_calprotectin
+Bacteroides dorei__Lachnospiraceae fam.	1	1	0	97	94	Inf	0.0248476305035798	Inf	1	1	AGP transfer	4	cd_calprotectin
+Bacteroides dorei__Parabacteroides distasonis	3	2	1	97	94	1.95127077906969	0.099995745989125	116.652678405239	1	1	AGP transfer	4	cd_calprotectin
+Bacteroides ovatus__Bacteroides dorei__Faecalibacterium prausnitzii__Agathobacter faecis	7	4	3	97	94	1.30285238835989	0.213947690337782	9.14003329407298	1	1	AGP transfer	4	cd_calprotectin
+Bacteroides ovatus__Bacteroides fragilis	3	2	1	97	94	1.95127077906969	0.099995745989125	116.652678405239	1	1	AGP transfer	4	cd_calprotectin
+Bacteroides ovatus__Faecalibacterium prausnitzii	1	1	0	97	94	Inf	0.0248476305035798	Inf	1	1	AGP transfer	4	cd_calprotectin
+Bacteroides sp.__Bacteroides dorei__Bacteroides sartorii	2	1	1	97	94	0.968903461486812	0.0122231031606486	76.80754226667	1	1	AGP transfer	4	cd_calprotectin
+CAG-352 bromii	2	1	1	97	94	0.968903461486812	0.0122231031606486	76.80754226667	1	1	AGP transfer	4	cd_calprotectin
+Clostridia UCG-014 ord.__Bacteroides dorei	2	1	1	97	94	0.968903461486812	0.0122231031606486	76.80754226667	1	1	AGP transfer	4	cd_calprotectin
+Enterococcus faecium	1	1	0	97	94	Inf	0.0248476305035798	Inf	1	1	AGP transfer	4	cd_calprotectin
+Faecalibacterium prausnitzii__Agathobacter faecis__Bacteroides dorei	1	1	0	97	94	Inf	0.0248476305035798	Inf	1	1	AGP transfer	4	cd_calprotectin
+Faecalibacterium prausnitzii__Bacteroides dorei__Bacteroides sartorii	2	1	1	97	94	0.968903461486812	0.0122231031606486	76.80754226667	1	1	AGP transfer	4	cd_calprotectin
+Faecalibacterium prausnitzii__Bacteroides ovatus	2	1	1	97	94	0.968903461486812	0.0122231031606486	76.80754226667	1	1	AGP transfer	4	cd_calprotectin
+Faecalibacterium prausnitzii__Christensenellaceae R-7 group sp.__Bacteroides dorei	1	1	0	97	94	Inf	0.0248476305035798	Inf	1	1	AGP transfer	4	cd_calprotectin
+Faecalibacterium prausnitzii__Segatella sp.__Bacteroides dorei	1	1	0	97	94	Inf	0.0248476305035798	Inf	1	1	AGP transfer	4	cd_calprotectin
+Gemmiger formicilis	3	2	1	97	94	1.95127077906969	0.099995745989125	116.652678405239	1	1	AGP transfer	4	cd_calprotectin
+Segatella sp.__Bacteroides dorei__Faecalibacterium prausnitzii__UCG-002 sp.	2	1	1	97	94	0.968903461486812	0.0122231031606486	76.80754226667	1	1	AGP transfer	4	cd_calprotectin
+Segatella sp.__Dialister invisus	3	2	1	97	94	1.95127077906969	0.099995745989125	116.652678405239	1	1	AGP transfer	4	cd_calprotectin
+Segatella sp.__Faecalibacterium prausnitzii__Agathobacter faecis__Bacteroides dorei	1	1	0	97	94	Inf	0.0248476305035798	Inf	1	1	AGP transfer	4	cd_calprotectin
+Segatella sp.__Faecalibacterium prausnitzii__Bacteroides dorei__Agathobacter faecis	5	3	2	97	94	1.46516880922611	0.163905258020164	17.9128739287689	1	1	AGP transfer	4	cd_calprotectin
+Segatella sp.__Faecalibacterium prausnitzii__Prevotellaceae fam.	2	1	1	97	94	0.968903461486812	0.0122231031606486	76.80754226667	1	1	AGP transfer	4	cd_calprotectin
+Segatella sp.__Faecalibacterium prausnitzii__UCG-002 sp.	1	1	0	97	94	Inf	0.0248476305035798	Inf	1	1	AGP transfer	4	cd_calprotectin
+Segatella sp.__UCG-002 sp.	1	1	0	97	94	Inf	0.0248476305035798	Inf	1	1	AGP transfer	4	cd_calprotectin

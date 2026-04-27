@@ -3,18 +3,18 @@
 
 from __future__ import annotations
 
-import math
 import re
+import math
 from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from paper_paths import DCST_VALIDATION_DIR, FIGURES_DIR, TABLES_DIR
+from paper_paths import CANONICAL_TRANSFER_ROOT, DCST_VALIDATION_DIR, FIGURES_DIR, TABLES_DIR
 
 REBUILT_ROOT = DCST_VALIDATION_DIR / "absorb"
-FROZEN_ROOT = DCST_VALIDATION_DIR / "frozen_agp"
+FROZEN_ROOT = CANONICAL_TRANSFER_ROOT
 
 TABLE_TSV = TABLES_DIR / "TABLE_V1_external_validation_summary.tsv"
 TABLE_MD = TABLES_DIR / "TABLE_V1_external_validation_summary.md"
@@ -51,42 +51,24 @@ KEY_COMPARISONS = [
         "display": "Gevers 2014\nCrohn vs Healthy",
         "short": "Gevers Crohn",
     },
-    {
-        "cohort": "prjeb84421",
-        "comparison": "OFG_vs_Healthy",
-        "display": "PRJEB84421\nOFG vs Healthy",
-        "short": "PRJEB84421 OFG",
-    },
-    {
-        "cohort": "jacobs_2023_ibs_250bp",
-        "comparison": "IBS_vs_Healthy",
-        "display": "Jacobs 2023 IBS\nIBS vs Healthy",
-        "short": "Jacobs IBS",
-    },
 ]
 
 COHORT_COLORS = {
     "halfvarson_2017": "#1f77b4",
     "hmp2": "#d62728",
     "gevers_2014": "#9467bd",
-    "prjeb84421": "#2ca02c",
-    "jacobs_2023_ibs_250bp": "#ff7f0e",
 }
 
 LINE_STYLES = {
     "IBD_vs_Healthy": "-",
     "Crohn_vs_Healthy": "--",
     "UC_vs_Healthy": ":",
-    "OFG_vs_Healthy": "-.",
-    "IBS_vs_Healthy": (0, (3, 1, 1, 1)),
 }
 
 MARKERS = {
     "IBD_vs_Healthy": "o",
     "Crohn_vs_Healthy": "s",
     "UC_vs_Healthy": "^",
-    "OFG_vs_Healthy": "D",
-    "IBS_vs_Healthy": "P",
 }
 
 
@@ -273,44 +255,8 @@ def write_table(table: pd.DataFrame) -> None:
         encoding="utf-8",
     )
 
-
-def q_to_score(value: float) -> float:
-    if pd.isna(value):
-        return 0.0
-    value = max(value, 1e-12)
-    return -math.log10(value)
-
-
 def build_figure(table: pd.DataFrame, coverage: pd.DataFrame) -> None:
-    order = table.index.tolist()
-    y = np.arange(len(order))[::-1]
-
-    fig = plt.figure(figsize=(13.5, 9))
-    gs = fig.add_gridspec(2, 1, height_ratios=[1.15, 1], hspace=0.32)
-    ax1 = fig.add_subplot(gs[0, 0])
-    ax2 = fig.add_subplot(gs[1, 0])
-
-    rebuilt_x = [q_to_score(table.loc[i, "rebuilt_q_numeric"]) for i in order]
-    frozen_x = [q_to_score(table.loc[i, "frozen_q_numeric"]) for i in order]
-    labels = [table.loc[i, "display"] for i in order]
-
-    for yi, rx, fx in zip(y, rebuilt_x, frozen_x):
-        ax1.plot([rx, fx], [yi, yi], color="#b0b0b0", linewidth=1.5, zorder=1)
-
-    ax1.scatter(rebuilt_x, y, s=55, color="#4c78a8", label="Rebuilt absorb", zorder=3)
-    ax1.scatter(frozen_x, y, s=55, color="#f58518", label="AGP-derived label transfer", zorder=3)
-    ax1.axvline(-math.log10(0.05), color="black", linestyle="--", linewidth=1)
-    ax1.set_yticks(y)
-    ax1.set_yticklabels(labels, fontsize=9)
-    ax1.set_xlabel(r"Best signal strength ($-\log_{10}(q)$)")
-    ax1.set_title("A. Rebuilt-cohort validation is broader than AGP-derived label transfer", fontsize=12)
-    ax1.grid(axis="x", alpha=0.25)
-    ax1.legend(loc="lower right", frameon=False)
-
-    for yi, fx, i in zip(y, frozen_x, order):
-        q_label = table.loc[i, "frozen_best_q"]
-        ax1.text(fx + 0.08, yi + 0.16, f"q={q_label}", va="bottom", fontsize=8, color="#444444")
-
+    fig, ax2 = plt.subplots(figsize=(13.5, 4.9))
     for spec in KEY_COMPARISONS:
         sub = coverage[
             (coverage["cohort"] == spec["cohort"]) & (coverage["comparison"] == spec["comparison"])
@@ -330,7 +276,10 @@ def build_figure(table: pd.DataFrame, coverage: pd.DataFrame) -> None:
     ax2.set_ylim(0, 105)
     ax2.set_ylabel("AGP-derived hierarchy mapping coverage (%)")
     ax2.set_xlabel("Depth")
-    ax2.set_title("B. Most cohorts map well at depth 1-2, then diverge at deeper levels", fontsize=12)
+    ax2.set_title(
+        "The IBD-focused cohorts map well at depth 1-2, then diverge at deeper levels",
+        fontsize=12,
+    )
     ax2.grid(alpha=0.25)
     ax2.legend(loc="lower left", ncol=2, frameon=False, fontsize=8)
 

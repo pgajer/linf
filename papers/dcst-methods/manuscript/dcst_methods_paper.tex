@@ -1,0 +1,936 @@
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+\documentclass[11pt]{article}
+
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{setspace}
+\usepackage{parskip}
+\usepackage{longtable,booktabs,array,tabularx}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{pdflscape}
+\usepackage{titling}
+\usepackage{caption}
+\usepackage{bookmark}
+\usepackage[section]{placeins}
+\usepackage{xurl}
+\urlstyle{same}
+\captionsetup{font=small,labelfont=bf}
+
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcommand{\taxon}[1]{\emph{#1}}
+\newcommand{\dcstsep}{/\allowbreak}
+\newcommand{\paperaffiliation}{Center for Advanced Microbiome Research and Innovation (CAMRI), Institute for Genome Sciences, Department of Microbiology and Immunology, University of Maryland School of Medicine, Baltimore, Maryland, USA.}
+\newcommand{\paperfundingnote}{Research reported in this publication was supported by grant number INV-048956 from the Gates Foundation.}
+\newcommand{\blfootnote}[1]{%
+  \begingroup
+  \renewcommand{\thefootnote}{}\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \endgroup}
+
+\setlength{\droptitle}{-2.4em}
+\pretitle{\begin{center}\Large}
+\posttitle{\par\end{center}\vspace{0.55em}}
+\preauthor{\begin{center}\normalsize}
+\postauthor{\par\end{center}\vspace{-0.5em}}
+\predate{}
+\postdate{}
+
+\hypersetup{
+  pdftitle={Dominant-Community State Types Define a Deterministic Framework for Microbiome State Representation},
+  colorlinks=true,
+  linkcolor={blue},
+  filecolor={Maroon},
+  citecolor={Blue},
+  urlcolor={blue},
+  pdfcreator={LaTeX}}
+
+\title{Dominant-Community State Types Define a Deterministic Framework for Microbiome State Representation}
+\author{Pawel Gajer and Jacques Ravel}
+\date{}
+\newif\ifshowbuildstamp
+\showbuildstampfalse
+\providecommand{\manuscriptversion}{unversioned}
+\providecommand{\manuscriptbuildnumber}{NA}
+\providecommand{\manuscriptcommit}{unknown}
+\providecommand{\manuscriptbuilddatetime}{unknown}
+\InputIfFileExists{../build/manuscript_build_info.tex}{}{}
+
+\begin{document}
+\maketitle
+\ifshowbuildstamp
+\begin{center}
+\footnotesize
+Build: \manuscriptbuilddatetime
+\end{center}
+\vspace{0.35em}
+\fi
+\blfootnote{\paperaffiliation}
+\blfootnote{\paperfundingnote}
+
+\begin{abstract}
+Microbiome state labels are useful for reducing high-dimensional abundance
+tables to interpretable ecological summaries, but many widely used labels are
+defined by clustering and can drift with the comparison cohort, distance
+metric, or partitioning rule. We present dominant-community state types
+(dCSTs), a deterministic rank-based framework in which each sample has an
+explicit pre-policy dominance-lineage built from a retained feature family.
+Under the absorb policy used here, the fitted hierarchy is deterministic given
+the reference cohort, retained features, tie rule, and support schedule; once
+frozen, that hierarchy provides stable sample assignment for aligned cohorts.
+Compared with clustering-based CSTs and earlier mathematical rank-state
+formulations, dCSTs add an operational microbiome workflow for defining,
+transferring, rebuilding, and testing deterministic state panels.
+
+We evaluate the framework in two deliberately different microbiome
+applications. In gut microbiome data, we learn a shared-taxonomy taxonomic dCST
+vocabulary in a large American Gut Project background cohort and test its
+portability in external inflammatory bowel disease cohorts. Direct transfer and
+rebuilt-cohort analyses recover clinically coherent sample-level IBD structure,
+especially in Halfvarson 2017, while subject-aware sensitivity analyses show
+that portability weakens under repeated-sample dependence and cohort mismatch.
+In a vaginal metagenomic application independent of the gut analysis, the same
+framework organizes outcome-associated VOG-cluster and full-VOG states linked
+to \textit{Chlamydia trachomatis} clearance and persistence. Support for the CT
+application comes from capped VOG robustness, VOG-cluster/full-VOG concordance,
+and biologically readable taxonomic, product-level, and KEGG-linked follow-up.
+
+Together, these applications show how dCSTs can serve as a reusable
+representation layer for microbiome state analysis. The framework is not
+intended to impose a single universal biomarker vocabulary; rather, it provides
+deterministic fitted state vocabularies and frozen sample assignments for
+cross-cohort portability analysis and local biological interpretation.
+\end{abstract}
+
+\section{Introduction}
+
+Microbiome studies often need a compact state language. Community-state types,
+enterotypes, and related coarse labels turn high-dimensional abundance tables
+into summaries that can be compared across samples, cohorts, and phenotypes
+\cite{Ravel2011_CST,Gajer2012_CST,Arumugam2011_enterotypes}. However, many
+widely used state labels are defined by clustering or other cohort-level
+partitioning procedures, so the meaning of a label can shift with the comparison
+cohort, distance metric, or partitioning rule. When the label itself drifts,
+portability and reproducibility become harder to interpret.
+
+This instability matters especially when the scientific question is not only
+descriptive. External validation, transfer across cohorts, repeated-sample
+sensitivity, and biological follow-up all benefit from labels that are defined
+sample by sample rather than only relative to a fitted clustering solution. A
+state label that changes when neighboring samples are added or removed is less
+useful as a unit of biological comparison, and it is harder to treat as a
+stable interface between microbiome measurements and downstream inference. For
+that reason, there is value in a microbiome-state framework whose central
+object is a deterministic assignment rule rather than a cluster membership
+produced by a global optimization.
+
+\begin{table}[!t]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\linewidth}{p{0.20\linewidth}Y Y}
+\toprule
+Property & Clustering-defined CSTs & dCSTs \\
+\midrule
+Construction choices & Depend on a clustering algorithm and distance metric; many implementations also depend on initialization and a number-of-clusters parameter. & Use rank-based dominance-lineage recursion after the reference cohort, retained feature family, deterministic tie rule, and support policy are fixed. \\
+Label definition & Cohort-relative partition labels whose boundaries can change when the comparison set or clustering choices change. & Pre-policy dominance order is sample-wise; absorb-policy labels are explicit retained-feature lineages within a fitted hierarchy. \\
+Transfer and interpretation & Transfer generally requires applying or refitting a fitted clustering representation, and biological meaning is usually assigned after clustering. & Frozen hierarchies can be applied to aligned cohorts, giving stable assignment into ordered retained-feature lineages. \\
+\bottomrule
+\end{tabularx}
+\caption{Conceptual comparison of clustering-defined CSTs and dCSTs. dCSTs
+replace clustering algorithm/distance/initialization/\(k\) choices with an
+explicit retained-feature family and support policy.}
+\label{tab:conceptual-comparison}
+\end{table}
+
+Dominant-community state types (dCSTs) were developed to provide this kind of
+representation. A pre-policy dCST lineage is a rank-based dominance path built
+from a retained feature family: samples are assigned first by their dominant
+retained feature and then recursively refined by the next dominant retained
+feature within each retained parent state. With the absorb policy used here,
+small provisional child states are reassigned into nearby retained named states
+rather than pooled into one residual bucket. The fitted absorb-policy vocabulary
+is deterministic for a specified reference cohort, retained feature family, tie
+rule, and support schedule; after freezing, it provides stable assignment into
+explicit retained-feature lineages for aligned samples.
+dCSTs are used here not as a single universal biomarker system, but as a
+reusable representation layer for microbiome analyses with different feature
+families, cohort structures, and inferential goals.
+
+Because a reusable representation should be informative under more than one
+biological design, we evaluate dCSTs in two deliberately different applications.
+The gut application tests portability: whether a taxonomic dCST vocabulary
+learned in a large shared-taxonomy American Gut Project background transfers
+into clinically annotated IBD cohorts, how direct transfer compares with
+cohort-specific rebuilt hierarchies, and how those signals behave under
+subject-aware sensitivity. The vaginal metagenomic CT application tests a
+different property: whether the same deterministic construction remains
+biologically interpretable in a different niche and feature universe, using
+VOG-cluster and full-VOG gene-family states with taxonomic, product-level, and
+KEGG-linked follow-up.
+
+Together, these applications evaluate three connected properties of dCSTs:
+deterministic and interpretable state construction without clustering-defined
+labels; qualified cross-cohort portability in gut IBD; and within-cohort
+metagenomic interpretability in an independent CT setting. These results
+position dCSTs not as a niche alternative to a single gut clustering analysis,
+but as a reusable representation strategy illustrated by two complementary
+microbiome applications.
+
+\begin{figure}[H]
+\centering
+% \includegraphics[width=0.98\linewidth,height=0.56\textheight,keepaspectratio]{../assets/figures/FIGURE_1_dcst_conceptual_framework.pdf}
+\includegraphics[scale=0.7]{../assets/figures/FIGURE_1_dcst_conceptual_framework.pdf}
+\caption{Conceptual dCST construction. The figure defines the representation
+used throughout the paper: samples are first assigned by their dominant retained
+feature and are then recursively refined by the next dominant retained feature
+within each retained parent state. The absorb policy used in the primary
+analyses merges low-support provisional states into nearby retained states
+rather than collapsing them into a residual bucket. The same construction is
+used for gut taxa, CT VOG-clusters, and CT full VOG gene groups.}
+\label{fig:dcst-concept}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\linewidth,height=0.55\textheight,keepaspectratio]{../assets/figures/FIGURE_5_cross_application_synthesis.pdf}
+\caption{Framework roadmap and cross-application synthesis. The shared dCST
+framework defines deterministic dominance-lineages from a retained feature
+family and then separates state construction from downstream inference. The gut
+application evaluates whether a taxonomic dCST vocabulary learned in a large AGP
+background cohort can transfer into external IBD cohorts and how that signal
+changes under subject-aware sensitivity. The CT application evaluates whether
+VOG-cluster and full-VOG dCSTs organize clearance- and persistence-associated
+metagenomic states with interpretable taxonomic and functional follow-up. The
+common conclusion is framework-level rather than universal-label: dCSTs provide
+a reusable state representation, while portability, robustness, and biological
+interpretability remain application-specific empirical properties.}
+\label{fig:cross-app-synth}
+\end{figure}
+
+\FloatBarrier
+
+\section{Methods}
+
+\subsection{dCST framework}
+
+A dCST hierarchy is a recursive, rank-based partition of a sample-by-feature
+abundance matrix whose columns belong to a retained feature family. At depth~1,
+each sample is assigned to the state defined by its highest-abundance retained
+feature. At depth~2, each retained depth-1 state is refined by the
+next-highest-ranked retained feature among the samples that share that parent
+assignment, and deeper levels continue the same recursion. A depth-$\ell$ dCST
+label is therefore a dominance-lineage: an ordered path through a refinement
+tree, not a cluster identifier and not a phylogenetic lineage; related
+mathematical background is given in \cite{Gajer2025_linf}.
+
+Formally, let \(X \in \mathbb{R}_{\geq 0}^{n \times p}\) be a microbiome
+abundance matrix with samples \(i = 1,\ldots,n\) and retained features
+\(\mathcal{F} = \{f_1,\ldots,f_p\}\). A depth-1 provisional dominance sample
+set for feature \(f\) is
+\[
+D(f) = \{i : X_{if} = \max_{g \in \mathcal{F}} X_{ig}\},
+\]
+with ties resolved by the first retained feature in the fixed feature-dictionary
+order. Retained depth-1 states are the dominance sample sets whose support
+satisfies the depth-specific minimum \(n_1\), after applying the low-support
+policy described below. For
+depth \(\ell > 1\), each retained parent lineage
+\(L = (f_{a_1},\ldots,f_{a_{\ell-1}})\) with sample set \(S_L\) is refined
+within \(S_L\). For each sample in the parent, features already used in the
+lineage are ignored and the next highest-abundance retained feature defines a
+provisional child. A retained child lineage is therefore
+\((f_{a_1},\ldots,f_{a_{\ell-1}}, f_b)\), where \(f_b\) is the next dominant
+retained feature among samples in \(S_L\), again subject to the depth-specific
+support threshold \(n_\ell\), the same first-feature tie rule, and the
+low-support policy. The same recursion defines all fitted depths.
+
+\begin{table}[H]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\linewidth}{p{0.23\linewidth}Y}
+\toprule
+Component & Operational definition \\
+\midrule
+Input abundance matrix & A non-negative sample-by-feature matrix \(X\). The input may be counts, proportions, or another sample-wise rescaling, provided the within-sample feature order is preserved. \\
+Retained feature family & A prespecified feature set \(\mathcal{F}\), such as shared gut taxa, VOG-clusters, or full VOG gene groups, after application-specific filtering. dCST labels are defined only with respect to this retained family. \\
+Depth-wise recursion & Depth~1 assigns each sample by its dominant retained feature. Depth~\(\ell\) refines each retained depth-\((\ell-1)\) parent by the next highest retained feature among samples in that parent, excluding features already present in the parent lineage. \\
+Low-support absorb policy & Provisional children below the depth-specific support threshold are reassigned to retained sibling states within the same parent, using the largest retained-sibling feature abundance in each reassigned sample. Pure-policy residual states are used only for methodological sensitivity, not for the main analyses. \\
+Frozen transfer rule & A hierarchy learned in a reference cohort can be frozen and applied to a new cohort after aligning the new data to the retained feature dictionary. External samples are mapped to realized reference lineage sets at the requested nominal depth; terminal retained lineages remain eligible at later nominal depths when the reference branch did not split further. \\
+Rebuilt-cohort mode & As a comparator to frozen transfer, the same feature filtering and absorb-policy workflow can be run independently within an external cohort. Rebuilt mode asks whether related dominance structure is rediscovered without requiring the reference labels themselves to transfer. \\
+Panel-level inference & At a fitted depth, the full dCST label-by-outcome table is tested as a panel. We use Fisher-exact contingency-table tests, with Monte Carlo evaluation for large tables, and report Cramer's~V as an omnibus effect-size summary. \\
+Label-level inference & Individual dominance-lineages are followed up against all other labels at the same depth using label-versus-rest contrasts, odds ratios, and Benjamini--Hochberg correction within the prespecified family. Bayesian estimates are used as supportive sparse-label summaries. \\
+\bottomrule
+\end{tabularx}
+\caption{Operational dCST definition and analysis workflow. Figure~\ref{fig:dcst-concept} gives the intuition; this table states the construction and inferential roles used in the main analyses.}
+\label{tab:dcst-workflow}
+\end{table}
+
+The absorb policy used in the main analyses handles low-support provisional
+children without creating a single residual state. At each parent, provisional
+children with support below \(n_\ell\) are reassigned to retained sibling
+children within the same parent. For each reassigned sample, the target retained
+sibling is the retained child feature with the largest abundance in that sample
+among the retained sibling features; ties use the \texttt{linf} first-target
+rule for the active matrix backend. Thus a low-support branch is absorbed into
+the nearest named dominance context available at that refinement step. This
+preserves named dominance-lineages for downstream comparison while avoiding
+unstable rare labels.
+
+This construction has three useful properties. First, the pre-policy dominance
+lineage of a sample depends only on its within-sample rank order, so the same
+pre-policy lineage is recovered from counts, proportions, or any sample-wide
+rescaling that preserves feature order within that sample. Second, the fitted
+absorb-policy hierarchy is deterministic once the reference cohort, retained
+feature family, tie rule, and depth-specific support schedule are fixed: it
+does not depend on a clustering algorithm, distance metric, initialization, or a
+number-of-clusters parameter. Third, after a hierarchy has been fitted and
+frozen, aligned external samples are assigned stably into the realized lineage
+sets of that hierarchy. This separates cohort-level hierarchy fitting from
+sample-level assignment, in contrast to clustering-defined state labels whose
+meaning can drift with the comparison cohort.
+
+Because recursive refinement produces many provisional low-frequency child
+states, the hierarchy also requires an explicit low-frequency policy. We use
+the absorb policy throughout the primary analyses. Under this policy, provisional
+child states below the depth-specific minimum-support threshold are reassigned
+into retained named states rather than pooled into a single residual bucket.
+This keeps the hierarchy readable and supports direct comparison of named
+dominance-lineages across downstream analyses. Pure-policy hierarchies remain
+useful as methodological sensitivity analyses, but the analyses here emphasize
+absorb-policy dCSTs because they provide a more portable and interpretable
+state vocabulary.
+
+\subsection{Shared inferential framework}
+
+The two applications share the same representational core but not a
+single rigid downstream statistical template. In both settings we distinguish
+panel-level from label-level inference. At a given depth, the primary screen
+asks whether outcome labels are distributed non-randomly across the full dCST
+panel at that depth. Panel-level tests use Fisher-exact contingency-table tests,
+with Monte Carlo evaluation when the full table is large, and summarize panel
+strength with Cramer's~V. Label-level follow-up then asks whether individual
+dominance-lineages are enriched or depleted relative to the rest of the panel
+at the same depth.
+
+Across both applications, multiplicity control is handled with the
+Benjamini--Hochberg procedure within the prespecified testing family relevant to
+the comparison being reported \cite{BenjaminiHochberg1995}. Odds ratios summarize direction and magnitude at
+the label level. Bayesian follow-up is used as a supportive estimation layer,
+especially for smaller or deeper states where maximum-likelihood estimates can
+be unstable, but it does not replace the frequentist panel-level gate. The
+common design principle is therefore not that every downstream test must be
+identical across applications, but that each application starts from the same
+deterministic dCST representation and then uses inferential layers suited to
+its cohort design and metadata structure.
+
+Implementation-level reproducibility details are summarized in Supplementary
+Table~S3. In brief, all primary pipelines used the first-feature tie rule from
+\texttt{linf}; for primary dominance assignment this chooses the first tied
+feature in the feature dictionary, and for absorb reassignment it chooses the
+first tied retained target in the active backend's retained-target order.
+Duplicate feature labels were made unique before assignment. The AGP exploratory
+omnibus screen used Monte Carlo Fisher tests with the recorded seed \(20260411\)
+and 1,000 simulations per panel in the run reported here. CT VOG-cluster and
+full-VOG omnibus screens used 50,000 Monte Carlo simulations per panel; the CT
+association scripts did not set a separate Fisher-test seed, so the generated
+result tables are the source of record for exact simulated \(p\)-value digits.
+Bayesian sparse-label summaries used 4,000 posterior draws: Jeffreys-prior
+beta-binomial prevalence contrasts for unadjusted label-versus-rest comparisons,
+and, in gut follow-up, \texttt{arm::bayesglm} logistic models for
+covariate-adjusted summaries.
+
+Downstream analyses differ according to study design. In gut IBD, external
+validation and repeated subjects make covariate adjustment and subject-aware
+sensitivity essential. In the CT application, label-level enrichment and
+Bayesian sparse-state summaries are evaluated inside a fixed outcome-labeled
+subset, followed by taxonomic, product, and KEGG-linked interpretation. This
+design allows the shared representation layer to support application-specific
+inference without requiring identical statistical designs.
+
+\subsection{Gut application design}
+
+The gut application is designed to test portability of taxonomic dCSTs across
+cohorts. Structure learning begins with a local American Gut Project stool
+table whose amplicon-sequence-variant identifiers were mapped back to sequences
+from the corresponding redbiom context and then reassigned taxonomy with the
+same DADA2/SILVA workflow used for the external validation datasets. This
+shared-taxonomy step places the AGP
+discovery cohort and the external validation cohorts in the same label universe
+before dCST construction and transfer \cite{McDonald2018_AGP,Quast2013_SILVA}.
+
+The resulting local AGP source table contained 24,566 samples. Samples with
+library size below 1,000 reads were excluded, leaving 24,421
+quality-controlled samples after taxon filtering. Retained taxa were required
+to reach a count of at least 2 in at least 5\% of the retained samples, which
+yielded a 340-taxon discovery matrix. The AGP hierarchy is then
+constructed on this filtered AGP matrix under the absorb policy, using a
+minimum-support schedule of 50 at depth~1 and 25 at depths~2 through~4. We use
+AGP primarily as a large ecological background cohort rather than as a source
+of diagnosis-grade IBD case definitions. The AGP phenotype fields are therefore
+used only for exploratory prioritization and sensitivity analysis, not as the
+primary disease-association evidence.
+
+The primary gut disease evidence comes from external cohorts with stronger diagnosis
+metadata. The central comparison separates structure learning from disease
+inference: the AGP-derived hierarchy is frozen and external samples are mapped
+into it under the corrected nearest-lineage-set transfer rule, while a parallel
+rebuilt mode asks whether related dominance structure is rediscovered when each
+external cohort is filtered and analyzed independently with the same absorb
+workflow. The validation cohorts analyzed here are
+Halfvarson 2017, HMP2 / IBDMDB, and Gevers 2014, because they provide the
+clearest clinically annotated IBD setting for testing portability. Where the
+metadata allow it, the primary contrasts separate pooled IBD, Crohn disease, and
+ulcerative colitis \cite{Halfvarson2017_IBD,LloydPrice2019_IBD,Gevers2014_CD}.
+
+Because repeated sampling is a central interpretive issue in the gut data, the
+validation layer also includes subject-aware sensitivity analyses. Leading
+comparisons are re-evaluated after keeping one sample per subject, and a
+bootstrap resample-one-per-subject consensus is used to summarize how strongly
+the leading sample-level signals depend on which visit is selected. This
+subject-aware layer shows both what transfers and where portability weakens once
+longitudinal dependence is taken seriously.
+
+\subsection{CT application design}
+
+The CT application is designed as an independent application of the same
+framework in a different niche, feature universe, and biological question. The
+labeled CT outcome cohort
+contains 604 vaginal metagenomic samples with a binary outcome label coded as
+spontaneous clearance or persistence. These labeled samples are embedded in a
+broader 3,602-sample CT+reference cohort that combines the 604 labeled CT
+metagenomes with additional unlabeled CT samples and reference vaginal
+metagenomes. As in the gut application, the broader cohort is used for
+structure learning, while the outcome association tests remain restricted to
+the labeled subset \cite{Edwards2019_CTmicrobiota}.
+
+Unlike the gut application, the CT analysis is gene-family centric. The primary
+high-resolution feature universe is a keep-filtered VIRGO2 VOG matrix. Starting
+from a combined VOG union table, VOGs are retained only if they are observed in
+at least 10 samples and at least 1\% of the combined cohort, yielding the
+509,501-VOG universe used for the full-resolution analysis. Smaller 25k, 50k,
+100k, and 250k VOG runs are nested robustness analyses drawn from the same
+keep-filtered universe by variance ranking. In parallel, a lower-dimensional
+VOG-cluster feature family is constructed from co-abundance structure within a
+selected 25,000-VOG matrix, producing a 354-feature representation that is
+easier to annotate taxonomically and functionally \cite{France2026_VIRGO2}.
+
+These two feature layers play different roles. The VOG-cluster hierarchy is a
+lower-resolution, easier-to-interpret orienting analysis that helps identify a
+mixed persistence-associated neighborhood. The full-VOG hierarchy is the
+primary high-resolution analysis, used to ask whether CT outcome is distributed
+non-randomly across deeper gene-family-defined dominance-lineages and to
+identify the leading clearance- and persistence-associated branches. All primary
+CT hierarchies use the absorb policy. For the VOG-cluster association
+screen, only dominance-lineages with at least 20 labeled CT samples at the
+tested depth enter the prespecified outcome-blind panel-level correction
+family. The capped VOG runs are used as robustness analyses for the full-VOG
+result, not as external replication cohorts.
+
+The CT application then adds a biological follow-up layer. Signal-bearing
+dominance-lineages are tested for outcome enrichment and interpreted through
+consensus taxonomy, representative product annotations, and KEGG-linked
+contrasts \cite{Kanehisa2023_KEGG}. This design evaluates whether the dCST
+framework can organize not only taxonomic state structure, but also
+function-linked metagenomic outcome structure in a biologically readable form.
+
+Table~\ref{tab:application-summary} summarizes how the two applications evaluate
+complementary properties of the dCST framework.
+
+\begin{table}[H]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\linewidth}{p{0.11\linewidth} p{0.25\linewidth} p{0.31\linewidth} p{0.23\linewidth}}
+\toprule
+Application & Design summary & Main result & Methodological interpretation \\
+\midrule
+Gut (IBD) & Shared-taxonomy stool hierarchy learned in 24,421 local AGP samples, then tested by direct transfer and rebuilt-cohort analysis in external IBD cohorts. & Halfvarson 2017 retained corrected sample-level IBD, Crohn, and UC signal in both transfer and rebuilt modes; rebuilt Crohn-location follow-up gave the clearest within-disease subject-aware result. & Portability can be real and biologically coherent, but it weakens under repeated-sample dependence and cohort mismatch. \\
+CT (vaginal metagenomics) & Independent application with VOG-cluster and full-VOG hierarchies learned in a 3,602-sample CT+reference cohort; outcome testing restricted to 604 labeled CT samples. & The full-VOG hierarchy reached its strongest panel-level CT association at depth~4 ($q = 0.0047$, $V = 0.371$), capped VOG runs showed support stabilizing from 50k features onward, and the VOG-cluster and full-VOG layers converged on persistence-oriented \taxon{L. iners}/\taxon{Ca. Lachnocurva vaginae} structure. & The same deterministic framework can remain taxonomically and functionally interpretable across a different niche and feature universe without implying external CT replication. \\
+\bottomrule
+\end{tabularx}
+\caption{Complementary application designs used to evaluate the dCST framework. The gut application evaluates portability and external transfer; the CT application evaluates biological and functional interpretability in an independent metagenomic setting.}
+\label{tab:application-summary}
+\end{table}
+
+\section{Results}
+
+\subsection{Framework overview}
+
+Within a fitted hierarchy, a dCST label is a sample-level state defined by
+retained-feature dominance order rather than by distance-based clustering. In
+the gut application, this means that a depth-2 label such as
+\taxon{Bacteroides~dorei}\dcstsep\taxon{Faecalibacterium~prausnitzii} denotes a
+retained taxonomic dominance-lineage: samples in which the dominant retained
+taxon is \taxon{Bacteroides~dorei} and the next retained refinement step follows
+\taxon{Faecalibacterium~prausnitzii}. In the CT application, the same logic is
+applied to VOG-clusters and to full VOG feature families rather than to stool
+taxa. The labels therefore live in different biological vocabularies across the
+two applications, but the assignment rule is the same.
+
+The shared assignment rule allows the two applications to be compared despite
+their different feature spaces. The gut application asks whether a taxonomic dCST vocabulary learned in a large
+background stool cohort can be transferred to external disease cohorts. The CT
+application asks whether the same deterministic framework can organize
+metagenomic gene-family-defined states associated with outcome in a different
+microbiome niche. The framework does not require every application to yield the
+same type of signal; rather, it expresses both analyses in a common sample-level
+state language without relying on clustering-defined labels
+(Figure~\ref{fig:dcst-concept}; Table~\ref{tab:application-summary}).
+
+\subsection{Gut application: portability across cohorts}
+
+The gut application begins with a large ecological structure-learning cohort
+rather than a diagnosis-grade clinical cohort. In 24,421 quality-controlled AGP
+stool samples, the absorb dCST hierarchy contained 50 retained states at
+depth~1, 158 at depth~2, 219 at depth~3, and 221 at depth~4. The largest
+depth-1 states were centered on \taxon{Bacteroides~dorei},
+\taxon{Faecalibacterium~prausnitzii}, and \taxon{Segatella} sp., and the twelve
+most common depth-1 states covered 79.8\% of the cohort. Exploratory AGP
+condition screening then prioritized self-reported IBD over the other AGP
+phenotype fields analyzed in AGP, with Cramer's~V increasing from
+0.24 at depth~1 to 0.31 at depth~4. The AGP follow-up itself remained
+multistate rather than collapsing to one dominant disease label, with recurrent
+enrichment of \taxon{[Eubacterium] eligens group eligens},
+\taxon{Alistipes} sp., and deeper \taxon{Bacteroides~dorei}-linked contexts,
+together with depletion of \taxon{Segatella} sp. This AGP result is treated as
+exploratory prioritization rather than as the main disease evidence because AGP
+does not support diagnosis-grade CD/UC subtype interpretation.
+
+The primary gut portability analysis is therefore external transfer into clinically richer IBD
+cohorts. Halfvarson 2017 provided the clearest stool-based support. After
+filtering, the pooled branch contained 533 stool samples from 118 subjects, of
+which 99 subjects contributed repeated samples. When the frozen AGP-derived
+hierarchy was transferred directly into this cohort, pooled IBD, Crohn disease,
+and ulcerative colitis all retained corrected sample-level signal. The leading
+transferred pattern was biologically coherent across the three
+disease-versus-healthy contrasts: depletion of \taxon{Segatella} sp., together
+with depletion of \taxon{Akkermansia~muciniphila}, and enrichment of
+\taxon{Bacteroides~dorei} in pooled IBD and ulcerative colitis. Rebuilt-cohort
+validation in Halfvarson was also positive for pooled IBD, Crohn disease, and
+ulcerative colitis, showing that the signal did not depend entirely on exact
+AGP label transfer.
+
+The same dataset also illustrates the limits of sample-level portability. After
+one-sample-per-subject sensitivity, the strong sample-level
+disease-versus-control transfer contrasts no longer retained $q < 0.05$. Direct
+AGP-derived transfer attenuated most strongly, while rebuilt-cohort validation
+remained more resilient but still weakened. Rebuilt ulcerative colitis provided
+the clearest residual subject-aware pattern, with first-sample
+$q = 0.075$, bootstrap recurrence 58.3\%, and median bootstrap odds ratio 5.05,
+which was interpreted as the strongest remaining subject-aware support rather
+than as a second formal BH-significant result. Thus, the Halfvarson result
+supports portability of the representation at the sample level, while also
+showing that repeated-sample structure limits disease-versus-control transfer
+interpretation.
+
+The most informative within-disease extension in gut was Crohn location.
+Relative to colonic-only Crohn disease, ileal-involved Crohn disease was marked
+in direct transfer by depletion of \taxon{Faecalibacterium~prausnitzii} and in
+rebuilt mode by a stronger depth-2
+\taxon{Bacteroides~dorei}\dcstsep\taxon{Faecalibacterium~prausnitzii} contrast
+(sample-level odds ratio 0.18, 95\% CI 0.074 to 0.41, $q = 4.4 \times 10^{-5}$).
+Under one-sample-per-subject sensitivity, the rebuilt depth-2 contrast remained
+the strongest within-disease subject-aware signal in the gut data
+($q = 0.042$, bootstrap recurrence 49.6\%), whereas the corresponding
+AGP-transferred labels attenuated. This asymmetry indicates that
+within-disease structure can be present in a rebuilt cohort even
+when a frozen external vocabulary does not capture that same subtype boundary
+robustly. Biologically, the rebuilt Crohn-location pattern is directionally
+consistent with the classical ileal-Crohn / adherent-invasive
+\textit{Escherichia coli} literature rather than representing only a generic
+disease-versus-healthy axis \cite{DarfeuilleMichaud2004_AIEC_ileal_CD}.
+
+HMP2 / IBDMDB and Gevers 2014 define the limits of the gut portability result.
+HMP2 was represented by a mucosal slice rather than stool-equivalent samples and
+did not retain corrected rebuilt or transferred pooled IBD signal. Gevers
+mapped well into the shared-taxonomy hierarchy but
+did not retain corrected transferred Crohn-versus-healthy labels in this
+pediatric new-onset setting. Exploratory medication follow-up in Gevers did not
+restore case-control transfer, suggesting that good mapping into the hierarchy is
+not sufficient for portable disease association. Taken together, the gut
+application supports a qualified portability result: dCSTs can provide an
+interpretable taxonomic state vocabulary that transfers across some external
+cohorts, but transfer strength depends strongly on cohort comparability, sample
+type, and repeated-subject structure (Figure~\ref{fig:gut-overview}).
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=0.96\linewidth,height=0.66\textheight,keepaspectratio]{../assets/figures/FIGURE_2_gut_portability_overview.png}
+\caption{Gut portability and subject-aware sensitivity. The figure asks whether
+an AGP-derived taxonomic dCST vocabulary can identify clinically coherent IBD
+structure in external cohorts. Panel A shows the exploratory AGP screen that
+prioritized self-reported IBD over the other AGP phenotype fields retained in
+the gut analysis. Panel B summarizes external IBD portability without
+label-level detail: filled circles indicate corrected \(q < 0.05\), open
+circles indicate \(q \geq 0.05\), and marker area scales with corrected signal
+strength. Panel C summarizes Halfvarson within-disease follow-up by bootstrap
+recurrence; the star marks the rebuilt Crohn-location contrast that retained
+first-subject \(q < 0.05\). The main takeaway is that Halfvarson supports
+sample-level transfer and rebuilt-cohort signal, whereas subject-aware
+sensitivity and the other external cohorts bound the portability claim.
+Expanded label-level details are provided in Supplementary Figure~S1.}
+\label{fig:gut-overview}
+\end{figure}
+
+\FloatBarrier
+
+\subsection{CT application: outcome-associated and function-linked states}
+
+The CT application addresses a different question from the gut transfer
+analysis. This analysis does not test cross-cohort taxonomic portability;
+instead, it asks whether the same deterministic framework can organize vaginal
+metagenomic outcome structure in a biologically interpretable form. The broad
+3,602-sample CT+reference cohort provides the ecological background for
+learning VOG-cluster and full-VOG hierarchies, while every outcome test remains
+restricted to the same 604 labeled CT metagenomes.
+
+At lower resolution, the VOG-cluster hierarchy provides an orienting view of
+the outcome-associated landscape. Meaningful refinement appears already by
+depth~2 and continues through depths~3 to~5, indicating that the combined
+hierarchy captures biologically structured variation before the
+higher-resolution VOG analysis. Under the prespecified outcome-blind
+\(n_{\mathrm{CT}} \geq 20\)
+filter, omnibus CT association is strongest at depth~3
+($p = 0.004$, across-depth $q = 0.025$, $V = 0.265$). The leading
+dominance-lineage at that depth,
+\texttt{vc\_0032 > vc\_0003 > vc\_0042}, is persistence-enriched
+(23 clearance / 49 persistence, odds ratio 2.25, label-level $q = 0.015$) and
+remains directionally coherent through its depth-4 and depth-5 refinements. At
+the taxonomic level this state is mixed rather than pure, combining a
+Gardnerella-rich component, a strongly \taxon{Lactobacillus iners}-rich
+component, and an \taxon{Amygdalobacter nucleatus} (BVAB2-like) component.
+Functionally, the same neighborhood is enriched for flagellar- and
+chemotaxis-like annotations, suggesting a coherent persistence-associated
+program nested within a broader transport-rich context.
+
+The primary CT result, however, comes from the full 509,501-VOG hierarchy. In
+this higher-resolution analysis, CT outcome is distributed non-randomly across
+the panel at every fitted depth and reaches its strongest panel-level effect at
+depth~4 ($q = 0.0047$, Cramer's $V = 0.371$). These results indicate that CT
+outcome is organized across a gene-family-defined dCST panel rather than by a
+single deterministic VOG biomarker. Within that
+panel, the most stable lineage is a clearance-oriented
+\taxon{Lactobacillus crispatus}/\taxon{Lactobacillus jensenii} branch that
+persists from depth~1 through depth~4. At depth~4, the extension
+\texttt{VOG0146820 > VOG0741118 > VOG0741686 > VOG0741595} contains 18 CT
+samples, of which 15 are clearance and 3 persistence, with Bayesian odds ratio
+0.20 (95\% credible interval 0.05 to 0.57). The strongest full-cap
+persistence-oriented single lineage is a pure \taxon{L. iners} branch with
+Bayesian odds ratio 3.85 (95\% credible interval 1.38 to 12.78), while a
+\taxon{Ca. Lachnocurva vaginae}-centered bridge lineage remains directionally
+persistence-oriented and overlaps the leading VOG-cluster persistence
+neighborhood in 66 of 127 full-cohort samples.
+
+The capped VOG analyses support this panel-level interpretation. Relative to
+the initial 25k-feature run, broader 50k, 100k, and 250k caps moved depth~4 into
+reproducible omnibus support, and the full 509,501-VOG fit retained the strongest
+depth~4 panel-level result. At the same time, the exact top-ranked sparse labels
+were more cap-sensitive than the overall panel signal. The CT result is
+therefore best interpreted as robustness-supported lineage- and panel-level
+organization rather than as external replication of a fixed single-label
+biomarker.
+
+The CT analysis also supports deeper biological interpretation. The stable
+clearance branch is functionally enriched for sugar transport, carbohydrate-processing,
+lactate-linked, and amino-acid transport features, consistent with a protective
+\taxon{Lactobacillus}-centered state. On the persistence-oriented side, the
+bridge \taxon{Ca. Lachnocurva vaginae} lineage carries transport together with
+chemotaxis- and flagellar-related features, echoing the lower-resolution
+VOG-cluster result. This agreement across the VOG-cluster and full-VOG layers
+shows that the framework can recover outcome-associated states while preserving
+taxonomic and functional interpretability across resolution levels.
+
+The broader reference background appears to stabilize, rather than create, this
+signal. When the fixed full-VOG reference hierarchy is
+restricted back to the 604 labeled CT samples, the CT subset still occupies
+most of the reference labels through depth~4. By contrast, a hierarchy learned
+on the CT subset alone becomes much coarser and loses omnibus support after
+depth~2. Thus, as in the gut analysis, a broader ecological background sharpens
+the learned state vocabulary,
+but the biological association is still evaluated only in the outcome-labeled
+subset. In CT, the sharpened vocabulary is therefore not only structurally
+stable but also interpretable at the functional level
+(Figures~\ref{fig:ct-full-vog} and \ref{fig:ct-vog-cluster}).
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=0.95\linewidth,height=0.63\textheight,keepaspectratio]{../assets/figures/FIGURE_3_ct_full_vog_overview.pdf}
+\caption{CT full-VOG outcome association and capped-feature robustness. The
+figure asks whether clearance and persistence are organized across a
+high-resolution gene-family dCST panel in the 604 labeled CT metagenomes. The
+primary result is a panel-level association in the 509,501-VOG hierarchy, with a
+stable clearance-oriented \taxon{Lactobacillus crispatus}/\taxon{Lactobacillus
+jensenii} branch and persistence-oriented \taxon{L. iners} and
+\taxon{Ca. Lachnocurva vaginae} structure. Capped VOG runs support the
+panel-level result from 50k features onward, while single-label rankings are
+more cap-sensitive. Thus the CT evidence is a robustness-supported
+lineage-and-panel signal rather than external replication of one fixed
+biomarker. Short branch names are used in the figure for readability: the
+clearance branch corresponds to
+\texttt{VOG0146820 > VOG0741118 > VOG0741686 > VOG0741595}, the
+\taxon{L. iners} persistence branch to
+\texttt{VOG0418718 > VOG0418741 > VOG0418778}, and the
+\taxon{Ca. Lachnocurva} persistence bridge to
+\texttt{VOG0675840 > VOG0676581 > VOG0675786}.}
+\label{fig:ct-full-vog}
+\end{figure}
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=0.95\linewidth,height=0.61\textheight,keepaspectratio]{../assets/figures/FIGURE_4_ct_vog_cluster_followup.pdf}
+\caption{CT VOG-cluster association and biological follow-up. The figure asks
+whether a lower-resolution VOG-cluster feature family recovers an interpretable
+version of the persistence-oriented CT signal seen in the full-VOG hierarchy.
+The VOG-cluster view identifies a mixed persistence-associated neighborhood
+combining a Gardnerella-rich component, a strongly \taxon{Lactobacillus iners}-
+rich component, and an \taxon{Amygdalobacter nucleatus} (BVAB2-like) component,
+with supporting product and KEGG-linked follow-up. The main takeaway is
+resolution-level concordance: the lower-resolution VOG-cluster layer gives an
+annotatable view of the same persistence-oriented structure that appears in the
+full-VOG analysis.}
+\label{fig:ct-vog-cluster}
+\end{figure}
+
+\FloatBarrier
+
+\subsection{Cross-application synthesis}
+
+The two applications evaluate different properties of the same representation.
+The gut application tests portability: it asks whether a deterministic taxonomic
+state vocabulary learned in one large background cohort can be transferred into
+external cohorts with stronger clinical annotation. Halfvarson shows that direct
+transfer can recover clinically coherent sample-level IBD structure, but HMP2,
+Gevers, and the subject-aware
+Halfvarson sensitivity layer show that portability is neither universal nor
+immune to repeated-sample dependence. The resulting interpretation is therefore
+bounded: dCST labels can transfer across selected compatible cohorts, but cohort
+type and subject dependence materially affect the strength of transfer.
+
+The CT application evaluates biological interpretability in a different
+microbiome niche and feature universe. The VOG-resolution panel-level signal,
+the stable clearance-oriented
+\taxon{Lactobacillus crispatus}/\taxon{Lactobacillus jensenii} branch, the
+persistence-oriented \taxon{L. iners} and \taxon{Ca. Lachnocurva vaginae}
+structure, and the matched KEGG/product follow-up together show that dCSTs can
+organize not only taxonomic dysbiosis summaries but also function-linked
+metagenomic outcome structure.
+
+Together, the applications define the empirical scope of the method. The gut
+analysis supports dCSTs as a frozen transferable sample-level vocabulary, while
+the CT analysis supports local biological interpretation in a different niche
+and feature universe. The common conclusion is that deterministic assignment and
+interpretable dominance-lineages can serve as a reusable representation layer,
+while portability, robustness, and biological interpretability remain empirical
+properties that must be evaluated in each application
+(Figure~\ref{fig:cross-app-synth}).
+
+\FloatBarrier
+
+\section{Discussion}
+
+This study addresses whether microbiome state labels can be made deterministic
+and interpretable without relying on clustering-defined CST or enterotype
+constructs. The two applications presented here support a qualified answer:
+dCSTs replace cluster membership with retained-feature dominance-lineages. The
+pre-policy dominance order is defined sample by sample, the absorb-policy
+hierarchy is deterministic for a fixed reference cohort and support schedule,
+and frozen transfer then assigns aligned samples stably into the realized
+lineage sets of that hierarchy. This property improves reproducibility by
+turning a microbiome state label from a global clustering artifact into an
+object that can be named, transferred, and interrogated sample by sample.
+
+The comparison to clustering-defined CSTs is not presented here as an empirical
+claim that any particular clustering algorithm performs poorly. Rather, it
+follows from the definition of the state label. A clustering-derived label is
+conditional on choices such as distance metric, clustering algorithm,
+initialization, and number of clusters, whereas an absorb-policy dCST label is
+determined by the retained feature family, deterministic tie handling, and the
+support schedule. The applications therefore evaluate whether this deterministic
+representation is useful in practice, not whether one selected clustering
+implementation can be outperformed on a particular dataset. Supplementary
+Figure~\ref{fig:supp-clustering-contrast} illustrates this definitional
+contrast with a toy example in which clustering labels change with \(k\) or the
+comparison set, whereas aligned samples retain the same assignments after a
+dCST hierarchy has been fitted and frozen.
+
+The gut application clarifies both the promise and the limits of that strategy.
+Using a shared-taxonomy AGP reference, the analysis learned a taxonomic dCST
+vocabulary that transferred meaningful IBD-associated structure into an
+independent stool cohort with stronger diagnosis metadata. The transferred
+signals in Halfvarson were sample-level significant and biologically coherent,
+and rebuilt-cohort follow-up showed that related dominance structure could be
+rediscovered even without freezing the AGP labels. At the same time, the gut
+results also show why sample-level signal should not be confused with
+subject-level stability. Once repeated samples were collapsed or
+re-selected at the subject level, the direct disease-versus-control transfer
+signal weakened substantially. The gut application therefore supports portable
+representation, not a stand-alone diagnostic test.
+
+The CT application supports the framework in a different direction. The
+important result is not external transfer, but that the same
+deterministic framework remains informative in a different body site, with a
+different feature universe, and with a richer biological follow-up layer. The
+full-VOG hierarchy showed that CT outcome is organized across a high-resolution
+gene-family-defined panel, while the VOG-cluster layer supplied a lower
+resolution view of a persistence-associated ecological neighborhood. The
+larger capped VOG runs showed that the panel-level signal stabilizes from 50k
+features onward, and the VOG-cluster/full-VOG concordance gives the CT result
+resolution-level support rather than external replication. The clearance-oriented
+\taxon{Lactobacillus crispatus}/\taxon{Lactobacillus
+jensenii} branch, the persistence-oriented \taxon{L. iners} and
+\taxon{Ca. Lachnocurva vaginae} structure, and the supporting transport,
+lactate, flagellar, and chemotaxis annotations together show that dCSTs can
+anchor biological interpretation rather than merely partition samples.
+
+These results support a qualified interpretation: dCSTs are useful as a
+representation layer because they separate state construction from downstream
+interpretation. In the gut application, that separation supports external
+transfer and rebuilt-versus-transfer comparison. In the CT application, it
+supports outcome association and functional follow-up in the same sample-level
+state language. These are complementary analyses rather than evidence for a
+single universal state vocabulary across microbiome niches: the framework
+provides a common scaffold on which different kinds of biological questions can
+be posed, while the strength and interpretation of the resulting labels remain
+application-specific.
+
+The two complementary demonstrations validate different aspects of the
+framework, but they do not validate the same claim. The gut analysis validates
+the feasibility of learning a taxonomic dCST vocabulary in a large background
+cohort and evaluating its transfer and rebuilt-cohort behavior in external IBD
+datasets, with explicit limits imposed by cohort mismatch and repeated-subject
+structure. The CT analysis validates the ability of the same construction to
+support VOG-cluster and full-VOG outcome analysis with capped-feature robustness
+and resolution-level biological interpretation, but it does not provide an
+external CT replication cohort. Thus, only the gut application evaluates
+external transfer; the CT application evaluates within-cohort metagenomic
+interpretability and robustness across feature resolutions. Together, these
+applications support dCSTs as a
+deterministic microbiome state representation that can be evaluated across
+different feature families and biological questions; they do not establish a
+universal state vocabulary, a diagnostic classifier, a causal mechanism, or
+guaranteed portability in every microbiome setting.
+
+Several limitations remain important. First, deterministic labels do not
+guarantee strong biological signal. A dCST vocabulary can be cleanly defined
+and still prove only modestly portable in some cohorts. Second, shared feature
+universes matter. The gut results improved materially once the AGP discovery
+cohort and the external validation cohorts were placed in a common taxonomy
+universe, and the CT application likewise depended on a clearly defined VOG
+feature family. Third, the framework is descriptive rather than causal. A
+dominance-lineage associated with persistence, clearance, or disease does not
+by itself explain mechanism. Even in the CT application, where the follow-up
+layer is richer, the taxonomic, product, and KEGG results should be read as
+biological interpretation and hypothesis generation rather than as resolved
+mechanistic evidence.
+
+These limitations point to natural next steps. In gut, the most important
+extension is to strengthen subject-aware inference, ideally in cohorts with
+more unique controls, richer subtype metadata, and additional molecular layers.
+In CT, independent vaginal metagenomic cohorts would be needed to test external
+replication of the leading VOG-defined and VOG-cluster-defined states, and
+targeted mechanistic follow-up would be needed to evaluate the transport- and
+motility-linked annotations. More broadly, the framework should be evaluated
+in settings where taxonomic, functional, and clinical data can be integrated
+rather than treated separately. That is where a deterministic fitted state
+representation may be most useful: as a stable interface between
+high-dimensional microbiome measurements and downstream biological
+interpretation, rather than as a complete inferential endpoint.
+
+\section{Data and code availability}
+
+The manuscript source and figure assets are maintained in the
+\texttt{linf} repository: \url{https://github.com/pgajer/linf}. This build was
+compiled from the local \texttt{linf} working tree based on commit
+\texttt{d89c3de5281d610328dc802a210c6b5d410e5454} at \manuscriptbuilddatetime. Gut
+application discovery, transfer, rebuilt-cohort validation, and sensitivity
+analyses are maintained in the \texttt{gut\_microbiome}
+repository: \url{https://github.com/pgajer/gut_microbiome}; the current build
+uses local analyses based on commit
+\texttt{811cafc07dba9a3fef5a843ef1a25e9fc4de0d70}. CT application
+analyses are maintained in the \texttt{CT\_clearance} repository:
+\url{https://github.com/pgajer/CT_clearance}; the current CT assets are based on
+commit \texttt{de9c7444b07251bfc64e28c2cc15771d1dec6c0e}. Implementation
+details are summarized in the supplement.
+Minimal reproduction requires rerunning the gut analysis workflow in
+\texttt{gut\_microbiome}, the CT analysis workflow in
+\texttt{CT\_clearance}, and the manuscript build workflow in \texttt{linf}.
+
+The gut application uses the local American Gut Project shared-taxonomy stool
+table derived from \texttt{PRJEB11419} together with the external IBD cohorts
+summarized in Supplementary Table~S1. The CT application uses
+the 604-sample outcome-labeled CT cohort embedded in the 3,602-sample
+CT+reference cohort summarized in Supplementary Table~S1. Supplementary
+Tables~S1--S3 summarize the cohort counts, feature families, filtering
+thresholds, support schedules, tie handling, Monte Carlo and Bayesian settings,
+multiple-testing families, transfer rules, and implementation details for the
+analyses reported here.
+
+\FloatBarrier
+\input{../assets/tables/TABLE_S1_methods_reproducibility_matrix.tex}
+
+\FloatBarrier
+\setcounter{figure}{0}
+\renewcommand{\thefigure}{S\arabic{figure}}
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=0.98\linewidth,height=0.86\textheight,keepaspectratio]{../assets/figures/FIGURE_S1_gut_validation_detail.png}
+\caption{Expanded gut validation details. Panel A shows label-level details for
+the external IBD validation contrasts summarized in Figure~\ref{fig:gut-overview},
+including sample-level corrected \(q\)-values and first-subject sensitivity.
+Panel B shows the Halfvarson within-disease follow-up details, including the
+leading label, hierarchy depth, sample-level corrected \(q\)-value,
+first-subject corrected \(q\)-value, and bootstrap recurrence.}
+\label{fig:supp-gut-validation-detail}
+\end{figure}
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=0.98\linewidth]{../assets/figures/FIGURE_S2_clustering_contrast_schematic.pdf}
+\caption{Toy schematic of clustering-defined labels and frozen dCST assignment.
+The schematic is illustrative and is not a benchmark of clustering performance.
+Panel A shows the same target samples receiving different clustering-defined
+labels when the number of clusters or the comparison set changes. This reflects
+the conditional definition of a clustering-derived label, not a claim that any
+particular clustering algorithm performs poorly. Panel B shows the corresponding
+logic for dCST transfer: after a reference hierarchy has been fitted and frozen,
+aligned samples are assigned into the same realized dominance-lineage sets by
+the fixed assignment rule.}
+\label{fig:supp-clustering-contrast}
+\end{figure}
+
+\FloatBarrier
+
+\section{Funding}
+
+\paperfundingnote
+
+\section{Competing Interests}
+
+The authors declare no competing interests.
+
+\section{Acknowledgments}
+
+We thank the participants and investigators of the American Gut Project,
+Halfvarson 2017, HMP2 / IBDMDB, PRJEB84421, and Gevers 2014 for making the gut
+cohort resources available. We also thank the investigators and participants
+behind the CT outcome-labeled and vaginal reference resources used in the
+vaginal metagenomic application, and we thank the VIRGO2 project context that
+made the gene-family-based CT analysis possible.
+
+\bibliographystyle{unsrt}
+\bibliography{combined_references}
+
+\end{document}

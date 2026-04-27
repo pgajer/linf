@@ -1,0 +1,256 @@
+label	n_label	n_cases	n_controls	total_cases	total_controls	or	ci_low	ci_high	p_value	q_value	mode	depth	analysis
+Bacteroides dorei	159	105	54	133	77	1.59361844259418	0.79499978615943	3.1797376439375	0.18188078217547	0.18188078217547	Rebuilt	1	cd_location
+Segatella sp.	51	28	23	133	77	0.627502778125575	0.314491354941375	1.25786197356217	0.18188078217547	0.18188078217547	Rebuilt	1	cd_location
+Bacteroides dorei__Faecalibacterium prausnitzii	37	11	26	133	77	0.178517098942418	0.07373292628796	0.40683286050382	7.33711889535648e-06	4.40227133721389e-05	Rebuilt	2	cd_location
+Bacteroides dorei__Escherichia-Shigella coli	40	34	6	133	77	4.04015888012047	1.56461470666598	12.4113222236028	0.00167791558433656	0.00503374675300969	Rebuilt	2	cd_location
+Bacteroides dorei__Bacteroides ovatus	31	26	5	133	77	3.4810650894167	1.23693365167344	12.1505383754972	0.0142616282716181	0.0285232565432363	Rebuilt	2	cd_location
+Segatella sp.__Faecalibacterium prausnitzii	51	28	23	133	77	0.627502778125575	0.314491354941375	1.25786197356217	0.18188078217547	0.272821173263204	Rebuilt	2	cd_location
+Bacteroides dorei__Bifidobacterium breve	21	16	5	133	77	1.96341621967984	0.651022296418544	7.15190838372522	0.238548597541842	0.28625831705021	Rebuilt	2	cd_location
+Bacteroides dorei__Bacteroides uniformis	30	18	12	133	77	0.848509871552477	0.36026722797096	2.06153899270983	0.686921204894876	0.686921204894876	Rebuilt	2	cd_location
+Bacteroides dorei__Faecalibacterium prausnitzii__Bacteroides stercoris	37	11	26	133	77	0.178517098942418	0.07373292628796	0.40683286050382	7.33711889535648e-06	6.60340700582084e-05	Rebuilt	3	cd_location
+Bacteroides dorei__Escherichia-Shigella coli	40	34	6	133	77	4.04015888012047	1.56461470666598	12.4113222236028	0.00167791558433656	0.00755062012951453	Rebuilt	3	cd_location
+Segatella sp.__Faecalibacterium prausnitzii__Bacteroides dorei	16	5	11	133	77	0.236113510104045	0.0616464528028745	0.774495639494023	0.0124358439634118	0.0320886636111408	Rebuilt	3	cd_location
+Bacteroides dorei__Bacteroides ovatus	31	26	5	133	77	3.4810650894167	1.23693365167344	12.1505383754972	0.0142616282716181	0.0320886636111408	Rebuilt	3	cd_location
+Segatella sp.__Faecalibacterium prausnitzii__Prevotellaceae fam.	6	1	5	133	77	0.110183864497583	0.00229487267929641	1.0116037905792	0.0258475313428005	0.0465255564170409	Rebuilt	3	cd_location
+Segatella sp.__Faecalibacterium prausnitzii__Escherichia-Shigella coli	15	13	2	133	77	4.04123893131054	0.877176831457457	37.9096283545345	0.0562497987767609	0.0843746981651414	Rebuilt	3	cd_location
+Bacteroides dorei__Bifidobacterium breve	21	16	5	133	77	1.96341621967984	0.651022296418544	7.15190838372522	0.238548597541842	0.306705339696654	Rebuilt	3	cd_location
+Bacteroides dorei__Bacteroides uniformis	30	18	12	133	77	0.848509871552477	0.36026722797096	2.06153899270983	0.686921204894876	0.772786355506736	Rebuilt	3	cd_location
+Segatella sp.__Faecalibacterium prausnitzii__Bifidobacterium breve	14	9	5	133	77	1.04494659391624	0.300594596900592	4.12757864345821	1	1	Rebuilt	3	cd_location
+Bacteroides dorei__Faecalibacterium prausnitzii__Bacteroides stercoris__Agathobacter faecis	18	5	13	133	77	0.193927674636817	0.0518102037409778	0.611040489475993	0.0016954542251249	0.0186499964763739	Rebuilt	4	cd_location
+Bacteroides dorei__Faecalibacterium prausnitzii__Bacteroides stercoris__Bacteroides ovatus	19	6	13	133	77	0.234330184192489	0.0696412042628404	0.697960815099526	0.00475883488545562	0.0261735918700059	Rebuilt	4	cd_location
+Segatella sp.__Faecalibacterium prausnitzii__Bacteroides dorei	16	5	11	133	77	0.236113510104045	0.0616464528028745	0.774495639494023	0.0124358439634118	0.0392194777469499	Rebuilt	4	cd_location
+Bacteroides dorei__Bacteroides ovatus	31	26	5	133	77	3.4810650894167	1.23693365167344	12.1505383754972	0.0142616282716181	0.0392194777469499	Rebuilt	4	cd_location
+Segatella sp.__Faecalibacterium prausnitzii__Prevotellaceae fam.	6	1	5	133	77	0.110183864497583	0.00229487267929641	1.0116037905792	0.0258475313428005	0.0568645689541611	Rebuilt	4	cd_location
+Bacteroides dorei__Escherichia-Shigella coli__Bacteroides ovatus	28	23	5	133	77	2.99706513426324	1.04991819174505	10.5577667559566	0.0340342820300341	0.0623961837217291	Rebuilt	4	cd_location
+Segatella sp.__Faecalibacterium prausnitzii__Escherichia-Shigella coli	15	13	2	133	77	4.04123893131054	0.877176831457457	37.9096283545345	0.0562497987767609	0.0818168858251608	Rebuilt	4	cd_location
+Bacteroides dorei__Escherichia-Shigella coli__Bacteroides fragilis	12	11	1	133	77	6.80841091342568	0.954775123674522	298.376967235164	0.059503189691026	0.0818168858251608	Rebuilt	4	cd_location
+Bacteroides dorei__Bifidobacterium breve	21	16	5	133	77	1.96341621967984	0.651022296418544	7.15190838372522	0.238548597541842	0.291559396995584	Rebuilt	4	cd_location
+Bacteroides dorei__Bacteroides uniformis	30	18	12	133	77	0.848509871552477	0.36026722797096	2.06153899270983	0.686921204894876	0.755613325384364	Rebuilt	4	cd_location
+Segatella sp.__Faecalibacterium prausnitzii__Bifidobacterium breve	14	9	5	133	77	1.04494659391624	0.300594596900592	4.12757864345821	1	1	Rebuilt	4	cd_location
+Faecalibacterium prausnitzii	20	4	16	133	77	0.119492076106825	0.0279035217608155	0.391165352021561	4.24205188957196e-05	0.00101809245349727	AGP transfer	1	cd_location
+Segatella sp.	28	11	17	133	77	0.320100878636522	0.126912613454306	0.776478762117566	0.00610606442448993	0.0635630692725987	AGP transfer	1	cd_location
+Lachnospiraceae fam.	11	11	0	133	77	Inf	1.52505169599888	Inf	0.00794538365907484	0.0635630692725987	AGP transfer	1	cd_location
+Bacteroides ovatus	15	14	1	133	77	8.88207479368344	1.30025135640725	382.308071986466	0.0114974113977206	0.0689844683863238	AGP transfer	1	cd_location
+Bacteroides fragilis	14	13	1	133	77	8.18038633693915	1.18305376530841	353.87220800603	0.019722884306093	0.0946698446692462	AGP transfer	1	cd_location
+Bacteroides eggerthii	3	0	3	133	77	0	0	1.38482598978272	0.0480769230769231	0.192307692307692	AGP transfer	1	cd_location
+Clostridia UCG-014 ord.	2	0	2	133	77	0	0	3.06890576641016	0.133333333333333	0.457142857142857	AGP transfer	1	cd_location
+Agathobacter faecis	3	3	0	133	77	Inf	0.239362691556628	Inf	0.3	0.733333333333333	AGP transfer	1	cd_location
+Akkermansia muciniphila	3	3	0	133	77	Inf	0.239362691556628	Inf	0.3	0.733333333333333	AGP transfer	1	cd_location
+UCG-002 sp.	5	2	3	133	77	0.378449186637823	0.030948412883387	3.38161178390624	0.358583357686355	0.733333333333333	AGP transfer	1	cd_location
+Christensenellaceae R-7 group sp.	1	0	1	133	77	0	0	22.5790500437779	0.366666666666667	0.733333333333333	AGP transfer	1	cd_location
+Gemmiger sp.	1	0	1	133	77	0	0	22.5790500437779	0.366666666666667	0.733333333333333	AGP transfer	1	cd_location
+Bifidobacterium breve	21	15	6	133	77	1.50145594312248	0.520718469585743	4.94610367308482	0.481953311685893	0.853333333333334	AGP transfer	1	cd_location
+Parabacteroides distasonis	2	2	0	133	77	Inf	0.10860920671777	Inf	0.533333333333333	0.853333333333334	AGP transfer	1	cd_location
+Prevotellaceae fam.	2	2	0	133	77	Inf	0.10860920671777	Inf	0.533333333333333	0.853333333333334	AGP transfer	1	cd_location
+[Eubacterium] coprostanoligenes group fam.	5	4	1	133	77	2.34833059558327	0.226940883967719	117.495943463606	0.654271880738744	0.981407821108117	AGP transfer	1	cd_location
+Blautia sp.	10	7	3	133	77	1.3684030942306	0.301013458311337	8.44690006431568	0.749064260254661	1	AGP transfer	1	cd_location
+Bacteroides dorei	53	34	19	133	77	1.0481539092122	0.525256302711128	2.13420571071798	1	1	AGP transfer	1	cd_location
+Alistipes onderdonkii	1	1	0	133	77	Inf	0.0148601973684211	Inf	1	1	AGP transfer	1	cd_location
+Bacteroides caccae	1	1	0	133	77	Inf	0.0148601973684211	Inf	1	1	AGP transfer	1	cd_location
+Enterococcus faecium	1	1	0	133	77	Inf	0.0148601973684211	Inf	1	1	AGP transfer	1	cd_location
+Bacteroides sp.	3	2	1	133	77	1.15952961172859	0.059441723391538	69.317283449583	1	1	AGP transfer	1	cd_location
+CAG-352 bromii	2	1	1	133	77	0.577378444422559	0.00728836534390556	45.784227785623	1	1	AGP transfer	1	cd_location
+Gemmiger formicilis	3	2	1	133	77	1.15952961172859	0.059441723391538	69.317283449583	1	1	AGP transfer	1	cd_location
+Bacteroides ovatus__Bacteroides dorei	11	11	0	129	77	Inf	1.57569507856306	Inf	0.00764942000492187	0.29731318348162	AGP transfer	2	cd_location
+Segatella sp.__Faecalibacterium prausnitzii	9	2	7	129	77	0.158909605365141	0.0156884616915982	0.864586569023187	0.0147406481951508	0.29731318348162	AGP transfer	2	cd_location
+Bifidobacterium breve__Bacteroides dorei	14	13	1	129	77	8.46042135037641	1.22295001671657	366.050978180187	0.0192430789129446	0.29731318348162	AGP transfer	2	cd_location
+Faecalibacterium prausnitzii__Bacteroides dorei	11	3	8	129	77	0.207005389297592	0.034251052916713	0.897710563516358	0.0212366559629729	0.29731318348162	AGP transfer	2	cd_location
+Lachnospiraceae fam.__Faecalibacterium prausnitzii	9	9	0	129	77	Inf	1.22095506937491	Inf	0.028030280975154	0.313939146921724	AGP transfer	2	cd_location
+Bacteroides dorei__Blautia sp.	3	0	3	129	77	0	0	1.42794728027309	0.0509464974718279	0.314829301784167	AGP transfer	2	cd_location
+Bacteroides eggerthii__Bacteroides dorei	3	0	3	129	77	0	0	1.42794728027309	0.0509464974718279	0.314829301784167	AGP transfer	2	cd_location
+Segatella sp.__Prevotellaceae fam.	3	0	3	129	77	0	0	1.42794728027309	0.0509464974718279	0.314829301784167	AGP transfer	2	cd_location
+Bacteroides dorei__Bacteroides ovatus	15	13	2	129	77	4.17959745015961	0.906706259525868	39.1984804390121	0.0537110920855253	0.314829301784167	AGP transfer	2	cd_location
+Bacteroides fragilis__Bacteroides dorei	11	10	1	129	77	6.34588305072258	0.871464843113335	280.400967325575	0.0562195181757441	0.314829301784167	AGP transfer	2	cd_location
+Bifidobacterium breve__Faecalibacterium prausnitzii	7	2	5	129	77	0.228466296947458	0.0212456957205436	1.43857075482119	0.105071593070946	0.517344699660589	AGP transfer	2	cd_location
+Bacteroides dorei__Bacteroides sartorii	2	0	2	129	77	0	0	3.1644180494138	0.138574473123372	0.517344699660589	AGP transfer	2	cd_location
+Bacteroides dorei__Bacteroides sp.	2	0	2	129	77	0	0	3.1644180494138	0.138574473123372	0.517344699660589	AGP transfer	2	cd_location
+Clostridia UCG-014 ord.__Bacteroides dorei	2	0	2	129	77	0	0	3.1644180494138	0.138574473123372	0.517344699660589	AGP transfer	2	cd_location
+Faecalibacterium prausnitzii__Bacteroides ovatus	2	0	2	129	77	0	0	3.1644180494138	0.138574473123372	0.517344699660589	AGP transfer	2	cd_location
+Bacteroides dorei__Parabacteroides distasonis	3	3	0	129	77	Inf	0.246861672899778	Inf	0.294364196069145	0.675227059191983	AGP transfer	2	cd_location
+Bacteroides ovatus__Bacteroides fragilis	3	3	0	129	77	Inf	0.246861672899778	Inf	0.294364196069145	0.675227059191983	AGP transfer	2	cd_location
+Bacteroides dorei__Faecalibacterium prausnitzii	9	4	5	129	77	0.462624805417617	0.0888306318940891	2.22487425361122	0.298948757697959	0.675227059191983	AGP transfer	2	cd_location
+Bacteroides dorei__Paraprevotella sp.	4	4	0	129	77	Inf	0.395882511569156	Inf	0.299157948431726	0.675227059191983	AGP transfer	2	cd_location
+UCG-002 sp.__Bacteroides dorei	5	2	3	129	77	0.390331303472315	0.0319223579705173	3.48880747868583	0.364654043777231	0.675227059191983	AGP transfer	2	cd_location
+Bacteroides dorei__Agathobacter faecis	1	0	1	129	77	0	0	23.27918260713	0.37378640776699	0.675227059191983	AGP transfer	2	cd_location
+Bacteroides dorei__Clostridia UCG-014 ord.	1	0	1	129	77	0	0	23.27918260713	0.37378640776699	0.675227059191983	AGP transfer	2	cd_location
+Bacteroides ovatus__Faecalibacterium prausnitzii	1	0	1	129	77	0	0	23.27918260713	0.37378640776699	0.675227059191983	AGP transfer	2	cd_location
+Christensenellaceae R-7 group sp.__Bacteroides dorei	1	0	1	129	77	0	0	23.27918260713	0.37378640776699	0.675227059191983	AGP transfer	2	cd_location
+Faecalibacterium prausnitzii__Agathobacter faecis	1	0	1	129	77	0	0	23.27918260713	0.37378640776699	0.675227059191983	AGP transfer	2	cd_location
+Faecalibacterium prausnitzii__Butyrivibrio crossotus	1	0	1	129	77	0	0	23.27918260713	0.37378640776699	0.675227059191983	AGP transfer	2	cd_location
+Faecalibacterium prausnitzii__Christensenellaceae R-7 group sp.	1	0	1	129	77	0	0	23.27918260713	0.37378640776699	0.675227059191983	AGP transfer	2	cd_location
+Faecalibacterium prausnitzii__Segatella sp.	1	0	1	129	77	0	0	23.27918260713	0.37378640776699	0.675227059191983	AGP transfer	2	cd_location
+Gemmiger sp.	1	0	1	129	77	0	0	23.27918260713	0.37378640776699	0.675227059191983	AGP transfer	2	cd_location
+Segatella sp.__Agathobacter faecis	1	0	1	129	77	0	0	23.27918260713	0.37378640776699	0.675227059191983	AGP transfer	2	cd_location
+Segatella sp.__UCG-002 sp.	1	0	1	129	77	0	0	23.27918260713	0.37378640776699	0.675227059191983	AGP transfer	2	cd_location
+Agathobacter faecis__Bacteroides dorei	2	2	0	129	77	Inf	0.111992126620969	Inf	0.529576130712763	0.801520630267966	AGP transfer	2	cd_location
+Akkermansia muciniphila__Bacteroides dorei	2	2	0	129	77	Inf	0.111992126620969	Inf	0.529576130712763	0.801520630267966	AGP transfer	2	cd_location
+Bacteroides dorei__Bacteroides cellulosilyticus	2	2	0	129	77	Inf	0.111992126620969	Inf	0.529576130712763	0.801520630267966	AGP transfer	2	cd_location
+Bacteroides fragilis__Faecalibacterium prausnitzii	2	2	0	129	77	Inf	0.111992126620969	Inf	0.529576130712763	0.801520630267966	AGP transfer	2	cd_location
+Parabacteroides distasonis__Bacteroides dorei	2	2	0	129	77	Inf	0.111992126620969	Inf	0.529576130712763	0.801520630267966	AGP transfer	2	cd_location
+Prevotellaceae fam.__Bacteroides dorei	2	2	0	129	77	Inf	0.111992126620969	Inf	0.529576130712763	0.801520630267966	AGP transfer	2	cd_location
+Faecalibacterium prausnitzii__Blautia sp.	3	1	2	129	77	0.294788134383041	0.00493438505010013	5.75136767468208	0.557248123023777	0.821207760245567	AGP transfer	2	cd_location
+[Eubacterium] coprostanoligenes group fam.	5	4	1	129	77	2.42300472147362	0.234095429633701	121.253087529209	0.652616599475321	0.937090501810717	AGP transfer	2	cd_location
+Blautia sp.	10	7	3	129	77	1.41302356182503	0.310723337148368	8.72587272817013	0.746596250079884	1	AGP transfer	2	cd_location
+Bacteroides dorei__Bacteroides caccae	2	1	1	129	77	0.595348818581519	0.00751411193890302	47.2149367860142	1	1	AGP transfer	2	cd_location
+Bacteroides dorei__Bacteroides eggerthii	2	1	1	129	77	0.595348818581519	0.00751411193890302	47.2149367860142	1	1	AGP transfer	2	cd_location
+CAG-352 bromii	2	1	1	129	77	0.595348818581519	0.00751411193890302	47.2149367860142	1	1	AGP transfer	2	cd_location
+Segatella sp.__Bacteroides dorei	11	7	4	129	77	1.04690272274356	0.255771917768223	5.04732946010901	1	1	AGP transfer	2	cd_location
+Agathobacter faecis__Faecalibacterium prausnitzii	1	1	0	129	77	Inf	0.0153204941860465	Inf	1	1	AGP transfer	2	cd_location
+Akkermansia muciniphila__Faecalibacterium prausnitzii	1	1	0	129	77	Inf	0.0153204941860465	Inf	1	1	AGP transfer	2	cd_location
+Alistipes onderdonkii__Bacteroides dorei	1	1	0	129	77	Inf	0.0153204941860465	Inf	1	1	AGP transfer	2	cd_location
+Bacteroides dorei__Bacteroides fragilis	1	1	0	129	77	Inf	0.0153204941860465	Inf	1	1	AGP transfer	2	cd_location
+Bacteroides dorei__Bacteroides thetaiotaomicron	1	1	0	129	77	Inf	0.0153204941860465	Inf	1	1	AGP transfer	2	cd_location
+Bacteroides dorei__Bifidobacterium breve	3	2	1	129	77	1.19587515308631	0.0612932663472603	71.4994070599227	1	1	AGP transfer	2	cd_location
+Bacteroides dorei__CAG-352 bromii	1	1	0	129	77	Inf	0.0153204941860465	Inf	1	1	AGP transfer	2	cd_location
+Bacteroides dorei__Lachnospiraceae fam.	1	1	0	129	77	Inf	0.0153204941860465	Inf	1	1	AGP transfer	2	cd_location
+Bacteroides sp.__Bacteroides dorei	3	2	1	129	77	1.19587515308631	0.0612932663472603	71.4994070599227	1	1	AGP transfer	2	cd_location
+Enterococcus faecium	1	1	0	129	77	Inf	0.0153204941860465	Inf	1	1	AGP transfer	2	cd_location
+Gemmiger formicilis	3	2	1	129	77	1.19587515308631	0.0612932663472603	71.4994070599227	1	1	AGP transfer	2	cd_location
+Segatella sp.__Dialister invisus	3	2	1	129	77	1.19587515308631	0.0612932663472603	71.4994070599227	1	1	AGP transfer	2	cd_location
+Bifidobacterium breve__Bacteroides dorei	14	13	1	124	76	8.72241637299987	1.25959617722008	377.546995101143	0.0190726392372836	0.568794517474664	AGP transfer	3	cd_location
+Bacteroides ovatus__Bacteroides dorei__Faecalibacterium prausnitzii	8	8	0	124	76	Inf	1.07832294866101	Inf	0.0252426115133273	0.568794517474664	AGP transfer	3	cd_location
+Lachnospiraceae fam.__Faecalibacterium prausnitzii__Bacteroides dorei	8	8	0	124	76	Inf	1.07832294866101	Inf	0.0252426115133273	0.568794517474664	AGP transfer	3	cd_location
+Bacteroides dorei__Blautia sp.	3	0	3	124	76	0	0	1.46622684904033	0.0535252017664078	0.568794517474664	AGP transfer	3	cd_location
+Bacteroides eggerthii__Bacteroides dorei	3	0	3	124	76	0	0	1.46622684904033	0.0535252017664078	0.568794517474664	AGP transfer	3	cd_location
+Segatella sp.__Prevotellaceae fam.__Faecalibacterium prausnitzii	3	0	3	124	76	0	0	1.46622684904033	0.0535252017664078	0.568794517474664	AGP transfer	3	cd_location
+Bacteroides fragilis__Bacteroides dorei	11	10	1	124	76	6.53512302090715	0.896683075468611	288.883553628199	0.0545419400318171	0.568794517474664	AGP transfer	3	cd_location
+Segatella sp.__Faecalibacterium prausnitzii__Bacteroides dorei	5	1	4	124	76	0.147708455261306	0.00295357511055729	1.52989625872812	0.0700269111268998	0.638995564032961	AGP transfer	3	cd_location
+Bifidobacterium breve__Faecalibacterium prausnitzii	7	2	5	124	76	0.234535457701501	0.0217972638683357	1.4778084033687	0.107473896692363	0.711282051282051	AGP transfer	3	cd_location
+Faecalibacterium prausnitzii__Bacteroides dorei__Bacteroides ovatus	7	2	5	124	76	0.234535457701501	0.0217972638683357	1.4778084033687	0.107473896692363	0.711282051282051	AGP transfer	3	cd_location
+Bacteroides dorei__Bacteroides sp.__Bacteroides sartorii	2	0	2	124	76	0	0	3.24940498976083	0.14321608040201	0.711282051282051	AGP transfer	3	cd_location
+Bacteroides dorei__Faecalibacterium prausnitzii__Agathobacter faecis	2	0	2	124	76	0	0	3.24940498976083	0.14321608040201	0.711282051282051	AGP transfer	3	cd_location
+Clostridia UCG-014 ord.__Bacteroides dorei	2	0	2	124	76	0	0	3.24940498976083	0.14321608040201	0.711282051282051	AGP transfer	3	cd_location
+Faecalibacterium prausnitzii__Bacteroides ovatus	2	0	2	124	76	0	0	3.24940498976083	0.14321608040201	0.711282051282051	AGP transfer	3	cd_location
+Bacteroides dorei__Faecalibacterium prausnitzii__Bacteroides ovatus	3	3	0	124	76	Inf	0.253554622840446	Inf	0.28964824120603	0.711282051282051	AGP transfer	3	cd_location
+Bacteroides dorei__Parabacteroides distasonis	3	3	0	124	76	Inf	0.253554622840446	Inf	0.28964824120603	0.711282051282051	AGP transfer	3	cd_location
+Bacteroides ovatus__Bacteroides fragilis	3	3	0	124	76	Inf	0.253554622840446	Inf	0.28964824120603	0.711282051282051	AGP transfer	3	cd_location
+Bacteroides dorei__Paraprevotella sp.	4	4	0	124	76	Inf	0.406654335620483	Inf	0.299628058767921	0.711282051282051	AGP transfer	3	cd_location
+UCG-002 sp.__Bacteroides dorei	5	2	3	124	76	0.400828974884166	0.0327658512920146	3.58395503034846	0.370248870778714	0.711282051282051	AGP transfer	3	cd_location
+Bacteroides dorei__Agathobacter faecis__Faecalibacterium prausnitzii	1	0	1	124	76	0	0	23.9033482545632	0.38	0.711282051282051	AGP transfer	3	cd_location
+Bacteroides dorei__Bacteroides sartorii__Bacteroides ovatus	1	0	1	124	76	0	0	23.9033482545632	0.38	0.711282051282051	AGP transfer	3	cd_location
+Bacteroides dorei__Bacteroides sartorii__Faecalibacterium prausnitzii	1	0	1	124	76	0	0	23.9033482545632	0.38	0.711282051282051	AGP transfer	3	cd_location
+Bacteroides dorei__Clostridia UCG-014 ord.__Faecalibacterium prausnitzii	1	0	1	124	76	0	0	23.9033482545632	0.38	0.711282051282051	AGP transfer	3	cd_location
+Bacteroides dorei__Faecalibacterium prausnitzii__Bacteroides cellulosilyticus	1	0	1	124	76	0	0	23.9033482545632	0.38	0.711282051282051	AGP transfer	3	cd_location
+Bacteroides dorei__Faecalibacterium prausnitzii__Bacteroides eggerthii	1	0	1	124	76	0	0	23.9033482545632	0.38	0.711282051282051	AGP transfer	3	cd_location
+Bacteroides dorei__Faecalibacterium prausnitzii__Bacteroides sartorii	1	0	1	124	76	0	0	23.9033482545632	0.38	0.711282051282051	AGP transfer	3	cd_location
+Bacteroides ovatus__Faecalibacterium prausnitzii	1	0	1	124	76	0	0	23.9033482545632	0.38	0.711282051282051	AGP transfer	3	cd_location
+Christensenellaceae R-7 group sp.__Bacteroides dorei	1	0	1	124	76	0	0	23.9033482545632	0.38	0.711282051282051	AGP transfer	3	cd_location
+Faecalibacterium prausnitzii__Agathobacter faecis__Bacteroides dorei	1	0	1	124	76	0	0	23.9033482545632	0.38	0.711282051282051	AGP transfer	3	cd_location
+Faecalibacterium prausnitzii__Bacteroides dorei__Agathobacter faecis	1	0	1	124	76	0	0	23.9033482545632	0.38	0.711282051282051	AGP transfer	3	cd_location
+Faecalibacterium prausnitzii__Bacteroides dorei__Christensenellaceae R-7 group sp.	1	0	1	124	76	0	0	23.9033482545632	0.38	0.711282051282051	AGP transfer	3	cd_location
+Faecalibacterium prausnitzii__Butyrivibrio crossotus	1	0	1	124	76	0	0	23.9033482545632	0.38	0.711282051282051	AGP transfer	3	cd_location
+Faecalibacterium prausnitzii__Christensenellaceae R-7 group sp.__Bacteroides dorei	1	0	1	124	76	0	0	23.9033482545632	0.38	0.711282051282051	AGP transfer	3	cd_location
+Faecalibacterium prausnitzii__Segatella sp.__Bacteroides dorei	1	0	1	124	76	0	0	23.9033482545632	0.38	0.711282051282051	AGP transfer	3	cd_location
+Gemmiger sp.	1	0	1	124	76	0	0	23.9033482545632	0.38	0.711282051282051	AGP transfer	3	cd_location
+Segatella sp.__Agathobacter faecis__Faecalibacterium prausnitzii	1	0	1	124	76	0	0	23.9033482545632	0.38	0.711282051282051	AGP transfer	3	cd_location
+Segatella sp.__Faecalibacterium prausnitzii__Agathobacter faecis	1	0	1	124	76	0	0	23.9033482545632	0.38	0.711282051282051	AGP transfer	3	cd_location
+Segatella sp.__Faecalibacterium prausnitzii__UCG-002 sp.	1	0	1	124	76	0	0	23.9033482545632	0.38	0.711282051282051	AGP transfer	3	cd_location
+Segatella sp.__UCG-002 sp.	1	0	1	124	76	0	0	23.9033482545632	0.38	0.711282051282051	AGP transfer	3	cd_location
+Agathobacter faecis__Bacteroides dorei__Faecalibacterium prausnitzii	2	2	0	124	76	Inf	0.115007476760457	Inf	0.52643216080402	0.817649951887095	AGP transfer	3	cd_location
+Akkermansia muciniphila__Bacteroides dorei__Bacteroides caccae	2	2	0	124	76	Inf	0.115007476760457	Inf	0.52643216080402	0.817649951887095	AGP transfer	3	cd_location
+Bacteroides dorei__Bacteroides cellulosilyticus__Faecalibacterium prausnitzii	2	2	0	124	76	Inf	0.115007476760457	Inf	0.52643216080402	0.817649951887095	AGP transfer	3	cd_location
+Bacteroides dorei__Bacteroides ovatus__Bacteroides caccae	2	2	0	124	76	Inf	0.115007476760457	Inf	0.52643216080402	0.817649951887095	AGP transfer	3	cd_location
+Bacteroides dorei__Bacteroides ovatus__Bacteroides fragilis	2	2	0	124	76	Inf	0.115007476760457	Inf	0.52643216080402	0.817649951887095	AGP transfer	3	cd_location
+Bacteroides fragilis__Faecalibacterium prausnitzii	2	2	0	124	76	Inf	0.115007476760457	Inf	0.52643216080402	0.817649951887095	AGP transfer	3	cd_location
+Parabacteroides distasonis__Bacteroides dorei	2	2	0	124	76	Inf	0.115007476760457	Inf	0.52643216080402	0.817649951887095	AGP transfer	3	cd_location
+Prevotellaceae fam.__Bacteroides dorei	2	2	0	124	76	Inf	0.115007476760457	Inf	0.52643216080402	0.817649951887095	AGP transfer	3	cd_location
+Faecalibacterium prausnitzii__Blautia sp.	3	1	2	124	76	0.302684694710567	0.00506474762045996	5.90760393075917	0.558720877112837	0.849721333942439	AGP transfer	3	cd_location
+[Eubacterium] coprostanoligenes group fam.	5	4	1	124	76	2.49018869049756	0.240450955214853	124.662040567073	0.651429264268661	0.951086725832245	AGP transfer	3	cd_location
+Bacteroides dorei__Bacteroides ovatus__Faecalibacterium prausnitzii	5	4	1	124	76	2.49018869049756	0.240450955214853	124.662040567073	0.651429264268661	0.951086725832245	AGP transfer	3	cd_location
+Blautia sp.	10	7	3	124	76	1.45323702411629	0.319259097002208	8.97940566883278	0.744817945782449	1	AGP transfer	3	cd_location
+Segatella sp.__Bacteroides dorei__Faecalibacterium prausnitzii	10	7	3	124	76	1.45323702411629	0.319259097002208	8.97940566883278	0.744817945782449	1	AGP transfer	3	cd_location
+Bacteroides dorei__Bacteroides caccae__Faecalibacterium prausnitzii	2	1	1	124	76	0.611352029481572	0.00771404556825685	48.4960095954402	1	1	AGP transfer	3	cd_location
+Bacteroides dorei__Bacteroides eggerthii	2	1	1	124	76	0.611352029481572	0.00771404556825685	48.4960095954402	1	1	AGP transfer	3	cd_location
+Bacteroides sp.__Bacteroides dorei__Bacteroides sartorii	2	1	1	124	76	0.611352029481572	0.00771404556825685	48.4960095954402	1	1	AGP transfer	3	cd_location
+CAG-352 bromii	2	1	1	124	76	0.611352029481572	0.00771404556825685	48.4960095954402	1	1	AGP transfer	3	cd_location
+Faecalibacterium prausnitzii__Bacteroides dorei__Bacteroides sartorii	2	1	1	124	76	0.611352029481572	0.00771404556825685	48.4960095954402	1	1	AGP transfer	3	cd_location
+Segatella sp.__Faecalibacterium prausnitzii__Prevotellaceae fam.	2	1	1	124	76	0.611352029481572	0.00771404556825685	48.4960095954402	1	1	AGP transfer	3	cd_location
+Agathobacter faecis__Faecalibacterium prausnitzii__Bacteroides dorei	1	1	0	124	76	Inf	0.0157308467741936	Inf	1	1	AGP transfer	3	cd_location
+Akkermansia muciniphila__Faecalibacterium prausnitzii	1	1	0	124	76	Inf	0.0157308467741936	Inf	1	1	AGP transfer	3	cd_location
+Alistipes onderdonkii__Bacteroides dorei	1	1	0	124	76	Inf	0.0157308467741936	Inf	1	1	AGP transfer	3	cd_location
+Bacteroides dorei__Bacteroides fragilis	1	1	0	124	76	Inf	0.0157308467741936	Inf	1	1	AGP transfer	3	cd_location
+Bacteroides dorei__Bacteroides ovatus__Agathobacter faecis	4	3	1	124	76	1.85426869486328	0.145833014570072	98.8530849227321	1	1	AGP transfer	3	cd_location
+Bacteroides dorei__Bacteroides ovatus__Bacteroides thetaiotaomicron	1	1	0	124	76	Inf	0.0157308467741936	Inf	1	1	AGP transfer	3	cd_location
+Bacteroides dorei__Bacteroides ovatus__Parabacteroides distasonis	1	1	0	124	76	Inf	0.0157308467741936	Inf	1	1	AGP transfer	3	cd_location
+Bacteroides dorei__Bifidobacterium breve	3	2	1	124	76	1.22823949427683	0.0629328467700183	73.4618945798582	1	1	AGP transfer	3	cd_location
+Bacteroides dorei__CAG-352 bromii	1	1	0	124	76	Inf	0.0157308467741936	Inf	1	1	AGP transfer	3	cd_location
+Bacteroides dorei__Faecalibacterium prausnitzii__Christensenellaceae R-7 group sp.	1	1	0	124	76	Inf	0.0157308467741936	Inf	1	1	AGP transfer	3	cd_location
+Bacteroides dorei__Lachnospiraceae fam.	1	1	0	124	76	Inf	0.0157308467741936	Inf	1	1	AGP transfer	3	cd_location
+Bacteroides sp.__Bacteroides dorei__Bacteroides ovatus	1	1	0	124	76	Inf	0.0157308467741936	Inf	1	1	AGP transfer	3	cd_location
+Enterococcus faecium	1	1	0	124	76	Inf	0.0157308467741936	Inf	1	1	AGP transfer	3	cd_location
+Gemmiger formicilis	3	2	1	124	76	1.22823949427683	0.0629328467700183	73.4618945798582	1	1	AGP transfer	3	cd_location
+Segatella sp.__Dialister invisus	3	2	1	124	76	1.22823949427683	0.0629328467700183	73.4618945798582	1	1	AGP transfer	3	cd_location
+Bifidobacterium breve__Bacteroides dorei	14	13	1	122	75	8.76288909853923	1.26468428576697	379.410204196474	0.0190194651063702	0.574009558936792	AGP transfer	4	cd_location
+Lachnospiraceae fam.__Faecalibacterium prausnitzii__Bacteroides dorei	8	8	0	122	75	Inf	1.08219428319173	Inf	0.0250816226498514	0.574009558936792	AGP transfer	4	cd_location
+Bacteroides ovatus__Bacteroides dorei__Faecalibacterium prausnitzii__Agathobacter faecis	7	7	0	122	75	Inf	0.907222603095401	Inf	0.0455985513413419	0.574009558936792	AGP transfer	4	cd_location
+Bacteroides dorei__Blautia sp.	3	0	3	122	75	0	0	1.47045059718344	0.0538094972467706	0.574009558936792	AGP transfer	4	cd_location
+Bacteroides eggerthii__Bacteroides dorei	3	0	3	122	75	0	0	1.47045059718344	0.0538094972467706	0.574009558936792	AGP transfer	4	cd_location
+Segatella sp.__Prevotellaceae fam.__Faecalibacterium prausnitzii	3	0	3	122	75	0	0	1.47045059718344	0.0538094972467706	0.574009558936792	AGP transfer	4	cd_location
+Bacteroides fragilis__Bacteroides dorei	11	10	1	122	75	6.56236354874047	0.899924378203986	290.170045825418	0.0542982015210479	0.574009558936792	AGP transfer	4	cd_location
+Segatella sp.__Faecalibacterium prausnitzii__Bacteroides dorei__Agathobacter faecis	5	1	4	122	75	0.148082901872814	0.00296029794709288	1.53433620678583	0.0704659812243913	0.65181032632562	AGP transfer	4	cd_location
+Bifidobacterium breve__Faecalibacterium prausnitzii	7	2	5	122	75	0.235108936897976	0.0218425483945666	1.48210061910451	0.107702703949909	0.72237407262788	AGP transfer	4	cd_location
+Faecalibacterium prausnitzii__Bacteroides dorei__Bacteroides ovatus	7	2	5	122	75	0.235108936897976	0.0218425483945666	1.48210061910451	0.107702703949909	0.72237407262788	AGP transfer	4	cd_location
+Bacteroides dorei__Bacteroides sp.__Bacteroides sartorii	2	0	2	122	75	0	0	3.25906851157232	0.143737698124935	0.72237407262788	AGP transfer	4	cd_location
+Bacteroides dorei__Faecalibacterium prausnitzii__Agathobacter faecis__Bacteroides ovatus	2	0	2	122	75	0	0	3.25906851157232	0.143737698124935	0.72237407262788	AGP transfer	4	cd_location
+Clostridia UCG-014 ord.__Bacteroides dorei	2	0	2	122	75	0	0	3.25906851157232	0.143737698124935	0.72237407262788	AGP transfer	4	cd_location
+Faecalibacterium prausnitzii__Bacteroides ovatus	2	0	2	122	75	0	0	3.25906851157232	0.143737698124935	0.72237407262788	AGP transfer	4	cd_location
+Bacteroides dorei__Faecalibacterium prausnitzii__Bacteroides ovatus__Agathobacter faecis	3	3	0	122	75	Inf	0.25433265883344	Inf	0.289081114679374	0.72237407262788	AGP transfer	4	cd_location
+Bacteroides dorei__Parabacteroides distasonis	3	3	0	122	75	Inf	0.25433265883344	Inf	0.289081114679374	0.72237407262788	AGP transfer	4	cd_location
+Bacteroides ovatus__Bacteroides fragilis	3	3	0	122	75	Inf	0.25433265883344	Inf	0.289081114679374	0.72237407262788	AGP transfer	4	cd_location
+Bacteroides dorei__Paraprevotella sp.	4	4	0	122	75	Inf	0.40793396212979	Inf	0.299642479034389	0.72237407262788	AGP transfer	4	cd_location
+UCG-002 sp.__Bacteroides dorei	5	2	3	122	75	0.401949634043849	0.0328470706769947	3.59526824580365	0.370851698749013	0.72237407262788	AGP transfer	4	cd_location
+Bacteroides dorei__Bacteroides sartorii__Bacteroides ovatus	1	0	1	122	75	0	0	23.975533429345	0.380710659898477	0.72237407262788	AGP transfer	4	cd_location
+Bacteroides dorei__Bacteroides sartorii__Faecalibacterium prausnitzii	1	0	1	122	75	0	0	23.975533429345	0.380710659898477	0.72237407262788	AGP transfer	4	cd_location
+Bacteroides dorei__Clostridia UCG-014 ord.__Faecalibacterium prausnitzii	1	0	1	122	75	0	0	23.975533429345	0.380710659898477	0.72237407262788	AGP transfer	4	cd_location
+Bacteroides dorei__Faecalibacterium prausnitzii__Bacteroides cellulosilyticus	1	0	1	122	75	0	0	23.975533429345	0.380710659898477	0.72237407262788	AGP transfer	4	cd_location
+Bacteroides dorei__Faecalibacterium prausnitzii__Bacteroides eggerthii	1	0	1	122	75	0	0	23.975533429345	0.380710659898477	0.72237407262788	AGP transfer	4	cd_location
+Bacteroides dorei__Faecalibacterium prausnitzii__Bacteroides sartorii	1	0	1	122	75	0	0	23.975533429345	0.380710659898477	0.72237407262788	AGP transfer	4	cd_location
+Bacteroides ovatus__Faecalibacterium prausnitzii	1	0	1	122	75	0	0	23.975533429345	0.380710659898477	0.72237407262788	AGP transfer	4	cd_location
+Christensenellaceae R-7 group sp.__Bacteroides dorei	1	0	1	122	75	0	0	23.975533429345	0.380710659898477	0.72237407262788	AGP transfer	4	cd_location
+Faecalibacterium prausnitzii__Agathobacter faecis__Bacteroides dorei	1	0	1	122	75	0	0	23.975533429345	0.380710659898477	0.72237407262788	AGP transfer	4	cd_location
+Faecalibacterium prausnitzii__Bacteroides dorei__Agathobacter faecis	1	0	1	122	75	0	0	23.975533429345	0.380710659898477	0.72237407262788	AGP transfer	4	cd_location
+Faecalibacterium prausnitzii__Bacteroides dorei__Christensenellaceae R-7 group sp.	1	0	1	122	75	0	0	23.975533429345	0.380710659898477	0.72237407262788	AGP transfer	4	cd_location
+Faecalibacterium prausnitzii__Butyrivibrio crossotus	1	0	1	122	75	0	0	23.975533429345	0.380710659898477	0.72237407262788	AGP transfer	4	cd_location
+Faecalibacterium prausnitzii__Christensenellaceae R-7 group sp.__Bacteroides dorei	1	0	1	122	75	0	0	23.975533429345	0.380710659898477	0.72237407262788	AGP transfer	4	cd_location
+Faecalibacterium prausnitzii__Segatella sp.__Bacteroides dorei	1	0	1	122	75	0	0	23.975533429345	0.380710659898477	0.72237407262788	AGP transfer	4	cd_location
+Gemmiger sp.	1	0	1	122	75	0	0	23.975533429345	0.380710659898477	0.72237407262788	AGP transfer	4	cd_location
+Segatella sp.__Agathobacter faecis__Faecalibacterium prausnitzii	1	0	1	122	75	0	0	23.975533429345	0.380710659898477	0.72237407262788	AGP transfer	4	cd_location
+Segatella sp.__Bacteroides dorei__Faecalibacterium prausnitzii__Clostridia UCG-014 ord.	1	0	1	122	75	0	0	23.975533429345	0.380710659898477	0.72237407262788	AGP transfer	4	cd_location
+Segatella sp.__Faecalibacterium prausnitzii__Agathobacter faecis__Bacteroides dorei	1	0	1	122	75	0	0	23.975533429345	0.380710659898477	0.72237407262788	AGP transfer	4	cd_location
+Segatella sp.__Faecalibacterium prausnitzii__UCG-002 sp.	1	0	1	122	75	0	0	23.975533429345	0.380710659898477	0.72237407262788	AGP transfer	4	cd_location
+Segatella sp.__UCG-002 sp.	1	0	1	122	75	0	0	23.975533429345	0.380710659898477	0.72237407262788	AGP transfer	4	cd_location
+Agathobacter faecis__Bacteroides dorei__Faecalibacterium prausnitzii__Bacteroides ovatus	2	2	0	122	75	Inf	0.11535507989554	Inf	0.526054076452916	0.811000034531579	AGP transfer	4	cd_location
+Akkermansia muciniphila__Bacteroides dorei__Bacteroides caccae	2	2	0	122	75	Inf	0.11535507989554	Inf	0.526054076452916	0.811000034531579	AGP transfer	4	cd_location
+Bacteroides dorei__Bacteroides cellulosilyticus__Faecalibacterium prausnitzii	2	2	0	122	75	Inf	0.11535507989554	Inf	0.526054076452916	0.811000034531579	AGP transfer	4	cd_location
+Bacteroides dorei__Bacteroides ovatus__Bacteroides caccae	2	2	0	122	75	Inf	0.11535507989554	Inf	0.526054076452916	0.811000034531579	AGP transfer	4	cd_location
+Bacteroides dorei__Bacteroides ovatus__Bacteroides fragilis	2	2	0	122	75	Inf	0.11535507989554	Inf	0.526054076452916	0.811000034531579	AGP transfer	4	cd_location
+Bacteroides fragilis__Faecalibacterium prausnitzii	2	2	0	122	75	Inf	0.11535507989554	Inf	0.526054076452916	0.811000034531579	AGP transfer	4	cd_location
+Parabacteroides distasonis__Bacteroides dorei	2	2	0	122	75	Inf	0.11535507989554	Inf	0.526054076452916	0.811000034531579	AGP transfer	4	cd_location
+Prevotellaceae fam.__Bacteroides dorei	2	2	0	122	75	Inf	0.11535507989554	Inf	0.526054076452916	0.811000034531579	AGP transfer	4	cd_location
+Segatella sp.__Bacteroides dorei__Faecalibacterium prausnitzii__UCG-002 sp.	2	2	0	122	75	Inf	0.11535507989554	Inf	0.526054076452916	0.811000034531579	AGP transfer	4	cd_location
+Faecalibacterium prausnitzii__Blautia sp.	3	1	2	122	75	0.303552877556688	0.00507820845209356	5.92593430121695	0.558865717313868	0.844001287371964	AGP transfer	4	cd_location
+[Eubacterium] coprostanoligenes group fam.	5	4	1	122	75	2.49844356868006	0.241160687169582	125.106142714146	0.651258619531288	0.963862756906307	AGP transfer	4	cd_location
+Segatella sp.__Bacteroides dorei__Faecalibacterium prausnitzii__Agathobacter faecis	7	5	2	122	75	1.55652005947686	0.246945741644594	16.7551685667235	0.710860948340398	1	AGP transfer	4	cd_location
+Blautia sp.	10	7	3	122	75	1.45819352273804	0.320160504169686	9.01416765375138	0.744562230221566	1	AGP transfer	4	cd_location
+Bacteroides dorei__Bacteroides caccae__Faecalibacterium prausnitzii	2	1	1	122	75	0.613184273852397	0.00773595788411913	48.6488531951544	1	1	AGP transfer	4	cd_location
+Bacteroides dorei__Bacteroides eggerthii	2	1	1	122	75	0.613184273852397	0.00773595788411913	48.6488531951544	1	1	AGP transfer	4	cd_location
+Bacteroides dorei__Bifidobacterium breve	3	2	1	122	75	1.23202485158918	0.0631119774790502	73.7032357105698	1	1	AGP transfer	4	cd_location
+Bacteroides sp.__Bacteroides dorei__Bacteroides sartorii	2	1	1	122	75	0.613184273852397	0.00773595788411913	48.6488531951544	1	1	AGP transfer	4	cd_location
+CAG-352 bromii	2	1	1	122	75	0.613184273852397	0.00773595788411913	48.6488531951544	1	1	AGP transfer	4	cd_location
+Faecalibacterium prausnitzii__Bacteroides dorei__Bacteroides sartorii	2	1	1	122	75	0.613184273852397	0.00773595788411913	48.6488531951544	1	1	AGP transfer	4	cd_location
+Gemmiger formicilis	3	2	1	122	75	1.23202485158918	0.0631119774790502	73.7032357105698	1	1	AGP transfer	4	cd_location
+Segatella sp.__Dialister invisus	3	2	1	122	75	1.23202485158918	0.0631119774790502	73.7032357105698	1	1	AGP transfer	4	cd_location
+Segatella sp.__Faecalibacterium prausnitzii__Prevotellaceae fam.	2	1	1	122	75	0.613184273852397	0.00773595788411913	48.6488531951544	1	1	AGP transfer	4	cd_location
+Agathobacter faecis__Faecalibacterium prausnitzii__Bacteroides dorei	1	1	0	122	75	Inf	0.0157783043032787	Inf	1	1	AGP transfer	4	cd_location
+Akkermansia muciniphila__Faecalibacterium prausnitzii	1	1	0	122	75	Inf	0.0157783043032787	Inf	1	1	AGP transfer	4	cd_location
+Alistipes onderdonkii__Bacteroides dorei	1	1	0	122	75	Inf	0.0157783043032787	Inf	1	1	AGP transfer	4	cd_location
+Bacteroides dorei__Bacteroides fragilis	1	1	0	122	75	Inf	0.0157783043032787	Inf	1	1	AGP transfer	4	cd_location
+Bacteroides dorei__Bacteroides ovatus__Agathobacter faecis	4	3	1	122	75	1.86018679201618	0.146253818535495	99.1914251388176	1	1	AGP transfer	4	cd_location
+Bacteroides dorei__Bacteroides ovatus__Bacteroides thetaiotaomicron	1	1	0	122	75	Inf	0.0157783043032787	Inf	1	1	AGP transfer	4	cd_location
+Bacteroides dorei__Bacteroides ovatus__Faecalibacterium prausnitzii__Agathobacter faecis	4	3	1	122	75	1.86018679201618	0.146253818535495	99.1914251388176	1	1	AGP transfer	4	cd_location
+Bacteroides dorei__Bacteroides ovatus__Parabacteroides distasonis	1	1	0	122	75	Inf	0.0157783043032787	Inf	1	1	AGP transfer	4	cd_location
+Bacteroides dorei__CAG-352 bromii	1	1	0	122	75	Inf	0.0157783043032787	Inf	1	1	AGP transfer	4	cd_location
+Bacteroides dorei__Faecalibacterium prausnitzii__Christensenellaceae R-7 group sp.	1	1	0	122	75	Inf	0.0157783043032787	Inf	1	1	AGP transfer	4	cd_location
+Bacteroides dorei__Lachnospiraceae fam.	1	1	0	122	75	Inf	0.0157783043032787	Inf	1	1	AGP transfer	4	cd_location
+Bacteroides sp.__Bacteroides dorei__Bacteroides ovatus	1	1	0	122	75	Inf	0.0157783043032787	Inf	1	1	AGP transfer	4	cd_location
+Enterococcus faecium	1	1	0	122	75	Inf	0.0157783043032787	Inf	1	1	AGP transfer	4	cd_location

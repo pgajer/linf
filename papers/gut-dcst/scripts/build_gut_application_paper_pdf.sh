@@ -2,6 +2,7 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+. "$SCRIPT_DIR/setup_tool_paths.sh"
 PAPER_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 REPO_DIR="$(cd "$PAPER_DIR/../.." && pwd)"
 MANUSCRIPT_DIR="$PAPER_DIR/manuscript"
@@ -19,6 +20,9 @@ escape_for_tex() {
 }
 
 mkdir -p "$BUILD_DIR"
+
+python3 "$SCRIPT_DIR/build_validation_assets.py"
+python3 "$SCRIPT_DIR/build_ibd_results_overview_figure.py"
 
 GIT_VERSION="$(git -C "$REPO_DIR" describe --tags --always --dirty 2>/dev/null || printf '%s\n' 'unversioned')"
 GIT_BUILD_NUMBER="$(git -C "$REPO_DIR" rev-list --count HEAD 2>/dev/null || printf '%s\n' 'NA')"

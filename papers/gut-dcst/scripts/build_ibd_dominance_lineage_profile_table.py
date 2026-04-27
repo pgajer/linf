@@ -1,3 +1,10 @@
+"""Legacy helper for an older AGP IBD profile table.
+
+The current manuscript-facing Supplementary Table S7 is generated from the
+canonical local-QZA SILVA AGP rerun by
+`build_ibd_reviewer_sensitivity_assets.R`.
+"""
+
 from __future__ import annotations
 
 import gzip
@@ -11,14 +18,17 @@ GUT_ROOT = PROJECT_ROOT / "gut_microbiome"
 
 COUNTS_PATH = (
     GUT_ROOT
-    / "outputs/prime_species/prime_gut_projects_silva_species_absolute_2026-03-24.csv.gz"
+    / "outputs/agp_silva_taxonomy/2026-04-26-redbiom-md5-sequence-map/agp_silva_collapsed_counts.tsv.gz"
 )
-METADATA_PATH = GUT_ROOT / "data/prime_gut_project_sample_metadata_2026-03-24.csv.gz"
+METADATA_PATH = (
+    GUT_ROOT
+    / "outputs/agp_silva_taxonomy/2026-04-26-redbiom-md5-sequence-map/agp_all_good_depthscan_metadata.tsv.gz"
+)
 ASSIGNMENTS_PATH = (
     GUT_ROOT
-    / "outputs/dcst_analysis/runs/2026-04-11-absorb-depthscan-adaptive/agp_absorb_assignments.tsv.gz"
+    / "outputs/dcst_analysis/runs/2026-04-26-agp-silva-local-qza-absorb-depth4-n0_50_25_25_25/agp_absorb_assignments.tsv.gz"
 )
-OUT = ROOT / "papers/gut-dcst/assets/tables/TABLE_S8_ibd_dominance_lineage_retained_feature_profiles.tsv"
+OUT = ROOT / "papers/gut-dcst/assets/tables/TABLE_S7_ibd_dominance_lineage_retained_feature_profiles.tsv"
 
 LINEAGES = [
     ("Bacteroides", 1, "Bacteroides"),

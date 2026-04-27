@@ -1,0 +1,8 @@
+Cohort	Comparison	best_signal	interpretation
+Halfvarson 2017	IBD vs healthy	\emph{Segatella sp.} (depth 1, q = 3.0e-09)	Corrected rebuilt pooled-IBD signal detected.
+Halfvarson 2017	Crohn vs healthy	\emph{Segatella sp.} (depth 1, q = 2.6e-05)	Corrected rebuilt Crohn signal detected.
+Halfvarson 2017	UC vs healthy	\emph{Bacteroides dorei} (depth 1, q = 3.3e-09)	Corrected rebuilt UC signal detected.
+HMP2 / IBDMDB	IBD vs healthy	\taxon{Bacteroides}\dcstsep \taxon{Faecalibacterium} (depth 2, q = 0.240)	Directional only in rebuilt mode.
+Gevers 2014	Crohn vs healthy	\emph{Faecalibacterium prausnitzii} (depth 1, q = 0.305)	No corrected rebuilt signal.
+PRJEB84421	OFG vs healthy	\taxon{Faecalibacterium}\dcstsep \taxon{Bacteroides} (depth 2, q = 0.019)	Corrected rebuilt signal detected.
+Jacobs 2023 IBS 250bp	IBS vs healthy	\emph{Faecalibacterium prausnitzii}\dcstsep \emph{Bacteroides dorei}\dcstsep \emph{Bacteroides ovatus} (depth 4, q = 0.564)	No corrected rebuilt signal.
