@@ -1,0 +1,9 @@
+comparison	ari	matched_agreement
+PAM k=3 vs k=4
+same 120 AGP samples	0.631965361445783	0.808333333333333
+PAM k=4 vs k=5
+same 120 AGP samples	0.824562936961064	0.908333333333333
+PAM k=4
+120 samples alone vs +120 context	0.863857487257883	0.95
+Frozen dCST depth 2
+same 120 AGP samples	1	1
