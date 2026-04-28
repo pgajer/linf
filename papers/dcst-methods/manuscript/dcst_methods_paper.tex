@@ -883,9 +883,16 @@ large gut datasets by clustering samples in a distance space
 Dirichlet-multinomial mixture models provide a generative probabilistic
 clustering framework for count data \cite{Holmes2012_DMM}; and VALENCIA
 provides a nearest-centroid classifier for established vaginal bacterial CSTs
-\cite{France2020_VALENCIA}. These approaches are useful when the scientific
+based on 16S rRNA amplicon profiles \cite{France2020_VALENCIA}. A direct
+empirical cross-tabulation between dCSTs and VALENCIA-CSTs is therefore out of
+scope for this paper: VALENCIA's centroids are trained on 16S amplicon data,
+whereas the CT dCST analysis is gene-family-defined on a VIRGO2 metagenomic
+matrix, and a head-to-head comparison would require a 16S-equivalent profile of
+the same 604 CT samples that does not exist in the present cohort. These
+approaches are useful when the scientific
 goal is cluster discovery, probabilistic mixture modeling, or assignment to a
-curated centroid vocabulary. dCSTs address a narrower representation problem:
+curated centroid vocabulary in their respective input modalities. dCSTs
+address a narrower representation problem:
 given a retained feature family and support policy, define a deterministic
 rank-based state label that can be frozen, transferred, rebuilt, and tested
 without choosing a distance-based clustering partition.
