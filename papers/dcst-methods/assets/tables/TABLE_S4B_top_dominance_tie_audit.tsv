@@ -1,0 +1,3 @@
+dataset	n_samples	n_features	zero_rows	top_tie_rows	top_tie_pct	max_top_tie_size
+Bundled AGP gut example	766	314	0	0	0	1
+CT 50k-VOG cap matrix	3602	50000	0	1	0.000277623542476402	2

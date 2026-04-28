@@ -1,0 +1,26 @@
+\clearpage
+
+\noindent\textbf{Supplementary Table S4.} Setting-dependence and robustness
+checks for deterministic dCST construction.
+
+\begin{longtable}{p{0.18\linewidth}p{0.48\linewidth}p{0.26\linewidth}}
+\toprule
+Check & Summary & Interpretation \\
+\midrule
+\endfirsthead
+\toprule
+Check & Summary & Interpretation \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+Deterministic tie rule & All reported dCST fits used \texttt{tie.method = "first"}: first retained feature for primary dominance and first retained target for absorb reassignment. This is part of the label definition, not a random analysis option. & The reported labels are reproducible by definition once feature order is fixed. \\
+\midrule
+Observed top-feature ties & Dominant-feature ties were absent in the bundled AGP gut example (0/766 rows) and rare in the CT cap audit: 1/3602 rows in the 50k-VOG cap audit (0.03\%); maximum tied top set size 2. & Tie handling is specified for exact reproducibility; available audits do not suggest that top-feature ties drive the reported examples. \\
+\midrule
+Gut support-schedule perturbation & Using the existing full-AGP raw-lineage size audit, a \(\pm25\%\) perturbation around the manuscript support schedule 50/25/25/25 changed hierarchy granularity but preserved high pre-absorb sample coverage at shallow depths. -25\%: thresholds 38/19/19/19; retained lineages 45/170/221/123; pre-absorb retained sample share 96.8\%/83.3\%/52.1\%/16.8\%. nominal: thresholds 50/25/25/25; retained lineages 40/141/154/89; pre-absorb retained sample share 96.2\%/81.3\%/47.4\%/14.4\%. +25\%: thresholds 63/31/31/31; retained lineages 35/115/114/64; pre-absorb retained sample share 95.3\%/79.0\%/43.8\%/12.1\%. & The support schedule controls naming granularity and should be treated as an explicit modeling choice, not as a hidden clustering parameter. \\
+\midrule
+CT retained-feature cap robustness & Capped VOG analyses used nested variance-ranked subsets from the same 509,501-VOG retained universe. 25k: depth-3 q=0.0414, V=0.325, depth-4 q=0.2125; 50k: depth-3 q=0.0053, V=0.360, depth-4 q=0.0074; 100k: depth-3 q=0.0042, V=0.358, depth-4 q=0.0063; 250k: depth-3 q=0.0044, V=0.357, depth-4 q=0.0053; 509,501: depth-3 q=0.0046, V=0.357, depth-4 q=0.0047. The 25k cap was shallower, whereas 50k and larger caps retained depth-4 support. & This supports the CT result as a within-cohort feature-family robustness result, not as external replication. \\
+\midrule
+Gut feature-filter scope & The gut taxonomic analysis is conditional on the stated shared-taxonomy retained family: count \(\geq2\) in at least 5\% of retained AGP samples, yielding 340 taxa. The combined manuscript does not claim robustness to all alternative gut prevalence filters. & This bounds the gut portability claim to the retained feature family used for transfer and rebuilt analyses. \\
+\end{longtable}
