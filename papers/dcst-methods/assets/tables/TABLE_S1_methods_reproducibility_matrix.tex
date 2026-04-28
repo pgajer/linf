@@ -59,7 +59,7 @@ AGP condition screens and label follow-up used depth-specific panel and label fa
 \midrule
 Gut external IBD transfer and rebuilt-cohort analysis &
 Direct transfer used the frozen AGP absorb hierarchy through depths 1--4. Rebuilt-cohort analyses used the same absorb-policy construction and depth range used for the AGP-derived hierarchy. &
-Direct transfer used the corrected nearest-lineage-set rule: external samples were compared against realized AGP lineage sets at each nominal depth, and stable terminal lineages remained assignable at later nominal depths. Rebuilt mode analyzed each external cohort independently. Label-level and panel-level tests used BH correction within the prespecified comparison/mode/depth families. Repeated-subject sensitivity retained one sample per subject and used bootstrap one-sample-per-subject recurrence for leading rows. \\
+Direct transfer used \texttt{transfer.dcsts()} with the corrected nearest-lineage-set rule: external samples were compared against realized AGP lineage sets at each nominal depth, and stable terminal lineages remained assignable at later nominal depths. Rebuilt mode analyzed each external cohort independently. Label-level and panel-level tests used BH correction within the prespecified comparison/mode/depth families. Repeated-subject sensitivity retained one sample per subject and used bootstrap one-sample-per-subject recurrence for leading rows. \\
 \midrule
 CT full-VOG hierarchy, capped robustness runs, and functional follow-up &
 Absorb-policy full-VOG and capped-VOG hierarchies fit through depth 4. Minimum support: \(n_0=50\) at depth 1; \(n_0=25\) at depth 2; \(n_0=12\) at depth 3; \(n_0=10\) at depth 4. &
@@ -99,6 +99,8 @@ Gut follow-up used 4,000 posterior draws for Jeffreys-prior beta-binomial preval
 Benjamini--Hochberg families &
 AGP exploratory phenotype screening adjusted the eligible phenotype-by-depth omnibus panels as one screen family; AGP label follow-up reported both global label-level BH values across tested labels/depths within each outcome and depth-specific BH values. Gut external transfer and rebuilt-cohort analyses adjusted label tests within each prespecified cohort/comparison/mode/depth family. CT full-VOG and capped-VOG omnibus tests adjusted across depths within each feature-cap run; label-level tests adjusted within each depth panel. \\
 \end{longtable}
+
+\input{../assets/tables/TABLE_S4_parameter_sensitivity_summary.tex}
 
 \endgroup
 \end{landscape}
