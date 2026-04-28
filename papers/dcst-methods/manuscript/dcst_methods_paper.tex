@@ -95,12 +95,14 @@ vocabulary in a large American Gut Project background cohort and test its
 portability in external inflammatory bowel disease cohorts. Direct transfer and
 rebuilt-cohort analyses recover clinically coherent sample-level IBD structure,
 especially in Halfvarson 2017, while subject-aware sensitivity analyses show
-that portability weakens under repeated-sample dependence and cohort mismatch.
-In a vaginal metagenomic application independent of the gut analysis, the same
-framework organizes outcome-associated VOG-cluster and full-VOG states linked
-to \textit{Chlamydia trachomatis} clearance and persistence. Support for the CT
-application comes from capped VOG robustness, VOG-cluster/full-VOG concordance,
-and biologically readable taxonomic, product-level, and KEGG-linked follow-up.
+that portability weakens under repeated-sample dependence and cohort mismatch;
+this application is therefore a portability demonstration, not broad IBD
+disease-state validation.
+In an independent vaginal metagenomic application, the same framework organizes
+VOG-cluster and full-VOG states associated with \textit{Chlamydia trachomatis}
+clearance and persistence within the labeled CT cohort; support comes from
+capped VOG robustness, VOG-cluster/full-VOG concordance, and biologically
+readable taxonomic, product-level, and KEGG-linked follow-up.
 
 Together, these applications show how dCSTs can serve as a reusable
 representation layer for microbiome state analysis. The framework is not
@@ -381,7 +383,7 @@ of diagnosis-grade IBD case definitions. The AGP phenotype fields are therefore
 used only for exploratory prioritization and sensitivity analysis, not as the
 primary disease-association evidence.
 
-The primary gut disease evidence comes from external cohorts with stronger diagnosis
+The primary gut portability evidence comes from external cohorts with stronger diagnosis
 metadata. The central comparison separates structure learning from disease
 inference: the AGP-derived hierarchy is frozen and external samples are mapped
 into it under the corrected nearest-lineage-set transfer rule, while a parallel
@@ -389,9 +391,11 @@ rebuilt mode asks whether related dominance structure is rediscovered when each
 external cohort is filtered and analyzed independently with the same absorb
 workflow. The validation cohorts analyzed here are
 Halfvarson 2017, HMP2 / IBDMDB, and Gevers 2014, because they provide the
-clearest clinically annotated IBD setting for testing portability. Where the
-metadata allow it, the primary contrasts separate pooled IBD, Crohn disease, and
-ulcerative colitis \cite{Halfvarson2017_IBD,LloydPrice2019_IBD,Gevers2014_CD}.
+clearest clinically annotated IBD setting for testing portability. These cohorts
+are used to evaluate whether a fitted taxonomic state vocabulary transfers into
+compatible disease datasets, not to define a general IBD state classifier. Where
+the metadata allow it, the primary contrasts separate pooled IBD, Crohn disease,
+and ulcerative colitis \cite{Halfvarson2017_IBD,LloydPrice2019_IBD,Gevers2014_CD}.
 
 Because repeated sampling is a central interpretive issue in the gut data, the
 validation layer also includes subject-aware sensitivity analyses. Leading
@@ -563,7 +567,9 @@ not sufficient for portable disease association. Taken together, the gut
 application supports a qualified portability result: dCSTs can provide an
 interpretable taxonomic state vocabulary that transfers across some external
 cohorts, but transfer strength depends strongly on cohort comparability, sample
-type, and repeated-subject structure (Figure~\ref{fig:gut-overview}).
+type, and repeated-subject structure. The result should therefore be read as a
+demonstration of portable representation under compatible conditions, not as
+broad validation of an IBD disease-state taxonomy (Figure~\ref{fig:gut-overview}).
 
 \begin{figure}[!htbp]
 \centering
@@ -579,7 +585,8 @@ strength. Panel C summarizes Halfvarson within-disease follow-up by bootstrap
 recurrence; the star marks the rebuilt Crohn-location contrast that retained
 first-subject \(q < 0.05\). The main takeaway is that Halfvarson supports
 sample-level transfer and rebuilt-cohort signal, whereas subject-aware
-sensitivity and the other external cohorts bound the portability claim.
+sensitivity and the other external cohorts bound the portability claim; the
+figure is not intended as broad IBD state validation.
 Expanded label-level details are provided in Supplementary Figure~S1.}
 \label{fig:gut-overview}
 \end{figure}
@@ -776,7 +783,8 @@ results also show why sample-level signal should not be confused with
 subject-level stability. Once repeated samples were collapsed or
 re-selected at the subject level, the direct disease-versus-control transfer
 signal weakened substantially. The gut application therefore supports portable
-representation, not a stand-alone diagnostic test.
+representation under compatible cohort conditions, not broad IBD disease-state
+validation or a stand-alone diagnostic test.
 
 The CT application supports the framework in a different direction. The
 important result is not external transfer, but that the same

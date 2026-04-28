@@ -23,10 +23,10 @@ linf.prepare.matrix <- function(X, backend = c("auto", "dense", "sparse"), fun.n
   }
 
   if (inherits(X, "sparseMatrix")) {
-    X <- methods::as(X, "dgCMatrix")
+    X <- as(X, "dgCMatrix")
   } else {
     X <- Matrix::Matrix(X, sparse = TRUE)
-    X <- methods::as(X, "dgCMatrix")
+    X <- as(X, "dgCMatrix")
   }
 
   X <- Matrix::drop0(X)
@@ -57,7 +57,7 @@ linf.validate.matrix <- function(X, backend, fun.name) {
 }
 
 linf.row.max.sparse <- function(X) {
-  Xr <- methods::as(X, "RsparseMatrix")
+  Xr <- as(X, "RsparseMatrix")
   p <- Xr@p
   x <- Xr@x
   out <- numeric(nrow(Xr))
@@ -74,7 +74,7 @@ linf.row.max.sparse <- function(X) {
 }
 
 linf.normalize.sparse <- function(X, tol = 0) {
-  Xr <- methods::as(X, "RsparseMatrix")
+  Xr <- as(X, "RsparseMatrix")
   p <- Xr@p
   row.max <- linf.row.max.sparse(Xr)
   keep.rows <- which(row.max > tol)
@@ -89,7 +89,7 @@ linf.normalize.sparse <- function(X, tol = 0) {
     }
   }
 
-  Matrix::drop0(methods::as(Xr, "CsparseMatrix"))
+  Matrix::drop0(as(Xr, "CsparseMatrix"))
 }
 
 linf.choose.index <- function(candidates, tie.method, error.message) {
@@ -123,7 +123,7 @@ linf.cells.sparse <- function(S,
   id.lev <- meta$feature.ids
   lev <- meta$feature.labels
 
-  Xr <- methods::as(X, "RsparseMatrix")
+  Xr <- as(X, "RsparseMatrix")
   p <- Xr@p
   j <- Xr@j
   x <- Xr@x
@@ -181,7 +181,7 @@ linf.absorb.sparse <- function(X,
                                fallback.idx) {
   tie.method <- match.arg(tie.method)
 
-  Xr <- methods::as(X, "RsparseMatrix")
+  Xr <- as(X, "RsparseMatrix")
   p <- Xr@p
   j <- Xr@j
   x <- Xr@x
