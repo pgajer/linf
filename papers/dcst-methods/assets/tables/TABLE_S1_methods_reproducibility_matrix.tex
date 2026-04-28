@@ -33,7 +33,7 @@ The 3,602-sample CT+reference learning cohort contained 604 outcome-labeled CT m
 Primary high-resolution feature family was the keep-filtered VIRGO2 VOG matrix. From 960,439 VOGs in the combined union table, VOGs were retained if observed in at least 10 samples and at least 1\% of the combined cohort, yielding 509,501 VOGs. Capped robustness runs used 25k, 50k, 100k, and 250k VOG subsets drawn from the same retained universe by variance ranking. \\
 \midrule
 Cross-application synthesis and assets &
-The synthesis integrates the gut transfer/rebuilt analyses and CT full-VOG analyses as complementary evaluations of the dCST representation layer. &
+The synthesis integrates the gut transfer/rebuilt analyses and CT full-VOG analyses as complementary evaluations of the dCST state vocabulary. &
 No new feature family is introduced for the synthesis; it reuses the gut shared-taxonomy and CT full-VOG feature families above. \\
 \end{longtable}
 
@@ -87,8 +87,11 @@ Implementation item & Setting used in the reported analyses \\
 \endhead
 \bottomrule
 \endfoot
+dCST package-operation mapping &
+The \texttt{linf} package functions used for Algorithm~\ref{alg:dcst-fit-transfer} were: \texttt{normalize.linf()} for sample-wise normalization; \texttt{linf.cells()} for dominant-feature assignment; \texttt{linf.csts()} for depth-1 dCST construction with pure or absorb low-support policies; \texttt{refine.linf.csts()} and \texttt{refine.linf.csts.iter()} for recursive depth-wise refinement, including absorb reassignment; and \texttt{transfer.dcsts()} for assigning aligned samples into a frozen fitted hierarchy. Application-specific repository workflows then performed cohort filtering, rebuilt-cohort analysis, association testing, and biological follow-up. \\
+\midrule
 dCST tie handling and feature identity &
-All primary dCST pipelines used the \texttt{linf} default \texttt{tie.method = "first"}. For primary dominance assignment, dense and sparse paths choose the first tied feature in the fixed feature-dictionary/column order; duplicate feature IDs or labels are made unique before assignment. Absorb reassignment chooses the first tied retained target in the active backend's retained-target order: the sparse path uses the lowest tied feature-column index, while the dense path uses the first tied retained target in the retained-cell vector passed to reassignment. If a low-support or all-zero sample has no positive retained-sibling value, it is assigned to the fallback retained sibling defined by the same retained-target ordering for that parent. \\
+All primary dCST pipelines used the \texttt{linf} default \texttt{tie.method = "first"}. For primary dominance assignment, tied features are resolved by the fixed feature-dictionary/column order; duplicate feature IDs or labels are made unique before assignment. Absorb reassignment uses the same ordered retained-feature dictionary restricted to the retained sibling targets for the active parent. If a low-support or all-zero sample has no positive retained-sibling value, it is assigned to the fallback retained sibling defined by that same ordered retained-target list. Observed top-feature ties were absent or rare in the reported audits, so tie handling is specified for reproducibility rather than because ties drive the analyses. \\
 \midrule
 Monte Carlo Fisher settings &
 AGP exploratory condition-depth screening used the recorded seed \(20260411\), standard Monte Carlo Fisher mode, and \(B=1{,}000\) simulations per panel in the run reported here. CT full-VOG omnibus panels used Fisher tests with Monte Carlo evaluation and \(B=50{,}000\) simulations per panel. The CT association scripts did not set a separate Fisher-test seed, so exact simulated \(p\)-value digits are reproduced from the generated result tables rather than regenerated deterministically from the script alone. dCST labels themselves do not depend on Monte Carlo draws. \\

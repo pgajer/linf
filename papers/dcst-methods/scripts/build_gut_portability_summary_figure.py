@@ -83,6 +83,23 @@ def clean_label(value: str) -> str:
     return str(value).replace("__", " / ")
 
 
+def short_label(value: str, max_chars: int = 34) -> str:
+    text = clean_label(value)
+    replacements = {
+        "Faecalibacterium prausnitzii": "F. prausnitzii",
+        "Bacteroides dorei": "B. dorei",
+        "Segatella sp.": "Segatella",
+        "Akkermansia muciniphila": "A. muciniphila",
+        "Escherichia-Shigella": "Escherichia-Shigella",
+        "Bifidobacterium": "Bifidobacterium",
+    }
+    for old, new in replacements.items():
+        text = text.replace(old, new)
+    if len(text) > max_chars:
+        text = text[: max_chars - 1].rstrip() + "..."
+    return text
+
+
 def load_inputs() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     omnibus = pd.read_csv(RUN_DIR / "omnibus_by_depth.tsv", sep="\t")
     omnibus = omnibus[omnibus["depth"].between(1, 4)].copy()
@@ -301,10 +318,10 @@ def plot_detailed_validation(ax: plt.Axes, validation: pd.DataFrame, subject: pd
             ax.text(
                 max(x_sample, x_first) + 0.18,
                 y_mode,
-                f"{MODE_NAMES[mode]}: {clean_label(row[label_col])}; q {fmt_q(row[q_col])} -> {fmt_q(diag['first_subject_q'])}",
+                f"{MODE_NAMES[mode]}: {short_label(row[label_col])}; q {fmt_q(row[q_col])} -> {fmt_q(diag['first_subject_q'])}",
                 va="center",
                 ha="left",
-                fontsize=8.4,
+                fontsize=9.3,
                 color="#3d3d3d",
             )
 
@@ -313,7 +330,7 @@ def plot_detailed_validation(ax: plt.Axes, validation: pd.DataFrame, subject: pd
     ax.set_yticklabels(validation["cohort"])
     ax.set_xlabel(r"Corrected signal strength ($-\log_{10} q$)")
     ax.set_title("A. External IBD validation details: sample-level q -> first-subject q", loc="left", fontweight="bold")
-    ax.set_xlim(-0.2, 9.8)
+    ax.set_xlim(-0.2, 10.4)
     ax.grid(axis="x", alpha=0.22, linewidth=0.6)
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
@@ -322,7 +339,7 @@ def plot_detailed_validation(ax: plt.Axes, validation: pd.DataFrame, subject: pd
 def plot_detailed_followup(ax: plt.Axes, followup: pd.DataFrame) -> None:
     summary = summarize_halfvarson_followup(followup)
     summary["label_text"] = summary.apply(
-        lambda row: f"d{row['depth']}; {row['label']}; q {fmt_q(row['sample_q'])} -> {fmt_q(row['first_q'])}; boot {row['boot']:.1f}%",
+        lambda row: f"d{row['depth']}; {short_label(row['label'], 30)}; q {fmt_q(row['sample_q'])} -> {fmt_q(row['first_q'])}; boot {row['boot']:.1f}%",
         axis=1,
     )
     analyses = ["UC extent", "Crohn location", "Crohn calprotectin"]
@@ -333,7 +350,7 @@ def plot_detailed_followup(ax: plt.Axes, followup: pd.DataFrame) -> None:
         i = analyses.index(row["analysis"])
         j = modes.index(row["mode"])
         matrix[i, j] = row["boot"]
-        text[i][j] = "\n".join(textwrap.wrap(row["label_text"], width=42, break_long_words=False))
+        text[i][j] = "\n".join(textwrap.wrap(row["label_text"], width=35, break_long_words=False))
 
     im = ax.imshow(matrix, cmap="YlOrRd", vmin=0, vmax=60, aspect="auto")
     ax.set_yticks(np.arange(len(analyses)))
@@ -343,7 +360,7 @@ def plot_detailed_followup(ax: plt.Axes, followup: pd.DataFrame) -> None:
     for i in range(len(analyses)):
         for j in range(len(modes)):
             color = "white" if matrix[i, j] >= 36 else "#222222"
-            ax.text(j, i, text[i][j], ha="center", va="center", fontsize=8.2, color=color, linespacing=1.2)
+            ax.text(j, i, text[i][j], ha="center", va="center", fontsize=9.0, color=color, linespacing=1.2)
     ax.set_title("B. Halfvarson within-disease follow-up details", loc="left", fontweight="bold")
     for spine in ax.spines.values():
         spine.set_visible(False)
@@ -358,15 +375,15 @@ def plot_detailed_followup(ax: plt.Axes, followup: pd.DataFrame) -> None:
 def build_supplement_figure(validation: pd.DataFrame, subject: pd.DataFrame, followup: pd.DataFrame) -> None:
     plt.rcParams.update(
         {
-            "font.size": 10,
-            "axes.titlesize": 12,
-            "axes.labelsize": 10,
+            "font.size": 10.8,
+            "axes.titlesize": 12.5,
+            "axes.labelsize": 10.8,
             "figure.facecolor": "white",
             "axes.facecolor": "#fcfcfb",
         }
     )
-    fig = plt.figure(figsize=(13.2, 9.0))
-    gs = fig.add_gridspec(2, 1, height_ratios=[1.1, 0.95], hspace=0.46)
+    fig = plt.figure(figsize=(11.2, 9.8))
+    gs = fig.add_gridspec(2, 1, height_ratios=[1.15, 1.0], hspace=0.48)
     ax_a = fig.add_subplot(gs[0, 0])
     ax_b = fig.add_subplot(gs[1, 0])
     plot_detailed_validation(ax_a, validation, subject)
