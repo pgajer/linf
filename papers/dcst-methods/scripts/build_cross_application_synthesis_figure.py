@@ -123,8 +123,8 @@ def main():
         edgecolor="#c97a2b",
         title="CT functional interpretation",
         lines=[
-            "VOG-cluster and full-VOG states associate with clearance and persistence",
-            "Capped VOG robustness and resolution-level concordance support panel-level organization",
+            "Full-VOG states associate with clearance and persistence",
+            "Capped VOG robustness and functional follow-up support panel-level organization",
         ],
         title_size=16,
         body_size=11.8,

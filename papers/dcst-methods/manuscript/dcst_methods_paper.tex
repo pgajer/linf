@@ -27,6 +27,10 @@
 \newcolumntype{Y}{>{\raggedright\arraybackslash}X}
 \newcommand{\taxon}[1]{\emph{#1}}
 \newcommand{\dcstsep}{/\allowbreak}
+\newcounter{algorithm}
+\newcommand{\algorithmtitle}[1]{%
+  \refstepcounter{algorithm}%
+  \noindent\textbf{Algorithm~\thealgorithm. #1}\par\nobreak\smallskip}
 \newcommand{\paperaffiliation}{Center for Advanced Microbiome Research and Innovation (CAMRI), Institute for Genome Sciences, Department of Microbiology and Immunology, University of Maryland School of Medicine, Baltimore, Maryland, USA.}
 \newcommand{\paperfundingnote}{Research reported in this publication was supported by grant number INV-048956 from the Gates Foundation.}
 \newcommand{\blfootnote}[1]{%
@@ -99,10 +103,10 @@ that portability weakens under repeated-sample dependence and cohort mismatch;
 this application is therefore a portability demonstration, not broad IBD
 disease-state validation.
 In an independent vaginal metagenomic application, the same framework organizes
-VOG-cluster and full-VOG states associated with \textit{Chlamydia trachomatis}
+full-VOG gene-family states associated with \textit{Chlamydia trachomatis}
 clearance and persistence within the labeled CT cohort; support comes from
-capped VOG robustness, VOG-cluster/full-VOG concordance, and biologically
-readable taxonomic, product-level, and KEGG-linked follow-up.
+capped VOG robustness and biologically readable taxonomic, product-level, and
+KEGG-linked follow-up.
 
 Together, these applications show how dCSTs can serve as a reusable
 representation layer for microbiome state analysis. The framework is not
@@ -176,8 +180,8 @@ cohort-specific rebuilt hierarchies, and how those signals behave under
 subject-aware sensitivity. The vaginal metagenomic CT application tests a
 different property: whether the same deterministic construction remains
 biologically interpretable in a different niche and feature universe, using
-VOG-cluster and full-VOG gene-family states with taxonomic, product-level, and
-KEGG-linked follow-up.
+full-VOG gene-family states with taxonomic, product-level, and KEGG-linked
+follow-up.
 
 Together, these applications evaluate three connected properties of dCSTs:
 deterministic and interpretable state construction without clustering-defined
@@ -197,7 +201,7 @@ feature and are then recursively refined by the next dominant retained feature
 within each retained parent state. The absorb policy used in the primary
 analyses merges low-support provisional states into nearby retained states
 rather than collapsing them into a residual bucket. The same construction is
-used for gut taxa, CT VOG-clusters, and CT full VOG gene groups.}
+used for gut taxa and CT full VOG gene groups.}
 \label{fig:dcst-concept}
 \end{figure}
 
@@ -210,8 +214,8 @@ family and then separates state construction from downstream inference. The gut
 application evaluates whether a taxonomic dCST vocabulary learned in a large AGP
 background cohort can transfer into external IBD cohorts and how that signal
 changes under subject-aware sensitivity. The CT application evaluates whether
-VOG-cluster and full-VOG dCSTs organize clearance- and persistence-associated
-metagenomic states with interpretable taxonomic and functional follow-up. The
+full-VOG dCSTs organize clearance- and persistence-associated metagenomic
+states with interpretable taxonomic and functional follow-up. The
 common conclusion is framework-level rather than universal-label: dCSTs provide
 a reusable state representation, while portability, robustness, and biological
 interpretability remain application-specific empirical properties.}
@@ -265,7 +269,7 @@ low-support policy. The same recursion defines all fitted depths.
 Component & Operational definition \\
 \midrule
 Input abundance matrix & A non-negative sample-by-feature matrix \(X\). The input may be counts, proportions, or another sample-wise rescaling, provided the within-sample feature order is preserved. \\
-Retained feature family & A prespecified feature set \(\mathcal{F}\), such as shared gut taxa, VOG-clusters, or full VOG gene groups, after application-specific filtering. dCST labels are defined only with respect to this retained family. \\
+Retained feature family & A prespecified feature set \(\mathcal{F}\), such as shared gut taxa or full VOG gene groups, after application-specific filtering. dCST labels are defined only with respect to this retained family. \\
 Depth-wise recursion & Depth~1 assigns each sample by its dominant retained feature. Depth~\(\ell\) refines each retained depth-\((\ell-1)\) parent by the next highest retained feature among samples in that parent, excluding features already present in the parent lineage. \\
 Low-support absorb policy & Provisional children below the depth-specific support threshold are reassigned to retained sibling states within the same parent, using the largest retained-sibling feature abundance in each reassigned sample. Pure-policy residual states are used only for methodological sensitivity, not for the main analyses. \\
 Frozen transfer rule & A hierarchy learned in a reference cohort can be frozen and applied to a new cohort after aligning the new data to the retained feature dictionary. External samples are mapped to realized reference lineage sets at the requested nominal depth; terminal retained lineages remain eligible at later nominal depths when the reference branch did not split further. \\
@@ -288,6 +292,62 @@ rule for the active matrix backend. Thus a low-support branch is absorbed into
 the nearest named dominance context available at that refinement step. This
 preserves named dominance-lineages for downstream comparison while avoiding
 unstable rare labels.
+
+\algorithmtitle{Absorb-policy dCST hierarchy fitting and frozen transfer}
+\label{alg:dcst-fit-transfer}
+\begin{minipage}{\linewidth}
+\small
+\textbf{Input:} abundance matrix \(X\); ordered retained feature family
+\(\mathcal{F}\); maximum depth \(L_{\max}\); support schedule
+\((n_1,\ldots,n_{L_{\max}})\); deterministic tie rule; low-support absorb
+policy. Optional transfer input: aligned external matrix \(X^{\ast}\) and a
+previously fitted hierarchy.
+
+\textbf{Fit:}
+\begin{enumerate}
+\item Initialize the root sample set \(S_{\emptyset}=\{1,\ldots,n\}\).
+\item For each depth \(\ell=1,\ldots,L_{\max}\), visit every retained parent
+lineage \(L\) from depth \(\ell-1\). For each sample \(i\in S_L\), remove from
+eligibility the features already present in \(L\), then assign \(i\) to the
+eligible retained feature with largest \(X_{if}\); ties are resolved by the
+fixed feature-dictionary order. These assignments define provisional child
+sets \(P_{L,f}\).
+\item Mark provisional children with \(|P_{L,f}|\ge n_\ell\) as retained
+children. If no child of \(L\) satisfies this condition, keep \(L\) terminal.
+\item For each low-support provisional child \(P_{L,f}\), reassign each
+sample \(i\in P_{L,f}\) to the retained sibling \(g\) of the same parent with
+largest \(X_{ig}\); ties are resolved by the retained-target order of the
+active backend. If no retained sibling has positive abundance in sample \(i\),
+use the same ordered fallback retained sibling for that parent.
+\item Store the realized lineage sets after absorption and continue recursion
+only from retained child lineages.
+\end{enumerate}
+
+\textbf{Frozen transfer:}
+Align \(X^{\ast}\) to the retained feature dictionary of the fitted hierarchy.
+For each external sample and requested nominal depth, follow the same dominance
+and tie rules down the frozen realized lineage sets. If the corresponding
+reference branch is terminal before the requested nominal depth, assign the
+sample to that terminal retained lineage.
+\end{minipage}
+
+\textit{Determinism and computational cost.} For fixed \(X\), retained feature
+order, tie rule, support schedule, and absorb policy, Algorithm~\ref{alg:dcst-fit-transfer}
+is deterministic by induction on depth. At depth~1, each sample has a unique
+assigned feature because the maximum is evaluated over a fixed ordered feature
+set with deterministic tie resolution. If all retained parent sets at
+depth~\(\ell-1\) are fixed, then the eligible feature set for every sample in
+each parent is fixed, provisional child sets are fixed, support filtering is a
+fixed threshold operation, and absorb reassignment uses a fixed ordered maximum
+over retained siblings with a deterministic fallback. Thus all retained
+depth-\(\ell\) lineage sets are fixed, and the argument continues through all
+fitted depths. Frozen transfer is deterministic for the same reason after the
+reference hierarchy and feature dictionary have been fixed. A direct dense
+implementation has worst-case time \(O(n p L_{\max})\) for fitting or transfer,
+excluding feature filtering and downstream inference, with memory dominated by
+the input matrix and the stored sample-to-lineage assignments; sparse
+implementations reduce the practical scan cost when the retained matrix is
+sparse.
 
 This construction has three useful properties. First, the pre-policy dominance
 lineage of a sample depends only on its within-sample rank order, so the same
@@ -343,10 +403,10 @@ feature in the feature dictionary, and for absorb reassignment it chooses the
 first tied retained target in the active backend's retained-target order.
 Duplicate feature labels were made unique before assignment. The AGP exploratory
 omnibus screen used Monte Carlo Fisher tests with the recorded seed \(20260411\)
-and 1,000 simulations per panel in the run reported here. CT VOG-cluster and
-full-VOG omnibus screens used 50,000 Monte Carlo simulations per panel; the CT
-association scripts did not set a separate Fisher-test seed, so the generated
-result tables are the source of record for exact simulated \(p\)-value digits.
+and 1,000 simulations per panel in the run reported here. CT full-VOG omnibus
+screens used 50,000 Monte Carlo simulations per panel; the CT association
+scripts did not set a separate Fisher-test seed, so the generated result tables
+are the source of record for exact simulated \(p\)-value digits.
 Bayesian sparse-label summaries used 4,000 posterior draws: Jeffreys-prior
 beta-binomial prevalence contrasts for unadjusted label-versus-rest comparisons,
 and, in gut follow-up, \texttt{arm::bayesglm} logistic models for
@@ -424,21 +484,12 @@ from a combined VOG union table, VOGs are retained only if they are observed in
 at least 10 samples and at least 1\% of the combined cohort, yielding the
 509,501-VOG universe used for the full-resolution analysis. Smaller 25k, 50k,
 100k, and 250k VOG runs are nested robustness analyses drawn from the same
-keep-filtered universe by variance ranking. In parallel, a lower-dimensional
-VOG-cluster feature family is constructed from co-abundance structure within a
-selected 25,000-VOG matrix, producing a 354-feature representation that is
-easier to annotate taxonomically and functionally \cite{France2026_VIRGO2}.
-
-These two feature layers play different roles. The VOG-cluster hierarchy is a
-lower-resolution, easier-to-interpret orienting analysis that helps identify a
-mixed persistence-associated neighborhood. The full-VOG hierarchy is the
-primary high-resolution analysis, used to ask whether CT outcome is distributed
-non-randomly across deeper gene-family-defined dominance-lineages and to
-identify the leading clearance- and persistence-associated branches. All primary
-CT hierarchies use the absorb policy. For the VOG-cluster association
-screen, only dominance-lineages with at least 20 labeled CT samples at the
-tested depth enter the prespecified outcome-blind panel-level correction
-family. The capped VOG runs are used as robustness analyses for the full-VOG
+keep-filtered universe by variance ranking \cite{France2026_VIRGO2}. The
+full-VOG hierarchy is the primary high-resolution analysis, used to ask whether
+CT outcome is distributed non-randomly across deeper gene-family-defined
+dominance-lineages and to identify the leading clearance- and
+persistence-associated branches. All primary CT hierarchies use the absorb
+policy. The capped VOG runs are used as robustness analyses for the full-VOG
 result, not as external replication cohorts.
 
 The CT application then adds a biological follow-up layer. Signal-bearing
@@ -461,7 +512,7 @@ complementary properties of the dCST framework.
 Application & Design summary & Main result & Methodological interpretation \\
 \midrule
 Gut (IBD) & Shared-taxonomy stool hierarchy learned in 24,421 local AGP samples, then tested by direct transfer and rebuilt-cohort analysis in external IBD cohorts. & Halfvarson 2017 retained corrected sample-level IBD, Crohn, and UC signal in both transfer and rebuilt modes; rebuilt Crohn-location follow-up gave the clearest within-disease subject-aware result. & Portability can be real and biologically coherent, but it weakens under repeated-sample dependence and cohort mismatch. \\
-CT (vaginal metagenomics) & Independent application with VOG-cluster and full-VOG hierarchies learned in a 3,602-sample CT+reference cohort; outcome testing restricted to 604 labeled CT samples. & The full-VOG hierarchy reached its strongest panel-level CT association at depth~4 ($q = 0.0047$, $V = 0.371$), capped VOG runs showed support stabilizing from 50k features onward, and the VOG-cluster and full-VOG layers converged on persistence-oriented \taxon{L. iners}/\taxon{Ca. Lachnocurva vaginae} structure. & The same deterministic framework can remain taxonomically and functionally interpretable across a different niche and feature universe without implying external CT replication. \\
+CT (vaginal metagenomics) & Independent application with full-VOG hierarchies learned in a 3,602-sample CT+reference cohort; outcome testing restricted to 604 labeled CT samples. & The full-VOG hierarchy reached its strongest panel-level CT association at depth~4 ($q = 0.0047$, $V = 0.371$), capped VOG runs showed support stabilizing from 50k features onward, and the leading branches were biologically interpretable through taxonomic, product-level, and KEGG-linked follow-up. & The same deterministic framework can remain taxonomically and functionally interpretable across a different niche and feature universe without implying external CT replication. \\
 \bottomrule
 \end{tabularx}
 \caption{Complementary application designs used to evaluate the dCST framework. The gut application evaluates portability and external transfer; the CT application evaluates biological and functional interpretability in an independent metagenomic setting.}
@@ -479,9 +530,9 @@ the gut application, this means that a depth-2 label such as
 retained taxonomic dominance-lineage: samples in which the dominant retained
 taxon is \taxon{Bacteroides~dorei} and the next retained refinement step follows
 \taxon{Faecalibacterium~prausnitzii}. In the CT application, the same logic is
-applied to VOG-clusters and to full VOG feature families rather than to stool
-taxa. The labels therefore live in different biological vocabularies across the
-two applications, but the assignment rule is the same.
+applied to full VOG feature families rather than to stool taxa. The labels
+therefore live in different biological vocabularies across the two
+applications, but the assignment rule is the same.
 
 The shared assignment rule allows the two applications to be compared despite
 their different feature spaces. The gut application asks whether a taxonomic dCST vocabulary learned in a large
@@ -600,35 +651,16 @@ analysis. This analysis does not test cross-cohort taxonomic portability;
 instead, it asks whether the same deterministic framework can organize vaginal
 metagenomic outcome structure in a biologically interpretable form. The broad
 3,602-sample CT+reference cohort provides the ecological background for
-learning VOG-cluster and full-VOG hierarchies, while every outcome test remains
-restricted to the same 604 labeled CT metagenomes.
+learning full-VOG hierarchies, while every outcome test remains restricted to
+the same 604 labeled CT metagenomes.
 
-At lower resolution, the VOG-cluster hierarchy provides an orienting view of
-the outcome-associated landscape. Meaningful refinement appears already by
-depth~2 and continues through depths~3 to~5, indicating that the combined
-hierarchy captures biologically structured variation before the
-higher-resolution VOG analysis. Under the prespecified outcome-blind
-\(n_{\mathrm{CT}} \geq 20\)
-filter, omnibus CT association is strongest at depth~3
-($p = 0.004$, across-depth $q = 0.025$, $V = 0.265$). The leading
-dominance-lineage at that depth,
-\texttt{vc\_0032 > vc\_0003 > vc\_0042}, is persistence-enriched
-(23 clearance / 49 persistence, odds ratio 2.25, label-level $q = 0.015$) and
-remains directionally coherent through its depth-4 and depth-5 refinements. At
-the taxonomic level this state is mixed rather than pure, combining a
-Gardnerella-rich component, a strongly \taxon{Lactobacillus iners}-rich
-component, and an \taxon{Amygdalobacter nucleatus} (BVAB2-like) component.
-Functionally, the same neighborhood is enriched for flagellar- and
-chemotaxis-like annotations, suggesting a coherent persistence-associated
-program nested within a broader transport-rich context.
-
-The primary CT result, however, comes from the full 509,501-VOG hierarchy. In
-this higher-resolution analysis, CT outcome is distributed non-randomly across
-the panel at every fitted depth and reaches its strongest panel-level effect at
+The primary CT result comes from the full 509,501-VOG hierarchy. In this
+high-resolution analysis, CT outcome is distributed non-randomly across the
+panel at every fitted depth and reaches its strongest panel-level effect at
 depth~4 ($q = 0.0047$, Cramer's $V = 0.371$). These results indicate that CT
 outcome is organized across a gene-family-defined dCST panel rather than by a
-single deterministic VOG biomarker. Within that
-panel, the most stable lineage is a clearance-oriented
+single deterministic VOG biomarker. Within that panel, the most stable lineage
+is a clearance-oriented
 \taxon{Lactobacillus crispatus}/\taxon{Lactobacillus jensenii} branch that
 persists from depth~1 through depth~4. At depth~4, the extension
 \texttt{VOG0146820 > VOG0741118 > VOG0741686 > VOG0741595} contains 18 CT
@@ -637,8 +669,7 @@ samples, of which 15 are clearance and 3 persistence, with Bayesian odds ratio
 persistence-oriented single lineage is a pure \taxon{L. iners} branch with
 Bayesian odds ratio 3.85 (95\% credible interval 1.38 to 12.78), while a
 \taxon{Ca. Lachnocurva vaginae}-centered bridge lineage remains directionally
-persistence-oriented and overlaps the leading VOG-cluster persistence
-neighborhood in 66 of 127 full-cohort samples.
+persistence-oriented.
 
 The capped VOG analyses support this panel-level interpretation. Relative to
 the initial 25k-feature run, broader 50k, 100k, and 250k caps moved depth~4 into
@@ -654,10 +685,9 @@ clearance branch is functionally enriched for sugar transport, carbohydrate-proc
 lactate-linked, and amino-acid transport features, consistent with a protective
 \taxon{Lactobacillus}-centered state. On the persistence-oriented side, the
 bridge \taxon{Ca. Lachnocurva vaginae} lineage carries transport together with
-chemotaxis- and flagellar-related features, echoing the lower-resolution
-VOG-cluster result. This agreement across the VOG-cluster and full-VOG layers
-shows that the framework can recover outcome-associated states while preserving
-taxonomic and functional interpretability across resolution levels.
+chemotaxis- and flagellar-related features. These follow-up annotations show
+that the framework can recover outcome-associated states while preserving
+taxonomic and functional interpretability at gene-family resolution.
 
 The broader reference background appears to stabilize, rather than create, this
 signal. When the fixed full-VOG reference hierarchy is
@@ -669,7 +699,7 @@ the learned state vocabulary,
 but the biological association is still evaluated only in the outcome-labeled
 subset. In CT, the sharpened vocabulary is therefore not only structurally
 stable but also interpretable at the functional level
-(Figures~\ref{fig:ct-full-vog} and \ref{fig:ct-vog-cluster}).
+(Figure~\ref{fig:ct-full-vog}).
 
 \begin{figure}[!htbp]
 \centering
@@ -692,22 +722,6 @@ clearance branch corresponds to
 \taxon{Ca. Lachnocurva} persistence bridge to
 \texttt{VOG0675840 > VOG0676581 > VOG0675786}.}
 \label{fig:ct-full-vog}
-\end{figure}
-
-\begin{figure}[!htbp]
-\centering
-\includegraphics[width=0.95\linewidth,height=0.61\textheight,keepaspectratio]{../assets/figures/FIGURE_4_ct_vog_cluster_followup.pdf}
-\caption{CT VOG-cluster association and biological follow-up. The figure asks
-whether a lower-resolution VOG-cluster feature family recovers an interpretable
-version of the persistence-oriented CT signal seen in the full-VOG hierarchy.
-The VOG-cluster view identifies a mixed persistence-associated neighborhood
-combining a Gardnerella-rich component, a strongly \taxon{Lactobacillus iners}-
-rich component, and an \taxon{Amygdalobacter nucleatus} (BVAB2-like) component,
-with supporting product and KEGG-linked follow-up. The main takeaway is
-resolution-level concordance: the lower-resolution VOG-cluster layer gives an
-annotatable view of the same persistence-oriented structure that appears in the
-full-VOG analysis.}
-\label{fig:ct-vog-cluster}
 \end{figure}
 
 \FloatBarrier
@@ -767,10 +781,25 @@ determined by the retained feature family, deterministic tie handling, and the
 support schedule. The applications therefore evaluate whether this deterministic
 representation is useful in practice, not whether one selected clustering
 implementation can be outperformed on a particular dataset. Supplementary
-Figure~\ref{fig:supp-clustering-contrast} illustrates this definitional
-contrast with a toy example in which clustering labels change with \(k\) or the
-comparison set, whereas aligned samples retain the same assignments after a
-dCST hierarchy has been fitted and frozen.
+Figure~\ref{fig:supp-clustering-contrast} gives a small real-data illustration
+using AGP gut example samples: PAM/enterotype-style labels based on
+Jensen--Shannon distance change when \(k\) or the comparison set changes,
+whereas the same target samples retain identical labels when read through an
+already frozen depth-2 dCST assignment.
+
+This distinction should be read against existing microbiome state frameworks,
+not as a claim that dCSTs replace all of them. PAM-style enterotypes summarize
+large gut datasets by clustering samples in a distance space
+\cite{Arumugam2011_enterotypes,Costea2018_enterotypes,Knights2014_rethinking};
+Dirichlet-multinomial mixture models provide a generative probabilistic
+clustering framework for count data \cite{Holmes2012_DMM}; and VALENCIA
+provides a nearest-centroid classifier for established vaginal bacterial CSTs
+\cite{France2020_VALENCIA}. These approaches are useful when the scientific
+goal is cluster discovery, probabilistic mixture modeling, or assignment to a
+curated centroid vocabulary. dCSTs address a narrower representation problem:
+given a retained feature family and support policy, define a deterministic
+rank-based state label that can be frozen, transferred, rebuilt, and tested
+without choosing a distance-based clustering partition.
 
 The gut application clarifies both the promise and the limits of that strategy.
 Using a shared-taxonomy AGP reference, the analysis learned a taxonomic dCST
@@ -790,12 +819,11 @@ The CT application supports the framework in a different direction. The
 important result is not external transfer, but that the same
 deterministic framework remains informative in a different body site, with a
 different feature universe, and with a richer biological follow-up layer. The
-full-VOG hierarchy showed that CT outcome is organized across a high-resolution
-gene-family-defined panel, while the VOG-cluster layer supplied a lower
-resolution view of a persistence-associated ecological neighborhood. The
-larger capped VOG runs showed that the panel-level signal stabilizes from 50k
-features onward, and the VOG-cluster/full-VOG concordance gives the CT result
-resolution-level support rather than external replication. The clearance-oriented
+full-VOG hierarchy showed that CT outcome is organized across a
+high-resolution gene-family-defined panel. The larger capped VOG runs showed
+that the panel-level signal stabilizes from 50k features onward, supporting the
+CT result as a within-cohort robustness finding rather than external
+replication. The clearance-oriented
 \taxon{Lactobacillus crispatus}/\taxon{Lactobacillus
 jensenii} branch, the persistence-oriented \taxon{L. iners} and
 \taxon{Ca. Lachnocurva vaginae} structure, and the supporting transport,
@@ -819,11 +847,11 @@ the feasibility of learning a taxonomic dCST vocabulary in a large background
 cohort and evaluating its transfer and rebuilt-cohort behavior in external IBD
 datasets, with explicit limits imposed by cohort mismatch and repeated-subject
 structure. The CT analysis validates the ability of the same construction to
-support VOG-cluster and full-VOG outcome analysis with capped-feature robustness
-and resolution-level biological interpretation, but it does not provide an
-external CT replication cohort. Thus, only the gut application evaluates
-external transfer; the CT application evaluates within-cohort metagenomic
-interpretability and robustness across feature resolutions. Together, these
+support full-VOG outcome analysis with capped-feature robustness and biological
+interpretation, but it does not provide an external CT replication cohort.
+Thus, only the gut application evaluates external transfer; the CT application
+evaluates within-cohort metagenomic interpretability and feature-cap
+robustness. Together, these
 applications support dCSTs as a
 deterministic microbiome state representation that can be evaluated across
 different feature families and biological questions; they do not establish a
@@ -847,8 +875,8 @@ These limitations point to natural next steps. In gut, the most important
 extension is to strengthen subject-aware inference, ideally in cohorts with
 more unique controls, richer subtype metadata, and additional molecular layers.
 In CT, independent vaginal metagenomic cohorts would be needed to test external
-replication of the leading VOG-defined and VOG-cluster-defined states, and
-targeted mechanistic follow-up would be needed to evaluate the transport- and
+replication of the leading VOG-defined states, and targeted mechanistic
+follow-up would be needed to evaluate the transport- and
 motility-linked annotations. More broadly, the framework should be evaluated
 in settings where taxonomic, functional, and clinical data can be integrated
 rather than treated separately. That is where a deterministic fitted state
@@ -904,18 +932,20 @@ first-subject corrected \(q\)-value, and bootstrap recurrence.}
 \label{fig:supp-gut-validation-detail}
 \end{figure}
 
-\begin{figure}[!t]
+\begin{figure}[H]
 \centering
-\includegraphics[width=0.98\linewidth]{../assets/figures/FIGURE_S2_clustering_contrast_schematic.pdf}
-\caption{Toy schematic of clustering-defined labels and frozen dCST assignment.
-The schematic is illustrative and is not a benchmark of clustering performance.
-Panel A shows the same target samples receiving different clustering-defined
-labels when the number of clusters or the comparison set changes. This reflects
-the conditional definition of a clustering-derived label, not a claim that any
-particular clustering algorithm performs poorly. Panel B shows the corresponding
-logic for dCST transfer: after a reference hierarchy has been fitted and frozen,
-aligned samples are assigned into the same realized dominance-lineage sets by
-the fixed assignment rule.}
+\includegraphics[width=0.98\linewidth]{../assets/figures/FIGURE_S2_clustering_drift_demo.pdf}
+\caption{Real-data illustration of clustering-label dependence and frozen dCST
+assignment. The analysis used the bundled AGP gut example matrix, with 120
+target samples and 120 additional context samples selected using a fixed random
+seed (20260428). PAM/enterotype-style clustering used Jensen--Shannon distance. Label
+stability is summarized by the adjusted Rand index and by the best matched
+sample agreement after one-to-one relabeling. The same target samples show
+lower stability when \(k\) changes from 3 to 4 or 4 to 5, and when a \(k=4\)
+partition is fit with or without the context samples. The frozen dCST row is
+not a clustering benchmark; it shows the definitional contrast that once a
+dCST hierarchy has been fitted and frozen, the same aligned target samples are
+assigned to the same realized depth-2 labels without refitting.}
 \label{fig:supp-clustering-contrast}
 \end{figure}
 
