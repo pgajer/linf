@@ -1,0 +1,8 @@
+table_id	samples	taxa_raw	zero_library_rows	taxa_max_rel_ge_1pct	taxa_rel_ge_1pct_in_ge_1pct_samples	taxa_nonzero_in_ge_1pct_samples	median_library_size	min_library_size	max_library_size
+agp_local_qza_silva	24566	3620	0	1181	168	635	13165	800	584884
+hmp2_prime	176	4593	0	187	115	405	36778	93	66685
+prjeb84421_prime	73	4593	0	92	92	271	23263	9640	34005
+halfvarson_2017	591	806	0	249	158	522	265968	1	1915173
+gevers_2014	396	1019	0	375	209	590	47666	3698	321567
+jacobs_2023_ibs_250bp	239	710	0	214	155	523	53816	1354	166809
+jacobs_2023_ibs_150bp_sample	502	1465	1	275	144	671	118801	15817	933318
