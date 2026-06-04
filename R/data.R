@@ -54,6 +54,135 @@
 "valencia2k"
 
 
+#' Valencia 1k four-component hypercube embedding example
+#'
+#' A stratified 1,000-sample subset of the Valencia 13k vaginal microbiome
+#' training set, reduced to four selected phylotype coordinates and
+#' L1-normalized over those coordinates. The object is bundled as a lightweight
+#' example for the zero-aware homogeneous-coordinate hypercube embedding in
+#' \code{\link{linf.hypercube.embedding}}.
+#'
+#' @format A list with four components:
+#' \describe{
+#'   \item{rel4}{Numeric matrix (1000 x 4). Rows are samples and columns are
+#'     \code{Li}, \code{Lc}, \code{Gv}, and \code{Bv}. Each row sums to 1 after
+#'     restricting the original Valencia profile to the four mapped taxa.}
+#'   \item{meta}{Data frame (1000 rows) with columns:
+#'     \code{sample_id} (anonymized bundled-data identifier),
+#'     \code{source_row} (row number in the filtered Valencia 13k source),
+#'     \code{Val_CST}, \code{Val_subCST}, \code{selected_mass} (original
+#'     relative-abundance mass carried by the four selected taxa), and
+#'     \code{dominant_component} (largest of \code{Li}, \code{Lc},
+#'     \code{Gv}, \code{Bv} after renormalization).}
+#'   \item{component_map}{Named character vector mapping \code{Li},
+#'     \code{Lc}, \code{Gv}, and \code{Bv} to the original Valencia taxon names:
+#'     \code{Lactobacillus_iners}, \code{Lactobacillus_crispatus},
+#'     \code{Gardnerella_vaginalis}, and \code{BVAB1}.}
+#'   \item{source}{Character string documenting provenance.}
+#' }
+#'
+#' @details
+#' Rows with zero total mass in the four selected taxa are removed before
+#' renormalization. Sampling is stratified by the dominant selected component,
+#' using \code{set.seed(20261604)}. The object is not intended to replace the
+#' full Valencia matrix; it is a compact reproducible example for visualizing
+#' compositional projective-space coordinate charts.
+#'
+#' @source
+#' Generated from the Valencia CST-classifier training dataset. See
+#' \code{data-raw/build_valencia_linf_hypercube_1k.R}.
+#'
+#' @examples
+#' data(valencia_linf_hypercube_1k)
+#' dim(valencia_linf_hypercube_1k$rel4)
+#' table(valencia_linf_hypercube_1k$meta$dominant_component)
+#' emb <- linf.hypercube.embedding(
+#'   valencia_linf_hypercube_1k$rel4,
+#'   reference = "Li"
+#' )
+#' dim(emb)
+#'
+"valencia_linf_hypercube_1k"
+
+
+#' Valencia 13k merged depth-2 DCST assignments
+#'
+#' A lightweight bundled assignment asset containing merged depth-2
+#' L-infinity dominant community state type (DCST) labels for the full Valencia
+#' 13k vaginal microbiome training set.
+#'
+#' @format A list with five components:
+#' \describe{
+#'   \item{assignments}{Data frame with one row per source sample and columns
+#'     \code{sample_id} (anonymized bundled-data identifier), \code{source_row}
+#'     (row number in the filtered Valencia 13k source), \code{Val_CST},
+#'     \code{Val_subCST}, \code{dcst_depth1}, and \code{dcst_depth2}.}
+#'   \item{summaries}{Named list of per-depth summary tables. Each table
+#'     contains \code{depth}, \code{dcst_label}, \code{n}, \code{prop}, and
+#'     \code{path_length}.}
+#'   \item{feature_labels}{Character vector of source taxon labels.}
+#'   \item{params}{List recording the construction parameters.}
+#'   \item{source}{Character string documenting provenance.}
+#' }
+#'
+#' @details
+#' The asset is computed from the Valencia 13k compositional matrix after
+#' L-infinity normalization. DCSTs use \code{n0 = 50} and the merged
+#' \code{low.freq.policy = "absorb"} view, so low-frequency cells are reassigned
+#' to frequent cells rather than stored as explicit rare buckets.
+#'
+#' @source
+#' Generated from the Valencia CST-classifier training dataset. See
+#' \code{data-raw/build_valencia13k_merged_dcst_depths.R}.
+#'
+#' @examples
+#' data(valencia13k_dcst_depth2_merged)
+#' nrow(valencia13k_dcst_depth2_merged$assignments)
+#' head(valencia13k_dcst_depth2_merged$summaries$depth2)
+#'
+"valencia13k_dcst_depth2_merged"
+
+
+#' Valencia 13k merged depth-3 DCST assignments
+#'
+#' A lightweight bundled assignment asset containing merged depth-3
+#' L-infinity dominant community state type (DCST) labels for the full Valencia
+#' 13k vaginal microbiome training set.
+#'
+#' @format A list with five components:
+#' \describe{
+#'   \item{assignments}{Data frame with one row per source sample and columns
+#'     \code{sample_id} (anonymized bundled-data identifier), \code{source_row}
+#'     (row number in the filtered Valencia 13k source), \code{Val_CST},
+#'     \code{Val_subCST}, \code{dcst_depth1}, \code{dcst_depth2}, and
+#'     \code{dcst_depth3}.}
+#'   \item{summaries}{Named list of per-depth summary tables. Each table
+#'     contains \code{depth}, \code{dcst_label}, \code{n}, \code{prop}, and
+#'     \code{path_length}.}
+#'   \item{feature_labels}{Character vector of source taxon labels.}
+#'   \item{params}{List recording the construction parameters.}
+#'   \item{source}{Character string documenting provenance.}
+#' }
+#'
+#' @details
+#' The depth-3 asset extends \code{\link{valencia13k_dcst_depth2_merged}} by one
+#' additional hierarchical DCST refinement. All levels use \code{n0 = 50} and
+#' \code{low.freq.policy = "absorb"}. This object is intended as a reusable
+#' source for selecting richer VALENCIA-derived component sets without
+#' recomputing the full hierarchy from the 13k source matrix.
+#'
+#' @source
+#' Generated from the Valencia CST-classifier training dataset. See
+#' \code{data-raw/build_valencia13k_merged_dcst_depths.R}.
+#'
+#' @examples
+#' data(valencia13k_dcst_depth3_merged)
+#' nrow(valencia13k_dcst_depth3_merged$assignments)
+#' head(valencia13k_dcst_depth3_merged$summaries$depth3)
+#'
+"valencia13k_dcst_depth3_merged"
+
+
 #' American Gut Project gut microbiome dataset
 #'
 #' A stratified subsample of 766 gut microbiome samples from the American Gut
