@@ -81,35 +81,40 @@ Build: \manuscriptbuilddatetime
 
 \begin{abstract}
 Microbiome state labels reduce high-dimensional abundance tables to ecological
-summaries, but clustering-derived labels can drift with the comparison cohort,
-distance metric, initialization, or number of clusters. We present
+summaries, but clustering-derived labels can change when the comparison cohort,
+distance metric, initialization, or number of clusters changes. We present
 dominant-community state types (dCSTs), a deterministic rank-based framework in
 which each sample has a dominance-lineage defined over a retained feature
-family. Under the absorb policy used here, the fitted hierarchy is deterministic
-for a fixed reference cohort, retained features, tie rule, and support schedule;
-once frozen, it provides stable assignment for aligned cohorts.
+family, meaning the taxa or gene groups kept for a given analysis. Under the
+absorb policy used here, the fitted hierarchy is deterministic for a fixed
+reference cohort, retained features, tie rule, and support schedule; once
+frozen, it provides stable assignment for aligned cohorts.
 
 We evaluate dCSTs in two microbiome settings. In gut data, a shared-taxonomy
-American Gut Project dCST vocabulary transfers clinically coherent sample-level
-IBD structure into external cohorts, especially Halfvarson 2017, while
-subject-aware sensitivity bounds the portability claim. In vaginal metagenomes,
-full-VOG dCSTs organize \textit{Chlamydia trachomatis} clearance and persistence
-within the labeled CT cohort, with support from feature-cap robustness and
-taxonomic, product-level, and KEGG-linked interpretation. Together, the two
-applications use dCSTs as a deterministic state vocabulary for portability
-analysis and local biological interpretation, not as a universal biomarker set.
+American Gut Project (AGP) dCST vocabulary transfers clinically coherent
+sample-level inflammatory bowel disease (IBD) structure into external cohorts,
+especially Halfvarson 2017, while subject-aware sensitivity bounds the
+portability claim. In vaginal metagenomes, full VIRGO2 orthologous gene group
+(VOG) dCSTs organize \textit{Chlamydia trachomatis} (CT) clearance and
+persistence within the labeled CT cohort, with support from feature-cap
+robustness and taxonomic, product-level, and KEGG-linked interpretation.
+Together, the two applications use dCSTs as a deterministic state vocabulary for
+portability analysis and local biological interpretation, not as a universal
+biomarker set.
 \end{abstract}
 
 \section{Introduction}
 
-Microbiome studies often need a compact state language. Community-state types,
-enterotypes, and related coarse labels turn high-dimensional abundance tables
-into summaries that can be compared across samples, cohorts, and phenotypes
+Microbiome studies often need compact state definitions: labels that summarize
+high-dimensional abundance tables using a small set of shared features or a
+cohort-level grouping. Community-state types, enterotypes, and related coarse
+labels make it possible to compare samples, cohorts, and phenotypes
 \cite{Ravel2011_CST,Gajer2012_CST,Arumugam2011_enterotypes}. However, many
 widely used state labels are defined by clustering or other cohort-level
-partitioning procedures, so the meaning of a label can shift with the comparison
-cohort, distance metric, or partitioning rule. When the label itself drifts,
-portability and reproducibility become harder to interpret.
+partitioning procedures, so a label learned in one cohort may not have the same
+definition, or may not transfer directly, when the comparison cohort, distance
+metric, or partitioning rule changes. This makes portability and
+reproducibility harder to interpret.
 
 This instability matters especially when the scientific question is not only
 descriptive. External validation, transfer across cohorts, repeated-sample
@@ -152,7 +157,7 @@ Gut (AGP, taxa) & 24,421 & 24,421 & 340 & 50 & 158 & 219 & 221 \\
 CT (full-VOG)   & 3,602  & 604    & 509,501 & 12 & 23 & 52 & 68 \\
 \bottomrule
 \end{tabular}
-\caption{Fitted dCST hierarchies analyzed in this paper. Cohort $n$ is the
+\caption{Overview of the fitted dCST hierarchies analyzed in this paper. Cohort $n$ is the
 structure-learning cohort used to fit the absorb-policy hierarchy; outcome
 subset $n$ is the labeled subset on which outcome contrasts are evaluated
 (identical to the structure-learning cohort in gut, restricted to the labeled
@@ -164,11 +169,12 @@ Supplementary Table~S2.}
 
 Dominant-community state types (dCSTs) were developed for this purpose. A
 pre-policy dCST lineage is a rank-based dominance path built from a retained
-feature family: samples are assigned first by their dominant retained feature
-and then recursively refined by the next dominant retained feature within each
-retained parent state. With the absorb policy used here, small provisional
-child states are reassigned into nearby retained named states rather than
-pooled into one residual bucket. The fitted absorb-policy vocabulary is
+feature family: samples are assigned first by their dominant retained feature,
+then each group of samples with the same current label is split again by the
+next dominant retained feature. With the absorb policy used here, small
+provisional subgroups created during refinement are reassigned into nearby
+retained named states rather than pooled into one residual bucket. The fitted
+absorb-policy vocabulary is
 deterministic for a specified reference cohort, retained feature family, tie
 rule, and support schedule; after freezing, it provides stable assignment into
 explicit retained-feature lineages for aligned samples. The analyses that
@@ -177,15 +183,16 @@ biomarker discovery.
 
 We evaluate dCSTs in two applications. The gut application tests portability:
 whether a taxonomic dCST vocabulary learned in a large shared-taxonomy American
-Gut Project background transfers into clinically annotated IBD cohorts, how
-direct transfer compares with cohort-specific rebuilt hierarchies, and how
-those signals behave under subject-aware sensitivity. The vaginal metagenomic
-CT application tests within-cohort interpretation: whether the same
-construction remains useful in a different niche and feature universe, using
-full-VOG gene-family states with taxonomic, product-level, and KEGG-linked
-follow-up. Together, the settings test whether dCSTs can provide deterministic,
-interpretable state construction without clustering-defined labels;
-cross-cohort portability under compatible conditions in gut IBD; and
+Gut Project background transfers into clinically annotated inflammatory bowel
+disease (IBD) cohorts, how direct transfer compares with cohort-specific
+rebuilt hierarchies, and how those signals behave under subject-aware
+sensitivity. The vaginal metagenomic \textit{Chlamydia trachomatis} (CT)
+application tests within-cohort interpretation: whether the same construction
+remains useful in a different niche and feature universe, using full VIRGO2
+orthologous gene group (VOG) feature states with taxonomic, product-level, and
+KEGG-linked follow-up. Together, the settings test whether dCSTs can provide
+deterministic, interpretable state construction without clustering-defined
+labels; cross-cohort portability under compatible conditions in gut IBD; and
 within-cohort metagenomic interpretation in an independent CT setting.
 
 \begin{figure}[H]
@@ -193,10 +200,10 @@ within-cohort metagenomic interpretation in an independent CT setting.
 % \includegraphics[width=0.98\linewidth,height=0.56\textheight,keepaspectratio]{../assets/figures/FIGURE_1_dcst_conceptual_framework.pdf}
 \includegraphics[scale=0.7]{../assets/figures/FIGURE_1_dcst_conceptual_framework.pdf}
 \caption{Conceptual dCST construction. Samples are assigned by their dominant
-retained feature and recursively refined by the next dominant retained feature
-within each retained parent state. The absorb policy reassigns low-support
-provisional children into retained sibling states rather than collapsing them
-into a residual bucket.}
+retained feature, and each resulting sample group is then refined by the next
+dominant retained feature among samples in that group. The absorb policy
+reassigns low-support provisional subgroups into retained named states from the
+same refinement step rather than collapsing them into a residual bucket.}
 \label{fig:dcst-concept}
 \end{figure}
 
@@ -357,13 +364,13 @@ initialization, or a number-of-clusters parameter. Third, after a hierarchy has
 been fitted and frozen, aligned external samples are assigned stably into the
 realized lineage sets of that hierarchy. This separates cohort-level hierarchy
 fitting from sample-level assignment, in contrast to clustering-defined state
-labels whose meaning can drift with the comparison cohort.
+labels whose cohort-specific definitions can change with the comparison cohort.
 
-Because recursive refinement produces many provisional low-frequency child
-states, the hierarchy also requires an explicit low-frequency policy. We use
-the absorb policy throughout the primary analyses. Under this policy, provisional
-child states below the depth-specific minimum-support threshold are reassigned
-into retained named states rather than pooled into a single residual bucket.
+Because recursive refinement produces many provisional low-frequency subgroups,
+the hierarchy also requires an explicit low-frequency policy. We use the absorb
+policy throughout the primary analyses. Under this policy, provisional subgroups
+below the depth-specific minimum-support threshold are reassigned into retained
+named states rather than pooled into a single residual bucket.
 This keeps the hierarchy readable and supports direct comparison of named
 dominance-lineages across downstream analyses. Pure-policy hierarchies remain
 useful as methodological sensitivity analyses, but the analyses here emphasize
@@ -624,9 +631,12 @@ remained more resilient but still weakened. Rebuilt ulcerative colitis provided
 the clearest residual subject-aware pattern, with first-sample
 $q = 0.075$, bootstrap recurrence 58.3\%, and median bootstrap odds ratio 5.05,
 which we interpret as the strongest remaining subject-aware support rather than
-as a second formal BH-significant result. Halfvarson therefore supports
-sample-level portability of the representation, but the repeated-sample
-structure limits disease-versus-control transfer interpretation.
+as a second formal BH-significant result. In practical terms, the same
+ulcerative-colitis-associated label reappeared in more than half of the
+one-sample-per-subject resamples, but the evidence was not strong enough to call
+it a second corrected positive result. Halfvarson therefore supports sample-level
+portability of the representation, but the repeated-sample structure limits
+disease-versus-control transfer interpretation.
 
 The most informative within-disease extension in gut was Crohn location, with
 ileal-involved versus colonic-only Crohn cases defined according to the
@@ -834,11 +844,14 @@ about the reusable representation, not a universal label set.}
 
 We asked whether microbiome state labels can be made deterministic and
 interpretable without relying on clustering-defined CST or enterotype
-constructs. dCSTs replace cluster membership with retained-feature
-dominance-lineages: the pre-policy dominance order is defined sample by sample,
-the absorb-policy hierarchy is deterministic for a fixed reference cohort and
-support schedule, and frozen transfer then assigns aligned samples stably into
-the realized lineage sets of that hierarchy. This turns a microbiome state
+constructs. In practical terms, this asks whether a sample can receive the same
+state label whenever the retained features and reference hierarchy are fixed,
+rather than receiving a label that depends on refitting a clustering solution.
+dCSTs replace cluster membership with retained-feature dominance-lineages: the
+pre-policy dominance order is defined sample by sample, the absorb-policy
+hierarchy is deterministic for a fixed reference cohort and support schedule,
+and frozen transfer then assigns aligned samples stably into the realized
+lineage sets of that hierarchy. This turns a microbiome state
 label from a model-fit cohort-level partition into an object that can be named,
 transferred, and interrogated sample by sample.
 
