@@ -4,6 +4,7 @@
 ##
 ## Creates the bundled `valencia2k` example dataset for the linf package
 ## from the canonical Valencia 13k training set.
+## Upstream: https://github.com/ravel-lab/VALENCIA
 ##
 ## Input files (not shipped with the package):
 ##   ~/current_projects/valencia/tx.13k.rds                          -- 12881 x 178 compositional matrix
@@ -111,7 +112,7 @@ valencia2k <- list(
   source = paste0(
     "Stratified subsample (n=", nrow(rel),
     ") from the Valencia 13k vaginal 16S training set ",
-    "(France et al. 2020, doi:10.1128/mSystems.00149-20). ",
+    "(France et al. 2020, doi:10.1186/s40168-020-00934-6). ",
     "Original dataset: 12881 samples x 178 taxa. ",
     "Subsampled with set.seed(42), stratified by Val_subCST. ",
     "Matrix is compositional (rows sum to 1). ",

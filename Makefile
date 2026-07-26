@@ -45,7 +45,7 @@ check-fast: build
 	PATH="$(HOMEBREW_BIN):$$PATH" R_TIDYCMD="$(HOMEBREW_BIN)/tidy" R CMD check $(TARBALL) --as-cran --no-examples --no-tests --no-manual
 
 check-examples: build
-	PATH="$(HOMEBREW_BIN):$$PATH" R_TIDYCMD="$(HOMEBREW_BIN)/tidy" R CMD check $(TARBALL) --as-cran --examples
+	PATH="$(HOMEBREW_BIN):$$PATH" R_TIDYCMD="$(HOMEBREW_BIN)/tidy" R CMD check $(TARBALL) --as-cran --no-tests --no-vignettes --no-manual
 
 install: build
 	R CMD INSTALL $(TARBALL)

@@ -2,10 +2,14 @@
 ## build_agp_gut.R
 ## ============================================================================
 ##
-## Creates the bundled `agp_gut` example dataset for the linf package
-## from the pre-subsampled AGP gut microbiome CSV files.
+## Creates the bundled `agp_gut` example dataset for the linf package from
+## the deterministic AGP demonstration-subset files.
 ##
-## Input files (in inst/extdata/, created by create_agp_gut_subset.py):
+## `data-raw/create_agp_gut_subset.py` deterministically selects membership
+## from the retained 5,000-sample DCST assignments, then writes the count and
+## metadata inputs below. Phenotypes are joined after membership is fixed.
+##
+## Input files (in inst/extdata/):
 ##   agp_gut_counts.csv.gz  -- 766 x 314 count matrix (samples x taxa)
 ##   agp_gut_meta.csv       -- 766-row metadata with DCST labels and disease indicators
 ##   agp_gut_taxa.txt       -- 314 SILVA taxonomy strings
@@ -74,17 +78,21 @@ agp_gut <- list(
   meta   = meta_df,
   taxa   = taxa,
   source = paste0(
-    "Stratified subsample (n=", nrow(counts),
+    "DCST-stratified subsample (n=", nrow(counts),
     ") from the American Gut Project (PRJEB11419, AGP-US-2015). ",
     "Original dataset: ~26,900 gut samples, subsampled from a 5,000-sample ",
-    "exploratory analysis. Stratified to enrich rare disease-associated DCSTs ",
-    "(Prevotella_7, Pasteurellaceae, Akkermansia, Staphylococcus) and over-sample ",
-    "IBD, IBS, obesity, and cardiovascular disease cases. ",
-    "Eukaryota and Unassigned DCSTs excluded. ",
+    "exploratory analysis. Includes all samples in four uncommon demonstration ",
+    "DCSTs (Prevotella_7, Pasteurellaceae, Akkermansia, Staphylococcus), then ",
+    "fills the remaining slots by a seed-42 simple random sample from the ",
+    "eligible background. Phenotypes do not influence selection. ",
+    "Eukaryota and Unassigned depth-1 labels are excluded. ",
     "Counts are raw 16S V4 reads (SILVA taxonomy). ",
     "Metadata includes self-reported health conditions from the AGP questionnaire. ",
     "Created with set.seed(42), March 2026. ",
-    "See data-raw/build_agp_gut.R for full provenance."
+    "Run IDs, selection reasons, and derived annotations are retained in ",
+    "inst/extdata/agp_gut_meta.csv. See data-raw/create_agp_gut_subset.py, ",
+    "data-raw/build_agp_gut.R, ",
+    "and inst/DATA_PROVENANCE.md for provenance and appropriate-use details."
   )
 )
 

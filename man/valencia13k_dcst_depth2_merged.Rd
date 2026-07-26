@@ -20,8 +20,10 @@ contains \code{depth}, \code{dcst_label}, \code{n}, \code{prop}, and
 }
 }
 \source{
-Generated from the Valencia CST-classifier training dataset. See
-\code{data-raw/build_valencia13k_merged_dcst_depths.R}.
+Generated from the VALENCIA training data at
+\url{https://github.com/ravel-lab/VALENCIA}. See
+\code{data-raw/build_valencia13k_merged_dcst_depths.R} and the installed
+\code{DATA_PROVENANCE.md} file.
 }
 \usage{
 valencia13k_dcst_depth2_merged

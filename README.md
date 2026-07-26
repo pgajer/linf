@@ -1,3 +1,4 @@
+
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 <!-- badges: start -->
@@ -8,17 +9,17 @@
 
 # linf — L∞ Normalization and DCSTs for Compositional Data
 
-**linf** is a minimal, dependency-free R package for analysing compositional
-data through L-infinity (L∞) normalization and Dominant Community State
-Types (DCSTs).
+**linf** is a lightweight R package for analysing compositional data
+through L-infinity (L∞) normalization and Dominant Community State Types
+(DCSTs).
 
 Standard compositional approaches (CLR, ILR) map data into log-ratio
 coordinates, introducing complications with zeros and obscuring the
-dominant features that often drive biological variation. L∞ normalization
-takes a different path: divide each sample by its maximum, placing every
-observation on the boundary of the unit L∞ ball. The dominant feature —
-the one that achieves the maximum — defines a natural, parameter-free
-partition of samples into **L∞ cells** (DCSTs).
+dominant features that often drive biological variation. L∞
+normalization takes a different path: divide each sample by its maximum,
+placing every observation on the boundary of the unit L∞ ball. The
+dominant feature — the one that achieves the maximum — defines a
+natural, parameter-free partition of samples into **L∞ cells** (DCSTs).
 
 At its core this is a **rank-based analysis**. Depth-1 DCSTs partition
 samples by the rank-1 (most abundant) feature. Depth-2 DCSTs refine each
@@ -89,50 +90,45 @@ res <- linf.csts(Z, n0 = 4)
 table(res$cell.label, useNA = "ifany")
 ```
 
-## Gut Microbiome: DCST–Disease Associations
+## Gut Microbiome Demonstration
 
-The figures below illustrate L∞ DCSTs applied to 766 gut microbiome
-samples from the American Gut Project (AGP). Without clustering,
-reference databases, or parameter tuning beyond the threshold *n*₀, the
-pipeline recovers dominant taxa and reveals clinically meaningful disease
-associations via Fisher's exact test with Benjamini–Hochberg correction.
+The figure below illustrates L∞ DCSTs in a bundled set of 766 gut
+microbiome samples from the American Gut Project (AGP). The subset was
+deliberately stratified to include every sample assigned to four
+selected uncommon DCSTs; the remaining slots are a seed-42 simple random
+sample from the eligible background. Phenotypes do not influence
+selection. The object is suitable for demonstrating the package
+workflow, but its phenotype frequencies, effect sizes, and p-values must
+not be interpreted as population estimates because inclusion
+probabilities differ by DCST.
 
 ### DCST Size Distribution
 
 <img src="man/figures/readme-dcst-barplot.png" alt="Barplot of depth-1 DCST sizes in 766 AGP gut samples" width="700" />
 
-The most common depth-1 DCSTs are *Bacteroides* (154 samples),
-*Escherichia-Shigella* (106), and *Prevotella_7* (89). The red bar marks
-RARE_DOMINANT — samples whose rank-1 taxon does not form a large enough
-cell, a signature of unusual or low-abundance dominance.
+The largest depth-1 DCSTs in this selected subset are *Bacteroides*,
+*Escherichia-Shigella*, and `RARE_DOMINANT`. The red bar marks
+`RARE_DOMINANT`—samples whose rank-1 taxon does not form a large enough
+cell at the chosen threshold.
 
-### DCST × Disease Heatmap
-
-<img src="man/figures/readme-dcst-disease-heatmap.png" alt="Heatmap of DCST by disease odds ratios in AGP gut samples" width="700" />
-
-Among the significant associations (q \< 0.05): *Bacteroides* enrichment
-in obesity (OR ≈ 3.0), *Escherichia-Shigella* enrichment in IBS
-(OR ≈ 2.8), *Pasteurellaceae* enrichment in cardiovascular disease
-(OR ≈ 4.5), and *Prevotella_7* depletion in seasonal allergies
-(OR ≈ 0.2).
-
-See `vignette("linf-intro")` and the companion article [Gut DCST–Disease
-Associations](https://pgajer.github.io/linf/articles/gut-dcst-disease-analysis.html)
-for the full analysis.
+See `vignette("linf-intro")` for the package-safe demonstration. The
+[full-analysis
+source](https://github.com/pgajer/linf/blob/main/vignettes/articles/gut-dcst-disease-analysis.Rmd)
+uses an independently selected 5,000-sample analysis cohort and is
+maintained as a companion repository article rather than a package
+vignette.
 
 ## Vignettes
 
-The package ships with three vignettes:
+The package ships with two vignettes:
 
-- **L-Infinity CSTs: From Normalization to Disease Associations** — a
+- **L-Infinity CSTs: From Normalization to a Gut Demonstration** — a
   step-by-step tutorial covering L∞ normalization, cell assignment,
-  truncated DCSTs, and disease-association testing on the bundled AGP gut
+  truncated DCSTs, and descriptive exploration of the bundled AGP gut
   data.
 - **DCSTs for Vaginal Microbiome Data** — applying the pipeline to the
   Valencia 2k vaginal dataset, demonstrating how L∞ DCSTs recover the
   classical community state types (CST I–V) without supervised training.
-- **Gut DCST–Disease Associations: Full AGP Analysis** — a companion
-  article with the full 5,000-sample AGP analysis and landmark profiles.
 
 ``` r
 browseVignettes("linf")
@@ -176,4 +172,5 @@ If you use this package, please cite:
 
 ## License
 
-MIT © 2025 Pawel Gajer. See `LICENSE` / `LICENSE.md`.
+MIT © 2025 Pawel Gajer. See `LICENSE` / `LICENSE.md`. Bundled-data
+sources and upstream terms are recorded in `inst/DATA_PROVENANCE.md`.

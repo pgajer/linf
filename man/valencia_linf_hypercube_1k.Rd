@@ -25,8 +25,10 @@ relative-abundance mass carried by the four selected taxa), and
 }
 }
 \source{
-Generated from the Valencia CST-classifier training dataset. See
-\code{data-raw/build_valencia_linf_hypercube_1k.R}.
+Generated from the VALENCIA training data at
+\url{https://github.com/ravel-lab/VALENCIA}. See
+\code{data-raw/build_valencia_linf_hypercube_1k.R} and the installed
+\code{DATA_PROVENANCE.md} file.
 }
 \usage{
 valencia_linf_hypercube_1k

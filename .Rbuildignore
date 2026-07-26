@@ -21,6 +21,8 @@
 ^notes$
 ^papers$
 ^data-raw$
+^vignettes/articles$
+^AGENTS\.md$
 ^\.claude$
 ^dcst_depth2_distribution\.png$
 ^dcst_disease_heatmap\.png$
