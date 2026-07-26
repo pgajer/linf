@@ -1,8 +1,8 @@
-#' Format feature labels for L-infinity cells and CSTs
+#' Format feature labels for dominant-feature assignments and dCSTs
 #'
 #' @description
 #' Builds unique display labels from stable feature IDs and taxonomy strings.
-#' This is useful when CST computation should operate on stable internal feature
+#' This is useful when dCST computation should operate on stable internal feature
 #' identifiers (for example `asv_4`) while reports and figures should use
 #' human-readable labels such as `L. iners 4`.
 #'

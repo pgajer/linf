@@ -33,7 +33,7 @@ valencia2k
 \description{
 A stratified subsample of 2,000 vaginal samples from the Valencia 13k
 CST-classifier training set (France et al. 2020), bundled as an example
-dataset for demonstrating L-infinity DCST construction.
+dataset for demonstrating dCST construction after L-infinity normalization.
 }
 \details{
 The subsample preserves proportional representation of all 13 Valencia
@@ -46,7 +46,7 @@ contains 12,881 samples and 178 taxonomic features after filtering.
 
 This 2,000-sample subsample is intended for vignette demonstrations. The
 compositional matrix can be used directly with \code{\link{normalize.linf}}
-and downstream DCST functions. For workflows that require count-like input,
+and downstream dCST functions. For workflows that require count-like input,
 reconstruct approximate counts using the \code{reads} vector.
 }
 \examples{

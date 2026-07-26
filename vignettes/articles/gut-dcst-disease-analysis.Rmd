@@ -1,5 +1,5 @@
 ---
-title: "Exploratory Gut DCST-Phenotype Analysis"
+title: "Exploratory Gut dCST-Phenotype Analysis"
 output: rmarkdown::html_vignette
 ---
 
@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 ```
 
 This companion article presents the full 5,000-sample American Gut Project
-(AGP) DCST analysis that underlies the curated subset in
+(AGP) dCST analysis that underlies the curated subset in
 `vignette("linf-intro")`. Unlike the package vignette, this article is *not*
 built during `R CMD check`---it uses external data files and takes several
 minutes to run. The code below is fully reproducible given access to the
@@ -77,7 +77,7 @@ meta_sub   <- agp_meta[sub_idx, ]
 cat("Subsampled:", nrow(counts_sub), "samples\n")
 ```
 
-## Phase 2: QC and DCST Construction
+## Phase 2: QC and dCST Construction
 
 ```{r filter}
 filt <- filter.asv(counts_sub, min.lib = 1000, prev.prop = 0.05,
@@ -90,14 +90,14 @@ cat("After filtering:", nrow(filt$counts), "samples x",
 ## L-infinity normalization
 M <- normalize.linf(filt$counts)
 
-## Depth-1 DCSTs
+## Depth-1 dCSTs
 csts1 <- linf.csts(M, n0 = 50)
-cat("\nDepth-1 DCSTs:\n")
+cat("\nDepth-1 dCSTs:\n")
 print(sort(table(csts1$cell.label), decreasing = TRUE))
 
 ## Depth-2 refinement
 csts2 <- refine.linf.csts(M, csts1, n0 = 50)
-cat("\nDepth-2 DCSTs (n >= 50):\n")
+cat("\nDepth-2 dCSTs (n >= 50):\n")
 tab2 <- sort(table(csts2$cell.label), decreasing = TRUE)
 print(tab2[tab2 >= 50])
 ```
@@ -109,7 +109,7 @@ barplot(tab1,
         col = ifelse(names(tab1) == "RARE_DOMINANT", "#e74c3c", "#3498db"),
         las = 2, cex.names = 0.8,
         ylab = "Number of samples",
-        main = "Gut DCST Size Distribution (AGP, n=5000, depth 1)")
+        main = "Gut dCST Size Distribution (AGP, n=5000, depth 1)")
 ```
 
 ## Phase 3: Exploratory Phenotype Association Testing
@@ -146,7 +146,7 @@ disease_mat <- cbind(disease_mat, Obesity = as.integer(!is.na(bmi) & bmi >= 30))
 ```
 
 ```{r fisher-tests}
-## Fisher's exact test for each DCST x condition pair
+## Fisher's exact test for each dCST x condition pair
 dcst_labels <- csts1$cell.label
 kept_dcsts  <- names(tab1[tab1 >= 30])
 
@@ -175,9 +175,9 @@ for (dcst in kept_dcsts) {
     }
 
     results <- rbind(results, data.frame(
-      DCST = dcst, Condition = cond,
-      n_DCST = sum(in_dcst), n_cases = a,
-      prev_DCST = round(a / sum(in_dcst), 3),
+      dCST = dcst, Condition = cond,
+      n_dCST = sum(in_dcst), n_cases = a,
+      prev_dCST = round(a / sum(in_dcst), 3),
       prev_pop  = round((a + cc) / length(dcst_labels), 3),
       OR = round(ft$estimate, 2),
       CI_low = round(ci[1], 2), CI_high = round(ci[2], 2),
@@ -201,7 +201,7 @@ cat("Exploratory q < 0.05 signals:", sum(results$q_value < 0.05), "\n")
 top20 <- head(results, 20)
 top20$p_value <- formatC(top20$p_value, format = "e", digits = 2)
 top20$q_value <- formatC(top20$q_value, format = "e", digits = 2)
-knitr::kable(top20, caption = "Top 20 exploratory DCST-phenotype results by p-value",
+knitr::kable(top20, caption = "Top 20 exploratory dCST-phenotype results by p-value",
              row.names = FALSE)
 ```
 
@@ -209,7 +209,7 @@ knitr::kable(top20, caption = "Top 20 exploratory DCST-phenotype results by p-va
 ## Heatmap of exploratory signals
 sig <- results[results$q_value < 0.2, ]
 if (nrow(sig) > 0) {
-  or_mat <- tapply(sig$OR, list(sig$DCST, sig$Condition), identity)
+  or_mat <- tapply(sig$OR, list(sig$dCST, sig$Condition), identity)
   or_mat[is.na(or_mat)] <- 1  # neutral OR
 
   log2_or <- log2(or_mat)
@@ -218,7 +218,7 @@ if (nrow(sig) > 0) {
 
   ## Simple heatmap
   image(t(log2_or), col = colorRampPalette(c("#2166AC", "white", "#B2182B"))(50),
-        axes = FALSE, main = "Exploratory DCST x Phenotype Results (q < 0.2)")
+        axes = FALSE, main = "Exploratory dCST x Phenotype Results (q < 0.2)")
   axis(1, at = seq(0, 1, length.out = nrow(log2_or)),
        labels = rownames(log2_or), las = 2, cex.axis = 0.7)
   axis(2, at = seq(0, 1, length.out = ncol(log2_or)),
@@ -229,13 +229,13 @@ if (nrow(sig) > 0) {
 ## Phase 4: Landmark Analysis
 
 ```{r landmarks}
-## Landmark points for depth-1 DCSTs
+## Landmark points for depth-1 dCSTs
 lm1 <- linf.landmarks(M, csts1, depth = 1,
                        landmark.types = c("endpoint.max", "endpoint.min",
                                           "mean.rep"))
 
-## Focus on disease-associated DCSTs
-disease_dcsts <- unique(sig$DCST[sig$q_value < 0.1])
+## Focus on disease-associated dCSTs
+disease_dcsts <- unique(sig$dCST[sig$q_value < 0.1])
 
 for (dcst_name in disease_dcsts) {
   if (!dcst_name %in% names(lm1)) next
@@ -256,13 +256,13 @@ for (dcst_name in disease_dcsts) {
 
 ## Descriptive and Exploratory Summary
 
-Using 5,000 AGP gut samples, the L-infinity DCST pipeline identified:
+Using 5,000 AGP gut samples, the dCST pipeline identified:
 
-- **14 depth-1 DCSTs** (n0 = 50), dominated by *Bacteroides* (~35%) and
+- **14 depth-1 dCSTs** (n0 = 50), dominated by *Bacteroides* (~35%) and
   *Escherichia-Shigella* (~23%).
 - **12.8% of samples in RARE_DOMINANT**, representing the tail of unusual
   single-species dominance.
-- **11 exploratory DCST-disease signals** with q < 0.05 after
+- **11 exploratory dCST-disease signals** with q < 0.05 after
   Benjamini-Hochberg correction in this analysis cohort.
 
 The strongest signals include *Prevotella_7* enrichment in obesity (OR ~ 4.0),
@@ -270,7 +270,7 @@ The strongest signals include *Prevotella_7* enrichment in obesity (OR ~ 4.0),
 *Prevotella_9* depletion in autoimmune conditions (OR ~ 0.3), and
 *Escherichia-Shigella* enrichment in IBS (OR ~ 1.5).
 
-These unadjusted results show how DCST labels can be carried into a downstream
+These unadjusted results show how dCST labels can be carried into a downstream
 association workflow. They require covariate adjustment, sensitivity analyses,
 and independent validation before biological or clinical interpretation.
 
