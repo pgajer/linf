@@ -47,7 +47,7 @@ revdep/
 *.tmp
 *.bak
 *~
-.claude/
+.qa-logs/
 
 # Developer scratch (keep if you use these; optional)
 build/

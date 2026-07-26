@@ -28,8 +28,11 @@ def main():
     tmpdir = Path(tempfile.mkdtemp(prefix='docx_pages_'))
     try:
         prefix = tmpdir / 'page'
+        pdftoppm = shutil.which('pdftoppm')
+        if pdftoppm is None:
+            raise RuntimeError('pdftoppm is required but was not found on PATH')
         subprocess.run([
-            '/opt/homebrew/bin/pdftoppm', '-png', str(pdf), str(prefix)
+            pdftoppm, '-png', str(pdf), str(prefix)
         ], check=True)
         images = sorted(tmpdir.glob('page-*.png'))
         if not images:

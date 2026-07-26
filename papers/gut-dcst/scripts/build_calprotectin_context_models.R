@@ -4,9 +4,8 @@
 #
 # Manuscript-ready Halfvarson 2017 Crohn calprotectin follow-up.
 #
-# This refactored script replaces the earlier prototype context-model workflow
-# with a validation-branch-aware pipeline that stays aligned with the sample
-# universe used in the current manuscript.
+# The validation-branch-aware pipeline stays aligned with the sample universe
+# used in the current manuscript.
 #
 # Manuscript-facing analysis:
 #   Pragmatic high-inflammatory-burden split at calprotectin >= 250 ug/g
@@ -36,9 +35,11 @@ script_path <- if (nzchar(script_arg)) {
 }
 script_dir <- dirname(script_path)
 paper_root <- normalizePath(file.path(script_dir, ".."), winslash = "/", mustWork = TRUE)
-current_projects_root <- normalizePath(file.path(paper_root, "..", "..", ".."),
-                                       winslash = "/", mustWork = TRUE)
-gut_root <- file.path(current_projects_root, "gut_microbiome")
+gut_root <- Sys.getenv("GUT_MICROBIOME_ROOT")
+if (!nzchar(gut_root)) {
+  stop("Set GUT_MICROBIOME_ROOT to the external gut_microbiome project directory.")
+}
+gut_root <- normalizePath(gut_root, winslash = "/", mustWork = TRUE)
 tables_dir <- file.path(paper_root, "assets", "tables")
 figures_dir <- file.path(paper_root, "assets", "figures")
 dir.create(tables_dir, recursive = TRUE, showWarnings = FALSE)

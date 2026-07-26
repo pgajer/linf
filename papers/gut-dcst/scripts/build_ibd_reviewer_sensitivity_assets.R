@@ -17,8 +17,11 @@ script_path <- if (nzchar(script_arg)) {
 }
 script_dir <- dirname(script_path)
 paper_root <- normalizePath(file.path(script_dir, ".."), winslash = "/", mustWork = TRUE)
-current_projects_root <- normalizePath(file.path(paper_root, "..", "..", ".."), winslash = "/", mustWork = TRUE)
-gut_root <- file.path(current_projects_root, "gut_microbiome")
+gut_root <- Sys.getenv("GUT_MICROBIOME_ROOT")
+if (!nzchar(gut_root)) {
+  stop("Set GUT_MICROBIOME_ROOT to the external gut_microbiome project directory.")
+}
+gut_root <- normalizePath(gut_root, winslash = "/", mustWork = TRUE)
 tables_dir <- file.path(paper_root, "assets", "tables")
 
 run_dir <- file.path(gut_root, "outputs", "dcst_analysis", "runs", "2026-04-26-agp-silva-local-qza-absorb-depth4-n0_50_25_25_25")

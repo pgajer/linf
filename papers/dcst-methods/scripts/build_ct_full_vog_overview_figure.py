@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import FancyBboxPatch
 
 
-ROOT = Path("/Users/pgajer/current_projects/linf/papers/dcst-methods")
+ROOT = Path(__file__).resolve().parents[1]
 OUT_DIR = ROOT / "assets" / "figures"
 PDF_OUT = OUT_DIR / "FIGURE_3_ct_full_vog_overview.pdf"
 PNG_OUT = OUT_DIR / "FIGURE_3_ct_full_vog_overview.png"

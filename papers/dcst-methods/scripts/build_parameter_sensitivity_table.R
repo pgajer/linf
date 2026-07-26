@@ -18,19 +18,25 @@ fmt_v <- function(x) sprintf("%.3f", x)
 tables_dir <- file.path(repo, "papers", "dcst-methods", "assets", "tables")
 dir.create(tables_dir, recursive = TRUE, showWarnings = FALSE)
 
+ct_root <- Sys.getenv("CT_CLEARANCE_ROOT")
+if (!nzchar(ct_root)) {
+  stop("Set CT_CLEARANCE_ROOT to the external CT_clearance project directory.")
+}
+ct_root <- normalizePath(ct_root, mustWork = TRUE)
+
 raw_sizes_path <- file.path(
   repo,
   "papers", "gut-dcst", "notes", "n0_quantile_threshold_report",
   "tables", "agp_raw_lineage_set_sizes_by_depth.tsv"
 )
 ct_cap_path <- file.path(
-  "/Users/pgajer/current_projects/CT_clearance",
+  ct_root,
   "analysis_output/ct_combined_vog_dcst_sensitivity_2026-04-10",
   "sensitivity_cap_summary.tsv"
 )
 agp_demo_path <- file.path(repo, "data", "agp_gut.rda")
 ct_cap50_matrix_path <- file.path(
-  "/Users/pgajer/current_projects/CT_clearance",
+  ct_root,
   "data/processed/ct_biological_plus_virgo2_sensitivity_2026-04-10",
   "cap_050000/x__ct_biological_plus_virgo2__vog.rds"
 )
