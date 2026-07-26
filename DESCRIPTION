@@ -16,6 +16,7 @@ Description: Implements L-infinity normalization for compositional matrices,
     illustrative and are not suitable for population-level inference.
 License: MIT + file LICENSE
 Encoding: UTF-8
+Language: en-US
 LazyData: true
 Roxygen: list(markdown = TRUE)
 Depends:
