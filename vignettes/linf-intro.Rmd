@@ -1,8 +1,8 @@
 ---
-title: "L-Infinity CSTs: From Normalization to Disease Associations"
+title: "L-Infinity CSTs: From Normalization to a Gut Demonstration"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{L-Infinity CSTs: From Normalization to Disease Associations}
+  %\VignetteIndexEntry{L-Infinity CSTs: From Normalization to a Gut Demonstration}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -25,8 +25,8 @@ The `linf` package implements L-infinity normalization and Dominant Community
 State Types (DCSTs) for compositional data. This vignette demonstrates the
 complete workflow in two parts: first a quick-start with toy data to introduce
 the core functions, then a real-data analysis of gut microbiome samples from
-the American Gut Project showing that DCSTs capture clinically meaningful
-dominance patterns.
+the American Gut Project showing how to inspect dominant and subdominant
+community structure.
 
 ## Part 1: Quick Start with Toy Data
 
@@ -80,30 +80,27 @@ Only Dom1 (6 samples) meets the `n0 = 5` threshold. Dom2 and Dom3 are
 collapsed into `RARE_DOMINANT`.
 
 
-## Part 2: Gut Microbiome DCSTs and Disease
+## Part 2: Gut Microbiome DCST Demonstration
 
 ### Background
 
-In the vaginal microbiome, single-species dominance is common and generally
-healthy---for instance, *Lactobacillus crispatus* dominance defines CST I, the
-healthiest community state. The gut is fundamentally different. Healthy gut
-communities are diverse, and single-species dominance is rare and often
-associated with pathology: post-antibiotic *Enterococcus* blooms,
-*Clostridioides* overgrowth in IBD, and similar dysbiotic states.
-
-This means that DCSTs applied to gut data should produce a large "mixed"
-majority (many taxa share abundance) alongside a tail of strongly dominated
-samples---and those dominated samples may be enriched for disease. This is a
-powerful use case for DCSTs: they identify clinically meaningful dominance
-patterns *without any clustering*.
+Single-species dominance is common in some microbial ecosystems and less
+common in others. DCSTs provide a deterministic way to summarize the dominant
+feature and then refine large groups by subdominant features. The gut example
+below demonstrates those mechanics without treating the selected package
+subset as an epidemiologic sample.
 
 ### The data
 
 The `agp_gut` dataset bundled with this package contains `r nrow(agp_gut$counts)`
 gut microbiome samples from the American Gut Project (PRJEB11419), a citizen-science
-16S rRNA V4 survey. The dataset is a stratified subsample designed to preserve
-rare disease-associated community types while keeping the file size small enough
-for CRAN.
+16S rRNA V4 survey. The dataset is a DCST-stratified demonstration subset
+that includes all samples in four selected uncommon DCSTs and fills
+the remaining slots with a seed-42 simple random sample from the eligible
+background. Phenotypes are joined only after selection and do not influence
+membership. Because inclusion probabilities differ by DCST, it is not a
+probability sample of the underlying cohort; phenotype frequencies, effect
+sizes, and hypothesis tests must not be interpreted as population results.
 
 ```{r load-data}
 data(agp_gut)
@@ -209,130 +206,37 @@ text(bp, tab1 + 5, labels = tab1, cex = 0.7, pos = 3)
 ```
 
 
-### Disease associations
+### Phenotype metadata
 
-The central question: do samples with unusual dominant species show different
-disease profiles? For each DCST with sufficient samples, we test whether the
-prevalence of self-reported health conditions differs from the population rate
-using Fisher's exact test.
+The bundle retains selected self-reported phenotype fields so that users can
+inspect the object structure and practice data alignment. The following table
+is purely descriptive; DCST-stratified selection precludes population
+prevalence estimation or treating association calculations as cohort results.
 
-```{r disease-test}
-# Align metadata to filtered samples
+```{r phenotype-summary}
 meta <- agp_gut$meta[match(rownames(M), agp_gut$meta$Run), ]
 stopifnot(all(meta$Run == rownames(M)))
 
-# Helper: shorten SILVA taxonomy to genus (or last named rank)
-shorten_taxon <- function(x) {
-  sapply(x, function(s) {
-    if (s == "RARE_DOMINANT") return(s)
-    ranks <- strsplit(s, ";")[[1]]
-    # Try genus first, then walk up
-    for (prefix in c("g__", "f__", "o__", "c__")) {
-      hit <- grep(prefix, ranks, value = TRUE)
-      if (length(hit) > 0) {
-        name <- sub(paste0(".*", prefix), "", hit[length(hit)])
-        if (nzchar(name)) return(name)
-      }
-    }
-    s  # fallback: return as-is
-  }, USE.NAMES = FALSE)
-}
-
-# Conditions to test
 conditions <- c("IBS", "IBD", "Obesity", "Cardiovascular_disease",
                 "Autoimmune", "Acid_reflux", "Lung_disease")
-
-dcst_labels <- csts$cell.label
-kept_dcsts  <- names(tab1[tab1 >= 20])
-
-results <- data.frame()
-
-for (dcst in kept_dcsts) {
-  in_dcst <- dcst_labels == dcst
-
-  for (cond in conditions) {
-    d <- meta[[cond]]
-    if (is.null(d) || all(is.na(d))) next
-
-    a <- sum(in_dcst & d == 1, na.rm = TRUE)
-    b <- sum(in_dcst & d == 0, na.rm = TRUE)
-    cc <- sum(!in_dcst & d == 1, na.rm = TRUE)
-    dd <- sum(!in_dcst & d == 0, na.rm = TRUE)
-
-    ft <- fisher.test(matrix(c(a, b, cc, dd), nrow = 2))
-
-    results <- rbind(results, data.frame(
-      DCST      = dcst,
-      Condition = cond,
-      n_DCST    = sum(in_dcst),
-      n_cases   = a,
-      prev_DCST = round(a / sum(in_dcst), 3),
-      prev_pop  = round((a + cc) / length(dcst_labels), 3),
-      OR        = round(ft$estimate, 2),
-      p_value   = ft$p.value,
-      stringsAsFactors = FALSE
-    ))
-  }
-}
-
-# Multiple testing correction (Benjamini-Hochberg)
-results$q_value <- p.adjust(results$p_value, method = "BH")
-results <- results[order(results$p_value), ]
-rownames(results) <- NULL
+phenotype_summary <- data.frame(
+  Condition = conditions,
+  Recorded_cases = vapply(
+    conditions,
+    function(x) sum(meta[[x]] == 1, na.rm = TRUE),
+    integer(1)
+  ),
+  Non_missing = vapply(
+    conditions,
+    function(x) sum(!is.na(meta[[x]])),
+    integer(1)
+  )
+)
+knitr::kable(
+  phenotype_summary,
+  caption = "Recorded phenotypes in the selected demonstration subset"
+)
 ```
-
-```{r disease-results}
-# Shorten DCST names for display
-results$DCST <- shorten_taxon(results$DCST)
-
-# Significant associations (q < 0.1)
-sig <- results[results$q_value < 0.1, ]
-if (nrow(sig) > 0) {
-  sig$p_value <- formatC(sig$p_value, format = "e", digits = 2)
-  sig$q_value <- formatC(sig$q_value, format = "e", digits = 2)
-  knitr::kable(sig, caption = "DCST-disease associations (q < 0.1)",
-               row.names = FALSE)
-} else {
-  cat("No associations reached q < 0.1 in this subset.\n")
-  cat("Showing top 10 by p-value:\n")
-  top10 <- head(results, 10)
-  top10$p_value <- formatC(top10$p_value, format = "e", digits = 2)
-  top10$q_value <- formatC(top10$q_value, format = "e", digits = 2)
-  knitr::kable(top10, caption = "Top 10 DCST-disease associations by p-value",
-               row.names = FALSE)
-}
-```
-
-### Interpreting the results
-
-Several patterns emerge that are consistent with known gut microbiome biology:
-
-**Prevotella_7 and obesity.** *Prevotella* species are associated with
-carbohydrate-rich diets and higher BMI in multiple cohort studies.
-The DCST framework identifies this without any prior clustering or
-reference database---purely from the compositional geometry.
-(Note: this association could be confounded by diet; see Limitations.)
-
-**Oral taxa and cardiovascular disease.** Pasteurellaceae and Staphylococcus
-are primarily oral or skin-associated taxa. Their appearance as dominant gut
-taxa likely reflects sample contamination, but their disease associations
-are biologically plausible: oral health and cardiovascular disease are
-epidemiologically linked, and the same individuals with poor oral hygiene
-may produce contaminated stool samples.
-
-**Escherichia-Shigella and IBS.** Enterobacteriaceae enrichment is a widely
-reported feature of IBS and IBD. The DCST framework captures this as a natural
-dominance pattern.
-
-**RARE_DOMINANT.** Samples in the rare-dominant bucket are dominated by unusual
-taxa that don't form their own DCST. In the full 5,000-sample analysis, this
-group shows distinct disease profiles, consistent with the idea that unusual
-gut dominance is a marker of dysbiosis.
-
-These associations are based on univariate Fisher's exact tests and do not
-account for potential confounders such as age, sex, diet, BMI, or geography.
-A full analysis with covariate-adjusted logistic regression and validation
-in an independent cohort is in preparation.
 
 
 ## Limitations
@@ -341,27 +245,22 @@ This analysis has several important caveats:
 
 - **Self-reported metadata.** AGP health conditions are self-reported by
   citizen-science participants, with unknown accuracy.
-- **No covariate adjustment.** The Fisher's exact tests are univariate. Age,
-  sex, diet, and geography could confound these associations. A full analysis
-  should use logistic regression with covariates.
 - **16S resolution.** The Escherichia-Shigella inflated abundance is a known
   V4 artifact. Shotgun metagenomics would resolve this.
-- **Stratified subsample.** This dataset was intentionally enriched for rare
-  DCSTs and disease cases to demonstrate the method. The effect sizes shown
-  here are not directly comparable to population-level estimates from the
-  full AGP cohort.
+- **DCST-stratified demonstration subset.** Four uncommon DCSTs are included
+  exhaustively and the eligible background is sampled with seed 42.
+  Phenotypes do not affect membership, but differing inclusion probabilities
+  mean the object must not be used for population prevalence estimates,
+  effect-size estimation, or association testing.
 
-For the complete 5,000-sample analysis without stratification bias, see the
-companion pkgdown article
-`vignette("gut-dcst-disease-analysis", package = "linf")`.
+The repository also contains the source for a separate 5,000-sample companion
+analysis. It is not installed as a package vignette.
 
 ## Summary
 
 The L-infinity DCST framework provides a clustering-free approach to
 community typing that is deterministic, hierarchical, and biologically
-interpretable. In the gut microbiome, where single-species dominance is
-atypical and often pathological, DCSTs naturally identify the clinically
-meaningful tail of the dominance distribution. The combination of depth-1
-DCSTs (dominant species) and depth-2 refinement (co-dominance patterns)
-captures structure at multiple resolutions without requiring any parameter
-tuning beyond the minimum cell-size threshold `n0`.
+interpretable. The combination of depth-1 DCSTs (dominant species) and depth-2
+refinement (co-dominance patterns) captures structure at multiple resolutions
+without requiring any parameter tuning beyond the minimum cell-size threshold
+`n0`.

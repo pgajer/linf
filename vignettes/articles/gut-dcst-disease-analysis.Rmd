@@ -1,5 +1,5 @@
 ---
-title: "Gut DCST-Disease Associations: Full AGP Analysis"
+title: "Exploratory Gut DCST-Phenotype Analysis"
 output: rmarkdown::html_vignette
 ---
 
@@ -20,20 +20,25 @@ built during `R CMD check`---it uses external data files and takes several
 minutes to run. The code below is fully reproducible given access to the
 PRIME-processed AGP abundance table.
 
+The association calculations are exploratory and unadjusted. They do not
+establish causal, diagnostic, or clinically validated relationships.
+
 ## Data
 
 The analysis uses the PRIME-processed SILVA species-level abundance table
 for PRJEB11419 (American Gut Project, ~26,900 gut samples) and the
 accompanying sample metadata. These files are produced by the
-[PRIME pipeline](https://github.com/pgajer/PRIME) and stored in
-`~/current_projects/gut_microbiome/`.
+[PRIME pipeline](https://github.com/pgajer/PRIME). Their locations are supplied
+through environment variables rather than maintainer-specific paths.
 
 ```{r data-paths}
 library(linf)
 
-## Adjust these paths to your local PRIME output directory
-abundance_file <- "~/current_projects/gut_microbiome/outputs/prime_species/prime_gut_projects_silva_species_absolute_2026-03-24.csv.gz"
-metadata_file  <- "~/current_projects/gut_microbiome/data/prime_gut_project_sample_metadata_2026-03-24.csv.gz"
+abundance_file <- Sys.getenv("LINF_AGP_ABUNDANCE")
+metadata_file  <- Sys.getenv("LINF_AGP_METADATA")
+if (!nzchar(abundance_file) || !nzchar(metadata_file)) {
+  stop("Set LINF_AGP_ABUNDANCE and LINF_AGP_METADATA before rendering.")
+}
 ```
 
 ## Phase 1: Data Loading and Subsampling
@@ -107,7 +112,7 @@ barplot(tab1,
         main = "Gut DCST Size Distribution (AGP, n=5000, depth 1)")
 ```
 
-## Phase 3: Disease Association Testing
+## Phase 3: Exploratory Phenotype Association Testing
 
 ```{r parse-metadata}
 ## Parse disease indicators from AGP Phenotype field
@@ -188,7 +193,7 @@ results <- results[order(results$p_value), ]
 rownames(results) <- NULL
 
 cat("Total tests:", nrow(results), "\n")
-cat("Significant (q < 0.05):", sum(results$q_value < 0.05), "\n")
+cat("Exploratory q < 0.05 signals:", sum(results$q_value < 0.05), "\n")
 ```
 
 ```{r top-results}
@@ -196,12 +201,12 @@ cat("Significant (q < 0.05):", sum(results$q_value < 0.05), "\n")
 top20 <- head(results, 20)
 top20$p_value <- formatC(top20$p_value, format = "e", digits = 2)
 top20$q_value <- formatC(top20$q_value, format = "e", digits = 2)
-knitr::kable(top20, caption = "Top 20 DCST-disease associations by p-value",
+knitr::kable(top20, caption = "Top 20 exploratory DCST-phenotype results by p-value",
              row.names = FALSE)
 ```
 
 ```{r heatmap, fig.width = 10, fig.height = 8}
-## Heatmap of significant associations
+## Heatmap of exploratory signals
 sig <- results[results$q_value < 0.2, ]
 if (nrow(sig) > 0) {
   or_mat <- tapply(sig$OR, list(sig$DCST, sig$Condition), identity)
@@ -213,7 +218,7 @@ if (nrow(sig) > 0) {
 
   ## Simple heatmap
   image(t(log2_or), col = colorRampPalette(c("#2166AC", "white", "#B2182B"))(50),
-        axes = FALSE, main = "DCST x Disease Associations (q < 0.2)")
+        axes = FALSE, main = "Exploratory DCST x Phenotype Results (q < 0.2)")
   axis(1, at = seq(0, 1, length.out = nrow(log2_or)),
        labels = rownames(log2_or), las = 2, cex.axis = 0.7)
   axis(2, at = seq(0, 1, length.out = ncol(log2_or)),
@@ -249,7 +254,7 @@ for (dcst_name in disease_dcsts) {
 }
 ```
 
-## Summary of Key Findings
+## Descriptive and Exploratory Summary
 
 Using 5,000 AGP gut samples, the L-infinity DCST pipeline identified:
 
@@ -257,18 +262,17 @@ Using 5,000 AGP gut samples, the L-infinity DCST pipeline identified:
   *Escherichia-Shigella* (~23%).
 - **12.8% of samples in RARE_DOMINANT**, representing the tail of unusual
   single-species dominance.
-- **11 significant DCST-disease associations** (q < 0.05) after
-  Benjamini-Hochberg correction.
+- **11 exploratory DCST-disease signals** with q < 0.05 after
+  Benjamini-Hochberg correction in this analysis cohort.
 
 The strongest signals include *Prevotella_7* enrichment in obesity (OR ~ 4.0),
 *Pasteurellaceae* enrichment in cardiovascular disease (OR ~ 8.8),
 *Prevotella_9* depletion in autoimmune conditions (OR ~ 0.3), and
 *Escherichia-Shigella* enrichment in IBS (OR ~ 1.5).
 
-These results demonstrate that the L-infinity DCST framework---without any
-clustering, reference databases, or parameter tuning beyond the threshold
-n0---naturally identifies the clinically meaningful dominance patterns in
-the human gut microbiome.
+These unadjusted results show how DCST labels can be carried into a downstream
+association workflow. They require covariate adjustment, sensitivity analyses,
+and independent validation before biological or clinical interpretation.
 
 ## Session Info
 

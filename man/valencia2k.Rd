@@ -22,8 +22,10 @@ to reconstruct a count-like matrix.}
 }
 }
 \source{
-Subsampled from the Valencia CST-classifier training dataset.
-See \code{data-raw/build_valencia2k.R} for the subsampling script.
+Subsampled from the VALENCIA training data at
+\url{https://github.com/ravel-lab/VALENCIA}. See
+\code{data-raw/build_valencia2k.R} and the installed
+\code{DATA_PROVENANCE.md} file for construction and licensing details.
 }
 \usage{
 valencia2k
