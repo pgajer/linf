@@ -2,7 +2,7 @@
 % Please edit documentation in R/linf.R
 \name{linf.csts}
 \alias{linf.csts}
-\title{Truncated L-infinity CSTs with configurable low-frequency handling}
+\title{Truncated dominant community state types with configurable low-support handling}
 \usage{
 linf.csts(
   S,
@@ -28,7 +28,8 @@ length \code{ncol(S)}.}
 \item{feature.labels}{Optional character vector of display labels, length
 \code{ncol(S)}.}
 
-\item{n0}{Integer >= 1. Minimum size for a cell to be kept.}
+\item{n0}{Integer >= 1. Minimum support required to retain a dominance
+sample set.}
 
 \item{low.freq.policy}{Character. One of \code{"pure"} or \code{"absorb"}.
 Default: \code{"pure"}. The legacy value \code{"rare"} is still accepted as
@@ -71,13 +72,15 @@ List with:
 }
 }
 \description{
-Computes L-infinity cells (dominant feature per sample) and then applies a
-minimum size threshold \code{n0}. Cells with fewer than \code{n0} samples are
-handled according to \code{low.freq.policy}:
+Forms provisional depth-1 dominance sample sets from the dominant feature
+of each sample and then applies the minimum support threshold \code{n0}.
+Sets with fewer than \code{n0} samples are handled according to
+\code{low.freq.policy}:
 \itemize{
-\item \code{"pure"}: keep only cells with size >= \code{n0} as named CSTs and
-collapse all low-frequency cells into \code{rare.label}.
-\item \code{"absorb"}: reassign each low-frequency sample to the kept cell
-with the largest value among the kept set (ties handled by \code{tie.method}).
+\item \code{"pure"}: retain only sets with support >= \code{n0} as named
+dCSTs and collapse all low-support sets into \code{rare.label}.
+\item \code{"absorb"}: reassign each low-support sample to the retained
+state with the largest value among the retained features (ties handled
+by \code{tie.method}).
 }
 }

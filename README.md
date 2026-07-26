@@ -11,7 +11,7 @@
 
 **linf** is a lightweight R package for analysing compositional data
 through L-infinity (L∞) normalization and Dominant Community State Types
-(DCSTs).
+(dCSTs).
 
 Standard compositional approaches (CLR, ILR) map data into log-ratio
 coordinates, introducing complications with zeros and obscuring the
@@ -19,14 +19,16 @@ dominant features that often drive biological variation. L∞
 normalization takes a different path: divide each sample by its maximum,
 placing every observation on the boundary of the unit L∞ ball. The
 dominant feature — the one that achieves the maximum — defines a
-natural, parameter-free partition of samples into **L∞ cells** (DCSTs).
+natural, parameter-free partition of samples into **dominance sample
+sets**.
 
-At its core this is a **rank-based analysis**. Depth-1 DCSTs partition
-samples by the rank-1 (most abundant) feature. Depth-2 DCSTs refine each
-cell using the rank-2 feature, and so on. This perspective connects L∞
-DCSTs to one of the oldest branches of statistical methodology — rank
-analysis — while the L∞ geometry adds a principled compositional
-framework and a single, interpretable size threshold *n*₀.
+At its core this is a **rank-based analysis**. Depth-1 dCSTs partition
+samples by the rank-1 (most abundant) feature. Depth-2 dCSTs refine each
+retained dominance-lineage using the rank-2 feature, and so on. This
+perspective connects dCSTs to one of the oldest branches of statistical
+methodology — rank analysis — while the L∞ geometry adds a principled
+compositional framework and a single, interpretable support threshold
+*n*₀.
 
 This package accompanies: Gajer & Ravel (2025), *A New Approach to
 Compositional Data Analysis using L∞-normalization with Applications to
@@ -52,18 +54,18 @@ install.packages("linf")
 
 - **L∞ normalization** — `normalize.linf()`: row-wise division by
   maximum, mapping each sample to the L∞ unit-ball boundary.
-- **Cell assignment** — `linf.cells()`: dominant-feature (rank-1)
-  assignment per sample, returning indices, labels, and level sets.
-- **Truncated DCSTs** — `linf.csts()`: keep cells with ≥ *n*₀ samples,
-  reassign rare dominants by restricted argmax.
-- **Iterative refinement** — `refine.linf.csts()`: depth-2+ DCSTs via
+- **Dominant-feature assignment** — `linf.cells()`: rank-1 assignment
+  per sample, returning indices, labels, and level sets.
+- **Truncated dCSTs** — `linf.csts()`: retain dominance sample sets with
+  support ≥ *n*₀, reassign rare dominants by restricted argmax.
+- **Iterative refinement** — `refine.linf.csts()`: depth-2+ dCSTs via
   successive rank decomposition.
 - **Landmark profiles** — `linf.landmarks()`: representative
-  compositional profiles (endpoint max/min, mean) for each DCST.
+  compositional profiles (endpoint max/min, mean) for each dCST.
 - **ASV filtering** — `filter.asv()`: library-size and prevalence
   filtering for amplicon count matrices.
 - **Pipeline wrapper** — `asv.to.linf.csts()`: counts → filter →
-  normalise → truncated DCSTs in one call.
+  normalise → truncated dCSTs in one call.
 
 ## Quick Start
 
@@ -81,35 +83,35 @@ Z <- normalize.linf(S.counts)
 apply(Z, 1, max)
 #> returns 1 for nonzero rows, 0 for all-zero rows
 
-# L∞ cells: indices + labels
+# Dominant-feature assignments: indices + labels
 cells <- linf.cells(Z)
 table(cells$label, useNA = "ifany")
 
-# Truncated DCSTs: keep cells with at least n0 samples
+# Truncated dCSTs: retain states with at least n0 samples
 res <- linf.csts(Z, n0 = 4)
 table(res$cell.label, useNA = "ifany")
 ```
 
 ## Gut Microbiome Demonstration
 
-The figure below illustrates L∞ DCSTs in a bundled set of 766 gut
+The figure below illustrates depth-1 dCSTs in a bundled set of 766 gut
 microbiome samples from the American Gut Project (AGP). The subset was
 deliberately stratified to include every sample assigned to four
-selected uncommon DCSTs; the remaining slots are a seed-42 simple random
+selected uncommon dCSTs; the remaining slots are a seed-42 simple random
 sample from the eligible background. Phenotypes do not influence
 selection. The object is suitable for demonstrating the package
 workflow, but its phenotype frequencies, effect sizes, and p-values must
 not be interpreted as population estimates because inclusion
-probabilities differ by DCST.
+probabilities differ by dCST.
 
-### DCST Size Distribution
+### dCST Size Distribution
 
-<img src="man/figures/readme-dcst-barplot.png" alt="Barplot of depth-1 DCST sizes in 766 AGP gut samples" width="700" />
+<img src="man/figures/readme-dcst-barplot.png" alt="Barplot of depth-1 dCST sizes in 766 AGP gut samples" width="700" />
 
-The largest depth-1 DCSTs in this selected subset are *Bacteroides*,
+The largest depth-1 dCSTs in this selected subset are *Bacteroides*,
 *Escherichia-Shigella*, and `RARE_DOMINANT`. The red bar marks
-`RARE_DOMINANT`—samples whose rank-1 taxon does not form a large enough
-cell at the chosen threshold.
+`RARE_DOMINANT`—samples whose rank-1 taxon does not form a sufficiently
+supported dominance sample set at the chosen threshold.
 
 See `vignette("linf-intro")` for the package-safe demonstration. The
 [full-analysis
@@ -122,12 +124,12 @@ vignette.
 
 The package ships with two vignettes:
 
-- **L-Infinity CSTs: From Normalization to a Gut Demonstration** — a
-  step-by-step tutorial covering L∞ normalization, cell assignment,
-  truncated DCSTs, and descriptive exploration of the bundled AGP gut
-  data.
-- **DCSTs for Vaginal Microbiome Data** — applying the pipeline to the
-  Valencia 2k vaginal dataset, demonstrating how L∞ DCSTs recover the
+- **Dominant Community State Types: From Normalization to a Gut
+  Demonstration** — a step-by-step tutorial covering L∞ normalization,
+  dominant-feature assignment, truncated dCSTs, and descriptive
+  exploration of the bundled AGP gut data.
+- **dCSTs for Vaginal Microbiome Data** — applying the pipeline to the
+  Valencia 2k vaginal dataset, demonstrating how dCSTs recover the
   classical community state types (CST I–V) without supervised training.
 
 ``` r
@@ -142,6 +144,11 @@ browseVignettes("linf")
 - Ties resolve to the **first** maximum (as in
   `max.col(..., ties.method = "first")`).
 - All-zero rows get `NA` for both `index` and `label`.
+
+The function name `linf.cells()` and `cell.*` result fields are retained
+for backward compatibility. In prose, the current nomenclature is
+**dominance sample set** at depth 1 and **dominance-lineage** for a
+retained hierarchical dCST label.
 
 ## Citation
 

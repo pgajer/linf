@@ -2,7 +2,7 @@
 % Please edit documentation in R/label_format.R
 \name{linf.feature.labels}
 \alias{linf.feature.labels}
-\title{Format feature labels for L-infinity cells and CSTs}
+\title{Format feature labels for dominant-feature assignments and dCSTs}
 \usage{
 linf.feature.labels(
   feature.ids,
@@ -36,7 +36,7 @@ Character vector of unique display labels.
 }
 \description{
 Builds unique display labels from stable feature IDs and taxonomy strings.
-This is useful when CST computation should operate on stable internal feature
+This is useful when dCST computation should operate on stable internal feature
 identifiers (for example \code{asv_4}) while reports and figures should use
 human-readable labels such as \verb{L. iners 4}.
 

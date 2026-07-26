@@ -2,7 +2,7 @@
 % Please edit documentation in R/landmarks.R
 \name{linf.landmarks}
 \alias{linf.landmarks}
-\title{Landmark points for L-infinity CST cells}
+\title{Landmark points for dCST dominance-lineages}
 \usage{
 linf.landmarks(
   M,
@@ -15,11 +15,11 @@ linf.landmarks(
 )
 }
 \arguments{
-\item{M}{Numeric matrix (samples x features) used to build or refine the CSTs.}
+\item{M}{Numeric matrix (samples x features) used to build or refine the dCSTs.}
 
 \item{csts}{A \code{"linf.csts"} object.}
 
-\item{depth}{Integer. CST depth to inspect. Defaults to the leaf depth
+\item{depth}{Integer. dCST depth to inspect. Defaults to the leaf depth
 \code{csts$cst.depth}.}
 
 \item{view}{Character. One of \code{"active"}, \code{"rare"}, or
@@ -41,17 +41,18 @@ A list of class \code{"linf.landmarks"} with components:
 \itemize{
 \item \code{depth}, \code{view}, \code{sep}, \code{rare.label}
 \item \code{feature.ids}, \code{feature.labels}
-\item \code{cells}: one row per cell with computability metadata
+\item \code{cells}: one row per dominance-lineage with computability
+metadata; the component name is retained for backward compatibility
 \item \code{landmarks}: one row per computed landmark point
 }
 }
 \description{
-Computes representative landmark points for the cells of a
+Computes representative landmark points for the dominance-lineages of a
 \code{"linf.csts"} object at a chosen depth and view.
 
-Landmark types are defined with respect to the leaf feature of the CST path:
-the last feature ID in the cell ID path.
-Cells whose leaf token is \code{rare.label} are reported but skipped for
+Landmark types are defined with respect to the leaf feature of the dCST path:
+the last feature ID in the lineage ID path.
+Lineages whose leaf token is \code{rare.label} are reported but skipped for
 landmark computation because they do not correspond to a unique target
 feature.
 }

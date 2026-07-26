@@ -27,5 +27,5 @@ and remain all-zero.
 \details{
 Zero rows have undefined L-infinity direction. By convention, they are
 preserved as all-zero rows and will yield NA labels in downstream
-L-infinity cell or CST assignment.
+dominant-feature or dCST assignment.
 }

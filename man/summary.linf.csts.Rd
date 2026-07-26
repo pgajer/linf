@@ -2,7 +2,7 @@
 % Please edit documentation in R/linf.R
 \name{summary.linf.csts}
 \alias{summary.linf.csts}
-\title{Summarize CST hierarchy statistics}
+\title{Summarize dCST hierarchy statistics}
 \usage{
 \method{summary}{linf.csts}(object, ...)
 }
@@ -15,5 +15,5 @@
 Data frame with depth-wise statistics
 }
 \description{
-Summarize CST hierarchy statistics
+Summarize dCST hierarchy statistics
 }

@@ -3,7 +3,7 @@
 \docType{data}
 \name{valencia13k_dcst_depth3_merged}
 \alias{valencia13k_dcst_depth3_merged}
-\title{Valencia 13k merged depth-3 DCST assignments}
+\title{Valencia 13k merged depth-3 dCST assignments}
 \format{
 A list with five components:
 \describe{
@@ -31,12 +31,12 @@ valencia13k_dcst_depth3_merged
 }
 \description{
 A lightweight bundled assignment asset containing merged depth-3
-L-infinity dominant community state type (DCST) labels for the full Valencia
+Dominant community state type (dCST) labels for the full Valencia
 13k vaginal microbiome training set.
 }
 \details{
 The depth-3 asset extends \code{\link{valencia13k_dcst_depth2_merged}} by one
-additional hierarchical DCST refinement. All levels use \code{n0 = 50} and
+additional hierarchical dCST refinement. All levels use \code{n0 = 50} and
 \code{low.freq.policy = "absorb"}. This object is intended as a reusable
 source for selecting richer VALENCIA-derived component sets without
 recomputing the full hierarchy from the 13k source matrix.

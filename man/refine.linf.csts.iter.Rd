@@ -2,7 +2,7 @@
 % Please edit documentation in R/linf.R
 \name{refine.linf.csts.iter}
 \alias{refine.linf.csts.iter}
-\title{Iteratively refine L-infinity CSTs by one additional level}
+\title{Iteratively refine dCSTs by one additional level}
 \usage{
 refine.linf.csts.iter(
   M,
@@ -22,9 +22,11 @@ refine.linf.csts.iter(
 
 \item{refined}{A \code{"linf.csts"} object with an existing hierarchy.}
 
-\item{cells.to.refine}{Character vector of leaf cells to refine, or NULL for auto-selection.}
+\item{cells.to.refine}{Character vector of leaf dominance-lineage IDs to
+refine, or NULL for auto-selection. The argument name is retained for
+backward compatibility.}
 
-\item{n0}{Integer >= 1. Minimum size for a child cell to be kept.}
+\item{n0}{Integer >= 1. Minimum support required to retain a child lineage.}
 
 \item{refinement.factor}{Numeric > 0. Auto-selection threshold multiplier.}
 
@@ -46,8 +48,8 @@ backend from \code{M} or from \code{refined} when available.}
 Updated \code{"linf.csts"} object with \code{cst.depth} increased by one.
 }
 \description{
-Appends one refinement level to an existing CST hierarchy produced by
+Appends one refinement level to an existing dCST hierarchy produced by
 \code{\link{refine.linf.csts}} or \code{\link{refine.linf.csts.iter}}.
-Cells to refine can be provided explicitly or selected automatically based on
-\code{refinement.factor * n0}.
+Dominance-lineages to refine can be provided explicitly or selected
+automatically based on \code{refinement.factor * n0}.
 }

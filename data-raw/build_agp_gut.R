@@ -6,12 +6,12 @@
 ## the deterministic AGP demonstration-subset files.
 ##
 ## `data-raw/create_agp_gut_subset.py` deterministically selects membership
-## from the retained 5,000-sample DCST assignments, then writes the count and
+## from the retained 5,000-sample dCST assignments, then writes the count and
 ## metadata inputs below. Phenotypes are joined after membership is fixed.
 ##
 ## Input files (in inst/extdata/):
 ##   agp_gut_counts.csv.gz  -- 766 x 314 count matrix (samples x taxa)
-##   agp_gut_meta.csv       -- 766-row metadata with DCST labels and disease indicators
+##   agp_gut_meta.csv       -- 766-row metadata with dCST labels and disease indicators
 ##   agp_gut_taxa.txt       -- 314 SILVA taxonomy strings
 ##
 ## Output (saved to data/):
@@ -53,9 +53,9 @@ cat("Library sizes: min =", min(rowSums(counts)),
     ", median =", median(rowSums(counts)),
     ", max =", max(rowSums(counts)), "\n")
 
-## --- Print DCST distribution -----------------------------------------------
+## --- Print dCST distribution -----------------------------------------------
 
-cat("\nDCST distribution:\n")
+cat("\ndCST distribution:\n")
 print(sort(table(meta_df$dcst_depth1), decreasing = TRUE))
 
 cat("\nDisease prevalence:\n")
@@ -78,11 +78,11 @@ agp_gut <- list(
   meta   = meta_df,
   taxa   = taxa,
   source = paste0(
-    "DCST-stratified subsample (n=", nrow(counts),
+    "dCST-stratified subsample (n=", nrow(counts),
     ") from the American Gut Project (PRJEB11419, AGP-US-2015). ",
     "Original dataset: ~26,900 gut samples, subsampled from a 5,000-sample ",
     "exploratory analysis. Includes all samples in four uncommon demonstration ",
-    "DCSTs (Prevotella_7, Pasteurellaceae, Akkermansia, Staphylococcus), then ",
+    "dCSTs (Prevotella_7, Pasteurellaceae, Akkermansia, Staphylococcus), then ",
     "fills the remaining slots by a seed-42 simple random sample from the ",
     "eligible background. Phenotypes do not influence selection. ",
     "Eukaryota and Unassigned depth-1 labels are excluded. ",

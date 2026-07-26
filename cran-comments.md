@@ -1,13 +1,15 @@
 ## Submission
 
 This is a new submission of `linf`, an R package providing utilities for
-L-infinity normalization, dominant-feature cell assignment, dominant community
+L-infinity normalization, dominant-feature assignment, dominant community
 state types, and landmark-profile construction for compositional data.
 
 ## Test environments
 
 * Local macOS 26.3.1 (Apple Silicon), R 4.5.2:
-  0 errors | 0 warnings | 0 notes
+  0 errors | 0 warnings | 1 note
+* Local macOS 26.3.1 (Apple Silicon), R-devel (2026-06-24 r90190):
+  0 errors | 0 warnings | 1 note
 * Win-builder, Windows Server 2022, R 4.6.1:
   0 errors | 0 warnings | 1 note
 * Win-builder, Windows Server 2022, R-devel (2026-07-25 r90301):
@@ -26,10 +28,10 @@ state types, and landmark-profile construction for compositional data.
 
 ## Notes
 
-* `New submission`: this is the first CRAN submission of `linf`.
-* The same incoming-feasibility note identifies `DCST`, `DCSTs`, and `Gajer`
-  as possibly misspelled. `DCST` means dominant community state type,
-  `DCSTs` is its plural, and `Gajer` is the maintainer's surname.
+* `New submission`: this is the first CRAN submission of `linf` and the only
+  NOTE in both local checks.
+* The isolated local R-devel library did not provide the optional suggested
+  package `plotly`; this was reported as INFO, not as a NOTE.
 
 ## Additional checks
 

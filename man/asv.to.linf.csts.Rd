@@ -2,7 +2,7 @@
 % Please edit documentation in R/linf.R
 \name{asv.to.linf.csts}
 \alias{asv.to.linf.csts}
-\title{From counts -> filter.asv -> L-infinity relatives -> truncated L-infinity CSTs}
+\title{From counts to filtered, normalized, truncated dCSTs}
 \usage{
 asv.to.linf.csts(S.counts, ..., backend = c("auto", "dense", "sparse"))
 }
@@ -25,8 +25,8 @@ A list with:
 }
 \description{
 Convenience pipeline: runs \code{filter.asv()} on counts, computes
-L-infinity-normalized relatives on the filtered counts, and assigns truncated
-L-infinity CSTs.
+L-infinity-normalized relatives on the filtered counts, and assigns
+truncated dCSTs.
 }
 \examples{
 set.seed(1)

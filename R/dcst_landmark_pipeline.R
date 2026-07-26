@@ -1,30 +1,31 @@
-#' Landmark-aware DCST pipeline
+#' Landmark-aware dCST pipeline
 #'
 #' @description
 #' Small wrapper that normalizes a nonnegative matrix with
-#' \code{\link{normalize.linf}}, computes depth-1 DCSTs with
+#' \code{\link{normalize.linf}}, computes depth-1 dCSTs with
 #' \code{\link{linf.csts}}, refines once to depth 2 with
 #' \code{\link{refine.linf.csts}}, and then computes landmark points for both
 #' depths with \code{\link{linf.landmarks}}.
 #'
 #' The function is intentionally explicit rather than highly abstracted. It
 #' keeps the intermediate objects visible and returns them together in one list
-#' so downstream workflows can inspect the normalized matrix, the depth-1 DCSTs,
-#' the depth-2 DCSTs, and the landmark tables without re-running the pipeline.
+#' so downstream workflows can inspect the normalized matrix, the depth-1 dCSTs,
+#' the depth-2 dCSTs, and the landmark tables without re-running the pipeline.
 #'
 #' @param X Numeric matrix (samples x features). Must be finite and nonnegative.
 #' @param feature.ids Optional character vector of stable feature identifiers,
 #'   length \code{ncol(X)}.
 #' @param feature.labels Optional character vector of display labels, length
 #'   \code{ncol(X)}.
-#' @param n0.depth1 Integer >= 1. Minimum cell size for depth-1 DCSTs.
-#' @param n0.depth2 Integer >= 1. Minimum cell size for depth-2 refinement.
+#' @param n0.depth1 Integer >= 1. Minimum support for a depth-1 dominance
+#'   sample set.
+#' @param n0.depth2 Integer >= 1. Minimum support for a depth-2 child lineage.
 #' @param refinement.factor Numeric > 0. Auto-refinement threshold multiplier
 #'   passed to \code{\link{refine.linf.csts}}.
-#' @param sep Character scalar used to join depth-refined CST path tokens.
+#' @param sep Character scalar used to join depth-refined dCST path tokens.
 #' @param low.freq.policy Character. One of \code{"pure"} or \code{"absorb"}.
-#'   Controls the active DCST view while still preserving parallel rare/absorb
-#'   views inside the returned CST objects. The legacy value \code{"rare"} is
+#'   Controls the active dCST view while still preserving parallel rare/absorb
+#'   views inside the returned dCST objects. The legacy value \code{"rare"} is
 #'   still accepted as a deprecated alias for \code{"pure"}.
 #' @param rare.label Character scalar for rare buckets.
 #' @param depth1.landmark.types Character vector of landmark types for depth 1.

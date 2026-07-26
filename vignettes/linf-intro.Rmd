@@ -1,8 +1,8 @@
 ---
-title: "L-Infinity CSTs: From Normalization to a Gut Demonstration"
+title: "Dominant Community State Types: From Normalization to a Gut Demonstration"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{L-Infinity CSTs: From Normalization to a Gut Demonstration}
+  %\VignetteIndexEntry{Dominant Community State Types: From Normalization to a Gut Demonstration}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -22,7 +22,7 @@ library(linf)
 ```
 
 The `linf` package implements L-infinity normalization and Dominant Community
-State Types (DCSTs) for compositional data. This vignette demonstrates the
+State Types (dCSTs) for compositional data. This vignette demonstrates the
 complete workflow in two parts: first a quick-start with toy data to introduce
 the core functions, then a real-data analysis of gut microbiome samples from
 the American Gut Project showing how to inspect dominant and subdominant
@@ -48,21 +48,22 @@ Z <- normalize.linf(S.counts)
 apply(Z, 1, max)   # all 1
 ```
 
-### L-infinity cells
+### Dominance sample sets
 
-Each sample is assigned to the column achieving its maximum---its
-*L-infinity cell*. This is the dominant feature.
+Each sample is assigned to its dominant feature: the column achieving the
+within-sample maximum. Samples with the same dominant feature form a
+depth-1 *dominance sample set*.
 
 ```{r toy-cells}
 cells <- linf.cells(Z)
 table(cells$label)
 ```
 
-### Truncated CSTs
+### Truncated dCSTs
 
 `linf.csts()` groups samples by dominant feature and collapses small groups
 (below threshold `n0`) into a `RARE_DOMINANT` bucket. This produces
-*Dominant Community State Types* (DCSTs).
+*Dominant Community State Types* (dCSTs).
 
 ```{r toy-csts}
 A <- matrix(c(5, 1, 0), nrow = 6, ncol = 3, byrow = TRUE)
@@ -80,12 +81,12 @@ Only Dom1 (6 samples) meets the `n0 = 5` threshold. Dom2 and Dom3 are
 collapsed into `RARE_DOMINANT`.
 
 
-## Part 2: Gut Microbiome DCST Demonstration
+## Part 2: Gut Microbiome dCST Demonstration
 
 ### Background
 
 Single-species dominance is common in some microbial ecosystems and less
-common in others. DCSTs provide a deterministic way to summarize the dominant
+common in others. dCSTs provide a deterministic way to summarize the dominant
 feature and then refine large groups by subdominant features. The gut example
 below demonstrates those mechanics without treating the selected package
 subset as an epidemiologic sample.
@@ -94,11 +95,11 @@ subset as an epidemiologic sample.
 
 The `agp_gut` dataset bundled with this package contains `r nrow(agp_gut$counts)`
 gut microbiome samples from the American Gut Project (PRJEB11419), a citizen-science
-16S rRNA V4 survey. The dataset is a DCST-stratified demonstration subset
-that includes all samples in four selected uncommon DCSTs and fills
+16S rRNA V4 survey. The dataset is a dCST-stratified demonstration subset
+that includes all samples in four selected uncommon dCSTs and fills
 the remaining slots with a seed-42 simple random sample from the eligible
 background. Phenotypes are joined only after selection and do not influence
-membership. Because inclusion probabilities differ by DCST, it is not a
+membership. Because inclusion probabilities differ by dCST, it is not a
 probability sample of the underlying cohort; phenotype frequencies, effect
 sizes, and hypothesis tests must not be interpreted as population results.
 
@@ -140,19 +141,19 @@ M <- normalize.linf(filt$counts)
 stopifnot(all(abs(apply(M, 1, max) - 1) < 1e-10))
 ```
 
-### Step 3: Depth-1 DCSTs
+### Step 3: Depth-1 dCSTs
 
 ```{r dcst-depth1}
 csts <- linf.csts(M, n0 = 30)
 
-# DCST size distribution
+# dCST size distribution
 sort(table(csts$cell.label), decreasing = TRUE)
 ```
 
 The landscape is dominated by *Bacteroides* and *Escherichia-Shigella*, with
-*Prevotella*, *Faecalibacterium*, and several smaller DCSTs forming the tail.
+*Prevotella*, *Faecalibacterium*, and several smaller dCSTs forming the tail.
 The `RARE_DOMINANT` bucket collects samples dominated by taxa too infrequent
-to form their own DCST at this threshold.
+to form their own dCST at this threshold.
 
 Note on *Escherichia-Shigella*: this genus is known to be inflated in 16S V4
 data due to primer cross-reactivity. Its high prevalence should be interpreted
@@ -160,7 +161,7 @@ with caution.
 
 ### Step 4: Depth-2 refinement
 
-`refine.linf.csts()` subdivides large DCSTs by their *subdominant* species.
+`refine.linf.csts()` subdivides large dCSTs by their *subdominant* species.
 For instance, a Bacteroides-dominated sample might be further classified by
 whether its second-most-abundant taxon is *Faecalibacterium* or
 *Lachnospiraceae*. This captures co-dominance patterns that are especially
@@ -169,7 +170,7 @@ important in the diverse gut environment.
 ```{r dcst-depth2}
 csts2 <- refine.linf.csts(M, csts, n0 = 30)
 
-# Show depth-2 DCSTs with >= 20 samples
+# Show depth-2 dCSTs with >= 20 samples
 tab2 <- sort(table(csts2$cell.label), decreasing = TRUE)
 tab2[tab2 >= 20]
 ```
@@ -192,16 +193,16 @@ legend("topright", "50% dominance", col = "red", lty = 2, lwd = 2, bty = "n")
 ```
 
 
-### DCST size distribution
+### dCST size distribution
 
-```{r dcst-barplot, fig.cap = "DCST size distribution at depth 1. Bacteroides and Escherichia-Shigella dominate; rare DCSTs in the tail are collapsed into RARE_DOMINANT."}
+```{r dcst-barplot, fig.cap = "dCST size distribution at depth 1. Bacteroides and Escherichia-Shigella dominate; rare dCSTs in the tail are collapsed into RARE_DOMINANT."}
 tab1 <- sort(table(csts$cell.label), decreasing = TRUE)
 par(mar = c(10, 4, 3, 1))
 bp <- barplot(tab1,
         col = ifelse(names(tab1) == "RARE_DOMINANT", "#e74c3c", "#3498db"),
         las = 2, cex.names = 0.7,
         ylab = "Number of samples",
-        main = "Gut DCST Size Distribution (depth 1)")
+        main = "Gut dCST Size Distribution (depth 1)")
 text(bp, tab1 + 5, labels = tab1, cex = 0.7, pos = 3)
 ```
 
@@ -210,7 +211,7 @@ text(bp, tab1 + 5, labels = tab1, cex = 0.7, pos = 3)
 
 The bundle retains selected self-reported phenotype fields so that users can
 inspect the object structure and practice data alignment. The following table
-is purely descriptive; DCST-stratified selection precludes population
+is purely descriptive; dCST-stratified selection precludes population
 prevalence estimation or treating association calculations as cohort results.
 
 ```{r phenotype-summary}
@@ -247,7 +248,7 @@ This analysis has several important caveats:
   citizen-science participants, with unknown accuracy.
 - **16S resolution.** The Escherichia-Shigella inflated abundance is a known
   V4 artifact. Shotgun metagenomics would resolve this.
-- **DCST-stratified demonstration subset.** Four uncommon DCSTs are included
+- **dCST-stratified demonstration subset.** Four uncommon dCSTs are included
   exhaustively and the eligible background is sampled with seed 42.
   Phenotypes do not affect membership, but differing inclusion probabilities
   mean the object must not be used for population prevalence estimates,
@@ -258,9 +259,9 @@ analysis. It is not installed as a package vignette.
 
 ## Summary
 
-The L-infinity DCST framework provides a clustering-free approach to
+The dCST framework provides a clustering-free approach to
 community typing that is deterministic, hierarchical, and biologically
-interpretable. The combination of depth-1 DCSTs (dominant species) and depth-2
+interpretable. The combination of depth-1 dCSTs (dominant species) and depth-2
 refinement (co-dominance patterns) captures structure at multiple resolutions
-without requiring any parameter tuning beyond the minimum cell-size threshold
+without requiring any parameter tuning beyond the minimum support threshold
 `n0`.

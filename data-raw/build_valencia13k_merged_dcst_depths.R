@@ -2,7 +2,7 @@
 ## build_valencia13k_merged_dcst_depths.R
 ## ============================================================================
 ##
-## Creates lightweight bundled assets for depth-2 and depth-3 merged DCST
+## Creates lightweight bundled assets for depth-2 and depth-3 merged dCST
 ## assignments on the canonical Valencia 13k training set.
 ##
 ## Input files (not shipped with the package):
@@ -142,7 +142,7 @@ make_asset <- function(csts, depth) {
     ),
     source = paste0(
       "Depth-", depth,
-      " merged DCST assignment asset generated from the Valencia 13k vaginal ",
+      " merged dCST assignment asset generated from the Valencia 13k vaginal ",
       "16S training set. Input matrix: tx.13k.rds with ", source_n,
       " samples x ", source_p, " taxa. L-infinity normalized with ",
       "normalize.linf(), then computed with n0=50, low.freq.policy='absorb', ",
@@ -160,8 +160,8 @@ stopifnot(nrow(valencia13k_dcst_depth3_merged$assignments) == source_n)
 stopifnot(!any(grepl(rare.label, valencia13k_dcst_depth2_merged$assignments$dcst_depth2, fixed = TRUE)))
 stopifnot(!any(grepl(rare.label, valencia13k_dcst_depth3_merged$assignments$dcst_depth3, fixed = TRUE)))
 
-cat("Depth-2 merged DCST count:", nrow(valencia13k_dcst_depth2_merged$summaries$depth2), "\n")
-cat("Depth-3 merged DCST count:", nrow(valencia13k_dcst_depth3_merged$summaries$depth3), "\n")
+cat("Depth-2 merged dCST count:", nrow(valencia13k_dcst_depth2_merged$summaries$depth2), "\n")
+cat("Depth-3 merged dCST count:", nrow(valencia13k_dcst_depth3_merged$summaries$depth3), "\n")
 
 save(
   valencia13k_dcst_depth2_merged,

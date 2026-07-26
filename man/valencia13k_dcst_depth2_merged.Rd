@@ -3,7 +3,7 @@
 \docType{data}
 \name{valencia13k_dcst_depth2_merged}
 \alias{valencia13k_dcst_depth2_merged}
-\title{Valencia 13k merged depth-2 DCST assignments}
+\title{Valencia 13k merged depth-2 dCST assignments}
 \format{
 A list with five components:
 \describe{
@@ -30,14 +30,15 @@ valencia13k_dcst_depth2_merged
 }
 \description{
 A lightweight bundled assignment asset containing merged depth-2
-L-infinity dominant community state type (DCST) labels for the full Valencia
+Dominant community state type (dCST) labels for the full Valencia
 13k vaginal microbiome training set.
 }
 \details{
 The asset is computed from the Valencia 13k compositional matrix after
-L-infinity normalization. DCSTs use \code{n0 = 50} and the merged
-\code{low.freq.policy = "absorb"} view, so low-frequency cells are reassigned
-to frequent cells rather than stored as explicit rare buckets.
+L-infinity normalization. dCSTs use \code{n0 = 50} and the merged
+\code{low.freq.policy = "absorb"} view, so samples from low-support
+provisional states are reassigned to retained states rather than stored as
+explicit rare buckets.
 }
 \examples{
 data(valencia13k_dcst_depth2_merged)

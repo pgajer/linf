@@ -59,7 +59,7 @@ test_that("linf.csts can attach landmarks and skip rare buckets", {
   expect_true(all(out$landmarks$landmarks$cell.id != out$rare.label))
 })
 
-test_that("linf.landmarks uses leaf feature ids for refined depth-2 cells", {
+test_that("linf.landmarks uses leaf feature ids for refined depth-2 dominance-lineages", {
   M <- rbind(
     r1 = c(1.00, 0.80, 0.20),
     r2 = c(0.95, 0.70, 0.30),
@@ -97,7 +97,7 @@ test_that("linf.landmarks uses leaf feature ids for refined depth-2 cells", {
   expect_equal(c.row$point.name, "r4")
 })
 
-test_that("switching CST views updates ids and drops stale attached landmarks", {
+test_that("switching dCST views updates ids and drops stale attached landmarks", {
   M <- rbind(
     s1 = c(1.0, 0.2, 0.1),
     s2 = c(0.9, 0.3, 0.1),

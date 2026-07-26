@@ -18,7 +18,7 @@
 #' @details
 #' Zero rows have undefined L-infinity direction. By convention, they are
 #' preserved as all-zero rows and will yield NA labels in downstream
-#' L-infinity cell or CST assignment.
+#' dominant-feature or dCST assignment.
 #'
 #' @export
 normalize.linf <- function(X,
@@ -49,15 +49,16 @@ normalize.linf <- function(X,
   X
 }
 
-#' L-infinity cell assignment
+#' Dominant-feature assignment
 #'
 #' @description
-#' Assigns each row to the column achieving its maximum (L-infinity cell).
+#' Assigns each row to the column achieving its maximum.
 #'
-#' For each sample (row) of a nonnegative matrix, identifies the \eqn{L^\infty}
-#' cell as the column with the maximum value. Ties are broken by the first
-#' maximum (as in \code{max.col(..., ties.method = "first")}). Rows that are all
-#' zero are assigned \code{NA}.
+#' For each sample (row) of a nonnegative matrix, identifies the dominant
+#' feature as the column with the maximum value. Samples with the same dominant
+#' feature form a depth-1 dominance sample set. Ties are broken by the first
+#' maximum (as in \code{max.col(..., ties.method = "first")}). Rows that are
+#' all zero are assigned \code{NA}.
 #'
 #' Feature IDs default to \code{colnames(S)}; if absent, synthetic IDs
 #' \code{"V1", "V2", ..., "Vp"} are generated. Display labels default to the
@@ -70,7 +71,8 @@ normalize.linf <- function(X,
 #'   length \code{ncol(S)}.
 #' @param feature.labels Optional character vector of display labels, length
 #'   \code{ncol(S)}.
-#' @param tie.method Character. How to resolve ties when assigning L-infinity cells.
+#' @param tie.method Character. How to resolve ties during dominant-feature
+#'   assignment.
 #' @param return.value Logical. If `TRUE`, include a `value` vector with row maxima.
 #' @param backend Character. Matrix backend to use: \code{"auto"},
 #'   \code{"dense"}, or \code{"sparse"}. The default \code{"auto"} preserves
@@ -214,17 +216,19 @@ linf.active.low.freq.view <- function(low.freq.policy) {
   low.freq.policy
 }
 
-#' Truncated L-infinity CSTs with configurable low-frequency handling
+#' Truncated dominant community state types with configurable low-support handling
 #'
 #' @description
-#' Computes L-infinity cells (dominant feature per sample) and then applies a
-#' minimum size threshold \code{n0}. Cells with fewer than \code{n0} samples are
-#' handled according to \code{low.freq.policy}:
+#' Forms provisional depth-1 dominance sample sets from the dominant feature
+#' of each sample and then applies the minimum support threshold \code{n0}.
+#' Sets with fewer than \code{n0} samples are handled according to
+#' \code{low.freq.policy}:
 #' \itemize{
-#'   \item \code{"pure"}: keep only cells with size >= \code{n0} as named CSTs and
-#'     collapse all low-frequency cells into \code{rare.label}.
-#'   \item \code{"absorb"}: reassign each low-frequency sample to the kept cell
-#'     with the largest value among the kept set (ties handled by \code{tie.method}).
+#'   \item \code{"pure"}: retain only sets with support >= \code{n0} as named
+#'     dCSTs and collapse all low-support sets into \code{rare.label}.
+#'   \item \code{"absorb"}: reassign each low-support sample to the retained
+#'     state with the largest value among the retained features (ties handled
+#'     by \code{tie.method}).
 #' }
 #'
 #' @param S Numeric matrix (samples x features), typically L-infinity relatives.
@@ -232,7 +236,8 @@ linf.active.low.freq.view <- function(low.freq.policy) {
 #'   length \code{ncol(S)}.
 #' @param feature.labels Optional character vector of display labels, length
 #'   \code{ncol(S)}.
-#' @param n0 Integer >= 1. Minimum size for a cell to be kept.
+#' @param n0 Integer >= 1. Minimum support required to retain a dominance
+#'   sample set.
 #' @param low.freq.policy Character. One of \code{"pure"} or \code{"absorb"}.
 #'   Default: \code{"pure"}. The legacy value \code{"rare"} is still accepted as
 #'   a deprecated alias for \code{"pure"}.
@@ -313,7 +318,7 @@ linf.csts <- function(S,
 
     n <- nrow(X)
 
-    ## Pure-policy labels: keep only cells with size >= n0; everything else -> rare.label
+    ## Pure-policy labels: retain only states with support >= n0.
     is.kept <- !is.na(raw$label) & (raw$label %in% kept.lbl)
 
     cell.idx.rare <- raw$index
@@ -323,7 +328,8 @@ linf.csts <- function(S,
     cell.id.rare[!is.kept] <- rare.label
     cell.lbl.rare[!is.kept] <- rare.label
 
-    ## Absorb-policy labels: reassign low-frequency (and zero-row) samples into kept cells
+    ## Absorb-policy labels: reassign low-support (and zero-row) samples
+    ## into retained states.
     cell.idx.absorb <- raw$index
     cell.id.absorb <- raw$id
     cell.lbl.absorb <- raw$label
@@ -377,7 +383,7 @@ linf.csts <- function(S,
 
     } else {
 
-        ## No kept cells at this n0:
+        ## No retained states at this n0:
         ## - rare-policy: everyone is rare.label (already set above)
         ## - absorb-policy: undefined; keep NA labels
         cell.idx.absorb[] <- NA_integer_
@@ -467,11 +473,11 @@ linf.csts <- function(S,
     out
 }
 
-#' From counts -> filter.asv -> L-infinity relatives -> truncated L-infinity CSTs
+#' From counts to filtered, normalized, truncated dCSTs
 #'
 #' Convenience pipeline: runs \code{filter.asv()} on counts, computes
-#' L-infinity-normalized relatives on the filtered counts, and assigns truncated
-#' L-infinity CSTs.
+#' L-infinity-normalized relatives on the filtered counts, and assigns
+#' truncated dCSTs.
 #'
 #' @param S.counts Numeric matrix of counts (samples x features).
 #' @param ... Arguments passed to \code{filter.asv()} (e.g., \code{min.lib},
@@ -509,7 +515,7 @@ validate.linf.csts <- function(obj) {
 
   n <- length(obj$cell.label)
 
-  ## Case 1: explicit hierarchy (refined CSTs)
+  ## Case 1: explicit hierarchy (refined dCSTs)
   if (!is.null(obj$cst.levels)) {
 
     stopifnot(is.list(obj$cst.levels))
@@ -523,28 +529,30 @@ validate.linf.csts <- function(obj) {
     return(invisible(TRUE))
   }
 
-  ## Case 2: depth-1 CST (plain linf.csts output)
+  ## Case 2: depth-1 dCST (plain linf.csts output)
   ## This is VALID and should be accepted
   return(invisible(TRUE))
 }
 
-#' Refine L-infinity CST hierarchy by one level
+#' Refine a dCST hierarchy by one level
 #'
 #' @description
-#' Selects large leaf cells and refines them by dropping the dominant feature(s)
-#' encoded in the parent label path and re-applying \code{\link{linf.csts}} to
-#' the remaining features. The resulting child labels are appended to the parent
-#' label using \code{sep}.
+#' Selects well-supported leaf dominance-lineages and refines them by dropping
+#' the dominant feature(s) encoded in the parent label path and re-applying
+#' \code{\link{linf.csts}} to the remaining features. The resulting child
+#' labels are appended to the parent label using \code{sep}.
 #'
-#' Low-frequency child cells are handled by \code{low.freq.policy}. When
+#' Low-support child lineages are handled by \code{low.freq.policy}. When
 #' \code{low.freq.policy = "pure"}, rare buckets at depth >= 2 become
 #' parent-prefixed automatically via the hierarchical \code{paste(parent, child, sep = sep)}.
 #'
 #' @param M Numeric matrix (samples x features) used for refinement. Column names
-#'   should match feature labels used in CST names.
+#'   should match feature labels used in dCST names.
 #' @param csts A \code{"linf.csts"} object.
-#' @param n0 Integer >= 1. Minimum size for a child cell to be kept (passed to \code{linf.csts}).
-#' @param refinement.factor Numeric > 0. Auto-refine parent cells with size >= \code{refinement.factor * n0}.
+#' @param n0 Integer >= 1. Minimum support required to retain a child lineage
+#'   (passed to \code{linf.csts}).
+#' @param refinement.factor Numeric > 0. Auto-refine parent lineages with
+#'   support >= \code{refinement.factor * n0}.
 #' @param sep Character scalar used to concatenate hierarchical labels.
 #' @param low.freq.policy Character. One of \code{"pure"} or \code{"absorb"}.
 #'   Default: \code{"pure"}. The legacy value \code{"rare"} is still accepted as
@@ -654,7 +662,7 @@ refine.linf.csts <- function(M,
         cat("AUTO-REFINEMENT MODE\n")
         cat("========================================\n")
         cat("Refinement threshold:", threshold, "\n")
-        cat("Cells selected for refinement:", length(refine.cells), "\n\n")
+        cat("Dominance-lineages selected for refinement:", length(refine.cells), "\n\n")
     }
 
     for (cell in refine.cells) {
@@ -672,7 +680,8 @@ refine.linf.csts <- function(M,
         drop.idx <- match(parent.features, csts$feature.ids)
         drop.idx <- drop.idx[!is.na(drop.idx)]
 
-        ## If no parent features match columns (e.g., cell is a rare bucket), do not drop any columns.
+        ## If no parent features match columns (e.g., the lineage is a rare
+        ## bucket), do not drop any columns.
         ## Note: x[, -integer(0)] selects *zero* columns, so we must handle this explicitly.
         if (length(drop.idx) == 0L) {
             M.sub <- M[idx, , drop = FALSE]
@@ -698,7 +707,7 @@ refine.linf.csts <- function(M,
         sub.labels.rare <- sub.csts$cell.label.rare
         sub.labels.absorb <- sub.csts$cell.label.absorb
 
-        ## If refinement yields no kept sub-cells (all samples go to rare), skip
+        ## If refinement yields no retained child lineages, skip.
         if (all(sub.labels.rare == rare.label)) next
 
         refined.ids.rare[idx] <- paste(parent.id.rare, sub.ids.rare, sep = sep)
@@ -707,7 +716,7 @@ refine.linf.csts <- function(M,
         refined.labels.absorb[idx] <- paste(parent.label.absorb, sub.labels.absorb, sep = sep)
     }
 
-    ## Update CST object (store both views; active view chosen by low.freq.policy)
+    ## Update dCST object (store both views; active view chosen by low.freq.policy)
     csts$cst.id.levels[[depth]] <- if (low.freq.policy == "pure") refined.ids.rare else refined.ids.absorb
     csts$cst.id.levels.rare[[depth]] <- refined.ids.rare
     csts$cst.id.levels.absorb[[depth]] <- refined.ids.absorb
@@ -741,18 +750,20 @@ refine.linf.csts <- function(M,
     csts
 }
 
-#' Iteratively refine L-infinity CSTs by one additional level
+#' Iteratively refine dCSTs by one additional level
 #'
 #' @description
-#' Appends one refinement level to an existing CST hierarchy produced by
+#' Appends one refinement level to an existing dCST hierarchy produced by
 #' \code{\link{refine.linf.csts}} or \code{\link{refine.linf.csts.iter}}.
-#' Cells to refine can be provided explicitly or selected automatically based on
-#' \code{refinement.factor * n0}.
+#' Dominance-lineages to refine can be provided explicitly or selected
+#' automatically based on \code{refinement.factor * n0}.
 #'
 #' @param M Numeric matrix used for refinement.
 #' @param refined A \code{"linf.csts"} object with an existing hierarchy.
-#' @param cells.to.refine Character vector of leaf cells to refine, or NULL for auto-selection.
-#' @param n0 Integer >= 1. Minimum size for a child cell to be kept.
+#' @param cells.to.refine Character vector of leaf dominance-lineage IDs to
+#'   refine, or NULL for auto-selection. The argument name is retained for
+#'   backward compatibility.
+#' @param n0 Integer >= 1. Minimum support required to retain a child lineage.
 #' @param refinement.factor Numeric > 0. Auto-selection threshold multiplier.
 #' @param sep Character scalar used to concatenate hierarchical labels.
 #' @param low.freq.policy Character. One of \code{"pure"} or \code{"absorb"}.
@@ -829,7 +840,7 @@ refine.linf.csts.iter <- function(M,
     }
 
     if (verbose) {
-        cat("Auto-selecting cells for iterative refinement (threshold =", threshold, "):\n")
+        cat("Auto-selecting dominance-lineages for iterative refinement (threshold =", threshold, "):\n")
         for (c in cells.to.refine) {
             cat(" -", c, ":", cell.sizes[c], "samples\n")
         }
@@ -856,7 +867,8 @@ refine.linf.csts.iter <- function(M,
         drop.idx <- match(parents, refined$feature.ids)
         drop.idx <- drop.idx[!is.na(drop.idx)]
 
-        ## If no parent features match columns (e.g., cell is a rare bucket), do not drop any columns.
+        ## If no parent features match columns (e.g., the lineage is a rare
+        ## bucket), do not drop any columns.
         ## Note: x[, -integer(0)] selects *zero* columns, so we must handle this explicitly.
         if (length(drop.idx) == 0L) {
             M.sub <- M[idx, , drop = FALSE]
@@ -882,7 +894,7 @@ refine.linf.csts.iter <- function(M,
         sub.labels.rare <- sub.csts$cell.label.rare
         sub.labels.absorb <- sub.csts$cell.label.absorb
 
-        ## If refinement yields no kept sub-cells (all samples go to rare), skip
+        ## If refinement yields no retained child lineages, skip.
         if (all(sub.labels.rare == rare.label)) next
 
         new.ids.rare[idx] <- paste(parent.id.rare, sub.ids.rare, sep = sep)
@@ -924,12 +936,12 @@ refine.linf.csts.iter <- function(M,
     refined
 }
 
-#' Switch a CST hierarchy to the "absorb" view (collapse rare buckets)
+#' Switch a dCST hierarchy to the "absorb" view (collapse rare buckets)
 #'
 #' @description
 #' Returns a copy of a \code{"linf.csts"} object with \code{cell.label} (and, if
 #' present, \code{cst.levels}) replaced by the precomputed "absorb" labeling.
-#' This does not recompute CSTs; it only switches between labelings already
+#' This does not recompute dCSTs; it only switches between labelings already
 #' stored in the object.
 #'
 #' @param csts A \code{"linf.csts"} object produced by \code{\link{linf.csts}}
@@ -980,12 +992,12 @@ collapse.rare <- function(csts) {
   csts
 }
 
-#' Switch a CST hierarchy to the "rare" view (explicit rare buckets)
+#' Switch a dCST hierarchy to the "rare" view (explicit rare buckets)
 #'
 #' @description
 #' Returns a copy of a \code{"linf.csts"} object with \code{cell.label} (and, if
 #' present, \code{cst.levels}) replaced by the precomputed "rare" labeling.
-#' This does not recompute CSTs; it only switches between labelings already
+#' This does not recompute dCSTs; it only switches between labelings already
 #' stored in the object. This explicit rare-bucket view is the active labeling
 #' used by \code{low.freq.policy = "pure"}.
 #'
@@ -1057,7 +1069,7 @@ print.linf.csts <- function(x, ...) {
   }
 
   cat("\n================================================================================\n")
-  cat("L-infinity CST Hierarchy\n")
+  cat("Dominant Community State Type Hierarchy\n")
   cat("================================================================================\n")
   cat("Total samples: ", length(x$cell.label), "\n")
   cat("Max depth:     ", max.depth, "\n")
@@ -1082,7 +1094,7 @@ print.linf.csts <- function(x, ...) {
   invisible(x)
 }
 
-#' Summarize CST hierarchy statistics
+#' Summarize dCST hierarchy statistics
 #'
 #' @param object A \code{"linf.csts"} object.
 #' @param ... Unused.
@@ -1188,15 +1200,15 @@ df.to.latex <- function(df,
   lines
 }
 
-#' Render L-infinity CSTs as a LaTeX table
+#' Render dCSTs as a LaTeX table
 #'
 #' @description
-#' Generates LaTeX code summarizing L-infinity CSTs at a specified hierarchy depth.
-#' Uses the explicit CST hierarchy stored in \code{cst.levels} when available.
+#' Generates LaTeX code summarizing dCSTs at a specified hierarchy depth.
+#' Uses the explicit dCST hierarchy stored in \code{cst.levels} when available.
 #'
-#' @param csts A CST object produced by \code{linf.csts()} and optionally refined
+#' @param csts A dCST object produced by \code{linf.csts()} and optionally refined
 #'   by \code{refine.linf.csts()} or \code{refine.linf.csts.iter()}.
-#' @param depth Integer. CST depth to render. Default is the leaf level
+#' @param depth Integer. dCST depth to render. Default is the leaf level
 #'   (\code{csts$cst.depth}). If \code{cst.levels} is missing, depth is ignored.
 #' @param caption Character or NULL. LaTeX table caption.
 #' @param label Character or NULL. LaTeX label for referencing the table.
@@ -1206,9 +1218,9 @@ df.to.latex <- function(df,
 #' @return Character vector containing LaTeX table code.
 #'
 #' @details
-#' This function is hierarchy-aware. It does not infer CST depth from label strings.
-#' If the CST object does not contain \code{cst.levels}, the function falls back
-#' to using \code{cell.label} as a single-level CST.
+#' This function is hierarchy-aware. It does not infer dCST depth from label
+#' strings. If the dCST object does not contain \code{cst.levels}, the function
+#' falls back to using \code{cell.label} as a single-level dCST.
 #'
 #' @export
 latex.linf.csts <- function(csts,
@@ -1230,7 +1242,7 @@ latex.linf.csts <- function(csts,
     }
     labels <- csts$cst.levels[[depth]]
   } else {
-    ## Backward compatibility: flat CST
+    ## Backward compatibility: flat dCST
     labels <- csts$cell.label
     depth <- 1L
   }
