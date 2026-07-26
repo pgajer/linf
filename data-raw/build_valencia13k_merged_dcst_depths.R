@@ -6,8 +6,8 @@
 ## assignments on the canonical Valencia 13k training set.
 ##
 ## Input files (not shipped with the package):
-##   ~/current_projects/valencia/tx.13k.rds      -- compositional matrix
-##   ~/current_projects/valencia/cst.tx.13k.rds  -- CST annotation data frame
+##   $LINF_VALENCIA_ROOT/tx.13k.rds      -- compositional matrix
+##   $LINF_VALENCIA_ROOT/cst.tx.13k.rds  -- CST annotation data frame
 ##
 ## Output (saved to data/):
 ##   valencia13k_dcst_depth2_merged
@@ -24,7 +24,11 @@ if (!exists("linf.csts", mode = "function")) {
   pkgload::load_all(".", quiet = TRUE)
 }
 
-valencia_root <- path.expand("~/current_projects/valencia")
+valencia_root <- Sys.getenv("LINF_VALENCIA_ROOT")
+if (!nzchar(valencia_root)) {
+  stop("Set LINF_VALENCIA_ROOT to the directory containing the Valencia source files.")
+}
+valencia_root <- normalizePath(valencia_root, mustWork = TRUE)
 
 tx_path <- file.path(valencia_root, "tx.13k.rds")
 cst_path <- file.path(valencia_root, "cst.tx.13k.rds")

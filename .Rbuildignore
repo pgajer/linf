@@ -23,7 +23,7 @@
 ^data-raw$
 ^vignettes/articles$
 ^AGENTS\.md$
-^\.claude$
+^\.qa-logs$
 ^dcst_depth2_distribution\.png$
 ^dcst_disease_heatmap\.png$
 ^dcst_size_distribution\.png$

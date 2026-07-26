@@ -3,8 +3,7 @@
 VERSION := $(shell grep "^Version:" DESCRIPTION | sed 's/Version: //')
 PKGNAME := $(shell grep "^Package:" DESCRIPTION | sed 's/Package: //')
 TARBALL := $(PKGNAME)_$(VERSION).tar.gz
-LOGDIR := .claude
-HOMEBREW_BIN := /opt/homebrew/bin
+LOGDIR := .qa-logs
 
 clean:
 	rm -rf $(PKGNAME).Rcheck ..Rcheck *.Rcheck
@@ -36,16 +35,16 @@ build-log: clean document
 	@echo "Build output saved to $(LOGDIR)/$(PKGNAME)_build.log"
 
 check: build
-	PATH="$(HOMEBREW_BIN):$$PATH" R_TIDYCMD="$(HOMEBREW_BIN)/tidy" R CMD check $(TARBALL) --as-cran
+	R CMD check $(TARBALL) --as-cran
 
 check-clean: build
-	env R_MAKEVARS_USER=/dev/null PATH="$(HOMEBREW_BIN):$$PATH" R_TIDYCMD="$(HOMEBREW_BIN)/tidy" R CMD check $(TARBALL) --as-cran
+	env R_MAKEVARS_USER=/dev/null R CMD check $(TARBALL) --as-cran
 
 check-fast: build
-	PATH="$(HOMEBREW_BIN):$$PATH" R_TIDYCMD="$(HOMEBREW_BIN)/tidy" R CMD check $(TARBALL) --as-cran --no-examples --no-tests --no-manual
+	R CMD check $(TARBALL) --as-cran --no-examples --no-tests --no-manual
 
 check-examples: build
-	PATH="$(HOMEBREW_BIN):$$PATH" R_TIDYCMD="$(HOMEBREW_BIN)/tidy" R CMD check $(TARBALL) --as-cran --no-tests --no-vignettes --no-manual
+	R CMD check $(TARBALL) --as-cran --no-tests --no-vignettes --no-manual
 
 install: build
 	R CMD INSTALL $(TARBALL)
