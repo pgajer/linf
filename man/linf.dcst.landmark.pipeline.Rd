@@ -2,7 +2,7 @@
 % Please edit documentation in R/dcst_landmark_pipeline.R
 \name{linf.dcst.landmark.pipeline}
 \alias{linf.dcst.landmark.pipeline}
-\title{Landmark-aware DCST pipeline}
+\title{Landmark-aware dCST pipeline}
 \usage{
 linf.dcst.landmark.pipeline(
   X,
@@ -31,18 +31,19 @@ length \code{ncol(X)}.}
 \item{feature.labels}{Optional character vector of display labels, length
 \code{ncol(X)}.}
 
-\item{n0.depth1}{Integer >= 1. Minimum cell size for depth-1 DCSTs.}
+\item{n0.depth1}{Integer >= 1. Minimum support for a depth-1 dominance
+sample set.}
 
-\item{n0.depth2}{Integer >= 1. Minimum cell size for depth-2 refinement.}
+\item{n0.depth2}{Integer >= 1. Minimum support for a depth-2 child lineage.}
 
 \item{refinement.factor}{Numeric > 0. Auto-refinement threshold multiplier
 passed to \code{\link{refine.linf.csts}}.}
 
-\item{sep}{Character scalar used to join depth-refined CST path tokens.}
+\item{sep}{Character scalar used to join depth-refined dCST path tokens.}
 
 \item{low.freq.policy}{Character. One of \code{"pure"} or \code{"absorb"}.
-Controls the active DCST view while still preserving parallel rare/absorb
-views inside the returned CST objects. The legacy value \code{"rare"} is
+Controls the active dCST view while still preserving parallel rare/absorb
+views inside the returned dCST objects. The legacy value \code{"rare"} is
 still accepted as a deprecated alias for \code{"pure"}.}
 
 \item{rare.label}{Character scalar for rare buckets.}
@@ -76,15 +77,15 @@ A named list with components:
 }
 \description{
 Small wrapper that normalizes a nonnegative matrix with
-\code{\link{normalize.linf}}, computes depth-1 DCSTs with
+\code{\link{normalize.linf}}, computes depth-1 dCSTs with
 \code{\link{linf.csts}}, refines once to depth 2 with
 \code{\link{refine.linf.csts}}, and then computes landmark points for both
 depths with \code{\link{linf.landmarks}}.
 
 The function is intentionally explicit rather than highly abstracted. It
 keeps the intermediate objects visible and returns them together in one list
-so downstream workflows can inspect the normalized matrix, the depth-1 DCSTs,
-the depth-2 DCSTs, and the landmark tables without re-running the pipeline.
+so downstream workflows can inspect the normalized matrix, the depth-1 dCSTs,
+the depth-2 dCSTs, and the landmark tables without re-running the pipeline.
 }
 \examples{
 X <- rbind(

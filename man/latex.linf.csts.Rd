@@ -2,7 +2,7 @@
 % Please edit documentation in R/linf.R
 \name{latex.linf.csts}
 \alias{latex.linf.csts}
-\title{Render L-infinity CSTs as a LaTeX table}
+\title{Render dCSTs as a LaTeX table}
 \usage{
 latex.linf.csts(
   csts,
@@ -14,10 +14,10 @@ latex.linf.csts(
 )
 }
 \arguments{
-\item{csts}{A CST object produced by \code{linf.csts()} and optionally refined
+\item{csts}{A dCST object produced by \code{linf.csts()} and optionally refined
 by \code{refine.linf.csts()} or \code{refine.linf.csts.iter()}.}
 
-\item{depth}{Integer. CST depth to render. Default is the leaf level
+\item{depth}{Integer. dCST depth to render. Default is the leaf level
 (\code{csts$cst.depth}). If \code{cst.levels} is missing, depth is ignored.}
 
 \item{caption}{Character or NULL. LaTeX table caption.}
@@ -32,11 +32,11 @@ by \code{refine.linf.csts()} or \code{refine.linf.csts.iter()}.}
 Character vector containing LaTeX table code.
 }
 \description{
-Generates LaTeX code summarizing L-infinity CSTs at a specified hierarchy depth.
-Uses the explicit CST hierarchy stored in \code{cst.levels} when available.
+Generates LaTeX code summarizing dCSTs at a specified hierarchy depth.
+Uses the explicit dCST hierarchy stored in \code{cst.levels} when available.
 }
 \details{
-This function is hierarchy-aware. It does not infer CST depth from label strings.
-If the CST object does not contain \code{cst.levels}, the function falls back
-to using \code{cell.label} as a single-level CST.
+This function is hierarchy-aware. It does not infer dCST depth from label
+strings. If the dCST object does not contain \code{cst.levels}, the function
+falls back to using \code{cell.label} as a single-level dCST.
 }

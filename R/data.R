@@ -2,7 +2,7 @@
 #'
 #' A stratified subsample of 2,000 vaginal samples from the Valencia 13k
 #' CST-classifier training set (France et al. 2020), bundled as an example
-#' dataset for demonstrating L-infinity DCST construction.
+#' dataset for demonstrating dCST construction after L-infinity normalization.
 #'
 #' The subsample preserves proportional representation of all 13 Valencia
 #' sub-CSTs and was drawn with \code{set.seed(42)}.
@@ -31,7 +31,7 @@
 #'
 #' This 2,000-sample subsample is intended for vignette demonstrations. The
 #' compositional matrix can be used directly with \code{\link{normalize.linf}}
-#' and downstream DCST functions. For workflows that require count-like input,
+#' and downstream dCST functions. For workflows that require count-like input,
 #' reconstruct approximate counts using the \code{reads} vector.
 #'
 #' @references
@@ -109,10 +109,10 @@
 "valencia_linf_hypercube_1k"
 
 
-#' Valencia 13k merged depth-2 DCST assignments
+#' Valencia 13k merged depth-2 dCST assignments
 #'
 #' A lightweight bundled assignment asset containing merged depth-2
-#' L-infinity dominant community state type (DCST) labels for the full Valencia
+#' Dominant community state type (dCST) labels for the full Valencia
 #' 13k vaginal microbiome training set.
 #'
 #' @format A list with five components:
@@ -131,9 +131,10 @@
 #'
 #' @details
 #' The asset is computed from the Valencia 13k compositional matrix after
-#' L-infinity normalization. DCSTs use \code{n0 = 50} and the merged
-#' \code{low.freq.policy = "absorb"} view, so low-frequency cells are reassigned
-#' to frequent cells rather than stored as explicit rare buckets.
+#' L-infinity normalization. dCSTs use \code{n0 = 50} and the merged
+#' \code{low.freq.policy = "absorb"} view, so samples from low-support
+#' provisional states are reassigned to retained states rather than stored as
+#' explicit rare buckets.
 #'
 #' @source
 #' Generated from the VALENCIA training data at
@@ -149,10 +150,10 @@
 "valencia13k_dcst_depth2_merged"
 
 
-#' Valencia 13k merged depth-3 DCST assignments
+#' Valencia 13k merged depth-3 dCST assignments
 #'
 #' A lightweight bundled assignment asset containing merged depth-3
-#' L-infinity dominant community state type (DCST) labels for the full Valencia
+#' Dominant community state type (dCST) labels for the full Valencia
 #' 13k vaginal microbiome training set.
 #'
 #' @format A list with five components:
@@ -172,7 +173,7 @@
 #'
 #' @details
 #' The depth-3 asset extends \code{\link{valencia13k_dcst_depth2_merged}} by one
-#' additional hierarchical DCST refinement. All levels use \code{n0 = 50} and
+#' additional hierarchical dCST refinement. All levels use \code{n0 = 50} and
 #' \code{low.freq.policy = "absorb"}. This object is intended as a reusable
 #' source for selecting richer VALENCIA-derived component sets without
 #' recomputing the full hierarchy from the 13k source matrix.
@@ -195,14 +196,14 @@
 #'
 #' A stratified subsample of 766 gut microbiome samples from the American Gut
 #' Project (PRJEB11419, AGP-US-2015), bundled for demonstrating L-infinity
-#' DCST construction in a gut ecosystem.
+#' dCST construction in a gut ecosystem.
 #'
 #' The subsample includes all samples assigned to four uncommon demonstration
-#' DCSTs (Prevotella_7, Pasteurellaceae, Akkermansia, and Staphylococcus).
+#' dCSTs (Prevotella_7, Pasteurellaceae, Akkermansia, and Staphylococcus).
 #' The remaining slots are a simple random sample, drawn with seed 42, from
 #' the eligible background after excluding Eukaryota and Unassigned labels.
 #' Phenotype fields are joined only after membership is fixed and do not
-#' influence selection. Because inclusion probabilities differ by DCST, this
+#' influence selection. Because inclusion probabilities differ by dCST, this
 #' object is a computational demonstration dataset rather than a probability
 #' sample of the underlying cohort.
 #'
@@ -212,13 +213,13 @@
 #'     Rows are samples, columns are SILVA species-level taxa.}
 #'   \item{meta}{Data frame (766 rows) with columns:
 #'     \code{Run} (SRA run accession),
-#'     \code{dcst_depth1}, \code{dcst_depth2} (pre-computed DCST labels),
+#'     \code{dcst_depth1}, \code{dcst_depth2} (pre-computed dCST labels),
 #'     \code{IBS}, \code{IBD}, \code{Diabetes}, \code{Autoimmune},
 #'     \code{Seasonal_allergies}, \code{Migraine}, \code{Acid_reflux},
 #'     \code{Lung_disease}, \code{Cardiovascular_disease}, \code{Skin_condition},
 #'     \code{Obesity} (binary disease indicators from self-reported AGP metadata),
 #'     \code{BMI} (numeric, self-reported), and
-#'     \code{selection_reason} (target-DCST inclusion or seeded background
+#'     \code{selection_reason} (target-dCST inclusion or seeded background
 #'     sampling).}
 #'   \item{taxa}{Character vector of 314 SILVA taxonomy strings.}
 #'   \item{source}{Character string documenting provenance.}
@@ -229,7 +230,7 @@
 #' human microbiome. Health conditions are self-reported via questionnaire and
 #' should be interpreted with appropriate caution.
 #'
-#' The phenotype fields must not be used with this DCST-stratified subset for
+#' The phenotype fields must not be used with this dCST-stratified subset for
 #' population prevalence estimates, effect-size estimation, or association
 #' testing. The exact selection is generated by
 #' \code{data-raw/create_agp_gut_subset.py}; run-ID membership, selection
@@ -237,7 +238,7 @@
 #' \code{inst/extdata/agp_gut_meta.csv}.
 #'
 #' The count matrix can be used directly with \code{\link{filter.asv}},
-#' \code{\link{normalize.linf}}, and downstream DCST functions.
+#' \code{\link{normalize.linf}}, and downstream dCST functions.
 #'
 #' Note on Escherichia-Shigella: this genus is inflated in 16S V4 data due to
 #' primer cross-reactivity and should be interpreted with caution.
@@ -257,7 +258,7 @@
 #' @examples
 #' data(agp_gut)
 #' dim(agp_gut$counts)                     # 766 x 314
-#' table(agp_gut$meta$dcst_depth1)         # DCST distribution
+#' table(agp_gut$meta$dcst_depth1)         # dCST distribution
 #' sum(agp_gut$meta$IBS)                   # IBS cases
 #'
 "agp_gut"

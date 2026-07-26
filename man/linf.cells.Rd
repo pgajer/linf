@@ -2,7 +2,7 @@
 % Please edit documentation in R/linf.R
 \name{linf.cells}
 \alias{linf.cells}
-\title{L-infinity cell assignment}
+\title{Dominant-feature assignment}
 \usage{
 linf.cells(
   S,
@@ -22,7 +22,8 @@ length \code{ncol(S)}.}
 \item{feature.labels}{Optional character vector of display labels, length
 \code{ncol(S)}.}
 
-\item{tie.method}{Character. How to resolve ties when assigning L-infinity cells.}
+\item{tie.method}{Character. How to resolve ties during dominant-feature
+assignment.}
 
 \item{return.value}{Logical. If \code{TRUE}, include a \code{value} vector with row maxima.}
 
@@ -44,12 +45,13 @@ A list with components:
 }
 }
 \description{
-Assigns each row to the column achieving its maximum (L-infinity cell).
+Assigns each row to the column achieving its maximum.
 
-For each sample (row) of a nonnegative matrix, identifies the \eqn{L^\infty}
-cell as the column with the maximum value. Ties are broken by the first
-maximum (as in \code{max.col(..., ties.method = "first")}). Rows that are all
-zero are assigned \code{NA}.
+For each sample (row) of a nonnegative matrix, identifies the dominant
+feature as the column with the maximum value. Samples with the same dominant
+feature form a depth-1 dominance sample set. Ties are broken by the first
+maximum (as in \code{max.col(..., ties.method = "first")}). Rows that are
+all zero are assigned \code{NA}.
 
 Feature IDs default to \code{colnames(S)}; if absent, synthetic IDs
 \code{"V1", "V2", ..., "Vp"} are generated. Display labels default to the

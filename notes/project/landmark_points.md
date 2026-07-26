@@ -1,19 +1,21 @@
-# Landmark Points for DCSTs in `linf`
+# Landmark Points for dCSTs in `linf`
 
 ## Overview
 
-This note describes the idea of **landmark points** for dominant-cell / DCST
-structures and explains how to compute them with the current `linf` package.
+This note describes the idea of **landmark points** for dCST
+dominance-lineages and explains how to compute them with the current `linf`
+package.
 
-The key idea is simple: once a cell or a refined DCST leaf has been defined by
-dominance of a feature, that same feature induces natural representative points
-inside the cell. Endpoints are the clearest example, but the same logic also
-gives minimum points and representative points near the cell mean or median.
+The key idea is simple: once a dominance sample set or refined dCST lineage has
+been defined by dominance of a feature, that same feature induces natural
+representative points within the lineage. Endpoints are the clearest example,
+but the same logic also gives minimum points and representative points near
+the lineage mean or median.
 
 In the current `linf` implementation:
 
-- depth-1 dominant cells are computed by `linf.csts()`
-- deeper DCST levels are computed by `refine.linf.csts()` or
+- depth-1 dominance sample sets are computed by `linf.csts()`
+- deeper dCST levels are computed by `refine.linf.csts()` or
   `refine.linf.csts.iter()`
 - landmark points are computed by `linf.landmarks()`
 - depth-1 landmarks can optionally be attached directly by
@@ -24,25 +26,25 @@ columns representing features.
 
 ## Concept
 
-### Depth-1 cells
+### Depth-1 dominance sample sets
 
-Let `C_i` denote the depth-1 DCST cell corresponding to feature `i`. In other
-words, `C_i` is the set of rows whose dominant feature is `i`.
+Let `D_i` denote the depth-1 dominance sample set corresponding to feature
+`i`. In other words, `D_i` is the set of rows whose dominant feature is `i`.
 
-The natural landmark points of `C_i` are defined with respect to the same
+The natural landmark points of `D_i` are defined with respect to the same
 feature `i`.
 
-The **endpoint** of `C_i` is the sample in `C_i` where feature `i` is maximal:
+The **endpoint** of `D_i` is the sample in `D_i` where feature `i` is maximal:
 
 ```text
-e_i = argmax_{x in C_i} X[x, i]
+e_i = argmax_{x in D_i} X[x, i]
 ```
 
-The corresponding **minimum endpoint** is the sample in `C_i` where feature `i`
+The corresponding **minimum endpoint** is the sample in `D_i` where feature `i`
 is minimal:
 
 ```text
-c_i = argmin_{x in C_i} X[x, i]
+c_i = argmin_{x in D_i} X[x, i]
 ```
 
 In the package API these are called:
@@ -53,44 +55,45 @@ In the package API these are called:
 I prefer these names to `co-endpoint`, because they are explicit and align well
 with code.
 
-### Depth-2 and deeper DCST cells
+### Depth-2 and deeper dominance-lineages
 
-If a depth-2 cell is written as `C_{i,j}`, then it is obtained by first placing
-rows in `C_i`, then refining that parent cell after excluding feature `i`, and
-then assigning dominance of feature `j` among the remaining features.
+If a depth-2 lineage is written as `D_{i,j}`, then it is obtained by first
+placing rows in `D_i`, then refining that parent lineage after excluding
+feature `i`, and then assigning dominance of feature `j` among the remaining
+features.
 
-The natural feature attached to `C_{i,j}` is therefore the **leaf feature**
+The natural feature attached to `D_{i,j}` is therefore the **leaf feature**
 `j`, not the whole path `(i, j)`. Its endpoint is
 
 ```text
-e_{i,j} = argmax_{x in C_{i,j}} X[x, j]
+e_{i,j} = argmax_{x in D_{i,j}} X[x, j]
 ```
 
 and similarly the minimum endpoint is
 
 ```text
-c_{i,j} = argmin_{x in C_{i,j}} X[x, j]
+c_{i,j} = argmin_{x in D_{i,j}} X[x, j]
 ```
 
-This extends recursively to arbitrary depth. If a leaf DCST cell has path
+This extends recursively to arbitrary depth. If a leaf dCST lineage has path
 
 ```text
-C_{i_1, i_2, ..., i_k}
+D_{i_1, i_2, ..., i_k}
 ```
 
 then its current natural landmark feature is the leaf feature `i_k`.
 
 ### Representative points
 
-Besides extrema, a cell also has useful representative points near its central
-tendency.
+Besides extrema, a dominance-lineage also has useful representative points
+near its central tendency.
 
-For a cell `C` with landmark feature `j`, define:
+For a lineage `D` with landmark feature `j`, define:
 
-- the **mean representative** as the sample in `C` whose value `X[x, j]` is
-  closest to `mean(X[C, j])`
-- the **median representative** as the sample in `C` whose value `X[x, j]` is
-  closest to `median(X[C, j])`
+- the **mean representative** as the sample in `D` whose value `X[x, j]` is
+  closest to `mean(X[D, j])`
+- the **median representative** as the sample in `D` whose value `X[x, j]` is
+  closest to `median(X[D, j])`
 
 In the package API these are called:
 
@@ -98,8 +101,8 @@ In the package API these are called:
 - `median.rep`
 
 This first implementation is intentionally feature-specific. It uses the leaf
-feature of the DCST path rather than the whole row vector `X[x, ]`. That keeps
-the meaning tightly aligned with the way the cell itself is defined.
+feature of the dCST path rather than the whole row vector `X[x, ]`. That keeps
+the meaning tightly aligned with the way the lineage itself is defined.
 
 ## Current Scope in `linf`
 
@@ -112,8 +115,8 @@ The current `linf.landmarks()` implementation supports:
 
 These landmarks are computed for:
 
-- any requested DCST depth
-- any requested CST/DCST view: `"active"`, `"rare"`, or `"absorb"`
+- any requested dCST depth
+- any requested dCST view: `"active"`, `"rare"`, or `"absorb"`
 - any `linf.csts` object that has been optionally refined to greater depth
 
 The current implementation does **not** yet compute:
@@ -129,14 +132,15 @@ is not yet part of the package.
 
 `linf` supports two low-frequency views:
 
-- `"rare"`: low-frequency cells remain explicit rare buckets
-- `"absorb"`: low-frequency cells are reassigned into kept cells
+- `"rare"`: low-support provisional states remain explicit rare buckets
+- `"absorb"`: samples from low-support states are reassigned into retained
+  states
 
 Because of that, landmark computation must always be tied to a specific view.
 The same row can belong to different effective leaves under `"rare"` and
 `"absorb"`.
 
-For this reason `linf.landmarks()` takes a `view` argument, and the CST object
+For this reason `linf.landmarks()` takes a `view` argument, and the dCST object
 stores parallel label and ID paths for the active, rare, and absorb views.
 
 ## How the Package Computes Landmark Points
@@ -152,9 +156,9 @@ Z <- normalize.linf(X)
 This scales each row by its row maximum. Nonzero rows then have maximum `1`,
 while zero rows remain zero.
 
-### Step 2: Compute depth-1 DCSTs
+### Step 2: Compute depth-1 dCSTs
 
-Depth-1 cells are computed by `linf.csts()`:
+Depth-1 dominance sample sets are computed by `linf.csts()`:
 
 ```r
 d1 <- linf.csts(
@@ -166,14 +170,14 @@ d1 <- linf.csts(
 
 This returns a `linf.csts` object containing:
 
-- active cell assignments
+- active dCST assignments
 - the rare and absorb variants
-- kept-cell summaries
-- level-1 cell IDs and labels
+- retained-state summaries
+- level-1 lineage IDs and labels
 
 ### Step 3: Refine to depth 2 or beyond
 
-Depth-2 DCSTs are obtained by refining the depth-1 object:
+Depth-2 dCSTs are obtained by refining the depth-1 object:
 
 ```r
 d2 <- refine.linf.csts(
@@ -192,12 +196,12 @@ Further depth can be added with either:
 - repeated calls to `refine.linf.csts()` if that matches the workflow better
 
 Internally, refinement drops the parent dominant feature(s) and recomputes
-dominance on the remaining columns. This is exactly why a refined cell has a
-well-defined leaf feature and therefore a natural landmark feature.
+dominance on the remaining columns. This is exactly why a refined lineage has
+a well-defined leaf feature and therefore a natural landmark feature.
 
 ### Step 4: Compute landmark points
 
-Use `linf.landmarks()` on the matrix and the DCST object:
+Use `linf.landmarks()` on the matrix and the dCST object:
 
 ```r
 lm2 <- linf.landmarks(
@@ -209,13 +213,13 @@ lm2 <- linf.landmarks(
 )
 ```
 
-The function identifies the leaf feature for each DCST cell from the cell ID
-path, then computes the requested point(s) using the rows currently assigned to
-that cell.
+The function identifies the leaf feature for each dCST dominance-lineage from
+the lineage ID path, then computes the requested point(s) using the rows
+currently assigned to that lineage.
 
 ### Step 5: Use the small pipeline wrapper when you want all pieces together
 
-For the common "normalize -> depth-1 DCST -> depth-2 refinement -> landmarks"
+For the common "normalize -> depth-1 dCST -> depth-2 refinement -> landmarks"
 workflow, the package now provides a convenience wrapper:
 
 ```r
@@ -242,7 +246,7 @@ This returns a named list containing:
 - `landmarks.depth1`
 - `landmarks.depth2`
 
-The wrapper does not add any new DCST logic; it simply orchestrates the
+The wrapper does not add any new dCST logic; it simply orchestrates the
 existing `normalize.linf()`, `linf.csts()`, `refine.linf.csts()`, and
 `linf.landmarks()` calls in a readable package-style interface.
 
@@ -253,16 +257,17 @@ following main components.
 
 ### Metadata
 
-- `depth`: the DCST depth used for computation
-- `view`: the resolved view used for cell membership
+- `depth`: the dCST depth used for computation
+- `view`: the resolved view used for lineage membership
 - `sep`: the separator used in hierarchical IDs
-- `rare.label`: the label used for explicit rare cells
+- `rare.label`: the label used for explicit rare buckets
 - `feature.ids`
 - `feature.labels`
 
 ### `cells`
 
-`cells` is one row per DCST cell at the requested depth and view. It includes:
+The legacy-named `cells` component is one row per dCST dominance-lineage at
+the requested depth and view. It includes:
 
 - `cell.id`
 - `cell.label`
@@ -272,7 +277,7 @@ following main components.
 - `is.rare`
 - `landmarks.computable`
 
-This table is useful because not every cell necessarily has computable
+This table is useful because not every lineage necessarily has computable
 landmarks. For example, explicit rare buckets are represented in `cells`, but
 their landmarks are skipped because a rare bucket does not correspond to one
 unique target feature.
@@ -296,9 +301,9 @@ Interpretation:
 
 - for `endpoint.max` and `endpoint.min`, `target.value` equals
   `observed.value`
-- for `mean.rep` and `median.rep`, `target.value` is the cell mean or median of
-  the target feature and `abs.deviation` measures how close the chosen sample is
-  to that target
+- for `mean.rep` and `median.rep`, `target.value` is the lineage mean or median
+  of the target feature and `abs.deviation` measures how close the chosen
+  sample is to that target
 
 ## Example Workflow
 
@@ -364,7 +369,7 @@ lm2$landmarks
 
 ## Convenience: Attaching Landmarks at Depth 1
 
-For depth-1 CSTs, landmarks can be computed automatically during the initial
+For depth-1 dCSTs, landmarks can be computed automatically during the initial
 call:
 
 ```r
@@ -387,17 +392,18 @@ explicitly after refinement.
 ## Practical Interpretation
 
 These landmark points are useful because they give concrete observed samples
-that summarize different parts of the geometry of a DCST cell:
+that summarize different parts of the geometry of a dCST dominance-lineage:
 
 - `endpoint.max` identifies the sample that most strongly expresses the leaf
   feature
 - `endpoint.min` identifies the weakest expression of the leaf feature within
-  the cell
+  the lineage
 - `mean.rep` gives a sample near the average level of the leaf feature
 - `median.rep` gives a robust central representative
 
-Together, these points provide a compact way to inspect how a DCST cell varies
-internally without collapsing the cell to a single synthetic average vector.
+Together, these points provide a compact way to inspect how a dCST
+dominance-lineage varies internally without collapsing the lineage to a single
+synthetic average vector.
 
 ## Recommended Terminology
 
@@ -425,13 +431,13 @@ extensions remain:
 
 1. Basin-aware local minima, for example minima whose attraction basin contains
    at least `M` points.
-2. Full-vector representatives based on distance to `mean(X[C, ])` or
-   `median(X[C, ])`.
-3. Paths between landmarks inside a nearest-neighbor or graph structure induced
-   on each DCST cell.
+2. Full-vector representatives based on distance to `mean(X[D, ])` or
+   `median(X[D, ])`.
+3. Paths between landmarks inside a nearest-neighbor or graph structure
+   induced on each dCST dominance-lineage.
 4. Automatic attachment of deeper landmark summaries during refinement.
 
 These are all compatible with the current design. The main architectural choice
 that makes future work easier is that landmarks are implemented as a separate,
-well-defined layer on top of the DCST object rather than being fused into the
+well-defined layer on top of the dCST object rather than being fused into the
 core assignment logic.

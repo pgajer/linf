@@ -48,7 +48,7 @@ test_that("linf.cells duplicate column names get disambiguated", {
   expect_equal(out$label[1:2], c("X_1", "X"))
 })
 
-test_that("linf.csts keeps big cells and reassigns small ones", {
+test_that("linf.csts retains supported states and reassigns low-support ones", {
   # 6 rows dominated by col1, 2 by col2, 2 by col3
   A <- matrix(c(5, 1, 0), nrow = 6, ncol = 3, byrow = TRUE)
   B <- matrix(c(1, 5, 0), nrow = 2, ncol = 3, byrow = TRUE)
@@ -63,16 +63,16 @@ test_that("linf.csts keeps big cells and reassigns small ones", {
   expect_identical(out$kept.cells.idx, 1L)
   expect_identical(out$kept.cells.lbl, "Dom1")
 
-  # big cell unchanged
+  # supported state unchanged
   expect_true(all(out$cell.index[1:6] == 1L))
   expect_true(all(out$cell.label[1:6] == "Dom1"))
 
-  # small cells reassigned to kept cell
+  # low-support samples reassigned to the retained state
   expect_true(all(out$cell.index[7:10] == 1L))
   expect_true(all(out$cell.label[7:10] == "Dom1"))
 })
 
-test_that("linf.csts returns all-NA when no cells meet threshold", {
+test_that("linf.csts returns all-NA when no states meet the support threshold", {
   S <- rbind(
     c(1, 0, 0),  # 1 sample in col1
     c(0, 1, 0),  # 1 sample in col2

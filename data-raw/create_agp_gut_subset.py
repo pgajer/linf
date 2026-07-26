@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Create the deterministic 766-sample AGP demonstration subset.
 
-Selection is based only on retained 5,000-sample DCST assignments:
+Selection is based only on retained 5,000-sample dCST assignments:
 
-1. Keep every sample in four uncommon demonstration DCSTs.
+1. Keep every sample in four uncommon demonstration dCSTs.
 2. Exclude Eukaryota and Unassigned depth-1 labels.
 3. Fill the remaining slots by a seeded simple random sample from the
    eligible background.
@@ -74,10 +74,10 @@ def read_assignments(path: Path) -> list[dict[str, str]]:
     required = {"Run", "dcst_depth1", "dcst_depth2"}
     missing = required.difference(reader.fieldnames or [])
     if missing:
-        raise SystemExit(f"DCST assignments lack columns: {sorted(missing)}")
+        raise SystemExit(f"dCST assignments lack columns: {sorted(missing)}")
     run_ids = [row["Run"] for row in rows]
     if len(run_ids) != len(set(run_ids)):
-        raise SystemExit("DCST assignments contain duplicated Run values.")
+        raise SystemExit("dCST assignments contain duplicated Run values.")
     return rows
 
 
@@ -94,7 +94,7 @@ def select_runs(
     ]
     if len(target_rows) > n_samples:
         raise SystemExit(
-            f"Target DCSTs contain {len(target_rows)} rows, exceeding "
+            f"Target dCSTs contain {len(target_rows)} rows, exceeding "
             f"n_samples={n_samples}."
         )
     n_background = n_samples - len(target_rows)
@@ -236,7 +236,7 @@ def main() -> None:
     parser.add_argument(
         "--output-metadata",
         default=str(REPO_ROOT / "inst" / "extdata" / "agp_gut_meta.csv"),
-        help="Output metadata and DCST manifest.",
+        help="Output metadata and dCST manifest.",
     )
     parser.add_argument("--n-samples", type=int, default=766)
     parser.add_argument("--seed", type=int, default=42)

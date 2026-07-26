@@ -21,7 +21,7 @@ are derived from the VALENCIA training data:
   composition," <https://doi.org/10.1186/s40168-020-00934-6>
 
 The source-preparation scripts in `data-raw/` record the deterministic
-subsampling and DCST construction parameters. Original sample identifiers are
+subsampling and dCST construction parameters. Original sample identifiers are
 not retained in the merged 13k assignment objects.
 
 ## American Gut Project demonstration object
@@ -51,13 +51,13 @@ creates the 766-sample package object using an explicit deterministic rule:
    eligible background.
 
 Phenotype fields are joined only after membership is fixed and cannot
-influence selection. Exact run-ID membership, selection reasons, DCST labels,
+influence selection. Exact run-ID membership, selection reasons, dCST labels,
 and derived phenotype fields are retained in
 `inst/extdata/agp_gut_meta.csv`. The script also reconstructs the bundled
-count matrix from the full abundance table and retained 5,000-sample DCST
+count matrix from the full abundance table and retained 5,000-sample dCST
 assignments. `data-raw/build_agp_gut.R` then constructs the package object.
 
-Because inclusion probabilities differ by DCST, `agp_gut` is suitable for
-demonstrating data alignment, filtering, normalization, and DCST construction
+Because inclusion probabilities differ by dCST, `agp_gut` is suitable for
+demonstrating data alignment, filtering, normalization, and dCST construction
 only. Its phenotype frequencies, effect sizes, and p-values must not be
 interpreted as population estimates.

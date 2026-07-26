@@ -1,4 +1,4 @@
-## Regenerate the AGP depth-1 DCST bar plot embedded in README.Rmd.
+## Regenerate the AGP depth-1 dCST bar plot embedded in README.Rmd.
 
 devtools::load_all(".", quiet = TRUE)
 load("data/agp_gut.rda")
@@ -26,7 +26,7 @@ bars <- barplot(
   las = 2,
   cex.names = 0.85,
   ylab = "Number of samples",
-  main = "Gut DCST Size Distribution (depth 1)"
+  main = "Gut dCST Size Distribution (depth 1)"
 )
 text(bars, sizes, labels = sizes, pos = 3, cex = 0.8)
 dev.off()

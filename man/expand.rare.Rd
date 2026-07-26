@@ -2,7 +2,7 @@
 % Please edit documentation in R/linf.R
 \name{expand.rare}
 \alias{expand.rare}
-\title{Switch a CST hierarchy to the "rare" view (explicit rare buckets)}
+\title{Switch a dCST hierarchy to the "rare" view (explicit rare buckets)}
 \usage{
 expand.rare(csts)
 }
@@ -17,7 +17,7 @@ A \code{"linf.csts"} object using the "rare" view.
 \description{
 Returns a copy of a \code{"linf.csts"} object with \code{cell.label} (and, if
 present, \code{cst.levels}) replaced by the precomputed "rare" labeling.
-This does not recompute CSTs; it only switches between labelings already
+This does not recompute dCSTs; it only switches between labelings already
 stored in the object. This explicit rare-bucket view is the active labeling
 used by \code{low.freq.policy = "pure"}.
 }

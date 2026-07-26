@@ -2,7 +2,7 @@
 % Please edit documentation in R/linf.R
 \name{refine.linf.csts}
 \alias{refine.linf.csts}
-\title{Refine L-infinity CST hierarchy by one level}
+\title{Refine a dCST hierarchy by one level}
 \usage{
 refine.linf.csts(
   M,
@@ -18,13 +18,15 @@ refine.linf.csts(
 }
 \arguments{
 \item{M}{Numeric matrix (samples x features) used for refinement. Column names
-should match feature labels used in CST names.}
+should match feature labels used in dCST names.}
 
 \item{csts}{A \code{"linf.csts"} object.}
 
-\item{n0}{Integer >= 1. Minimum size for a child cell to be kept (passed to \code{linf.csts}).}
+\item{n0}{Integer >= 1. Minimum support required to retain a child lineage
+(passed to \code{linf.csts}).}
 
-\item{refinement.factor}{Numeric > 0. Auto-refine parent cells with size >= \code{refinement.factor * n0}.}
+\item{refinement.factor}{Numeric > 0. Auto-refine parent lineages with
+support >= \code{refinement.factor * n0}.}
 
 \item{sep}{Character scalar used to concatenate hierarchical labels.}
 
@@ -46,12 +48,12 @@ updated \code{cell.label}. Policy-specific views are stored in
 \code{cell.label.rare} and \code{cell.label.absorb}.
 }
 \description{
-Selects large leaf cells and refines them by dropping the dominant feature(s)
-encoded in the parent label path and re-applying \code{\link{linf.csts}} to
-the remaining features. The resulting child labels are appended to the parent
-label using \code{sep}.
+Selects well-supported leaf dominance-lineages and refines them by dropping
+the dominant feature(s) encoded in the parent label path and re-applying
+\code{\link{linf.csts}} to the remaining features. The resulting child
+labels are appended to the parent label using \code{sep}.
 
-Low-frequency child cells are handled by \code{low.freq.policy}. When
+Low-support child lineages are handled by \code{low.freq.policy}. When
 \code{low.freq.policy = "pure"}, rare buckets at depth >= 2 become
 parent-prefixed automatically via the hierarchical \code{paste(parent, child, sep = sep)}.
 }

@@ -2,7 +2,7 @@
 
 This note records the current downstream analysis pattern used with the
 `linf` package so that future projects can reuse it without reconstructing the
-gut DCST paper workflow from scattered scripts.
+gut dCST paper workflow from scattered scripts.
 
 The intended split is:
 
@@ -12,14 +12,14 @@ The intended split is:
 
 ## Core Idea
 
-The `linf` package defines the DCST hierarchy itself:
+The `linf` package defines the dCST hierarchy itself:
 
 - `filter.asv()` for library-size and prevalence filtering
 - `normalize.linf()` for within-sample rank-preserving normalization
-- `linf.csts()` for depth-1 DCST assignment
+- `linf.csts()` for depth-1 dCST assignment
 - `refine.linf.csts()` for recursive depth-2+ refinement
 
-The downstream pipeline begins after DCST labels exist. In practice that means
+The downstream pipeline begins after dCST labels exist. In practice that means
 the package gives us the hierarchy, while project scripts add:
 
 - phenotype extraction
@@ -67,7 +67,7 @@ The current default preprocessing pattern is:
 These values should be treated as project defaults, not immutable package
 constants.
 
-### 3. DCST Construction
+### 3. dCST Construction
 
 Two low-frequency policies are currently important:
 
@@ -102,7 +102,7 @@ Current absorb reference implementation:
 
 This stage answers:
 
-- which phenotypes show any DCST-structure association at a given depth
+- which phenotypes show any dCST-structure association at a given depth
 - whether deeper levels add information or merely fragment the cohort
 
 ### 5. Label-Level Frequentist Follow-up
@@ -167,7 +167,7 @@ Once discovery is stable, the current project pattern adds:
 - contamination-aware sensitivity reruns
 - external validation on compatible cohorts
 
-The key rule is that validation should use the same DCST policy as discovery.
+The key rule is that validation should use the same dCST policy as discovery.
 Rare-policy validation and absorb-policy validation are different branches, not
 interchangeable labels.
 

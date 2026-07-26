@@ -2,7 +2,7 @@
 % Please edit documentation in R/linf.R
 \name{collapse.rare}
 \alias{collapse.rare}
-\title{Switch a CST hierarchy to the "absorb" view (collapse rare buckets)}
+\title{Switch a dCST hierarchy to the "absorb" view (collapse rare buckets)}
 \usage{
 collapse.rare(csts)
 }
@@ -17,6 +17,6 @@ A \code{"linf.csts"} object using the "absorb" view.
 \description{
 Returns a copy of a \code{"linf.csts"} object with \code{cell.label} (and, if
 present, \code{cst.levels}) replaced by the precomputed "absorb" labeling.
-This does not recompute CSTs; it only switches between labelings already
+This does not recompute dCSTs; it only switches between labelings already
 stored in the object.
 }
