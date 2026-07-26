@@ -49,8 +49,8 @@ A list of class \code{"linf.landmarks"} with components:
 Computes representative landmark points for the cells of a
 \code{"linf.csts"} object at a chosen depth and view.
 
-In the first implementation pass, landmark types are defined with respect to
-the leaf feature of the CST path: the last feature ID in the cell ID path.
+Landmark types are defined with respect to the leaf feature of the CST path:
+the last feature ID in the cell ID path.
 Cells whose leaf token is \code{rare.label} are reported but skipped for
 landmark computation because they do not correspond to a unique target
 feature.

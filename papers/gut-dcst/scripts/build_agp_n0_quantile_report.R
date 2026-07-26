@@ -9,8 +9,18 @@ suppressPackageStartupMessages({
 stopf <- function(...) stop(sprintf(...), call. = FALSE)
 messagef <- function(...) message(sprintf(...))
 
-repo_root <- "/Users/pgajer/current_projects/linf"
-gut_root <- "/Users/pgajer/current_projects/gut_microbiome"
+script_arg <- grep("^--file=", commandArgs(trailingOnly = FALSE), value = TRUE)
+if (!length(script_arg)) {
+  stopf("Run this file with Rscript so the repository root can be located")
+}
+script_path <- normalizePath(sub("^--file=", "", script_arg[[1L]]), mustWork = TRUE)
+repo_root <- normalizePath(file.path(dirname(script_path), "..", "..", ".."), mustWork = TRUE)
+
+gut_root <- Sys.getenv("GUT_MICROBIOME_ROOT")
+if (!nzchar(gut_root)) {
+  stopf("Set GUT_MICROBIOME_ROOT to the external gut_microbiome project directory")
+}
+gut_root <- normalizePath(gut_root, mustWork = TRUE)
 counts_path <- file.path(
   gut_root,
   "outputs/prime_species/prime_gut_projects_silva_species_absolute_2026-03-24.csv.gz"

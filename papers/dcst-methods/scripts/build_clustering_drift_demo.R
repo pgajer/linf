@@ -6,7 +6,12 @@ suppressPackageStartupMessages({
   library(scales)
 })
 
-root <- "/Users/pgajer/current_projects/linf"
+script_arg <- grep("^--file=", commandArgs(trailingOnly = FALSE), value = TRUE)
+if (!length(script_arg)) {
+  stop("Run this file with Rscript so the repository root can be located.")
+}
+script_path <- normalizePath(sub("^--file=", "", script_arg[[1L]]), mustWork = TRUE)
+root <- normalizePath(file.path(dirname(script_path), "..", "..", ".."), mustWork = TRUE)
 paper_root <- file.path(root, "papers", "dcst-methods")
 out_dir <- file.path(paper_root, "assets", "figures")
 dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)

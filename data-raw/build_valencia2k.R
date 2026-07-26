@@ -7,9 +7,9 @@
 ## Upstream: https://github.com/ravel-lab/VALENCIA
 ##
 ## Input files (not shipped with the package):
-##   ~/current_projects/valencia/tx.13k.rds                          -- 12881 x 178 compositional matrix
-##   ~/current_projects/valencia/cst.tx.13k.rds                      -- 12881 x 12 CST annotation data frame
-##   ~/current_projects/valencia/tx.13k_sample_filtering_summary.csv -- per-sample read counts
+##   $LINF_VALENCIA_ROOT/tx.13k.rds                          -- 12881 x 178 compositional matrix
+##   $LINF_VALENCIA_ROOT/cst.tx.13k.rds                      -- 12881 x 12 CST annotation data frame
+##   $LINF_VALENCIA_ROOT/tx.13k_sample_filtering_summary.csv -- per-sample read counts
 ##
 ## Output (saved to data/):
 ##   valencia2k   -- list with components:
@@ -25,7 +25,11 @@
 
 ## --- Paths ---------------------------------------------------------------
 
-valencia_root <- path.expand("~/current_projects/valencia")
+valencia_root <- Sys.getenv("LINF_VALENCIA_ROOT")
+if (!nzchar(valencia_root)) {
+  stop("Set LINF_VALENCIA_ROOT to the directory containing the Valencia source files.")
+}
+valencia_root <- normalizePath(valencia_root, mustWork = TRUE)
 
 tx_path    <- file.path(valencia_root, "tx.13k.rds")
 cst_path   <- file.path(valencia_root, "cst.tx.13k.rds")

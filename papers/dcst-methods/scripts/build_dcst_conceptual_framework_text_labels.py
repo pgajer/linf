@@ -13,7 +13,7 @@ from matplotlib.colors import LinearSegmentedColormap
 from matplotlib.patches import FancyArrowPatch
 
 
-ROOT = Path("/Users/pgajer/current_projects/linf/papers/dcst-methods")
+ROOT = Path(__file__).resolve().parents[1]
 OUT_DIR = ROOT / "assets" / "figures"
 PDF_OUT = OUT_DIR / "FIGURE_1_dcst_conceptual_framework_text_labels.pdf"
 PNG_OUT = OUT_DIR / "FIGURE_1_dcst_conceptual_framework_text_labels.png"

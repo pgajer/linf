@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import math
+import os
 import textwrap
 from pathlib import Path
 
@@ -13,13 +14,26 @@ import pandas as pd
 from matplotlib.lines import Line2D
 
 
-ROOT = Path("/Users/pgajer/current_projects/linf")
+ROOT = Path(__file__).resolve().parents[3]
 METHODS_ROOT = ROOT / "papers" / "dcst-methods"
 GUT_ROOT = ROOT / "papers" / "gut-dcst"
+GUT_MICROBIOME_ROOT = os.environ.get("GUT_MICROBIOME_ROOT")
+if not GUT_MICROBIOME_ROOT:
+    raise RuntimeError(
+        "Set GUT_MICROBIOME_ROOT to the external gut_microbiome project directory."
+    )
 RUN_DIR = Path(
-    "/Users/pgajer/current_projects/gut_microbiome/outputs/dcst_analysis/runs/"
-    "2026-04-26-agp-silva-local-qza-absorb-depth4-n0_50_25_25_25"
-)
+    os.environ.get(
+        "LINF_GUT_RUN_DIR",
+        str(
+            Path(GUT_MICROBIOME_ROOT).expanduser()
+            / "outputs"
+            / "dcst_analysis"
+            / "runs"
+            / "2026-04-26-agp-silva-local-qza-absorb-depth4-n0_50_25_25_25"
+        ),
+    )
+).expanduser()
 
 FIGURES_DIR = METHODS_ROOT / "assets" / "figures"
 TABLES_DIR = GUT_ROOT / "assets" / "tables"
