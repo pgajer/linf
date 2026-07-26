@@ -9,7 +9,7 @@ output: github_document
 [![DOI](https://zenodo.org/badge/DOI/10.48550/arXiv.2503.21543.svg)](https://doi.org/10.48550/arXiv.2503.21543)
 <!-- badges: end -->
 
-# linf — L∞ Normalization and DCSTs for Compositional Data
+# linf — L∞ Normalization and Dominant Community State Types for Compositional Data
 
 **linf** is a lightweight R package for analysing compositional
 data through L-infinity (L∞) normalization and Dominant Community State Types
