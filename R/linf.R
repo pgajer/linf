@@ -384,7 +384,7 @@ linf.csts <- function(S,
     } else {
 
         ## No retained states at this n0:
-        ## - rare-policy: everyone is rare.label (already set above)
+        ## - pure policy: everyone is rare.label (already set above)
         ## - absorb-policy: undefined; keep NA labels
         cell.idx.absorb[] <- NA_integer_
         cell.id.absorb[] <- NA_character_
@@ -529,8 +529,7 @@ validate.linf.csts <- function(obj) {
     return(invisible(TRUE))
   }
 
-  ## Case 2: depth-1 dCST (plain linf.csts output)
-  ## This is VALID and should be accepted
+  ## A depth-1 dCST has no explicit hierarchy.
   return(invisible(TRUE))
 }
 
