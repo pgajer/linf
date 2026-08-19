@@ -24,14 +24,13 @@
 #'   passed to \code{\link{refine.linf.csts}}.
 #' @param sep Character scalar used to join depth-refined dCST path tokens.
 #' @param low.freq.policy Character. One of \code{"pure"} or \code{"absorb"}.
-#'   Controls the active dCST view while still preserving parallel rare/absorb
-#'   views inside the returned dCST objects. The legacy value \code{"rare"} is
-#'   still accepted as a deprecated alias for \code{"pure"}.
+#'   Controls the active dCST view while preserving both pure and absorb views
+#'   inside the returned dCST objects.
 #' @param rare.label Character scalar for rare buckets.
 #' @param depth1.landmark.types Character vector of landmark types for depth 1.
 #' @param depth2.landmark.types Character vector of landmark types for depth 2.
 #' @param landmark.view Character. One of \code{"absorb"}, \code{"active"}, or
-#'   \code{"rare"}. Defaults to \code{"absorb"} because landmark reporting is
+#'   \code{"pure"}. Defaults to \code{"absorb"} because landmark reporting is
 #'   typically requested on the absorb view.
 #' @param tie.method Character. Tie handling passed through to
 #'   \code{\link{linf.csts}} and \code{\link{linf.landmarks}}.
@@ -74,7 +73,7 @@
 #' )
 #'
 #' names(out)
-#' out$dcst.depth2$cst.depth
+#' out$dcst.depth2$depth
 #' out$landmarks.depth2$view
 #' @export
 linf.dcst.landmark.pipeline <- function(
@@ -89,15 +88,12 @@ linf.dcst.landmark.pipeline <- function(
   rare.label = "RARE_DOMINANT",
   depth1.landmark.types = c("endpoint.max", "endpoint.min", "mean.rep", "median.rep"),
   depth2.landmark.types = c("endpoint.max", "endpoint.min", "mean.rep", "median.rep"),
-  landmark.view = c("absorb", "active", "rare"),
+  landmark.view = c("absorb", "active", "pure"),
   tie.method = c("first", "random", "error"),
   verbose = FALSE,
   backend = c("auto", "dense", "sparse")
 ) {
-  low.freq.policy <- linf.normalize.low.freq.policy(
-    low.freq.policy,
-    "linf.dcst.landmark.pipeline"
-  )
+  low.freq.policy <- linf.normalize.low.freq.policy(low.freq.policy)
   landmark.view <- match.arg(landmark.view)
   tie.method <- match.arg(tie.method)
   prep <- linf.prepare.matrix(X, backend = backend, fun.name = "linf.dcst.landmark.pipeline")

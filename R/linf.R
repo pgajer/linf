@@ -97,7 +97,7 @@ normalize.linf <- function(X,
 #'   b = c(A = 0,  B = 0,  C = 0),   # -> NA
 #'   c = c(A = 1,  B = 4,  C = 4)    # tie -> first max: B
 #' )
-#' out <- linf.cells(S)
+#' out <- linf.dominant.features(S)
 #' out$index
 #' out$label
 #' out$levels
@@ -106,26 +106,26 @@ normalize.linf <- function(X,
 #' # Unnamed columns (synthetic labels V1..Vp), duplicate names disambiguated
 #' T <- matrix(c(0,2,  3,1,  0,0), nrow = 3, byrow = TRUE)
 #' colnames(T) <- c("X", "X")  # duplicates -> X, X_1
-#' linf.cells(T)$levels
+#' linf.dominant.features(T)$levels
 #'
 #' # With L-infinity normalization in a pipeline
 #' M <- normalize.linf(S)
-#' linf.cells(M)$label
+#' linf.dominant.features(M)$label
 #'
 #' @seealso \code{\link{normalize.linf}}, \code{\link{linf.csts}}
 #' @export
-linf.cells <- function(S,
-                       feature.ids = NULL,
-                       feature.labels = NULL,
-                       tie.method = c("first", "random", "error"),
-                       return.value = FALSE,
-                       backend = c("auto", "dense", "sparse")) {
+linf.dominant.features <- function(S,
+                                   feature.ids = NULL,
+                                   feature.labels = NULL,
+                                   tie.method = c("first", "random", "error"),
+                                   return.value = FALSE,
+                                   backend = c("auto", "dense", "sparse")) {
 
   tie.method <- match.arg(tie.method)
   backend <- linf.resolve.backend(S, backend)
 
   if (backend == "sparse") {
-    return(linf.cells.sparse(
+    return(linf.dominant.features.sparse(
       S,
       feature.ids = feature.ids,
       feature.labels = feature.labels,
@@ -134,9 +134,9 @@ linf.cells <- function(S,
     ))
   }
 
-  prep <- linf.prepare.matrix(S, backend = "dense", fun.name = "linf.cells")
+  prep <- linf.prepare.matrix(S, backend = "dense", fun.name = "linf.dominant.features")
   X <- prep$X
-  linf.validate.matrix(X, backend = "dense", fun.name = "linf.cells")
+  linf.validate.matrix(X, backend = "dense", fun.name = "linf.dominant.features")
 
   meta <- resolve.linf.feature.meta(X, feature.ids = feature.ids, feature.labels = feature.labels)
   id.lev <- meta$feature.ids
@@ -153,7 +153,7 @@ linf.cells <- function(S,
       if (length(j) == 1L) return(j)
       if (tie.method == "first") return(j[1L])
       if (tie.method == "random") return(sample(j, 1L))
-      stop("linf.cells: tie encountered and tie.method = 'error'")
+      stop("linf.dominant.features: tie encountered and tie.method = 'error'")
     })
   }
 
@@ -180,28 +180,12 @@ linf.cells <- function(S,
   out
 }
 
-linf.normalize.low.freq.policy <- function(low.freq.policy, fun.name) {
+linf.normalize.low.freq.policy <- function(low.freq.policy) {
   if (length(low.freq.policy) > 1L) {
     low.freq.policy <- low.freq.policy[[1L]]
   }
 
-  low.freq.policy <- match.arg(
-    low.freq.policy,
-    choices = c("pure", "absorb", "rare")
-  )
-
-  if (identical(low.freq.policy, "rare")) {
-    warning(
-      sprintf(
-        '%s: low.freq.policy = "rare" is deprecated; use "pure" instead',
-        fun.name
-      ),
-      call. = FALSE
-    )
-    return("pure")
-  }
-
-  low.freq.policy
+  match.arg(low.freq.policy, choices = c("pure", "absorb"))
 }
 
 linf.active.low.freq.view <- function(low.freq.policy) {
@@ -209,8 +193,8 @@ linf.active.low.freq.view <- function(low.freq.policy) {
     return("active")
   }
 
-  if (identical(low.freq.policy, "pure") || identical(low.freq.policy, "rare")) {
-    return("rare")
+  if (identical(low.freq.policy, "pure")) {
+    return("pure")
   }
 
   low.freq.policy
@@ -239,11 +223,10 @@ linf.active.low.freq.view <- function(low.freq.policy) {
 #' @param n0 Integer >= 1. Minimum support required to retain a dominance
 #'   sample set.
 #' @param low.freq.policy Character. One of \code{"pure"} or \code{"absorb"}.
-#'   Default: \code{"pure"}. The legacy value \code{"rare"} is still accepted as
-#'   a deprecated alias for \code{"pure"}.
+#'   Default: \code{"pure"}.
 #' @param rare.label Character scalar used when \code{low.freq.policy = "pure"}.
 #'   Default: \code{"RARE_DOMINANT"}.
-#' @param tie.method Character. Tie handling passed to \code{linf.cells()} and used
+#' @param tie.method Character. Tie handling passed to \code{linf.dominant.features()} and used
 #'   during absorb reassignment ("first", "random", "error").
 #' @param return.diagnostics Logical. If TRUE, return reassignment diagnostics.
 #' @param return.landmarks Logical. If TRUE, attach a depth-1 landmark summary
@@ -258,11 +241,16 @@ linf.active.low.freq.view <- function(low.freq.policy) {
 #'
 #' @return List with:
 #'   \itemize{
-#'     \item \code{cell.index}, \code{cell.id}, \code{cell.label}: active labeling per \code{low.freq.policy}
-#'     \item \code{cell.index.rare}, \code{cell.id.rare}, \code{cell.label.rare}
-#'     \item \code{cell.index.absorb}, \code{cell.id.absorb}, \code{cell.label.absorb}
-#'     \item \code{kept.cells.idx}, \code{kept.cells.id}, \code{kept.cells.lbl}
-#'     \item \code{raw.index}, \code{raw.id}, \code{raw.label}
+#'     \item \code{depth1.feature.index}, \code{depth1.feature.id},
+#'       \code{depth1.feature.label}: active depth-1 assignment
+#'     \item \code{lineage.id}, \code{lineage.label}: active leaf-lineage assignment
+#'     \item policy-specific variants of the depth-1 and leaf-lineage fields,
+#'       ending in \code{.pure} or \code{.absorb}
+#'     \item \code{lineage.ids}, \code{lineage.labels}: active hierarchy, plus
+#'       policy-specific \code{.pure} and \code{.absorb} hierarchies
+#'     \item \code{depth}: current hierarchy depth
+#'     \item \code{retained.feature.indices}, \code{retained.feature.ids}, \code{retained.feature.labels}
+#'     \item \code{provisional.feature.index}, \code{provisional.feature.id}, \code{provisional.feature.label}
 #'     \item \code{feature.ids}, \code{feature.labels}
 #'     \item \code{size.table}, \code{size.table.id}
 #'     \item \code{n0}, \code{low.freq.policy}, \code{rare.label}
@@ -281,10 +269,10 @@ linf.csts <- function(S,
                       return.diagnostics = FALSE,
                       return.landmarks = FALSE,
                       landmark.types = c("endpoint.max", "endpoint.min"),
-                      landmark.view = c("active", "rare", "absorb"),
+                      landmark.view = c("active", "pure", "absorb"),
                       backend = c("auto", "dense", "sparse")) {
 
-    low.freq.policy <- linf.normalize.low.freq.policy(low.freq.policy, "linf.csts")
+    low.freq.policy <- linf.normalize.low.freq.policy(low.freq.policy)
     tie.method <- match.arg(tie.method)
     landmark.view <- match.arg(landmark.view)
     prep <- linf.prepare.matrix(S, backend = backend, fun.name = "linf.csts")
@@ -304,7 +292,7 @@ linf.csts <- function(S,
     fid <- meta$feature.ids
     lev <- meta$feature.labels
 
-    raw <- linf.cells(X,
+    raw <- linf.dominant.features(X,
                       feature.ids = fid,
                       feature.labels = lev,
                       tie.method = tie.method,
@@ -321,18 +309,24 @@ linf.csts <- function(S,
     ## Pure-policy labels: retain only states with support >= n0.
     is.kept <- !is.na(raw$label) & (raw$label %in% kept.lbl)
 
-    cell.idx.rare <- raw$index
-    cell.id.rare <- raw$id
-    cell.lbl.rare <- raw$label
-    cell.idx.rare[!is.kept] <- NA_integer_
-    cell.id.rare[!is.kept] <- rare.label
-    cell.lbl.rare[!is.kept] <- rare.label
+    depth1.feature.idx.pure <- raw$index
+    lineage.id.pure <- raw$id
+    lineage.label.pure <- raw$label
+    depth1.feature.idx.pure[!is.kept] <- NA_integer_
+    lineage.id.pure[!is.kept] <- rare.label
+    lineage.label.pure[!is.kept] <- rare.label
+    depth1.feature.id.pure <- ifelse(
+        is.na(depth1.feature.idx.pure), NA_character_, fid[depth1.feature.idx.pure]
+    )
+    depth1.feature.label.pure <- ifelse(
+        is.na(depth1.feature.idx.pure), NA_character_, lev[depth1.feature.idx.pure]
+    )
 
     ## Absorb-policy labels: reassign low-support (and zero-row) samples
     ## into retained states.
-    cell.idx.absorb <- raw$index
-    cell.id.absorb <- raw$id
-    cell.lbl.absorb <- raw$label
+    depth1.feature.idx.absorb <- raw$index
+    lineage.id.absorb <- raw$id
+    lineage.label.absorb <- raw$label
 
     reassigned <- logical(n)
     reassigned.from <- rep(NA_character_, n)
@@ -376,9 +370,9 @@ linf.csts <- function(S,
             reassigned.from[to.absorb] <- raw$label[to.absorb]
             reassigned.to[to.absorb]   <- lev[new.idx]
 
-            cell.idx.absorb[to.absorb] <- new.idx
-            cell.id.absorb[to.absorb] <- fid[new.idx]
-            cell.lbl.absorb[to.absorb] <- lev[new.idx]
+            depth1.feature.idx.absorb[to.absorb] <- new.idx
+            lineage.id.absorb[to.absorb] <- fid[new.idx]
+            lineage.label.absorb[to.absorb] <- lev[new.idx]
         }
 
     } else {
@@ -386,50 +380,64 @@ linf.csts <- function(S,
         ## No retained states at this n0:
         ## - pure policy: everyone is rare.label (already set above)
         ## - absorb-policy: undefined; keep NA labels
-        cell.idx.absorb[] <- NA_integer_
-        cell.id.absorb[] <- NA_character_
-        cell.lbl.absorb[] <- NA_character_
+        depth1.feature.idx.absorb[] <- NA_integer_
+        lineage.id.absorb[] <- NA_character_
+        lineage.label.absorb[] <- NA_character_
     }
 
     ## Select active labeling
     if (low.freq.policy == "pure") {
-        cell.idx <- cell.idx.rare
-        cell.id <- cell.id.rare
-        cell.lbl <- cell.lbl.rare
+        depth1.feature.idx <- depth1.feature.idx.pure
+        depth1.feature.id <- depth1.feature.id.pure
+        depth1.feature.label <- depth1.feature.label.pure
+        lineage.id <- lineage.id.pure
+        lineage.label <- lineage.label.pure
     } else {
-        cell.idx <- cell.idx.absorb
-        cell.id <- cell.id.absorb
-        cell.lbl <- cell.lbl.absorb
+        depth1.feature.idx <- depth1.feature.idx.absorb
+        depth1.feature.id <- lineage.id.absorb
+        depth1.feature.label <- lineage.label.absorb
+        lineage.id <- lineage.id.absorb
+        lineage.label <- lineage.label.absorb
     }
 
-    names(cell.idx) <- rownames(X)
-    names(cell.id) <- rownames(X)
-    names(cell.lbl) <- rownames(X)
+    names(depth1.feature.idx) <- rownames(X)
+    names(depth1.feature.id) <- rownames(X)
+    names(depth1.feature.label) <- rownames(X)
+    names(lineage.id) <- rownames(X)
+    names(lineage.label) <- rownames(X)
 
-    names(cell.idx.rare) <- rownames(X)
-    names(cell.id.rare) <- rownames(X)
-    names(cell.lbl.rare) <- rownames(X)
+    names(depth1.feature.idx.pure) <- rownames(X)
+    names(depth1.feature.id.pure) <- rownames(X)
+    names(depth1.feature.label.pure) <- rownames(X)
+    names(lineage.id.pure) <- rownames(X)
+    names(lineage.label.pure) <- rownames(X)
 
-    names(cell.idx.absorb) <- rownames(X)
-    names(cell.id.absorb) <- rownames(X)
-    names(cell.lbl.absorb) <- rownames(X)
+    names(depth1.feature.idx.absorb) <- rownames(X)
+    names(lineage.id.absorb) <- rownames(X)
+    names(lineage.label.absorb) <- rownames(X)
 
     out <- list(
-        cell.index       = cell.idx,
-        cell.id          = cell.id,
-        cell.label       = cell.lbl,
-        cell.index.rare  = cell.idx.rare,
-        cell.id.rare     = cell.id.rare,
-        cell.label.rare  = cell.lbl.rare,
-        cell.index.absorb = cell.idx.absorb,
-        cell.id.absorb   = cell.id.absorb,
-        cell.label.absorb = cell.lbl.absorb,
-        kept.cells.idx   = kept.idx,
-        kept.cells.id    = kept.id,
-        kept.cells.lbl   = kept.lbl,
-        raw.index        = raw$index,
-        raw.id           = raw$id,
-        raw.label        = raw$label,
+        depth1.feature.index       = depth1.feature.idx,
+        depth1.feature.id          = depth1.feature.id,
+        depth1.feature.label       = depth1.feature.label,
+        lineage.id          = lineage.id,
+        lineage.label       = lineage.label,
+        depth1.feature.index.pure  = depth1.feature.idx.pure,
+        depth1.feature.id.pure     = depth1.feature.id.pure,
+        depth1.feature.label.pure  = depth1.feature.label.pure,
+        lineage.id.pure     = lineage.id.pure,
+        lineage.label.pure  = lineage.label.pure,
+        depth1.feature.index.absorb = depth1.feature.idx.absorb,
+        depth1.feature.id.absorb    = lineage.id.absorb,
+        depth1.feature.label.absorb = lineage.label.absorb,
+        lineage.id.absorb   = lineage.id.absorb,
+        lineage.label.absorb = lineage.label.absorb,
+        retained.feature.indices   = kept.idx,
+        retained.feature.ids    = kept.id,
+        retained.feature.labels   = kept.lbl,
+        provisional.feature.index        = raw$index,
+        provisional.feature.id           = raw$id,
+        provisional.feature.label        = raw$label,
         size.table       = tab,
         size.table.id    = tab.id,
         feature.ids      = fid,
@@ -448,13 +456,13 @@ linf.csts <- function(S,
         )
     }
 
-    out$cst.id.levels <- list(level1 = out$cell.id)
-    out$cst.id.levels.rare <- list(level1 = out$cell.id.rare)
-    out$cst.id.levels.absorb <- list(level1 = out$cell.id.absorb)
-    out$cst.levels <- list(level1 = out$cell.label)
-    out$cst.levels.rare <- list(level1 = out$cell.label.rare)
-    out$cst.levels.absorb <- list(level1 = out$cell.label.absorb)
-    out$cst.depth <- 1L
+    out$lineage.ids <- list(level1 = out$lineage.id)
+    out$lineage.ids.pure <- list(level1 = out$lineage.id.pure)
+    out$lineage.ids.absorb <- list(level1 = out$lineage.id.absorb)
+    out$lineage.labels <- list(level1 = out$lineage.label)
+    out$lineage.labels.pure <- list(level1 = out$lineage.label.pure)
+    out$lineage.labels.absorb <- list(level1 = out$lineage.label.absorb)
+    out$depth <- 1L
 
     class(out) <- "linf.csts"
 
@@ -511,18 +519,18 @@ asv.to.linf.csts <- function(S.counts,
 validate.linf.csts <- function(obj) {
 
   stopifnot(is.list(obj))
-  stopifnot(!is.null(obj$cell.label))
+  stopifnot(!is.null(obj$lineage.label))
 
-  n <- length(obj$cell.label)
+  n <- length(obj$lineage.label)
 
   ## Case 1: explicit hierarchy (refined dCSTs)
-  if (!is.null(obj$cst.levels)) {
+  if (!is.null(obj$lineage.labels)) {
 
-    stopifnot(is.list(obj$cst.levels))
-    stopifnot(!is.null(obj$cst.depth))
-    stopifnot(obj$cst.depth == length(obj$cst.levels))
+    stopifnot(is.list(obj$lineage.labels))
+    stopifnot(!is.null(obj$depth))
+    stopifnot(obj$depth == length(obj$lineage.labels))
 
-    for (lvl in obj$cst.levels) {
+    for (lvl in obj$lineage.labels) {
       stopifnot(length(lvl) == n)
     }
 
@@ -554,17 +562,16 @@ validate.linf.csts <- function(obj) {
 #'   support >= \code{refinement.factor * n0}.
 #' @param sep Character scalar used to concatenate hierarchical labels.
 #' @param low.freq.policy Character. One of \code{"pure"} or \code{"absorb"}.
-#'   Default: \code{"pure"}. The legacy value \code{"rare"} is still accepted as
-#'   a deprecated alias for \code{"pure"}.
+#'   Default: \code{"pure"}.
 #' @param rare.label Character scalar for rare buckets when \code{low.freq.policy = "pure"}.
 #' @param verbose Logical. If TRUE, print progress information.
 #' @param backend Character. Matrix backend to use: \code{"auto"},
 #'   \code{"dense"}, or \code{"sparse"}. The default \code{"auto"} inherits the
 #'   backend from \code{M} or from \code{csts} when available.
 #'
-#' @return Updated \code{"linf.csts"} object with \code{cst.depth} increased by one and
-#'   updated \code{cell.label}. Policy-specific views are stored in
-#'   \code{cell.label.rare} and \code{cell.label.absorb}.
+#' @return Updated \code{"linf.csts"} object with \code{depth} increased by one and
+#'   updated \code{lineage.label}. Policy-specific views are stored in
+#'   \code{lineage.label.pure} and \code{lineage.label.absorb}.
 #'
 #' @export
 refine.linf.csts <- function(M,
@@ -579,7 +586,7 @@ refine.linf.csts <- function(M,
 
     validate.linf.csts(csts)
 
-    low.freq.policy <- linf.normalize.low.freq.policy(low.freq.policy, "refine.linf.csts")
+    low.freq.policy <- linf.normalize.low.freq.policy(low.freq.policy)
     if (missing(backend) && !is.null(csts$matrix.backend)) {
         backend <- csts$matrix.backend
     }
@@ -603,25 +610,25 @@ refine.linf.csts <- function(M,
     }
 
     ## Initialize hierarchy if missing
-    if (is.null(csts$cst.levels)) {
-        csts$cst.levels <- list(level1 = csts$cell.label)
-        csts$cst.depth <- 1L
+    if (is.null(csts$lineage.labels)) {
+        csts$lineage.labels <- list(level1 = csts$lineage.label)
+        csts$depth <- 1L
         csts$sep <- sep
 
         ## Ensure both policy-specific views exist at depth 1
-        if (is.null(csts$cell.label.rare)) {
-            csts$cell.label.rare <- csts$cell.label
+        if (is.null(csts$lineage.label.pure)) {
+            csts$lineage.label.pure <- csts$lineage.label
         }
-        if (is.null(csts$cell.label.absorb)) {
-            csts$cell.label.absorb <- csts$cell.label
+        if (is.null(csts$lineage.label.absorb)) {
+            csts$lineage.label.absorb <- csts$lineage.label
         }
 
-        csts$cst.levels.rare <- list(level1 = csts$cell.label.rare)
-        csts$cst.levels.absorb <- list(level1 = csts$cell.label.absorb)
+        csts$lineage.labels.pure <- list(level1 = csts$lineage.label.pure)
+        csts$lineage.labels.absorb <- list(level1 = csts$lineage.label.absorb)
     }
 
-    if (is.null(csts$cst.id.levels)) {
-        csts$cst.id.levels <- list(level1 = csts$cell.id %||% csts$cell.label)
+    if (is.null(csts$lineage.ids)) {
+        csts$lineage.ids <- list(level1 = csts$lineage.id %||% csts$lineage.label)
     }
 
     if (is.null(csts$feature.ids)) {
@@ -631,51 +638,51 @@ refine.linf.csts <- function(M,
         csts$feature.labels <- csts$feature.ids
     }
 
-    ## Backward-compatible defaults if stored views are missing
-    if (is.null(csts$cst.levels.rare)) csts$cst.levels.rare <- csts$cst.levels
-    if (is.null(csts$cst.levels.absorb)) csts$cst.levels.absorb <- csts$cst.levels
-    if (is.null(csts$cst.id.levels.rare)) csts$cst.id.levels.rare <- csts$cst.id.levels
-    if (is.null(csts$cst.id.levels.absorb)) csts$cst.id.levels.absorb <- csts$cst.id.levels
+    ## Ensure both stored policy views are present.
+    if (is.null(csts$lineage.labels.pure)) csts$lineage.labels.pure <- csts$lineage.labels
+    if (is.null(csts$lineage.labels.absorb)) csts$lineage.labels.absorb <- csts$lineage.labels
+    if (is.null(csts$lineage.ids.pure)) csts$lineage.ids.pure <- csts$lineage.ids
+    if (is.null(csts$lineage.ids.absorb)) csts$lineage.ids.absorb <- csts$lineage.ids
 
-    depth <- csts$cst.depth + 1L
-    parent.ids <- csts$cst.id.levels[[depth - 1L]]
-    parent.ids.rare <- csts$cst.id.levels.rare[[depth - 1L]]
-    parent.ids.absorb <- csts$cst.id.levels.absorb[[depth - 1L]]
-    parent.labels <- csts$cst.levels[[depth - 1L]]
+    depth <- csts$depth + 1L
+    parent.ids <- csts$lineage.ids[[depth - 1L]]
+    parent.ids.pure <- csts$lineage.ids.pure[[depth - 1L]]
+    parent.ids.absorb <- csts$lineage.ids.absorb[[depth - 1L]]
+    parent.labels <- csts$lineage.labels[[depth - 1L]]
 
-    parent.labels.rare <- csts$cst.levels.rare[[depth - 1L]]
-    parent.labels.absorb <- csts$cst.levels.absorb[[depth - 1L]]
+    parent.labels.pure <- csts$lineage.labels.pure[[depth - 1L]]
+    parent.labels.absorb <- csts$lineage.labels.absorb[[depth - 1L]]
 
-    refined.ids.rare <- parent.ids.rare
+    refined.ids.pure <- parent.ids.pure
     refined.ids.absorb <- parent.ids.absorb
-    refined.labels.rare <- parent.labels.rare
+    refined.labels.pure <- parent.labels.pure
     refined.labels.absorb <- parent.labels.absorb
 
-    cell.sizes <- sort(table(parent.ids), decreasing = TRUE)
+    lineage.sizes <- sort(table(parent.ids), decreasing = TRUE)
 
     threshold <- refinement.factor * n0
-    refine.cells <- names(cell.sizes[cell.sizes >= threshold])
+    refine.lineages <- names(lineage.sizes[lineage.sizes >= threshold])
 
     if (verbose) {
         cat("========================================\n")
         cat("AUTO-REFINEMENT MODE\n")
         cat("========================================\n")
         cat("Refinement threshold:", threshold, "\n")
-        cat("Dominance-lineages selected for refinement:", length(refine.cells), "\n\n")
+        cat("Dominance-lineages selected for refinement:", length(refine.lineages), "\n\n")
     }
 
-    for (cell in refine.cells) {
+    for (lineage in refine.lineages) {
         ## Rare buckets are synthetic catch-all groups, not real feature paths.
         ## They should never be refined further.
-        if (identical(cell, rare.label)) next
+        if (identical(lineage, rare.label)) next
 
-        idx <- which(parent.ids == cell)
-        parent.id.rare <- parent.ids.rare[idx[1L]]
+        idx <- which(parent.ids == lineage)
+        parent.id.pure <- parent.ids.pure[idx[1L]]
         parent.id.absorb <- parent.ids.absorb[idx[1L]]
-        parent.label.rare <- parent.labels.rare[idx[1L]]
+        parent.label.pure <- parent.labels.pure[idx[1L]]
         parent.label.absorb <- parent.labels.absorb[idx[1L]]
 
-        parent.features <- strsplit(cell, sep, fixed = TRUE)[[1]]
+        parent.features <- strsplit(lineage, sep, fixed = TRUE)[[1]]
         drop.idx <- match(parent.features, csts$feature.ids)
         drop.idx <- drop.idx[!is.na(drop.idx)]
 
@@ -701,43 +708,43 @@ refine.linf.csts <- function(M,
                              rare.label = rare.label,
                              backend = backend)
 
-        sub.ids.rare <- sub.csts$cell.id.rare %||% sub.csts$cell.label.rare
-        sub.ids.absorb <- sub.csts$cell.id.absorb %||% sub.csts$cell.label.absorb
-        sub.labels.rare <- sub.csts$cell.label.rare
-        sub.labels.absorb <- sub.csts$cell.label.absorb
+        sub.ids.pure <- sub.csts$lineage.id.pure %||% sub.csts$lineage.label.pure
+        sub.ids.absorb <- sub.csts$lineage.id.absorb %||% sub.csts$lineage.label.absorb
+        sub.labels.pure <- sub.csts$lineage.label.pure
+        sub.labels.absorb <- sub.csts$lineage.label.absorb
 
         ## If refinement yields no retained child lineages, skip.
-        if (all(sub.labels.rare == rare.label)) next
+        if (all(sub.labels.pure == rare.label)) next
 
-        refined.ids.rare[idx] <- paste(parent.id.rare, sub.ids.rare, sep = sep)
+        refined.ids.pure[idx] <- paste(parent.id.pure, sub.ids.pure, sep = sep)
         refined.ids.absorb[idx] <- paste(parent.id.absorb, sub.ids.absorb, sep = sep)
-        refined.labels.rare[idx] <- paste(parent.label.rare, sub.labels.rare, sep = sep)
+        refined.labels.pure[idx] <- paste(parent.label.pure, sub.labels.pure, sep = sep)
         refined.labels.absorb[idx] <- paste(parent.label.absorb, sub.labels.absorb, sep = sep)
     }
 
     ## Update dCST object (store both views; active view chosen by low.freq.policy)
-    csts$cst.id.levels[[depth]] <- if (low.freq.policy == "pure") refined.ids.rare else refined.ids.absorb
-    csts$cst.id.levels.rare[[depth]] <- refined.ids.rare
-    csts$cst.id.levels.absorb[[depth]] <- refined.ids.absorb
-    csts$cst.levels.rare[[depth]] <- refined.labels.rare
-    csts$cst.levels.absorb[[depth]] <- refined.labels.absorb
+    csts$lineage.ids[[depth]] <- if (low.freq.policy == "pure") refined.ids.pure else refined.ids.absorb
+    csts$lineage.ids.pure[[depth]] <- refined.ids.pure
+    csts$lineage.ids.absorb[[depth]] <- refined.ids.absorb
+    csts$lineage.labels.pure[[depth]] <- refined.labels.pure
+    csts$lineage.labels.absorb[[depth]] <- refined.labels.absorb
 
     if (low.freq.policy == "pure") {
-        refined.labels <- refined.labels.rare
+        refined.labels <- refined.labels.pure
     } else {
         refined.labels <- refined.labels.absorb
     }
 
-    csts$cst.levels[[depth]] <- refined.labels
-    csts$cst.depth <- depth
+    csts$lineage.labels[[depth]] <- refined.labels
+    csts$depth <- depth
     csts$sep <- sep
 
-    csts$cell.id.rare <- refined.ids.rare
-    csts$cell.id.absorb <- refined.ids.absorb
-    csts$cell.id <- csts$cst.id.levels[[depth]]
-    csts$cell.label.rare <- refined.labels.rare
-    csts$cell.label.absorb <- refined.labels.absorb
-    csts$cell.label <- refined.labels
+    csts$lineage.id.pure <- refined.ids.pure
+    csts$lineage.id.absorb <- refined.ids.absorb
+    csts$lineage.id <- csts$lineage.ids[[depth]]
+    csts$lineage.label.pure <- refined.labels.pure
+    csts$lineage.label.absorb <- refined.labels.absorb
+    csts$lineage.label <- refined.labels
 
     csts$low.freq.policy <- low.freq.policy
     csts$rare.label <- rare.label
@@ -759,27 +766,25 @@ refine.linf.csts <- function(M,
 #'
 #' @param M Numeric matrix used for refinement.
 #' @param refined A \code{"linf.csts"} object with an existing hierarchy.
-#' @param cells.to.refine Character vector of leaf dominance-lineage IDs to
-#'   refine, or NULL for auto-selection. The argument name is retained for
-#'   backward compatibility.
+#' @param lineages.to.refine Character vector of leaf dominance-lineage IDs to
+#'   refine, or NULL for auto-selection.
 #' @param n0 Integer >= 1. Minimum support required to retain a child lineage.
 #' @param refinement.factor Numeric > 0. Auto-selection threshold multiplier.
 #' @param sep Character scalar used to concatenate hierarchical labels.
 #' @param low.freq.policy Character. One of \code{"pure"} or \code{"absorb"}.
-#'   Default: \code{"pure"}. The legacy value \code{"rare"} is still accepted as
-#'   a deprecated alias for \code{"pure"}.
+#'   Default: \code{"pure"}.
 #' @param rare.label Character scalar for rare buckets when \code{low.freq.policy = "pure"}.
 #' @param verbose Logical. If TRUE, print progress information.
 #' @param backend Character. Matrix backend to use: \code{"auto"},
 #'   \code{"dense"}, or \code{"sparse"}. The default \code{"auto"} inherits the
 #'   backend from \code{M} or from \code{refined} when available.
 #'
-#' @return Updated \code{"linf.csts"} object with \code{cst.depth} increased by one.
+#' @return Updated \code{"linf.csts"} object with \code{depth} increased by one.
 #'
 #' @export
 refine.linf.csts.iter <- function(M,
                                   refined,
-                                  cells.to.refine = NULL,
+                                  lineages.to.refine = NULL,
                                   n0 = 50,
                                   refinement.factor = 5,
                                   sep = "__",
@@ -790,7 +795,7 @@ refine.linf.csts.iter <- function(M,
 
     validate.linf.csts(refined)
 
-    low.freq.policy <- linf.normalize.low.freq.policy(low.freq.policy, "refine.linf.csts.iter")
+    low.freq.policy <- linf.normalize.low.freq.policy(low.freq.policy)
     if (missing(backend) && !is.null(refined$matrix.backend)) {
         backend <- refined$matrix.backend
     }
@@ -813,56 +818,56 @@ refine.linf.csts.iter <- function(M,
         stop("refine.linf.csts.iter: rare.label must be a non-empty character scalar")
     }
 
-    ## Ensure stored views exist (backward compatible)
-    if (is.null(refined$cst.levels.rare)) refined$cst.levels.rare <- refined$cst.levels
-    if (is.null(refined$cst.levels.absorb)) refined$cst.levels.absorb <- refined$cst.levels
-    if (is.null(refined$cst.id.levels)) refined$cst.id.levels <- list(level1 = refined$cell.id %||% refined$cell.label)
-    if (is.null(refined$cst.id.levels.rare)) refined$cst.id.levels.rare <- refined$cst.id.levels
-    if (is.null(refined$cst.id.levels.absorb)) refined$cst.id.levels.absorb <- refined$cst.id.levels
+    ## Ensure both stored policy views are present.
+    if (is.null(refined$lineage.labels.pure)) refined$lineage.labels.pure <- refined$lineage.labels
+    if (is.null(refined$lineage.labels.absorb)) refined$lineage.labels.absorb <- refined$lineage.labels
+    if (is.null(refined$lineage.ids)) refined$lineage.ids <- list(level1 = refined$lineage.id %||% refined$lineage.label)
+    if (is.null(refined$lineage.ids.pure)) refined$lineage.ids.pure <- refined$lineage.ids
+    if (is.null(refined$lineage.ids.absorb)) refined$lineage.ids.absorb <- refined$lineage.ids
     if (is.null(refined$feature.ids)) refined$feature.ids <- colnames(M)
     if (is.null(refined$feature.labels)) refined$feature.labels <- refined$feature.ids
 
-    depth <- refined$cst.depth
+    depth <- refined$depth
 
-    parent.ids <- refined$cst.id.levels[[depth]]
-    parent.ids.rare <- refined$cst.id.levels.rare[[depth]]
-    parent.ids.absorb <- refined$cst.id.levels.absorb[[depth]]
-    parent.labels <- refined$cst.levels[[depth]]
-    parent.labels.rare <- refined$cst.levels.rare[[depth]]
-    parent.labels.absorb <- refined$cst.levels.absorb[[depth]]
+    parent.ids <- refined$lineage.ids[[depth]]
+    parent.ids.pure <- refined$lineage.ids.pure[[depth]]
+    parent.ids.absorb <- refined$lineage.ids.absorb[[depth]]
+    parent.labels <- refined$lineage.labels[[depth]]
+    parent.labels.pure <- refined$lineage.labels.pure[[depth]]
+    parent.labels.absorb <- refined$lineage.labels.absorb[[depth]]
 
-    cell.sizes <- sort(table(parent.ids), decreasing = TRUE)
+    lineage.sizes <- sort(table(parent.ids), decreasing = TRUE)
     threshold <- refinement.factor * n0
 
-    if (is.null(cells.to.refine)) {
-        cells.to.refine <- names(cell.sizes[cell.sizes >= threshold])
+    if (is.null(lineages.to.refine)) {
+        lineages.to.refine <- names(lineage.sizes[lineage.sizes >= threshold])
     }
 
     if (verbose) {
         cat("Auto-selecting dominance-lineages for iterative refinement (threshold =", threshold, "):\n")
-        for (c in cells.to.refine) {
-            cat(" -", c, ":", cell.sizes[c], "samples\n")
+        for (c in lineages.to.refine) {
+            cat(" -", c, ":", lineage.sizes[c], "samples\n")
         }
         cat("\n")
     }
 
-    new.ids.rare <- parent.ids.rare
+    new.ids.pure <- parent.ids.pure
     new.ids.absorb <- parent.ids.absorb
-    new.labels.rare <- parent.labels.rare
+    new.labels.pure <- parent.labels.pure
     new.labels.absorb <- parent.labels.absorb
 
-    for (cell in cells.to.refine) {
+    for (lineage in lineages.to.refine) {
         ## Rare buckets are synthetic catch-all groups, not real feature paths.
         ## They should never be refined further.
-        if (identical(cell, rare.label)) next
+        if (identical(lineage, rare.label)) next
 
-        idx <- which(parent.ids == cell)
-        parent.id.rare <- parent.ids.rare[idx[1L]]
+        idx <- which(parent.ids == lineage)
+        parent.id.pure <- parent.ids.pure[idx[1L]]
         parent.id.absorb <- parent.ids.absorb[idx[1L]]
-        parent.label.rare <- parent.labels.rare[idx[1L]]
+        parent.label.pure <- parent.labels.pure[idx[1L]]
         parent.label.absorb <- parent.labels.absorb[idx[1L]]
 
-        parents <- strsplit(cell, sep, fixed = TRUE)[[1]]
+        parents <- strsplit(lineage, sep, fixed = TRUE)[[1]]
         drop.idx <- match(parents, refined$feature.ids)
         drop.idx <- drop.idx[!is.na(drop.idx)]
 
@@ -888,41 +893,41 @@ refine.linf.csts.iter <- function(M,
                              rare.label = rare.label,
                              backend = backend)
 
-        sub.ids.rare <- sub.csts$cell.id.rare %||% sub.csts$cell.label.rare
-        sub.ids.absorb <- sub.csts$cell.id.absorb %||% sub.csts$cell.label.absorb
-        sub.labels.rare <- sub.csts$cell.label.rare
-        sub.labels.absorb <- sub.csts$cell.label.absorb
+        sub.ids.pure <- sub.csts$lineage.id.pure %||% sub.csts$lineage.label.pure
+        sub.ids.absorb <- sub.csts$lineage.id.absorb %||% sub.csts$lineage.label.absorb
+        sub.labels.pure <- sub.csts$lineage.label.pure
+        sub.labels.absorb <- sub.csts$lineage.label.absorb
 
         ## If refinement yields no retained child lineages, skip.
-        if (all(sub.labels.rare == rare.label)) next
+        if (all(sub.labels.pure == rare.label)) next
 
-        new.ids.rare[idx] <- paste(parent.id.rare, sub.ids.rare, sep = sep)
+        new.ids.pure[idx] <- paste(parent.id.pure, sub.ids.pure, sep = sep)
         new.ids.absorb[idx] <- paste(parent.id.absorb, sub.ids.absorb, sep = sep)
-        new.labels.rare[idx] <- paste(parent.label.rare, sub.labels.rare, sep = sep)
+        new.labels.pure[idx] <- paste(parent.label.pure, sub.labels.pure, sep = sep)
         new.labels.absorb[idx] <- paste(parent.label.absorb, sub.labels.absorb, sep = sep)
     }
 
-    refined$cst.id.levels[[depth + 1L]] <- if (low.freq.policy == "pure") new.ids.rare else new.ids.absorb
-    refined$cst.id.levels.rare[[depth + 1L]] <- new.ids.rare
-    refined$cst.id.levels.absorb[[depth + 1L]] <- new.ids.absorb
-    refined$cst.levels.rare[[depth + 1L]] <- new.labels.rare
-    refined$cst.levels.absorb[[depth + 1L]] <- new.labels.absorb
+    refined$lineage.ids[[depth + 1L]] <- if (low.freq.policy == "pure") new.ids.pure else new.ids.absorb
+    refined$lineage.ids.pure[[depth + 1L]] <- new.ids.pure
+    refined$lineage.ids.absorb[[depth + 1L]] <- new.ids.absorb
+    refined$lineage.labels.pure[[depth + 1L]] <- new.labels.pure
+    refined$lineage.labels.absorb[[depth + 1L]] <- new.labels.absorb
 
     if (low.freq.policy == "pure") {
-        new.labels <- new.labels.rare
+        new.labels <- new.labels.pure
     } else {
         new.labels <- new.labels.absorb
     }
 
-    refined$cst.levels[[depth + 1L]] <- new.labels
-    refined$cst.depth <- depth + 1L
+    refined$lineage.labels[[depth + 1L]] <- new.labels
+    refined$depth <- depth + 1L
 
-    refined$cell.id.rare <- new.ids.rare
-    refined$cell.id.absorb <- new.ids.absorb
-    refined$cell.id <- refined$cst.id.levels[[depth + 1L]]
-    refined$cell.label.rare <- new.labels.rare
-    refined$cell.label.absorb <- new.labels.absorb
-    refined$cell.label <- new.labels
+    refined$lineage.id.pure <- new.ids.pure
+    refined$lineage.id.absorb <- new.ids.absorb
+    refined$lineage.id <- refined$lineage.ids[[depth + 1L]]
+    refined$lineage.label.pure <- new.labels.pure
+    refined$lineage.label.absorb <- new.labels.absorb
+    refined$lineage.label <- new.labels
 
     refined$low.freq.policy <- low.freq.policy
     refined$rare.label <- rare.label
@@ -935,113 +940,46 @@ refine.linf.csts.iter <- function(M,
     refined
 }
 
-#' Switch a dCST hierarchy to the "absorb" view (collapse rare buckets)
+#' Select a stored dCST policy view
 #'
 #' @description
-#' Returns a copy of a \code{"linf.csts"} object with \code{cell.label} (and, if
-#' present, \code{cst.levels}) replaced by the precomputed "absorb" labeling.
-#' This does not recompute dCSTs; it only switches between labelings already
-#' stored in the object.
+#' Returns a copy of a \code{"linf.csts"} object using either the stored
+#' \code{"pure"} or \code{"absorb"} hierarchy. This does not recompute dCSTs.
 #'
 #' @param csts A \code{"linf.csts"} object produced by \code{\link{linf.csts}}
 #'   and optionally refined by \code{\link{refine.linf.csts}} /
 #'   \code{\link{refine.linf.csts.iter}}.
+#' @param view Character. The stored policy view to activate: \code{"pure"} or
+#'   \code{"absorb"}.
 #'
-#' @return A \code{"linf.csts"} object using the "absorb" view.
-#'
-#' @export
-collapse.rare <- function(csts) {
-
-  validate.linf.csts(csts)
-
-  if (is.null(csts$cell.label.absorb)) {
-    stop("collapse.rare: no precomputed absorb labels found in object")
-  }
-
-  if (!is.null(csts$cell.index.absorb)) {
-    csts$cell.index <- csts$cell.index.absorb
-  }
-  if (!is.null(csts$cell.id.absorb)) {
-    csts$cell.id <- csts$cell.id.absorb
-  }
-  csts$cell.label <- csts$cell.label.absorb
-  csts$low.freq.policy <- "absorb"
-
-  if (!is.null(csts$cst.id.levels)) {
-    if (is.null(csts$cst.id.levels.absorb)) {
-      depth <- csts$cst.depth
-      csts$cst.id.levels[[depth]] <- csts$cell.id %||% csts$cell.label
-    } else {
-      csts$cst.id.levels <- csts$cst.id.levels.absorb
-    }
-  }
-
-  if (!is.null(csts$cst.levels)) {
-    if (is.null(csts$cst.levels.absorb)) {
-      ## Fall back to updating only the leaf level
-      depth <- csts$cst.depth
-      csts$cst.levels[[depth]] <- csts$cell.label.absorb
-    } else {
-      csts$cst.levels <- csts$cst.levels.absorb
-    }
-  }
-
-  csts$landmarks <- NULL
-  class(csts) <- "linf.csts"
-  csts
-}
-
-#' Switch a dCST hierarchy to the "rare" view (explicit rare buckets)
-#'
-#' @description
-#' Returns a copy of a \code{"linf.csts"} object with \code{cell.label} (and, if
-#' present, \code{cst.levels}) replaced by the precomputed "rare" labeling.
-#' This does not recompute dCSTs; it only switches between labelings already
-#' stored in the object. This explicit rare-bucket view is the active labeling
-#' used by \code{low.freq.policy = "pure"}.
-#'
-#' @param csts A \code{"linf.csts"} object produced by \code{\link{linf.csts}}
-#'   and optionally refined by \code{\link{refine.linf.csts}} /
-#'   \code{\link{refine.linf.csts.iter}}.
-#'
-#' @return A \code{"linf.csts"} object using the "rare" view.
+#' @return A \code{"linf.csts"} object using the requested view.
 #'
 #' @export
-expand.rare <- function(csts) {
+dcst.view <- function(csts, view = c("absorb", "pure")) {
 
   validate.linf.csts(csts)
+  view <- match.arg(view)
 
-  if (is.null(csts$cell.label.rare)) {
-    stop("expand.rare: no precomputed rare labels found in object")
-  }
+  lineage.label <- csts[[paste0("lineage.label.", view)]]
+  lineage.id <- csts[[paste0("lineage.id.", view)]]
+  depth1.feature.index <- csts[[paste0("depth1.feature.index.", view)]]
+  depth1.feature.id <- csts[[paste0("depth1.feature.id.", view)]]
+  depth1.feature.label <- csts[[paste0("depth1.feature.label.", view)]]
+  lineage.ids <- csts[[paste0("lineage.ids.", view)]]
+  lineage.labels <- csts[[paste0("lineage.labels.", view)]]
 
-  if (!is.null(csts$cell.index.rare)) {
-    csts$cell.index <- csts$cell.index.rare
-  }
-  if (!is.null(csts$cell.id.rare)) {
-    csts$cell.id <- csts$cell.id.rare
-  }
-  csts$cell.label <- csts$cell.label.rare
-  csts$low.freq.policy <- "pure"
-
-  if (!is.null(csts$cst.id.levels)) {
-    if (is.null(csts$cst.id.levels.rare)) {
-      depth <- csts$cst.depth
-      csts$cst.id.levels[[depth]] <- csts$cell.id %||% csts$cell.label
-    } else {
-      csts$cst.id.levels <- csts$cst.id.levels.rare
-    }
+  if (is.null(lineage.label) || is.null(lineage.ids) || is.null(lineage.labels)) {
+    stop(sprintf('dcst.view: object does not contain the "%s" view', view))
   }
 
-  if (!is.null(csts$cst.levels)) {
-    if (is.null(csts$cst.levels.rare)) {
-      ## Fall back to updating only the leaf level
-      depth <- csts$cst.depth
-      csts$cst.levels[[depth]] <- csts$cell.label.rare
-    } else {
-      csts$cst.levels <- csts$cst.levels.rare
-    }
-  }
+  csts$depth1.feature.index <- depth1.feature.index
+  csts$depth1.feature.id <- depth1.feature.id
+  csts$depth1.feature.label <- depth1.feature.label
+  csts$lineage.id <- lineage.id
+  csts$lineage.label <- lineage.label
+  csts$lineage.ids <- lineage.ids
+  csts$lineage.labels <- lineage.labels
+  csts$low.freq.policy <- view
 
   csts$landmarks <- NULL
   class(csts) <- "linf.csts"
@@ -1059,18 +997,18 @@ print.linf.csts <- function(x, ...) {
   validate.linf.csts(x)
 
   ## Determine hierarchy
-  if (is.null(x$cst.levels)) {
-    levels <- list(level1 = x$cell.label)
+  if (is.null(x$lineage.labels)) {
+    levels <- list(level1 = x$lineage.label)
     max.depth <- 1L
   } else {
-    levels <- x$cst.levels
-    max.depth <- x$cst.depth
+    levels <- x$lineage.labels
+    max.depth <- x$depth
   }
 
   cat("\n================================================================================\n")
   cat("Dominant Community State Type Hierarchy\n")
   cat("================================================================================\n")
-  cat("Total samples: ", length(x$cell.label), "\n")
+  cat("Total samples: ", length(x$lineage.label), "\n")
   cat("Max depth:     ", max.depth, "\n")
 
   ## Policy stamp (if available)
@@ -1104,15 +1042,15 @@ summary.linf.csts <- function(object, ...) {
   validate.linf.csts(object)
 
   ## Determine hierarchy
-  if (is.null(object$cst.levels)) {
-    levels <- list(level1 = object$cell.label)
+  if (is.null(object$lineage.labels)) {
+    levels <- list(level1 = object$lineage.label)
   } else {
-    levels <- object$cst.levels
+    levels <- object$lineage.labels
   }
 
   out <- data.frame(
     depth = integer(0),
-    n.cells = integer(0),
+    n.lineages = integer(0),
     total.samples = integer(0),
     mean.size = numeric(0),
     median.size = numeric(0),
@@ -1126,7 +1064,7 @@ summary.linf.csts <- function(object, ...) {
 
     out <- rbind(out, data.frame(
       depth = d,
-      n.cells = length(tab),
+      n.lineages = length(tab),
       total.samples = sum(tab),
       mean.size = mean(tab),
       median.size = stats::median(tab),
@@ -1203,12 +1141,12 @@ df.to.latex <- function(df,
 #'
 #' @description
 #' Generates LaTeX code summarizing dCSTs at a specified hierarchy depth.
-#' Uses the explicit dCST hierarchy stored in \code{cst.levels} when available.
+#' Uses the explicit dCST hierarchy stored in \code{lineage.labels} when available.
 #'
 #' @param csts A dCST object produced by \code{linf.csts()} and optionally refined
 #'   by \code{refine.linf.csts()} or \code{refine.linf.csts.iter()}.
 #' @param depth Integer. dCST depth to render. Default is the leaf level
-#'   (\code{csts$cst.depth}). If \code{cst.levels} is missing, depth is ignored.
+#'   (\code{csts$depth}). If \code{lineage.labels} is missing, depth is ignored.
 #' @param caption Character or NULL. LaTeX table caption.
 #' @param label Character or NULL. LaTeX label for referencing the table.
 #' @param digits Integer. Digits to display for percentages. Default: 1.
@@ -1218,8 +1156,8 @@ df.to.latex <- function(df,
 #'
 #' @details
 #' This function is hierarchy-aware. It does not infer dCST depth from label
-#' strings. If the dCST object does not contain \code{cst.levels}, the function
-#' falls back to using \code{cell.label} as a single-level dCST.
+#' strings. If the dCST object does not contain \code{lineage.labels}, the function
+#' falls back to using \code{lineage.label} as a single-level dCST.
 #'
 #' @export
 latex.linf.csts <- function(csts,
@@ -1232,17 +1170,17 @@ latex.linf.csts <- function(csts,
   validate.linf.csts(csts)
 
   ## Determine labels at requested depth
-  if (!is.null(csts$cst.levels)) {
+  if (!is.null(csts$lineage.labels)) {
     if (is.null(depth)) {
-      depth <- csts$cst.depth
+      depth <- csts$depth
     }
-    if (depth < 1 || depth > csts$cst.depth) {
+    if (depth < 1 || depth > csts$depth) {
       stop("latex.linf.csts: invalid depth")
     }
-    labels <- csts$cst.levels[[depth]]
+    labels <- csts$lineage.labels[[depth]]
   } else {
     ## Backward compatibility: flat dCST
-    labels <- csts$cell.label
+    labels <- csts$lineage.label
     depth <- 1L
   }
 

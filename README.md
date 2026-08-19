@@ -54,8 +54,8 @@ install.packages("linf")
 
 - **L∞ normalization** — `normalize.linf()`: row-wise division by
   maximum, mapping each sample to the L∞ unit-ball boundary.
-- **Dominant-feature assignment** — `linf.cells()`: rank-1 assignment
-  per sample, returning indices, labels, and level sets.
+- **Dominant-feature assignment** — `linf.dominant.features()`: rank-1
+  assignment per sample, returning indices, labels, and level sets.
 - **Truncated dCSTs** — `linf.csts()`: apply the support threshold *n*₀
   and either group low-support samples together or absorb them into
   retained states.
@@ -85,12 +85,12 @@ apply(Z, 1, max)
 #> returns 1 for nonzero rows, 0 for all-zero rows
 
 # Dominant-feature assignments: indices + labels
-cells <- linf.cells(Z)
-table(cells$label, useNA = "ifany")
+dominant.features <- linf.dominant.features(Z)
+table(dominant.features$label, useNA = "ifany")
 
 # Absorb-policy dCSTs: reassign low-support samples among retained states
 res <- linf.csts(Z, n0 = 4, low.freq.policy = "absorb")
-table(res$cell.label, useNA = "ifany")
+table(res$lineage.label, useNA = "ifany")
 ```
 
 ## Gut Microbiome Demonstration

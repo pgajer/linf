@@ -16,7 +16,7 @@ dcsts <- linf.csts(
   low.freq.policy = "absorb",
   return.diagnostics = TRUE
 )
-sizes <- sort(table(dcsts$cell.label), decreasing = TRUE)
+sizes <- sort(table(dcsts$lineage.label), decreasing = TRUE)
 stopifnot(
   sum(sizes) == nrow(normalized),
   !"RARE_DOMINANT" %in% names(sizes)

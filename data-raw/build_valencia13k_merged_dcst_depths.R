@@ -101,7 +101,7 @@ summarize_labels <- function(labels, depth, sep) {
 }
 
 make_assignments <- function(csts) {
-  depth <- csts$cst.depth
+  depth <- csts$depth
   out <- data.frame(
     sample_id = anon_sample_id,
     source_row = seq_len(source_n),
@@ -111,7 +111,7 @@ make_assignments <- function(csts) {
   )
 
   for (d in seq_len(depth)) {
-    out[[paste0("dcst_depth", d)]] <- as.character(csts$cst.levels.absorb[[d]])
+    out[[paste0("dcst_depth", d)]] <- as.character(csts$lineage.labels.absorb[[d]])
   }
 
   out
@@ -121,7 +121,7 @@ make_asset <- function(csts, depth) {
   assignments <- make_assignments(csts)
   summaries <- setNames(
     lapply(seq_len(depth), function(d) {
-      summarize_labels(csts$cst.levels.absorb[[d]], depth = d, sep = sep)
+      summarize_labels(csts$lineage.labels.absorb[[d]], depth = d, sep = sep)
     }),
     paste0("depth", seq_len(depth))
   )

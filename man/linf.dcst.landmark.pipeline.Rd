@@ -16,7 +16,7 @@ linf.dcst.landmark.pipeline(
   rare.label = "RARE_DOMINANT",
   depth1.landmark.types = c("endpoint.max", "endpoint.min", "mean.rep", "median.rep"),
   depth2.landmark.types = c("endpoint.max", "endpoint.min", "mean.rep", "median.rep"),
-  landmark.view = c("absorb", "active", "rare"),
+  landmark.view = c("absorb", "active", "pure"),
   tie.method = c("first", "random", "error"),
   verbose = FALSE,
   backend = c("auto", "dense", "sparse")
@@ -42,9 +42,8 @@ passed to \code{\link{refine.linf.csts}}.}
 \item{sep}{Character scalar used to join depth-refined dCST path tokens.}
 
 \item{low.freq.policy}{Character. One of \code{"pure"} or \code{"absorb"}.
-Controls the active dCST view while still preserving parallel rare/absorb
-views inside the returned dCST objects. The legacy value \code{"rare"} is
-still accepted as a deprecated alias for \code{"pure"}.}
+Controls the active dCST view while preserving both pure and absorb views
+inside the returned dCST objects.}
 
 \item{rare.label}{Character scalar for rare buckets.}
 
@@ -53,7 +52,7 @@ still accepted as a deprecated alias for \code{"pure"}.}
 \item{depth2.landmark.types}{Character vector of landmark types for depth 2.}
 
 \item{landmark.view}{Character. One of \code{"absorb"}, \code{"active"}, or
-\code{"rare"}. Defaults to \code{"absorb"} because landmark reporting is
+\code{"pure"}. Defaults to \code{"absorb"} because landmark reporting is
 typically requested on the absorb view.}
 
 \item{tie.method}{Character. Tie handling passed through to
@@ -112,6 +111,6 @@ out <- linf.dcst.landmark.pipeline(
 )
 
 names(out)
-out$dcst.depth2$cst.depth
+out$dcst.depth2$depth
 out$landmarks.depth2$view
 }

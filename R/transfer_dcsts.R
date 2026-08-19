@@ -16,8 +16,8 @@
 #' @param depth Integer vector of requested depths. Defaults to all fitted
 #'   depths in \code{csts}.
 #' @param view Which fitted hierarchy view to transfer into. \code{"absorb"}
-#'   uses \code{cst.levels.absorb}; \code{"rare"} uses
-#'   \code{cst.levels.rare}; \code{"active"} uses \code{cst.levels}.
+#'   uses \code{lineage.labels.absorb}; \code{"pure"} uses
+#'   \code{lineage.labels.pure}; \code{"active"} uses \code{lineage.labels}.
 #' @param match.by Whether columns in \code{X} are aligned to
 #'   \code{csts$feature.ids} or \code{csts$feature.labels}.
 #' @param feature.ids Optional feature identifiers for columns of \code{X}.
@@ -60,7 +60,7 @@
 transfer.dcsts <- function(X,
                            csts,
                            depth = NULL,
-                           view = c("absorb", "active", "rare"),
+                           view = c("absorb", "active", "pure"),
                            match.by = c("feature.ids", "feature.labels"),
                            feature.ids = NULL,
                            feature.labels = NULL,
@@ -97,13 +97,13 @@ transfer.dcsts <- function(X,
     stop("transfer.dcsts: feature.labels must have length ncol(X)")
   }
 
-  levels <- resolve.linf.cst.levels(csts, kind = "label", view = view)
+  levels <- resolve.linf.lineage.labels(csts, kind = "label", view = view)
   max.depth <- length(levels)
   if (!max.depth) stop("transfer.dcsts: csts does not contain fitted levels")
   if (is.null(depth)) depth <- seq_len(max.depth)
   if (!is.numeric(depth) || any(!is.finite(depth)) || any(depth < 1) ||
       any(depth %% 1 != 0) || any(depth > max.depth)) {
-    stop("transfer.dcsts: depth must contain fitted depths between 1 and csts$cst.depth")
+    stop("transfer.dcsts: depth must contain fitted depths between 1 and csts$depth")
   }
   depth <- as.integer(depth)
 

@@ -22,7 +22,7 @@ test_that("linf.landmarks computes feature-specific landmarks at depth 1", {
     landmark.types = c("endpoint.max", "endpoint.min", "mean.rep", "median.rep")
   )
 
-  a.rows <- out$landmarks[out$landmarks$cell.id == "asv_1", , drop = FALSE]
+  a.rows <- out$landmarks[out$landmarks$lineage.id == "asv_1", , drop = FALSE]
 
   expect_s3_class(out, "linf.landmarks")
   expect_equal(a.rows$landmark.type, c("endpoint.max", "endpoint.min", "mean.rep", "median.rep"))
@@ -47,16 +47,16 @@ test_that("linf.csts can attach landmarks and skip rare buckets", {
     low.freq.policy = "pure",
     return.landmarks = TRUE,
     landmark.types = "endpoint.max",
-    landmark.view = "rare"
+    landmark.view = "pure"
   )
 
-  rare.row <- out$landmarks$cells[out$landmarks$cells$cell.id == out$rare.label, , drop = FALSE]
+  rare.row <- out$landmarks$lineages[out$landmarks$lineages$lineage.id == out$rare.label, , drop = FALSE]
 
   expect_s3_class(out$landmarks, "linf.landmarks")
-  expect_identical(out$landmarks$view, "rare")
+  expect_identical(out$landmarks$view, "pure")
   expect_equal(nrow(rare.row), 1L)
   expect_false(rare.row$landmarks.computable)
-  expect_true(all(out$landmarks$landmarks$cell.id != out$rare.label))
+  expect_true(all(out$landmarks$landmarks$lineage.id != out$rare.label))
 })
 
 test_that("linf.landmarks uses leaf feature ids for refined depth-2 dominance-lineages", {
@@ -86,12 +86,12 @@ test_that("linf.landmarks uses leaf feature ids for refined depth-2 dominance-li
     low.freq.policy = "pure",
     verbose = FALSE
   )
-  out <- linf.landmarks(M, d2, depth = 2, view = "rare", landmark.types = "endpoint.max")
+  out <- linf.landmarks(M, d2, depth = 2, view = "pure", landmark.types = "endpoint.max")
 
-  c.row <- out$landmarks[out$landmarks$cell.id == "asv_1__asv_3", , drop = FALSE]
+  c.row <- out$landmarks[out$landmarks$lineage.id == "asv_1__asv_3", , drop = FALSE]
 
-  expect_true("cst.id.levels.rare" %in% names(d2))
-  expect_true("cst.id.levels.absorb" %in% names(d2))
+  expect_true("lineage.ids.pure" %in% names(d2))
+  expect_true("lineage.ids.absorb" %in% names(d2))
   expect_equal(c.row$target.feature.id, "asv_3")
   expect_equal(c.row$target.feature.label, "C")
   expect_equal(c.row$point.name, "r4")
@@ -111,14 +111,14 @@ test_that("switching dCST views updates ids and drops stale attached landmarks",
     low.freq.policy = "pure",
     return.landmarks = TRUE
   )
-  collapsed <- collapse.rare(csts)
+  collapsed <- dcst.view(csts, "absorb")
 
   expect_null(collapsed$landmarks)
-  expect_identical(collapsed$cell.id, collapsed$cell.id.absorb)
-  expect_identical(collapsed$cst.id.levels[[collapsed$cst.depth]], collapsed$cst.id.levels.absorb[[collapsed$cst.depth]])
+  expect_identical(collapsed$lineage.id, collapsed$lineage.id.absorb)
+  expect_identical(collapsed$lineage.ids[[collapsed$depth]], collapsed$lineage.ids.absorb[[collapsed$depth]])
 })
 
-test_that('low.freq.policy = "rare" is accepted as a deprecated alias for "pure"', {
+test_that('the removed low.freq.policy = "rare" alias is rejected', {
   M <- rbind(
     s1 = c(1.0, 0.2, 0.1),
     s2 = c(0.9, 0.3, 0.1),
@@ -126,11 +126,8 @@ test_that('low.freq.policy = "rare" is accepted as a deprecated alias for "pure"
   )
   colnames(M) <- c("A", "B", "C")
 
-  expect_warning(
-    csts <- linf.csts(M, n0 = 2, low.freq.policy = "rare"),
-    'deprecated; use "pure" instead'
+  expect_error(
+    linf.csts(M, n0 = 2, low.freq.policy = "rare"),
+    "should be one of"
   )
-
-  expect_identical(csts$low.freq.policy, "pure")
-  expect_identical(csts$cell.label, csts$cell.label.rare)
 })

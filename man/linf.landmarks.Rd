@@ -8,7 +8,7 @@ linf.landmarks(
   M,
   csts,
   depth = NULL,
-  view = c("active", "rare", "absorb"),
+  view = c("active", "pure", "absorb"),
   landmark.types = c("endpoint.max", "endpoint.min", "mean.rep", "median.rep"),
   tie.method = c("first", "random", "error"),
   backend = c("auto", "dense", "sparse")
@@ -20,9 +20,9 @@ linf.landmarks(
 \item{csts}{A \code{"linf.csts"} object.}
 
 \item{depth}{Integer. dCST depth to inspect. Defaults to the leaf depth
-\code{csts$cst.depth}.}
+\code{csts$depth}.}
 
-\item{view}{Character. One of \code{"active"}, \code{"rare"}, or
+\item{view}{Character. One of \code{"active"}, \code{"pure"}, or
 \code{"absorb"}.}
 
 \item{landmark.types}{Character vector containing any of
@@ -41,8 +41,8 @@ A list of class \code{"linf.landmarks"} with components:
 \itemize{
 \item \code{depth}, \code{view}, \code{sep}, \code{rare.label}
 \item \code{feature.ids}, \code{feature.labels}
-\item \code{cells}: one row per dominance-lineage with computability
-metadata; the component name is retained for backward compatibility
+\item \code{lineages}: one row per dominance-lineage with computability
+metadata
 \item \code{landmarks}: one row per computed landmark point
 }
 }

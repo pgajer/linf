@@ -31,8 +31,8 @@ test_that("linf.dcst.landmark.pipeline returns the expected object bundle", {
   expect_s3_class(out$dcst.depth2, "linf.csts")
   expect_s3_class(out$landmarks.depth1, "linf.landmarks")
   expect_s3_class(out$landmarks.depth2, "linf.landmarks")
-  expect_equal(out$dcst.depth1$cst.depth, 1L)
-  expect_equal(out$dcst.depth2$cst.depth, 2L)
+  expect_equal(out$dcst.depth1$depth, 1L)
+  expect_equal(out$dcst.depth2$depth, 2L)
 })
 
 test_that("linf.dcst.landmark.pipeline computes landmark tables for both depths", {
@@ -61,11 +61,11 @@ test_that("linf.dcst.landmark.pipeline computes landmark tables for both depths"
     verbose = FALSE
   )
 
-  expect_true(all(c("cells", "landmarks") %in% names(out$landmarks.depth1)))
-  expect_true(all(c("cells", "landmarks") %in% names(out$landmarks.depth2)))
-  expect_gt(nrow(out$landmarks.depth1$cells), 0L)
+  expect_true(all(c("lineages", "landmarks") %in% names(out$landmarks.depth1)))
+  expect_true(all(c("lineages", "landmarks") %in% names(out$landmarks.depth2)))
+  expect_gt(nrow(out$landmarks.depth1$lineages), 0L)
   expect_gt(nrow(out$landmarks.depth1$landmarks), 0L)
-  expect_gt(nrow(out$landmarks.depth2$cells), 0L)
+  expect_gt(nrow(out$landmarks.depth2$lineages), 0L)
   expect_gt(nrow(out$landmarks.depth2$landmarks), 0L)
   expect_equal(sort(unique(out$landmarks.depth1$landmarks$landmark.type)), c("endpoint.max", "mean.rep"))
   expect_equal(sort(unique(out$landmarks.depth2$landmarks$landmark.type)), c("endpoint.max", "median.rep"))
@@ -94,8 +94,8 @@ test_that("linf.dcst.landmark.pipeline respects absorb landmark views under pure
   expect_identical(out$dcst.depth1$low.freq.policy, "pure")
   expect_identical(out$landmarks.depth1$view, "absorb")
   expect_identical(out$landmarks.depth2$view, "absorb")
-  expect_false(any(out$landmarks.depth1$cells$cell.id == out$dcst.depth1$rare.label))
-  expect_false(any(out$landmarks.depth2$cells$cell.id == out$dcst.depth2$rare.label))
+  expect_false(any(out$landmarks.depth1$lineages$lineage.id == out$dcst.depth1$rare.label))
+  expect_false(any(out$landmarks.depth2$lineages$lineage.id == out$dcst.depth2$rare.label))
 })
 
 test_that("linf.dcst.landmark.pipeline carries feature ids and labels into landmark output", {
@@ -128,8 +128,8 @@ test_that("linf.dcst.landmark.pipeline carries feature ids and labels into landm
   expect_true(all(out$dcst.depth1$feature.labels == labels))
   expect_true(all(out$dcst.depth2$feature.ids == ids))
   expect_true(all(out$dcst.depth2$feature.labels == labels))
-  expect_true(all(out$landmarks.depth1$cells$target.feature.id %in% c(ids, NA_character_)))
-  expect_true(all(out$landmarks.depth1$cells$target.feature.label %in% c(labels, NA_character_)))
-  expect_true(any(grepl("^asv_1(__|$)", out$landmarks.depth2$cells$cell.id)))
-  expect_true(any(grepl("^L\\. iners 1(__|$)", out$landmarks.depth2$cells$cell.label)))
+  expect_true(all(out$landmarks.depth1$lineages$target.feature.id %in% c(ids, NA_character_)))
+  expect_true(all(out$landmarks.depth1$lineages$target.feature.label %in% c(labels, NA_character_)))
+  expect_true(any(grepl("^asv_1(__|$)", out$landmarks.depth2$lineages$lineage.id)))
+  expect_true(any(grepl("^L\\. iners 1(__|$)", out$landmarks.depth2$lineages$lineage.label)))
 })

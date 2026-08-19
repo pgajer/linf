@@ -16,8 +16,8 @@ test_that("transfer.dcsts reproduces fitted labels on aligned training data", {
 
   tr <- transfer.dcsts(X, fit, match.by = "feature.labels")
 
-  expect_equal(tr$assignment[, "depth1"], fit$cst.levels.absorb[[1]])
-  expect_equal(tr$assignment[, "depth2"], fit$cst.levels.absorb[[2]])
+  expect_equal(tr$assignment[, "depth1"], fit$lineage.labels.absorb[[1]])
+  expect_equal(tr$assignment[, "depth2"], fit$lineage.labels.absorb[[2]])
 })
 
 test_that("transfer.dcsts aligns by feature metadata rather than column order", {
@@ -32,7 +32,7 @@ test_that("transfer.dcsts aligns by feature metadata rather than column order", 
 
   tr <- transfer.dcsts(shuffled, fit, match.by = "feature.labels")
 
-  expect_equal(tr$assignment[, "depth1"], fit$cst.levels.absorb[[1]])
+  expect_equal(tr$assignment[, "depth1"], fit$lineage.labels.absorb[[1]])
 })
 
 test_that("transfer.dcsts can use support tie-breaking in frozen transfer", {

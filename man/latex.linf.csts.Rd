@@ -18,7 +18,7 @@ latex.linf.csts(
 by \code{refine.linf.csts()} or \code{refine.linf.csts.iter()}.}
 
 \item{depth}{Integer. dCST depth to render. Default is the leaf level
-(\code{csts$cst.depth}). If \code{cst.levels} is missing, depth is ignored.}
+(\code{csts$depth}). If \code{lineage.labels} is missing, depth is ignored.}
 
 \item{caption}{Character or NULL. LaTeX table caption.}
 
@@ -33,10 +33,10 @@ Character vector containing LaTeX table code.
 }
 \description{
 Generates LaTeX code summarizing dCSTs at a specified hierarchy depth.
-Uses the explicit dCST hierarchy stored in \code{cst.levels} when available.
+Uses the explicit dCST hierarchy stored in \code{lineage.labels} when available.
 }
 \details{
 This function is hierarchy-aware. It does not infer dCST depth from label
-strings. If the dCST object does not contain \code{cst.levels}, the function
-falls back to using \code{cell.label} as a single-level dCST.
+strings. If the dCST object does not contain \code{lineage.labels}, the function
+falls back to using \code{lineage.label} as a single-level dCST.
 }

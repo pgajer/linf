@@ -4,13 +4,13 @@ test_that("normalize.linf max-per-row", {
   expect_equal(apply(Z, 1, max), c(1, 0))
 })
 
-test_that("linf.cells ties, zeros, labels, levels", {
+test_that("linf.dominant.features ties, zeros, labels, levels", {
   S <- rbind(c(0.7, 0.3),
              c(0, 0),
              c(1, 1))   # tie -> first
   colnames(S) <- c("A", "B")
 
-  out <- linf.cells(S)
+  out <- linf.dominant.features(S)
 
   # index behavior
   expect_equal(out$index, c(1L, NA_integer_, 1L))
@@ -25,10 +25,10 @@ test_that("linf.cells ties, zeros, labels, levels", {
   expect_equal(out$observed.levels, "A")
 })
 
-test_that("linf.cells unnamed columns synthesize unique levels", {
+test_that("linf.dominant.features unnamed columns synthesize unique levels", {
   T <- matrix(c(0,2,  3,1,  0,0), nrow = 3, byrow = TRUE)
   # no colnames -> V1, V2
-  out <- linf.cells(T)
+  out <- linf.dominant.features(T)
 
   expect_equal(out$levels, c("V1", "V2"))     # synthesized
   expect_equal(out$index, c(2L, 1L, NA_integer_))
@@ -36,13 +36,13 @@ test_that("linf.cells unnamed columns synthesize unique levels", {
   expect_equal(out$observed.levels, c("V1", "V2"))  # both appeared
 })
 
-test_that("linf.cells duplicate column names get disambiguated", {
+test_that("linf.dominant.features duplicate column names get disambiguated", {
   T <- matrix(c(0, 2,
                 3, 1,
                 0, 0), nrow = 3, byrow = TRUE)
   colnames(T) <- c("X", "X") # duplicates
 
-  out <- linf.cells(T)
+  out <- linf.dominant.features(T)
   # expected: make.unique -> "X", "X_1"
   expect_equal(out$levels, c("X", "X_1"))
   expect_equal(out$label[1:2], c("X_1", "X"))
@@ -60,16 +60,16 @@ test_that("linf.csts retains supported states and reassigns low-support ones", {
   out <- linf.csts(S, n0 = 5, low.freq.policy = "absorb")
 
   # only col1 kept
-  expect_identical(out$kept.cells.idx, 1L)
-  expect_identical(out$kept.cells.lbl, "Dom1")
+  expect_identical(out$retained.feature.indices, 1L)
+  expect_identical(out$retained.feature.labels, "Dom1")
 
   # supported state unchanged
-  expect_true(all(out$cell.index[1:6] == 1L))
-  expect_true(all(out$cell.label[1:6] == "Dom1"))
+  expect_true(all(out$depth1.feature.index[1:6] == 1L))
+  expect_true(all(out$lineage.label[1:6] == "Dom1"))
 
   # low-support samples reassigned to the retained state
-  expect_true(all(out$cell.index[7:10] == 1L))
-  expect_true(all(out$cell.label[7:10] == "Dom1"))
+  expect_true(all(out$depth1.feature.index[7:10] == 1L))
+  expect_true(all(out$lineage.label[7:10] == "Dom1"))
 })
 
 test_that("linf.csts returns all-NA when no states meet the support threshold", {
@@ -81,10 +81,10 @@ test_that("linf.csts returns all-NA when no states meet the support threshold", 
   colnames(S) <- c("A","B","C")
   out <- linf.csts(S, n0 = 2)
 
-  expect_true(all(is.na(out$cell.index)))
-  expect_true(all(out$cell.label == out$rare.label))
-  expect_length(out$kept.cells.idx, 0)
-  expect_length(out$kept.cells.lbl, 0)
+  expect_true(all(is.na(out$depth1.feature.index)))
+  expect_true(all(out$lineage.label == out$rare.label))
+  expect_length(out$retained.feature.indices, 0)
+  expect_length(out$retained.feature.labels, 0)
 
   # size.table reports raw sizes by label
   expect_identical(as.integer(unclass(out$size.table)), c(1L,1L,1L))

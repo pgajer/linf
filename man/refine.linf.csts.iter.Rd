@@ -7,7 +7,7 @@
 refine.linf.csts.iter(
   M,
   refined,
-  cells.to.refine = NULL,
+  lineages.to.refine = NULL,
   n0 = 50,
   refinement.factor = 5,
   sep = "__",
@@ -22,9 +22,8 @@ refine.linf.csts.iter(
 
 \item{refined}{A \code{"linf.csts"} object with an existing hierarchy.}
 
-\item{cells.to.refine}{Character vector of leaf dominance-lineage IDs to
-refine, or NULL for auto-selection. The argument name is retained for
-backward compatibility.}
+\item{lineages.to.refine}{Character vector of leaf dominance-lineage IDs to
+refine, or NULL for auto-selection.}
 
 \item{n0}{Integer >= 1. Minimum support required to retain a child lineage.}
 
@@ -33,8 +32,7 @@ backward compatibility.}
 \item{sep}{Character scalar used to concatenate hierarchical labels.}
 
 \item{low.freq.policy}{Character. One of \code{"pure"} or \code{"absorb"}.
-Default: \code{"pure"}. The legacy value \code{"rare"} is still accepted as
-a deprecated alias for \code{"pure"}.}
+Default: \code{"pure"}.}
 
 \item{rare.label}{Character scalar for rare buckets when \code{low.freq.policy = "pure"}.}
 
@@ -45,7 +43,7 @@ a deprecated alias for \code{"pure"}.}
 backend from \code{M} or from \code{refined} when available.}
 }
 \value{
-Updated \code{"linf.csts"} object with \code{cst.depth} increased by one.
+Updated \code{"linf.csts"} object with \code{depth} increased by one.
 }
 \description{
 Appends one refinement level to an existing dCST hierarchy produced by
