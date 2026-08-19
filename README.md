@@ -13,14 +13,21 @@
 through L-infinity (L∞) normalization and Dominant Community State Types
 (dCSTs).
 
-Standard compositional approaches (CLR, ILR) map data into log-ratio
-coordinates, introducing complications with zeros and obscuring the
-dominant features that often drive biological variation. L∞
-normalization takes a different path: divide each sample by its maximum,
-placing every observation on the boundary of the unit L∞ ball. The
-dominant feature — the one that achieves the maximum — defines a
-natural, parameter-free partition of samples into **dominance sample
-sets**.
+Classical centered log-ratio (CLR) and isometric log-ratio (ILR)
+coordinates are defined only for strictly positive compositions.
+Zero-containing observations lie on the boundary of the simplex and must
+first undergo pseudocount addition or zero replacement, which represents
+them as interior compositions. This is questionable when zeros represent
+true absence, especially when every sample contains structural zeros, as
+is common in microbiome feature tables: replacement then represents
+every sample as containing every feature in the analysed feature set.
+For vaginal 16S rRNA or metagenomic data, this would imply that every
+vaginal microbial community contains every phylotype included in the
+analysis, a biologically implausible assumption. L∞ normalization
+retains zeros: dividing each sample by its maximum places the
+observation on the boundary of the unit L∞ ball. The dominant feature —
+the one that achieves the maximum — defines a natural, parameter-free
+partition of samples into **dominance sample sets**.
 
 At its core this is a **rank-based analysis**. Depth-1 dCSTs partition
 samples by the rank-1 (most abundant) feature. Depth-2 dCSTs refine each
