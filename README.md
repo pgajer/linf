@@ -29,18 +29,11 @@ observation on the boundary of the unit L∞ ball. The dominant feature —
 the one that achieves the maximum — defines a natural, parameter-free
 partition of samples into **dominance sample sets**.
 
-At its core this is a **rank-based analysis**. Depth-1 dCSTs partition
-samples by the rank-1 (most abundant) feature. Depth-2 dCSTs refine each
-retained dominance-lineage using the rank-2 feature, and so on. This
-perspective connects dCSTs to one of the oldest branches of statistical
-methodology — rank analysis — while the L∞ geometry adds a principled
-compositional framework and a single, interpretable support threshold
-*n*₀.
-
-This package accompanies: Gajer & Ravel (2025), *A New Approach to
-Compositional Data Analysis using L∞-normalization with Applications to
-Vaginal Microbiome*
-([arXiv:2503.21543](https://doi.org/10.48550/arXiv.2503.21543)).
+dCST construction is rank based. Depth-1 dCSTs partition samples by the
+rank-1 (most abundant) feature. Deeper dCSTs iteratively refine each
+retained dominance-lineage using the next-ranked feature. The support
+threshold *n*₀ sets the minimum sample count required to retain a
+dominance sample set.
 
 ## Installation
 
