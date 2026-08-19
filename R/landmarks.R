@@ -1,40 +1,40 @@
-resolve.linf.cst.levels <- function(csts,
-                                    kind = c("id", "label"),
-                                    view = c("active", "rare", "absorb")) {
+resolve.linf.lineage.labels <- function(csts,
+                                        kind = c("id", "label"),
+                                        view = c("active", "pure", "absorb")) {
   kind <- match.arg(kind)
   view <- match.arg(view)
 
   if (kind == "id") {
-    active <- csts$cst.id.levels
-    if (is.null(active)) active <- list(level1 = csts$cell.id %||% csts$cell.label)
+    active <- csts$lineage.ids
+    if (is.null(active)) active <- list(level1 = csts$lineage.id %||% csts$lineage.label)
 
-    rare <- csts$cst.id.levels.rare
-    if (is.null(rare) && !is.null(csts$cell.id.rare)) rare <- list(level1 = csts$cell.id.rare)
+    pure <- csts$lineage.ids.pure
+    if (is.null(pure) && !is.null(csts$lineage.id.pure)) pure <- list(level1 = csts$lineage.id.pure)
 
-    absorb <- csts$cst.id.levels.absorb
-    if (is.null(absorb) && !is.null(csts$cell.id.absorb)) absorb <- list(level1 = csts$cell.id.absorb)
+    absorb <- csts$lineage.ids.absorb
+    if (is.null(absorb) && !is.null(csts$lineage.id.absorb)) absorb <- list(level1 = csts$lineage.id.absorb)
   } else {
-    active <- csts$cst.levels
-    if (is.null(active)) active <- list(level1 = csts$cell.label)
+    active <- csts$lineage.labels
+    if (is.null(active)) active <- list(level1 = csts$lineage.label)
 
-    rare <- csts$cst.levels.rare
-    if (is.null(rare) && !is.null(csts$cell.label.rare)) rare <- list(level1 = csts$cell.label.rare)
+    pure <- csts$lineage.labels.pure
+    if (is.null(pure) && !is.null(csts$lineage.label.pure)) pure <- list(level1 = csts$lineage.label.pure)
 
-    absorb <- csts$cst.levels.absorb
-    if (is.null(absorb) && !is.null(csts$cell.label.absorb)) absorb <- list(level1 = csts$cell.label.absorb)
+    absorb <- csts$lineage.labels.absorb
+    if (is.null(absorb) && !is.null(csts$lineage.label.absorb)) absorb <- list(level1 = csts$lineage.label.absorb)
   }
 
-  rare <- rare %||% active
+  pure <- pure %||% active
   absorb <- absorb %||% active
 
   switch(view,
          active = active,
-         rare = rare,
+         pure = pure,
          absorb = absorb)
 }
 
 resolve.linf.landmark.view <- function(csts,
-                                       view = c("active", "rare", "absorb")) {
+                                       view = c("active", "pure", "absorb")) {
   view <- match.arg(view)
   if (view == "active") {
     return(linf.active.low.freq.view(csts$low.freq.policy %||% "active"))
@@ -97,11 +97,11 @@ choose.linf.landmark.index <- function(scores,
   stop("linf.landmarks: tie encountered and tie.method = 'error'")
 }
 
-empty.linf.landmark.cells <- function() {
+empty.linf.landmark.lineages <- function() {
   data.frame(
-    cell.id = character(0),
-    cell.label = character(0),
-    cell.size = integer(0),
+    lineage.id = character(0),
+    lineage.label = character(0),
+    lineage.size = integer(0),
     target.feature.id = character(0),
     target.feature.label = character(0),
     is.rare = logical(0),
@@ -112,8 +112,8 @@ empty.linf.landmark.cells <- function() {
 
 empty.linf.landmark.rows <- function() {
   data.frame(
-    cell.id = character(0),
-    cell.label = character(0),
+    lineage.id = character(0),
+    lineage.label = character(0),
     landmark.type = character(0),
     point.index = integer(0),
     point.name = character(0),
@@ -141,8 +141,8 @@ empty.linf.landmark.rows <- function() {
 #' @param M Numeric matrix (samples x features) used to build or refine the dCSTs.
 #' @param csts A \code{"linf.csts"} object.
 #' @param depth Integer. dCST depth to inspect. Defaults to the leaf depth
-#'   \code{csts$cst.depth}.
-#' @param view Character. One of \code{"active"}, \code{"rare"}, or
+#'   \code{csts$depth}.
+#' @param view Character. One of \code{"active"}, \code{"pure"}, or
 #'   \code{"absorb"}.
 #' @param landmark.types Character vector containing any of
 #'   \code{"endpoint.max"}, \code{"endpoint.min"}, \code{"mean.rep"}, or
@@ -157,8 +157,8 @@ empty.linf.landmark.rows <- function() {
 #' \itemize{
 #'   \item \code{depth}, \code{view}, \code{sep}, \code{rare.label}
 #'   \item \code{feature.ids}, \code{feature.labels}
-#'   \item \code{cells}: one row per dominance-lineage with computability
-#'     metadata; the component name is retained for backward compatibility
+#'   \item \code{lineages}: one row per dominance-lineage with computability
+#'     metadata
 #'   \item \code{landmarks}: one row per computed landmark point
 #' }
 #'
@@ -166,7 +166,7 @@ empty.linf.landmark.rows <- function() {
 linf.landmarks <- function(M,
                            csts,
                            depth = NULL,
-                           view = c("active", "rare", "absorb"),
+                           view = c("active", "pure", "absorb"),
                            landmark.types = c("endpoint.max",
                                               "endpoint.min",
                                               "mean.rep",
@@ -186,32 +186,32 @@ linf.landmarks <- function(M,
   X <- prep$X
   backend <- prep$backend
   linf.validate.matrix(X, backend = backend, fun.name = "linf.landmarks")
-  if (nrow(X) != length(csts$cell.label)) {
+  if (nrow(X) != length(csts$lineage.label)) {
     stop("linf.landmarks: nrow(M) must match the number of samples in csts")
   }
 
-  max.depth <- csts$cst.depth %||% 1L
+  max.depth <- csts$depth %||% 1L
   if (is.null(depth)) depth <- max.depth
 
   if (!is.numeric(depth) || length(depth) != 1L || depth < 1L || depth %% 1 != 0) {
     stop("linf.landmarks: depth must be an integer >= 1")
   }
   if (depth > max.depth) {
-    stop("linf.landmarks: requested depth exceeds csts$cst.depth")
+    stop("linf.landmarks: requested depth exceeds csts$depth")
   }
 
   resolved.view <- resolve.linf.landmark.view(csts, view)
-  id.levels <- resolve.linf.cst.levels(csts, kind = "id", view = resolved.view)
-  label.levels <- resolve.linf.cst.levels(csts, kind = "label", view = resolved.view)
+  id.levels <- resolve.linf.lineage.labels(csts, kind = "id", view = resolved.view)
+  label.levels <- resolve.linf.lineage.labels(csts, kind = "label", view = resolved.view)
 
   if (length(id.levels) < depth || length(label.levels) < depth) {
     stop("linf.landmarks: requested view does not contain the requested depth")
   }
 
-  cell.ids <- as.character(id.levels[[depth]])
-  cell.labels <- as.character(label.levels[[depth]])
+  lineage.ids <- as.character(id.levels[[depth]])
+  lineage.labels <- as.character(label.levels[[depth]])
 
-  if (length(cell.ids) != nrow(X) || length(cell.labels) != nrow(X)) {
+  if (length(lineage.ids) != nrow(X) || length(lineage.labels) != nrow(X)) {
     stop("linf.landmarks: dCST levels at the requested depth must align with rows of M")
   }
 
@@ -226,14 +226,14 @@ linf.landmarks <- function(M,
   row.ids <- rownames(X)
   if (is.null(row.ids)) row.ids <- rep(NA_character_, nrow(X))
 
-  cells <- empty.linf.landmark.cells()
+  lineages <- empty.linf.landmark.lineages()
   landmarks <- empty.linf.landmark.rows()
-  unique.cells <- unique(cell.ids[!is.na(cell.ids)])
+  unique.lineages <- unique(lineage.ids[!is.na(lineage.ids)])
 
-  for (cell in unique.cells) {
-    members <- which(cell.ids == cell)
-    cell.label <- cell.labels[members[1L]]
-    parts <- strsplit(cell, sep, fixed = TRUE)[[1L]]
+  for (lineage in unique.lineages) {
+    members <- which(lineage.ids == lineage)
+    lineage.label <- lineage.labels[members[1L]]
+    parts <- strsplit(lineage, sep, fixed = TRUE)[[1L]]
     leaf.id <- parts[[length(parts)]]
     target <- resolve.linf.landmark.feature(
       leaf.id,
@@ -242,10 +242,10 @@ linf.landmarks <- function(M,
       rare.label = rare.label
     )
 
-    cells <- rbind(cells, data.frame(
-      cell.id = cell,
-      cell.label = cell.label,
-      cell.size = length(members),
+    lineages <- rbind(lineages, data.frame(
+      lineage.id = lineage,
+      lineage.label = lineage.label,
+      lineage.size = length(members),
       target.feature.id = target$feature.id,
       target.feature.label = target$feature.label,
       is.rare = target$is.rare,
@@ -282,8 +282,8 @@ linf.landmarks <- function(M,
 
       point.index <- members[[pick]]
       landmarks <- rbind(landmarks, data.frame(
-        cell.id = cell,
-        cell.label = cell.label,
+        lineage.id = lineage,
+        lineage.label = lineage.label,
         landmark.type = landmark.type,
         point.index = point.index,
         point.name = row.ids[[point.index]],
@@ -305,7 +305,7 @@ linf.landmarks <- function(M,
       rare.label = rare.label,
       feature.ids = meta$feature.ids,
       feature.labels = meta$feature.labels,
-      cells = cells,
+      lineages = lineages,
       landmarks = landmarks
     ),
     class = "linf.landmarks"

@@ -13,7 +13,7 @@ test_that("normalize.linf returns the same values under dense and sparse backend
   expect_equal(as.matrix(sparse), dense)
 })
 
-test_that("linf.cells matches between dense and sparse backends", {
+test_that("linf.dominant.features matches between dense and sparse backends", {
   M <- rbind(
     s1 = c(1, 0.5, 0),
     s2 = c(0, 0, 0),
@@ -23,8 +23,8 @@ test_that("linf.cells matches between dense and sparse backends", {
   ids <- c("asv_1", "asv_2", "asv_3")
   labels <- c("A", "B", "C")
 
-  dense <- linf.cells(M, feature.ids = ids, feature.labels = labels, backend = "dense")
-  sparse <- linf.cells(Matrix::Matrix(M, sparse = TRUE), feature.ids = ids, feature.labels = labels, backend = "auto")
+  dense <- linf.dominant.features(M, feature.ids = ids, feature.labels = labels, backend = "dense")
+  sparse <- linf.dominant.features(Matrix::Matrix(M, sparse = TRUE), feature.ids = ids, feature.labels = labels, backend = "auto")
 
   expect_equal(sparse$index, dense$index)
   expect_equal(sparse$id, dense$id)
@@ -65,10 +65,10 @@ test_that("linf.csts and refinement agree across dense and sparse backends", {
   )
 
   expect_identical(sparse.d1$matrix.backend, "sparse")
-  expect_equal(sparse.d1$cell.id, dense.d1$cell.id)
-  expect_equal(sparse.d1$cell.label, dense.d1$cell.label)
-  expect_equal(sparse.d1$cell.label.absorb, dense.d1$cell.label.absorb)
-  expect_equal(sparse.d1$cell.label.rare, dense.d1$cell.label.rare)
+  expect_equal(sparse.d1$lineage.id, dense.d1$lineage.id)
+  expect_equal(sparse.d1$lineage.label, dense.d1$lineage.label)
+  expect_equal(sparse.d1$lineage.label.absorb, dense.d1$lineage.label.absorb)
+  expect_equal(sparse.d1$lineage.label.pure, dense.d1$lineage.label.pure)
 
   dense.d2 <- refine.linf.csts(
     M,
@@ -89,8 +89,8 @@ test_that("linf.csts and refinement agree across dense and sparse backends", {
   )
 
   expect_identical(sparse.d2$matrix.backend, "sparse")
-  expect_equal(sparse.d2$cst.levels[[2]], dense.d2$cst.levels[[2]])
-  expect_equal(sparse.d2$cst.id.levels[[2]], dense.d2$cst.id.levels[[2]])
+  expect_equal(sparse.d2$lineage.labels[[2]], dense.d2$lineage.labels[[2]])
+  expect_equal(sparse.d2$lineage.ids[[2]], dense.d2$lineage.ids[[2]])
 })
 
 test_that("linf.landmarks and the landmark pipeline accept sparse matrices", {

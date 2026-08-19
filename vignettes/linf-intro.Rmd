@@ -54,9 +54,9 @@ Each sample is assigned to its dominant feature: the column achieving the
 within-sample maximum. Samples with the same dominant feature form a
 depth-1 *dominance sample set*.
 
-```{r toy-cells}
-cells <- linf.cells(Z)
-table(cells$label)
+```{r toy-dominant.features}
+dominant.features <- linf.dominant.features(Z)
+table(dominant.features$label)
 ```
 
 ### Truncated dCSTs
@@ -74,7 +74,7 @@ S <- sweep(S, 1, rowSums(S), "/")
 colnames(S) <- c("Dom1", "Dom2", "Dom3")
 
 res <- linf.csts(S, n0 = 5)
-table(res$cell.label, useNA = "ifany")
+table(res$lineage.label, useNA = "ifany")
 ```
 
 Only Dom1 (6 samples) meets the `n0 = 5` threshold. Dom2 and Dom3 are
@@ -147,7 +147,7 @@ stopifnot(all(abs(apply(M, 1, max) - 1) < 1e-10))
 csts <- linf.csts(M, n0 = 30)
 
 # dCST size distribution
-sort(table(csts$cell.label), decreasing = TRUE)
+sort(table(csts$lineage.label), decreasing = TRUE)
 ```
 
 The landscape is dominated by *Bacteroides* and *Escherichia-Shigella*, with
@@ -171,7 +171,7 @@ important in the diverse gut environment.
 csts2 <- refine.linf.csts(M, csts, n0 = 30)
 
 # Show depth-2 dCSTs with >= 20 samples
-tab2 <- sort(table(csts2$cell.label), decreasing = TRUE)
+tab2 <- sort(table(csts2$lineage.label), decreasing = TRUE)
 tab2[tab2 >= 20]
 ```
 
@@ -196,7 +196,7 @@ legend("topright", "50% dominance", col = "red", lty = 2, lwd = 2, bty = "n")
 ### dCST size distribution
 
 ```{r dcst-barplot, fig.cap = "dCST size distribution at depth 1. Bacteroides and Escherichia-Shigella dominate; rare dCSTs in the tail are collapsed into RARE_DOMINANT."}
-tab1 <- sort(table(csts$cell.label), decreasing = TRUE)
+tab1 <- sort(table(csts$lineage.label), decreasing = TRUE)
 par(mar = c(10, 4, 3, 1))
 bp <- barplot(tab1,
         col = ifelse(names(tab1) == "RARE_DOMINANT", "#e74c3c", "#3498db"),

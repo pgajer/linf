@@ -890,8 +890,8 @@ build_absorb_policy_sensitivity <- function() {
   rows <- list()
   for (i in seq_len(nrow(label_specs))) {
     spec <- label_specs[i, ]
-    for (view in c("absorb", "rare_policy")) {
-      labels <- if (view == "absorb") obj$cst.levels.absorb[[spec$depth]] else obj$cst.levels.rare[[spec$depth]]
+    for (view in c("absorb", "pure_policy")) {
+      labels <- if (view == "absorb") obj$lineage.labels.absorb[[spec$depth]] else obj$lineage.labels.pure[[spec$depth]]
       condition <- ibd_by_run[names(labels)]
       present <- as.character(labels) == spec$label
       present[is.na(present)] <- FALSE
@@ -922,7 +922,7 @@ build_absorb_policy_sensitivity <- function() {
   for (i in seq_len(nrow(label_specs))) {
     spec <- label_specs[i, ]
     absorb <- out[out$label == spec$label & out$view == "absorb", , drop = FALSE]
-    rare <- out[out$label == spec$label & out$view == "rare_policy", , drop = FALSE]
+    rare <- out[out$label == spec$label & out$view == "pure_policy", , drop = FALSE]
     render_rows[[i]] <- sprintf(
       "%s & %d & OR %s; q = %s & OR %s; q = %s \\\\",
       format_label_tex(spec$label),

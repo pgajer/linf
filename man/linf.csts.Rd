@@ -15,7 +15,7 @@ linf.csts(
   return.diagnostics = FALSE,
   return.landmarks = FALSE,
   landmark.types = c("endpoint.max", "endpoint.min"),
-  landmark.view = c("active", "rare", "absorb"),
+  landmark.view = c("active", "pure", "absorb"),
   backend = c("auto", "dense", "sparse")
 )
 }
@@ -32,13 +32,12 @@ length \code{ncol(S)}.}
 sample set.}
 
 \item{low.freq.policy}{Character. One of \code{"pure"} or \code{"absorb"}.
-Default: \code{"pure"}. The legacy value \code{"rare"} is still accepted as
-a deprecated alias for \code{"pure"}.}
+Default: \code{"pure"}.}
 
 \item{rare.label}{Character scalar used when \code{low.freq.policy = "pure"}.
 Default: \code{"RARE_DOMINANT"}.}
 
-\item{tie.method}{Character. Tie handling passed to \code{linf.cells()} and used
+\item{tie.method}{Character. Tie handling passed to \code{linf.dominant.features()} and used
 during absorb reassignment ("first", "random", "error").}
 
 \item{return.diagnostics}{Logical. If TRUE, return reassignment diagnostics.}
@@ -59,11 +58,16 @@ sparse input and otherwise uses the dense path.}
 \value{
 List with:
 \itemize{
-\item \code{cell.index}, \code{cell.id}, \code{cell.label}: active labeling per \code{low.freq.policy}
-\item \code{cell.index.rare}, \code{cell.id.rare}, \code{cell.label.rare}
-\item \code{cell.index.absorb}, \code{cell.id.absorb}, \code{cell.label.absorb}
-\item \code{kept.cells.idx}, \code{kept.cells.id}, \code{kept.cells.lbl}
-\item \code{raw.index}, \code{raw.id}, \code{raw.label}
+\item \code{depth1.feature.index}, \code{depth1.feature.id},
+\code{depth1.feature.label}: active depth-1 assignment
+\item \code{lineage.id}, \code{lineage.label}: active leaf-lineage assignment
+\item policy-specific variants of the depth-1 and leaf-lineage fields,
+ending in \code{.pure} or \code{.absorb}
+\item \code{lineage.ids}, \code{lineage.labels}: active hierarchy, plus
+policy-specific \code{.pure} and \code{.absorb} hierarchies
+\item \code{depth}: current hierarchy depth
+\item \code{retained.feature.indices}, \code{retained.feature.ids}, \code{retained.feature.labels}
+\item \code{provisional.feature.index}, \code{provisional.feature.id}, \code{provisional.feature.label}
 \item \code{feature.ids}, \code{feature.labels}
 \item \code{size.table}, \code{size.table.id}
 \item \code{n0}, \code{low.freq.policy}, \code{rare.label}

@@ -99,14 +99,14 @@ Samples with the same dominant species form a depth-1 dominance sample set.
 The assignment is deterministic and sample-independent: it depends only on
 the sample's own abundance profile, never on other samples.
 
-```{r linf-cells}
-cells <- linf.cells(Z)
+```{r linf-dominant.features}
+dominant.features <- linf.dominant.features(Z)
 
 ## How many distinct dominant taxa?
-cat("Distinct dominant taxa:", length(cells$observed.levels), "\n")
+cat("Distinct dominant taxa:", length(dominant.features$observed.levels), "\n")
 
 ## Dominance sample-set size distribution (top 15)
-dominance_tab <- sort(table(cells$label), decreasing = TRUE)
+dominance_tab <- sort(table(dominant.features$label), decreasing = TRUE)
 head(dominance_tab, 15)
 ```
 
@@ -128,16 +128,14 @@ The package supports two policies for handling low-support provisional sets:
 - **"absorb"**: samples from low-support sets are reassigned to a retained
   state by restricted argmax
 
-The legacy policy name `"rare"` is still accepted as a deprecated alias for `"pure"`.
-
 ```{r depth1-dcsts}
 dcst1 <- linf.csts(Z, n0 = 30, low.freq.policy = "pure")
 
 ## Retained depth-1 states
-dcst1$kept.cells.lbl
+dcst1$retained.feature.labels
 
 ## dCST assignment (pure policy)
-dcst1_tab <- sort(table(dcst1$cell.label), decreasing = TRUE)
+dcst1_tab <- sort(table(dcst1$lineage.label), decreasing = TRUE)
 dcst1_tab
 ```
 
@@ -148,7 +146,7 @@ build a cross-tabulation:
 
 ```{r concordance-depth1}
 ## Build concordance table: rows = dCSTs, columns = Valencia CSTs
-dcst_labels <- dcst1$cell.label.absorb  # use absorb view for clean comparison
+dcst_labels <- dcst1$lineage.label.absorb  # use absorb view for clean comparison
 val_cst     <- valencia2k$cst$Val_CST
 
 concordance <- table(dCST = dcst_labels, Valencia = val_cst)
@@ -189,14 +187,14 @@ dcst2 <- refine.linf.csts(Z, dcst1, n0 = 15, refinement.factor = 2,
                            low.freq.policy = "pure", verbose = FALSE)
 
 ## Depth-2 dCST table
-dcst2_tab <- sort(table(dcst2$cell.label), decreasing = TRUE)
+dcst2_tab <- sort(table(dcst2$lineage.label), decreasing = TRUE)
 dcst2_tab
 ```
 
 ### Concordance with Valencia sub-CSTs
 
 ```{r concordance-depth2}
-dcst2_labels <- dcst2$cell.label.absorb
+dcst2_labels <- dcst2$lineage.label.absorb
 val_subcst   <- valencia2k$cst$Val_subCST
 
 concordance2 <- table(dCST = dcst2_labels, Valencia = val_subcst)
@@ -250,17 +248,17 @@ lm1 <- out$landmarks.depth1$landmarks
 ## Show landmarks for a few key dCST dominance-lineages
 key_lineages <- c("Lactobacillus_crispatus", "Lactobacillus_iners",
                   "Gardnerella_vaginalis")
-key_lm <- lm1[lm1$cell.id %in% key_lineages, ]
+key_lm <- lm1[lm1$lineage.id %in% key_lineages, ]
 
 ## For each dCST, show the endpoint.max landmark's target value
 ## (how dominant is the dominant species in the most extreme sample?)
 ep_max <- key_lm[key_lm$landmark.type == "endpoint.max",
-                 c("cell.label", "point.name", "target.value")]
+                 c("lineage.label", "point.name", "target.value")]
 ep_max
 
 ## And the endpoint.min (least dominant while still assigned to this lineage)
 ep_min <- key_lm[key_lm$landmark.type == "endpoint.min",
-                 c("cell.label", "point.name", "target.value")]
+                 c("lineage.label", "point.name", "target.value")]
 ep_min
 ```
 

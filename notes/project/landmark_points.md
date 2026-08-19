@@ -132,16 +132,16 @@ is not yet part of the package.
 
 `linf` supports two low-frequency views:
 
-- `"rare"`: low-support provisional states remain explicit rare buckets
+- `"pure"`: low-support provisional states remain explicit rare buckets
 - `"absorb"`: samples from low-support states are reassigned into retained
   states
 
 Because of that, landmark computation must always be tied to a specific view.
-The same row can belong to different effective leaves under `"rare"` and
+The same row can belong to different effective leaves under `"pure"` and
 `"absorb"`.
 
 For this reason `linf.landmarks()` takes a `view` argument, and the dCST object
-stores parallel label and ID paths for the active, rare, and absorb views.
+stores parallel label and ID paths for the active, pure, and absorb views.
 
 ## How the Package Computes Landmark Points
 
@@ -164,14 +164,14 @@ Depth-1 dominance sample sets are computed by `linf.csts()`:
 d1 <- linf.csts(
   Z,
   n0 = 50,
-  low.freq.policy = "rare"
+  low.freq.policy = "pure"
 )
 ```
 
 This returns a `linf.csts` object containing:
 
 - active dCST assignments
-- the rare and absorb variants
+- the pure and absorb variants
 - retained-state summaries
 - level-1 lineage IDs and labels
 
@@ -185,7 +185,7 @@ d2 <- refine.linf.csts(
   d1,
   n0 = 25,
   refinement.factor = 2,
-  low.freq.policy = "rare",
+  low.freq.policy = "pure",
   verbose = FALSE
 )
 ```
@@ -208,7 +208,7 @@ lm2 <- linf.landmarks(
   Z,
   d2,
   depth = 2,
-  view = "rare",
+  view = "pure",
   landmark.types = c("endpoint.max", "endpoint.min", "mean.rep", "median.rep")
 )
 ```
@@ -233,7 +233,7 @@ pipe <- linf.dcst.landmark.pipeline(
   n0.depth1 = 50,
   n0.depth2 = 25,
   refinement.factor = 2,
-  low.freq.policy = "rare",
+  low.freq.policy = "pure",
   landmark.view = "absorb"
 )
 ```
@@ -264,21 +264,21 @@ following main components.
 - `feature.ids`
 - `feature.labels`
 
-### `cells`
+### `lineages`
 
-The legacy-named `cells` component is one row per dCST dominance-lineage at
-the requested depth and view. It includes:
+The `lineages` component is one row per dCST dominance-lineage at the requested
+depth and view. It includes:
 
-- `cell.id`
-- `cell.label`
-- `cell.size`
+- `lineage.id`
+- `lineage.label`
+- `lineage.size`
 - `target.feature.id`
 - `target.feature.label`
 - `is.rare`
 - `landmarks.computable`
 
 This table is useful because not every lineage necessarily has computable
-landmarks. For example, explicit rare buckets are represented in `cells`, but
+landmarks. For example, explicit rare buckets are represented in `lineages`, but
 their landmarks are skipped because a rare bucket does not correspond to one
 unique target feature.
 
@@ -286,8 +286,8 @@ unique target feature.
 
 `landmarks` is one row per computed landmark point. It includes:
 
-- `cell.id`
-- `cell.label`
+- `lineage.id`
+- `lineage.label`
 - `landmark.type`
 - `point.index`
 - `point.name`
@@ -332,7 +332,7 @@ Z <- normalize.linf(X)
 d1 <- linf.csts(
   Z,
   n0 = 2,
-  low.freq.policy = "rare"
+  low.freq.policy = "pure"
 )
 
 d2 <- refine.linf.csts(
@@ -340,7 +340,7 @@ d2 <- refine.linf.csts(
   d1,
   n0 = 2,
   refinement.factor = 2,
-  low.freq.policy = "rare",
+  low.freq.policy = "pure",
   verbose = FALSE
 )
 
@@ -348,7 +348,7 @@ lm1 <- linf.landmarks(
   Z,
   d1,
   depth = 1,
-  view = "rare",
+  view = "pure",
   landmark.types = c("endpoint.max", "mean.rep")
 )
 
@@ -356,14 +356,14 @@ lm2 <- linf.landmarks(
   Z,
   d2,
   depth = 2,
-  view = "rare",
+  view = "pure",
   landmark.types = c("endpoint.max", "endpoint.min", "median.rep")
 )
 
-lm1$cells
+lm1$lineages
 lm1$landmarks
 
-lm2$cells
+lm2$lineages
 lm2$landmarks
 ```
 
@@ -376,10 +376,10 @@ call:
 d1 <- linf.csts(
   Z,
   n0 = 50,
-  low.freq.policy = "rare",
+  low.freq.policy = "pure",
   return.landmarks = TRUE,
   landmark.types = c("endpoint.max", "endpoint.min"),
-  landmark.view = "rare"
+  landmark.view = "pure"
 )
 
 d1$landmarks

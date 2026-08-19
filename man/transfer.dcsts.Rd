@@ -8,7 +8,7 @@ transfer.dcsts(
   X,
   csts,
   depth = NULL,
-  view = c("absorb", "active", "rare"),
+  view = c("absorb", "active", "pure"),
   match.by = c("feature.ids", "feature.labels"),
   feature.ids = NULL,
   feature.labels = NULL,
@@ -31,8 +31,8 @@ retained features are treated as zero.}
 depths in \code{csts}.}
 
 \item{view}{Which fitted hierarchy view to transfer into. \code{"absorb"}
-uses \code{cst.levels.absorb}; \code{"rare"} uses
-\code{cst.levels.rare}; \code{"active"} uses \code{cst.levels}.}
+uses \code{lineage.labels.absorb}; \code{"pure"} uses
+\code{lineage.labels.pure}; \code{"active"} uses \code{lineage.labels}.}
 
 \item{match.by}{Whether columns in \code{X} are aligned to
 \code{csts$feature.ids} or \code{csts$feature.labels}.}

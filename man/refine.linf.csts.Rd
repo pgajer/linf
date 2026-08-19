@@ -31,8 +31,7 @@ support >= \code{refinement.factor * n0}.}
 \item{sep}{Character scalar used to concatenate hierarchical labels.}
 
 \item{low.freq.policy}{Character. One of \code{"pure"} or \code{"absorb"}.
-Default: \code{"pure"}. The legacy value \code{"rare"} is still accepted as
-a deprecated alias for \code{"pure"}.}
+Default: \code{"pure"}.}
 
 \item{rare.label}{Character scalar for rare buckets when \code{low.freq.policy = "pure"}.}
 
@@ -43,9 +42,9 @@ a deprecated alias for \code{"pure"}.}
 backend from \code{M} or from \code{csts} when available.}
 }
 \value{
-Updated \code{"linf.csts"} object with \code{cst.depth} increased by one and
-updated \code{cell.label}. Policy-specific views are stored in
-\code{cell.label.rare} and \code{cell.label.absorb}.
+Updated \code{"linf.csts"} object with \code{depth} increased by one and
+updated \code{lineage.label}. Policy-specific views are stored in
+\code{lineage.label.pure} and \code{lineage.label.absorb}.
 }
 \description{
 Selects well-supported leaf dominance-lineages and refines them by dropping

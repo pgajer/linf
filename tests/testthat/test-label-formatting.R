@@ -30,12 +30,12 @@ test_that("linf.feature.labels applies abbreviations and global indices", {
   expect_equal(out, c("L. iners 1", "L. iners 4", "Mega. lornae", "BVAB1"))
 })
 
-test_that("linf.cells keeps ids separate from labels", {
+test_that("linf.dominant.features keeps ids separate from labels", {
   S <- rbind(c(0.7, 0.3), c(0, 0), c(0.1, 0.9))
   ids <- c("asv_1", "asv_4")
   labels <- c("L. iners 1", "L. iners 4")
 
-  out <- linf.cells(S, feature.ids = ids, feature.labels = labels)
+  out <- linf.dominant.features(S, feature.ids = ids, feature.labels = labels)
 
   expect_equal(out$index, c(1L, NA_integer_, 2L))
   expect_equal(out$id, c("asv_1", NA_character_, "asv_4"))
@@ -73,9 +73,9 @@ test_that("refine.linf.csts tracks id paths separately from label paths", {
     verbose = FALSE
   )
 
-  expect_true("cst.id.levels" %in% names(d2))
-  expect_true(all(grepl("^asv_1(__|$)|^asv_4(__|$)", d2$cst.id.levels[[2]][!is.na(d2$cst.id.levels[[2]])])))
-  expect_true(all(grepl("^L\\. iners 1(__|$)|^L\\. iners 4(__|$)", d2$cst.levels[[2]][!is.na(d2$cst.levels[[2]])])))
+  expect_true("lineage.ids" %in% names(d2))
+  expect_true(all(grepl("^asv_1(__|$)|^asv_4(__|$)", d2$lineage.ids[[2]][!is.na(d2$lineage.ids[[2]])])))
+  expect_true(all(grepl("^L\\. iners 1(__|$)|^L\\. iners 4(__|$)", d2$lineage.labels[[2]][!is.na(d2$lineage.labels[[2]])])))
 })
 
 test_that("refine.linf.csts skips refinement of the synthetic rare bucket", {
@@ -104,7 +104,7 @@ test_that("refine.linf.csts skips refinement of the synthetic rare bucket", {
     low.freq.policy = "pure"
   )
 
-  expect_equal(sum(d1$cell.id == d1$rare.label), 4L)
+  expect_equal(sum(d1$lineage.id == d1$rare.label), 4L)
 
   d2 <- refine.linf.csts(
     M,
@@ -116,7 +116,7 @@ test_that("refine.linf.csts skips refinement of the synthetic rare bucket", {
     verbose = FALSE
   )
 
-  expect_equal(d2$cst.depth, 2L)
-  expect_equal(sum(d2$cst.id.levels[[2]] == d2$rare.label), 4L)
-  expect_false(any(grepl(paste0("^", d2$rare.label, "__"), d2$cst.id.levels[[2]])))
+  expect_equal(d2$depth, 2L)
+  expect_equal(sum(d2$lineage.ids[[2]] == d2$rare.label), 4L)
+  expect_false(any(grepl(paste0("^", d2$rare.label, "__"), d2$lineage.ids[[2]])))
 })

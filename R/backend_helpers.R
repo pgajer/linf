@@ -108,16 +108,16 @@ linf.choose.index <- function(candidates, tie.method, error.message) {
   stop(error.message)
 }
 
-linf.cells.sparse <- function(S,
-                              feature.ids = NULL,
-                              feature.labels = NULL,
-                              tie.method = c("first", "random", "error"),
-                              return.value = FALSE) {
+linf.dominant.features.sparse <- function(S,
+                                          feature.ids = NULL,
+                                          feature.labels = NULL,
+                                          tie.method = c("first", "random", "error"),
+                                          return.value = FALSE) {
   tie.method <- match.arg(tie.method)
 
-  prep <- linf.prepare.matrix(S, backend = "sparse", fun.name = "linf.cells")
+  prep <- linf.prepare.matrix(S, backend = "sparse", fun.name = "linf.dominant.features")
   X <- prep$X
-  linf.validate.matrix(X, backend = "sparse", fun.name = "linf.cells")
+  linf.validate.matrix(X, backend = "sparse", fun.name = "linf.dominant.features")
 
   meta <- resolve.linf.feature.meta(X, feature.ids = feature.ids, feature.labels = feature.labels)
   id.lev <- meta$feature.ids
@@ -147,7 +147,7 @@ linf.cells.sparse <- function(S,
     idx[[ii]] <- linf.choose.index(
       ties,
       tie.method = tie.method,
-      error.message = "linf.cells: tie encountered and tie.method = 'error'"
+      error.message = "linf.dominant.features: tie encountered and tie.method = 'error'"
     )
   }
 
