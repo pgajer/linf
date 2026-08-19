@@ -15,12 +15,10 @@ changes the public function and result-field names; the changes are listed in
   0 errors | 0 warnings | 0 notes
 * Win-builder, Windows Server 2022, R 4.5.3:
   0 errors | 0 warnings | 0 notes
-* R-hub, Windows and macOS, R-devel:
-  0 errors | 0 warnings | 0 notes on each completed platform
-* R-hub, Linux, R-devel: pending external runner completion
-* GitHub Actions, Windows release, macOS release, and Ubuntu oldrel:
-  0 errors | 0 warnings | 0 notes on each completed job
-* GitHub Actions, Ubuntu release and devel: pending external runner completion
+* R-hub, Linux, Windows, and macOS, R-devel:
+  0 errors | 0 warnings | 0 notes on each platform
+* GitHub Actions, Ubuntu release/devel/oldrel, Windows release, and macOS
+  release: 0 errors | 0 warnings | 0 notes on each job
 
 ## R CMD check results
 
