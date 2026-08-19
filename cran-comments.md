@@ -1,26 +1,26 @@
 ## Submission
 
-This is a new submission of `linf`, an R package providing utilities for
-L-infinity normalization, dominant-feature assignment, dominant community
-state types, and landmark-profile construction for compositional data.
+This is an update to `linf`. Version 0.2.0 adopts the dominance-sample-set and
+dominance-lineage terminology used in the methods paper. This intentionally
+changes the public function and result-field names; the changes are listed in
+`NEWS.md`. CRAN currently reports no reverse dependencies for `linf`.
 
 ## Test environments
 
-* Local macOS 26.3.1 (Apple Silicon), R 4.5.2:
-  0 errors | 0 warnings | 1 note
-* Local macOS 26.3.1 (Apple Silicon), R-devel (2026-06-24 r90190):
+* Local macOS 26.6.1 (Apple Silicon), R-devel (2026-06-24 r90190):
   0 errors | 0 warnings | 1 note
 * Win-builder, Windows Server 2022, R 4.6.1:
-  0 errors | 0 warnings | 1 note
-* Win-builder, Windows Server 2022, R-devel (2026-07-25 r90301):
-  0 errors | 0 warnings | 1 note
+  0 errors | 0 warnings | 0 notes
+* Win-builder, Windows Server 2022, R-devel (2026-08-17 r90424):
+  0 errors | 0 warnings | 0 notes
 * Win-builder, Windows Server 2022, R 4.5.3:
-  0 errors | 0 warnings | 1 note
-* R-hub, Linux, Windows, and macOS, R-devel:
-  0 errors | 0 warnings | 0 notes on each platform
-* GitHub Actions:
-  Ubuntu (R-oldrel, R-release, and R-devel), Windows (R-release), and
-  macOS (R-release): 0 errors | 0 warnings | 0 notes on each job
+  0 errors | 0 warnings | 0 notes
+* R-hub, Windows and macOS, R-devel:
+  0 errors | 0 warnings | 0 notes on each completed platform
+* R-hub, Linux, R-devel: pending external runner completion
+* GitHub Actions, Windows release, macOS release, and Ubuntu oldrel:
+  0 errors | 0 warnings | 0 notes on each completed job
+* GitHub Actions, Ubuntu release and devel: pending external runner completion
 
 ## R CMD check results
 
@@ -28,15 +28,13 @@ state types, and landmark-profile construction for compositional data.
 
 ## Notes
 
-* `New submission`: this is the first CRAN submission of `linf` and the only
-  NOTE in both local checks.
-* The isolated local R-devel library did not provide the optional suggested
-  package `plotly`; this was reported as INFO, not as a NOTE.
+* The local NOTE is environmental: HTML-manual validation was skipped because
+  the installed HTML Tidy is not recent enough. Win-builder reports no NOTE.
+* The compatibility-breaking terminology changes are intentional and are
+  documented in `NEWS.md`; the package has no CRAN reverse dependencies.
 
 ## Additional checks
 
-* `urlchecker::url_check()` reports that all URLs are correct.
-* Examples, tests, vignettes, and PDF and HTML manuals pass locally and on
-  Win-builder.
-* The bundled AGP-derived subset is reproducible from an explicit,
-  deterministic, seed-controlled selection script.
+* Examples, tests, vignettes, and PDF and HTML manuals pass locally.
+* The built source package contains no personal paths, debugging hooks, paper
+  sources, project notes, or data-preparation directories.
