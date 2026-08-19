@@ -56,8 +56,9 @@ install.packages("linf")
   maximum, mapping each sample to the L∞ unit-ball boundary.
 - **Dominant-feature assignment** — `linf.cells()`: rank-1 assignment
   per sample, returning indices, labels, and level sets.
-- **Truncated dCSTs** — `linf.csts()`: retain dominance sample sets with
-  support ≥ *n*₀, reassign rare dominants by restricted argmax.
+- **Truncated dCSTs** — `linf.csts()`: apply the support threshold *n*₀
+  and either group low-support samples together or absorb them into
+  retained states.
 - **Iterative refinement** — `refine.linf.csts()`: depth-2+ dCSTs via
   successive rank decomposition.
 - **Landmark profiles** — `linf.landmarks()`: representative
@@ -87,31 +88,37 @@ apply(Z, 1, max)
 cells <- linf.cells(Z)
 table(cells$label, useNA = "ifany")
 
-# Truncated dCSTs: retain states with at least n0 samples
-res <- linf.csts(Z, n0 = 4)
+# Absorb-policy dCSTs: reassign low-support samples among retained states
+res <- linf.csts(Z, n0 = 4, low.freq.policy = "absorb")
 table(res$cell.label, useNA = "ifany")
 ```
 
 ## Gut Microbiome Demonstration
 
-The figure below illustrates depth-1 dCSTs in a bundled set of 766 gut
-microbiome samples from the American Gut Project (AGP). The subset was
-deliberately stratified to include every sample assigned to four
-selected uncommon dCSTs; the remaining slots are a seed-42 simple random
-sample from the eligible background. Phenotypes do not influence
-selection. The object is suitable for demonstrating the package
-workflow, but its phenotype frequencies, effect sizes, and p-values must
-not be interpreted as population estimates because inclusion
-probabilities differ by dCST.
+The figure below illustrates depth-1 dCSTs fitted under the absorb
+policy to a bundled set of 766 gut microbiome samples from the American
+Gut Project (AGP). After filtering, 763 samples and 307 taxa remain.
+With *n*₀ = 30, samples from provisional dominance sample sets below the
+support threshold are reassigned to the retained state for which they
+have the largest normalized abundance; no composite rare category is
+shown.
+
+The subset was deliberately stratified to include every sample assigned
+to four selected uncommon dCSTs; the remaining slots are a seed-42
+simple random sample from the eligible background. Phenotypes do not
+influence selection. The object is suitable for demonstrating the
+package workflow, but its phenotype frequencies, effect sizes, and
+p-values must not be interpreted as population estimates because
+inclusion probabilities differ by dCST.
 
 ### dCST Size Distribution
 
-<img src="man/figures/readme-dcst-barplot.png" alt="Barplot of depth-1 dCST sizes in 766 AGP gut samples" width="700" />
+<img src="man/figures/readme-dcst-barplot.png" alt="Barplot of absorb-policy depth-1 dCST sizes in 763 filtered AGP gut samples" width="700" />
 
-The largest depth-1 dCSTs in this selected subset are *Bacteroides*,
-*Escherichia-Shigella*, and `RARE_DOMINANT`. The red bar marks
-`RARE_DOMINANT`—samples whose rank-1 taxon does not form a sufficiently
-supported dominance sample set at the chosen threshold.
+The 763 filtered samples are assigned among seven retained dCSTs. The
+largest are *Bacteroides* (239 samples), *Escherichia-Shigella* (134),
+and *Staphylococcus* (102). In total, 159 samples from low-support
+provisional dominance sample sets are absorbed into retained states.
 
 See `vignette("linf-intro")` for the package-safe demonstration. The
 [full-analysis
@@ -135,20 +142,6 @@ The package ships with two vignettes:
 ``` r
 browseVignettes("linf")
 ```
-
-## Notes & Conventions
-
-- Dot-delimited function names (e.g., `filter.asv`, `normalize.linf`).
-- `linf.cells()` is invariant to positive row scaling (counts vs
-  relatives).
-- Ties resolve to the **first** maximum (as in
-  `max.col(..., ties.method = "first")`).
-- All-zero rows get `NA` for both `index` and `label`.
-
-The function name `linf.cells()` and `cell.*` result fields are retained
-for backward compatibility. In prose, the current nomenclature is
-**dominance sample set** at depth 1 and **dominance-lineage** for a
-retained hierarchical dCST label.
 
 ## Citation
 
