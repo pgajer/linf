@@ -1,0 +1,5 @@
+linf
+Matrix
+knitr
+rmarkdown
+rjtools

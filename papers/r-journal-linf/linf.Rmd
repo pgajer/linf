@@ -1,0 +1,588 @@
+---
+title: "Linf: L-Infinity Normalization and Dominant Community State Types in R"
+date: "2026-08-20"
+abstract: >
+  The linf package provides dependency-light tools for L-infinity
+  normalization of nonnegative compositional matrices and for constructing
+  dominant Community State Types (dCSTs). A sample is first assigned to its
+  largest feature. Well-supported assignments define retained states, while
+  an absorb policy reassigns samples from smaller states among the retained
+  features. The same construction can be refined by successive subdominant
+  features and transferred to new matrices through a frozen hierarchy. The
+  package separates stable feature identifiers from display labels, supports
+  dense and sparse matrices, preserves observed zeros, and includes
+  zero-aware hypercube coordinates and representative landmarks. We describe
+  the software design and demonstrate it with bundled vaginal and gut
+  microbiome data. In the vaginal example, dCSTs correspond closely, but not
+  identically, to established VALENCIA Community State Types. The package is
+  intended as an interpretable compositional summary and does not replace
+  log-ratio inference or establish that microbial communities form discrete
+  clusters.
+draft: true
+author:
+  - name: Pawel Gajer
+    affiliation: University of Maryland School of Medicine
+    address:
+      - Center for Advanced Microbiome Research and Innovation
+      - Institute for Genome Sciences
+      - Baltimore, Maryland, USA
+    email: pgajer@gmail.com
+type: package
+output:
+  rjtools::rjournal_article:
+    self_contained: yes
+    toc: no
+bibliography: RJreferences.bib
+preamble: |
+  \usepackage{float}
+packages:
+  cran:
+    - linf
+    - Matrix
+    - compositions
+    - robCompositions
+    - zCompositions
+  bioc: []
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 4.8,
+  fig.align = "center",
+  out.width = "100%",
+  dev = if (knitr::is_latex_output()) "cairo_pdf" else "png",
+  dpi = 150
+)
+
+library(linf)
+library(Matrix)
+
+stopifnot(packageVersion("linf") >= "0.2.0")
+
+pretty_taxon <- function(x) {
+  x <- sub("^g_", "", x)
+  gsub("_", " ", x, fixed = TRUE)
+}
+
+short_silva_label <- function(x) {
+  ranks <- strsplit(x, ";", fixed = TRUE)[[1L]]
+  labels <- sub("^[a-z]__", "", ranks)
+  labels <- labels[nzchar(labels) & labels != "__"]
+  if (!length(labels)) x else labels[[length(labels)]]
+}
+
+output_alt <- function(text) {
+  if (knitr::is_html_output()) text else NULL
+}
+
+data(valencia2k, package = "linf")
+valencia_linf <- normalize.linf(valencia2k$rel)
+valencia_dominant <- linf.dominant.features(valencia_linf)
+valencia_fit <- linf.csts(
+  valencia_linf,
+  n0 = 30,
+  low.freq.policy = "absorb"
+)
+valencia_fit_depth2 <- refine.linf.csts(
+  valencia_linf,
+  valencia_fit,
+  n0 = 15,
+  refinement.factor = 2,
+  low.freq.policy = "absorb",
+  verbose = FALSE
+)
+valencia_concordance <- table(
+  dCST = valencia_fit$lineage.label,
+  VALENCIA = valencia2k$cst$Val_CST
+)
+valencia_concordance_pct <- 100 * prop.table(valencia_concordance, margin = 1)
+valencia_majority_fraction <-
+  sum(apply(valencia_concordance, 1, max)) / sum(valencia_concordance)
+
+set.seed(20260820)
+training_index <- sort(sample(seq_len(nrow(valencia_linf)), 1500))
+test_index <- setdiff(seq_len(nrow(valencia_linf)), training_index)
+transfer_fit <- linf.csts(
+  valencia_linf[training_index, ],
+  n0 = 25,
+  low.freq.policy = "absorb"
+)
+transfer_fit <- refine.linf.csts(
+  valencia_linf[training_index, ],
+  transfer_fit,
+  n0 = 12,
+  refinement.factor = 2,
+  low.freq.policy = "absorb",
+  verbose = FALSE
+)
+transferred <- transfer.dcsts(
+  valencia_linf[test_index, ],
+  transfer_fit,
+  depth = 1:2,
+  view = "absorb"
+)
+transfer_concordance <- table(
+  dCST = transferred$assignment[, "depth1"],
+  VALENCIA = valencia2k$cst$Val_CST[test_index]
+)
+transfer_majority_fraction <-
+  sum(apply(transfer_concordance, 1, max)) / sum(transfer_concordance)
+
+data(agp_gut, package = "linf")
+gut_filtered <- suppressMessages(filter.asv(
+  agp_gut$counts,
+  min.lib = 1000,
+  prev.prop = 0.05,
+  min.count = 2
+))
+gut_linf <- normalize.linf(gut_filtered$counts)
+gut_fit <- linf.csts(
+  gut_linf,
+  n0 = 30,
+  low.freq.policy = "absorb"
+)
+gut_sizes <- sort(table(gut_fit$lineage.label), decreasing = TRUE)
+names(gut_sizes) <- make.unique(vapply(
+  names(gut_sizes), short_silva_label, character(1L)
+))
+gut_dominance <- apply(gut_filtered$rel, 1, max)
+
+make_sparse_example <- function(n, p = 1000, density = 0.01, seed = 1L) {
+  set.seed(seed + n)
+  x <- Matrix::rsparsematrix(
+    n,
+    p,
+    density = density,
+    rand.x = function(k) rexp(k)
+  )
+  x@x <- abs(x@x)
+  zero_rows <- which(Matrix::rowSums(x) == 0)
+  if (length(zero_rows)) {
+    x[cbind(zero_rows, ((zero_rows - 1L) %% p) + 1L)] <- 1
+  }
+  x
+}
+
+benchmark_linf <- function(n, p = 1000, repetitions = 5L) {
+  sparse_x <- make_sparse_example(n, p)
+  dense_x <- as.matrix(sparse_x)
+  run <- function(x, backend) {
+    median(replicate(repetitions, system.time({
+      z <- normalize.linf(x, backend = backend)
+      linf.csts(
+        z,
+        n0 = 10,
+        low.freq.policy = "absorb",
+        backend = backend
+      )
+    })[["elapsed"]]))
+  }
+  data.frame(
+    Samples = n,
+    Features = p,
+    `Dense MB` = as.numeric(object.size(dense_x)) / 1024^2,
+    `Sparse MB` = as.numeric(object.size(sparse_x)) / 1024^2,
+    `Dense seconds` = run(dense_x, "dense"),
+    `Sparse seconds` = run(sparse_x, "sparse"),
+    check.names = FALSE
+  )
+}
+
+benchmark_results <- rbind(
+  benchmark_linf(1000),
+  benchmark_linf(5000)
+)
+```
+
+# Introduction
+
+Compositional observations record relative amounts. Classical compositional
+data analysis represents strictly positive compositions through log-ratios
+[@aitchison1986book]. In R, \CRANpkg{compositions} implements the Aitchison
+framework, \CRANpkg{robCompositions} adds robust procedures and several
+zero-handling methods, and \CRANpkg{zCompositions} provides methods for
+replacing zeros and left-censored values [@compositionsPackage;
+@robCompositionsPackage; @zCompositionsPackage]. These packages address a
+broad range of estimation and inference problems.
+
+The \CRANpkg{linf} package addresses a different task: describing a sample by
+its dominant feature and, when useful, by a hierarchy of successively
+subdominant features [@linfPackage]. The construction is defined for
+nonnegative matrices and leaves zero coordinates at zero. It provides a
+categorical summary whose labels refer directly to observed features. It does
+not supply regression, differential-abundance testing, or a probabilistic
+model, and it should be used alongside rather than in place of methods suited
+to those questions.
+
+Dominance summaries are particularly familiar in vaginal microbiome research.
+The original vaginal Community State Types (CSTs) were obtained by clustering
+16S rRNA profiles [@ravel2011vaginal]. VALENCIA later provided reproducible
+nearest-centroid assignment to fitted CST reference profiles
+[@france2020valencia]. Dominant Community State Types (dCSTs) are related but
+distinct: their depth-1 labels arise from the largest component, and the
+retained state vocabulary is selected by a minimum support threshold. The
+geometric construction is developed separately by @gajerRavel2025linf. This
+article focuses on its implementation in R.
+
+# Representation and software design
+
+For a nonzero nonnegative row vector $x=(x_1,\ldots,x_p)$,
+
+$$
+z = \frac{x}{\max_j x_j}
+$$
+
+is its L-infinity-normalized representation. Its largest coordinate is one,
+and every zero in $x$ remains zero. The identity of the largest component is
+unchanged by the normalization. The package nevertheless keeps normalization
+as an explicit step because the normalized matrix is also used by refinement,
+landmark, and coordinate functions.
+
+The interface follows four design choices.
+
+1. Samples are rows and features are columns throughout the package.
+2. Stable feature identifiers and human-readable feature labels are stored
+   separately. This avoids using abbreviated taxonomic names as join keys.
+3. Fitted objects retain pure- and absorb-policy assignments. `dcst.view()`
+   switches the active view without refitting the hierarchy.
+4. Dense matrices and sparse `Matrix` objects use separate backends. The
+   default `backend = "auto"` preserves sparse input where the operation can
+   remain sparse [@MatrixPackage].
+
+Table \@ref(tab:interface) summarizes the public workflow. The low-level
+functions remain available for inspection, while
+`linf.dcst.landmark.pipeline()` supplies a compact end-to-end route.
+
+```{r interface, echo=FALSE}
+interface <- data.frame(
+  Stage = c(
+    "Preparation", "Normalization", "Dominance", "Depth 1",
+    "Refinement", "Transfer", "Representatives", "Coordinates"
+  ),
+  Function = c(
+    "filter.asv()", "normalize.linf()", "linf.dominant.features()",
+    "linf.csts()", "refine.linf.csts()", "transfer.dcsts()",
+    "linf.landmarks()", "linf.hypercube.embedding()"
+  ),
+  Output = c(
+    "filtered counts and relatives", "L-infinity relatives",
+    "dominant feature IDs and labels", "fitted depth-1 dCST object",
+    "updated hierarchy", "assignments to a frozen hierarchy",
+    "observed and summary profiles", "bounded reference-component chart"
+  )
+)
+knitr::kable(
+  interface,
+  caption = "Main stages of the linf interface.",
+  booktabs = TRUE
+)
+```
+
+## Dominance, support, and policy views
+
+`linf.dominant.features()` assigns each nonzero row to an index attaining the
+row maximum. The default resolves exact ties by the first maximum in column
+order; `tie.method = "random"` and `tie.method = "error"` make alternative
+choices explicit. All-zero rows receive `NA` at this stage.
+
+`linf.csts()` counts the resulting depth-1 dominance sample sets. Features
+with support of at least `n0` form the retained vocabulary. Under the pure
+policy, samples from smaller provisional sets are labeled `RARE_DOMINANT`.
+Under the absorb policy, each such sample is reassigned to its largest retained
+feature. The latter often gives a more convenient biological summary, but it
+is cohort-fitted: changing the cohort can change which features pass `n0`.
+
+```{r toy-workflow}
+toy <- rbind(
+  s1 = c(A = 8, B = 2, C = 0),
+  s2 = c(A = 7, B = 3, C = 0),
+  s3 = c(A = 2, B = 9, C = 1),
+  s4 = c(A = 1, B = 2, C = 8),
+  s5 = c(A = 4, B = 4, C = 0)
+)
+
+toy_linf <- normalize.linf(toy)
+toy_dominant <- linf.dominant.features(toy_linf)
+toy_fit <- linf.csts(
+  toy_linf,
+  n0 = 2,
+  low.freq.policy = "absorb"
+)
+
+data.frame(
+  sample = rownames(toy),
+  dominant = toy_dominant$label,
+  dCST = toy_fit$lineage.label
+)
+```
+
+`refine.linf.csts()` removes the feature used at the current lineage depth and
+repeats the support calculation within selected parent lineages. For example,
+a lineage led by *Lactobacillus iners* and then *Gardnerella vaginalis* records
+an ordered dominance sequence rather than an unordered pair. Automated refinement uses
+`refinement.factor` to restrict refinement to sufficiently large parents;
+`refine.linf.csts.iter()` also permits an explicit set of lineages.
+
+## Frozen transfer and zero-aware coordinates
+
+Raw dominant-feature assignment is sample-wise once the feature universe,
+column order, and tie rule are fixed. A thresholded dCST hierarchy is not:
+`n0` and the realized child lineages are fitted from a reference cohort.
+`transfer.dcsts()` freezes that hierarchy, aligns a new matrix by feature ID or
+label, and walks each new sample through the realized tree. Extra query
+features are ignored, and missing reference features are treated as zero.
+
+The package also implements a bounded homogeneous-coordinate chart. Ordinary
+ratios to a reference component are undefined when that component is zero.
+`linf.hypercube.embedding()` uses finite ratios when possible and a boundary
+extension otherwise, returning $p-1$ coordinates in the unit cube.
+
+```{r embedding-example}
+coordinate_example <- rbind(
+  finite_reference = c(A = 2, B = 1, C = 1),
+  zero_reference = c(A = 0, B = 2, C = 1)
+)
+
+round(linf.hypercube.embedding(
+  coordinate_example,
+  reference = "A",
+  lambda = log(2)
+), 3)
+```
+
+# Vaginal microbiome workflow
+
+The bundled `valencia2k` object is a seed-controlled, sub-CST-stratified sample
+of 2,000 profiles from the public VALENCIA training data. It contains 178
+taxonomic features, the original VALENCIA labels, and read depths. The object
+is small enough to rebuild the examples during article rendering. Its purpose
+is software demonstration, not estimation of CST prevalence.
+
+```{r vaginal-fit}
+data(valencia2k, package = "linf")
+
+z <- normalize.linf(valencia2k$rel)
+dominant <- linf.dominant.features(z)
+fit <- linf.csts(z, n0 = 30, low.freq.policy = "absorb")
+fit2 <- refine.linf.csts(
+  z,
+  fit,
+  n0 = 15,
+  refinement.factor = 2,
+  low.freq.policy = "absorb",
+  verbose = FALSE
+)
+
+c(
+  observed_dominant_features = length(dominant$observed.levels),
+  retained_depth1_states = length(fit$retained.feature.labels),
+  realized_depth2_states = length(unique(fit2$lineage.label))
+)
+```
+
+The 35 observed dominant features reduce to nine retained depth-1 states at
+`n0 = 30`; depth-2 refinement yields 28 realized absorb-policy lineages. Figure
+\@ref(fig:valencia-concordance) compares the depth-1 assignments with the seven
+VALENCIA CST labels. The weighted within-dCST majority fraction is
+`r sprintf("%.1f", 100 * valencia_majority_fraction)`%. This number describes
+the cross-tabulation and is not an accuracy estimate against a biological gold
+standard. VALENCIA uses similarities to fitted reference centroids, whereas a
+dCST uses ordered component dominance and a support threshold.
+
+```{r valencia-concordance, echo=FALSE, fig.pos="H", fig.cap="Row percentages for absorb-policy depth-1 dCSTs versus VALENCIA CST assignments in the bundled 2,000-sample vaginal dataset. The constructions correspond closely but are not identical.", fig.alt=output_alt("Heat map with nine dCST rows and seven VALENCIA CST columns. Most rows have one dark cell, indicating that each dCST is concentrated in one VALENCIA CST.")}
+pct <- valencia_concordance_pct
+row_labels <- vapply(rownames(pct), pretty_taxon, character(1L))
+col_labels <- colnames(pct)
+
+op <- par(mar = c(4.2, 11.5, 1.2, 1.5))
+image(
+  x = seq_len(ncol(pct)),
+  y = seq_len(nrow(pct)),
+  z = t(pct[nrow(pct):1, , drop = FALSE]),
+  col = hcl.colors(20, "Blues", rev = TRUE),
+  zlim = c(0, 100),
+  axes = FALSE,
+  xlab = "VALENCIA CST",
+  ylab = ""
+)
+axis(1, at = seq_len(ncol(pct)), labels = col_labels)
+axis(2, at = seq_len(nrow(pct)), labels = rev(row_labels), las = 2, cex.axis = 0.8)
+for (i in seq_len(nrow(pct))) {
+  for (j in seq_len(ncol(pct))) {
+    value <- pct[nrow(pct) - i + 1L, j]
+    if (value >= 1) {
+      text(j, i, sprintf("%.0f", value), cex = 0.65,
+           col = if (value >= 55) "white" else "black")
+    }
+  }
+}
+box()
+par(op)
+```
+
+To demonstrate transfer without refitting, we selected 1,500 profiles with a
+fixed seed, fitted a depth-2 absorb-policy hierarchy, and assigned the 500 held
+out profiles with `transfer.dcsts()`. The held-out weighted within-dCST majority
+fraction relative to VALENCIA CSTs was
+`r sprintf("%.1f", 100 * transfer_majority_fraction)`%. The calculation tests
+the software's frozen-vocabulary path; it is not an independent clinical
+validation because both subsets originate from the same public training
+resource.
+
+```{r transfer-example}
+transferred <- transfer.dcsts(
+  valencia_linf[test_index, ],
+  transfer_fit,
+  depth = 1:2,
+  view = "absorb"
+)
+
+head(transferred$assignment, 4)
+```
+
+# Gut microbiome and sparse matrices
+
+The bundled `agp_gut` object contains 766 American Gut Project profiles
+[@mcdonald2018american]. It is deliberately stratified to retain several
+uncommon dCSTs and is not a probability sample. The phenotype columns support
+data-alignment demonstrations but must not be used to estimate prevalence or
+population associations.
+
+After the documented library-size and prevalence filters, the example retains
+`r nrow(gut_filtered$counts)` samples and `r ncol(gut_filtered$counts)`
+features. Seven features pass `n0 = 30` under the absorb policy. The median
+largest relative abundance is `r sprintf("%.2f", median(gut_dominance))`, much
+lower than in strongly single-species-dominated vaginal communities. Figure
+\@ref(fig:gut-summary) shows both the retained dCST sizes and the continuous
+dominance-strength distribution. The latter should be inspected alongside the
+categorical assignments because a dCST label alone does not record how strongly
+the named feature dominates.
+
+```{r gut-summary, echo=FALSE, fig.pos="H", fig.cap="Absorb-policy depth-1 dCST sizes (left) and dominance strength (right) in the filtered, stratified American Gut demonstration subset. The subset is intended for software demonstration rather than population inference.", fig.alt=output_alt("Two panels. The left is a bar chart of seven gut dCST sizes, led by Bacteroides. The right is a histogram of the largest relative abundance per sample, concentrated below one half with a right tail.")}
+op <- par(mfrow = c(1, 2), mar = c(7.5, 4, 2, 0.5))
+bars <- barplot(
+  gut_sizes,
+  col = "#3B82A0",
+  border = NA,
+  las = 2,
+  cex.names = 0.72,
+  ylab = "Samples",
+  main = "Depth-1 dCST size"
+)
+text(bars, gut_sizes, labels = gut_sizes, pos = 3, cex = 0.7)
+par(mar = c(4, 4, 2, 0.5))
+hist(
+  gut_dominance,
+  breaks = seq(0, 1, by = 0.04),
+  col = "#75B798",
+  border = "white",
+  xlab = "Largest relative abundance",
+  ylab = "Samples",
+  main = "Dominance strength"
+)
+abline(v = median(gut_dominance), lty = 2, lwd = 1.5, col = "#7A1F5C")
+par(op)
+```
+
+Sparse input matters when a feature universe is large and each sample contains
+few observed features. Table \@ref(tab:benchmark-table) reports a small synthetic
+benchmark with 1,000 features and 1% nonzero entries. Each time is the median
+of five calls that normalize the matrix and fit absorb-policy depth-1 dCSTs.
+The values are build-machine measurements rather than general performance
+guarantees. In this example the sparse representation reduces object size by
+about two orders of magnitude and also lowers elapsed time.
+
+```{r benchmark-table, echo=FALSE}
+benchmark_display <- benchmark_results
+benchmark_display[, c("Dense MB", "Sparse MB")] <- round(
+  benchmark_display[, c("Dense MB", "Sparse MB")], 2
+)
+benchmark_display[, c("Dense seconds", "Sparse seconds")] <- round(
+  benchmark_display[, c("Dense seconds", "Sparse seconds")], 3
+)
+knitr::kable(
+  benchmark_display,
+  format = "pipe",
+  caption = "Dense and sparse backend benchmark on synthetic matrices with 1% nonzero entries.",
+  booktabs = TRUE
+)
+```
+
+The core package imports only \CRANpkg{Matrix} and `methods`. Plotting,
+interactive displays, testing, and vignette generation remain suggested
+dependencies. Sparse normalization and dominance assignment do not densify the
+input. `linf.hypercube.embedding()` returns a dense matrix by design because
+its bounded homogeneous coordinates are generally dense.
+
+# Limitations and appropriate use
+
+Several aspects of a dCST analysis require an explicit scientific decision.
+
+- **Zeros:** the software preserves observed zeros but cannot determine whether
+  a zero means biological absence, censoring, or inadequate sampling.
+- **Feature universe:** dominance is defined relative to the columns supplied.
+  Taxonomic aggregation, filtering, or a different reference database can
+  change assignments.
+- **Ties and ordering:** exact ties require a declared rule. The default first
+  maximum is reproducible only when column order is retained.
+- **Support threshold:** `n0` controls the fitted state vocabulary. Sensitivity
+  to plausible thresholds should be reported.
+- **Transfer:** portable assignment requires a frozen reference hierarchy and
+  stable feature identifiers. Recomputing `n0` on a target cohort is refitting,
+  not transfer.
+- **Interpretation:** dCSTs summarize ordered dominance. They do not prove that
+  the underlying composition distribution is clustered, and they do not
+  replace continuous analyses when effect estimation is the objective.
+
+The pure policy is useful when the scientific question requires retained states
+to contain only samples originally dominated by the named feature. The absorb
+policy is easier to display and guarantees assignment when at least one state
+is retained, but its reassigned samples may be only weakly dominated by that
+feature. The package stores both views so this choice can be inspected rather
+than hidden.
+
+# Reproducibility and availability
+
+\CRANpkg{linf} is distributed under the MIT license from CRAN and developed at
+<https://github.com/pgajer/linf>. The package includes the two demonstration
+datasets used here, source scripts under `data-raw/`, unit tests, and two
+installed workflow vignettes. This article is generated from `linf.Rmd` with
+the R Journal's \CRANpkg{rjtools} format. The build installs the current package
+into an isolated article library, evaluates every result, runs the citation and
+journal-format checks, and produces a submission archive. The submission gate
+also verifies that the described version is publicly available on CRAN.
+
+# Discussion
+
+The package turns component dominance into a compact R workflow while keeping
+the decisions that affect interpretation visible. Raw assignment is
+sample-wise; support filtering is cohort-fitted; and transfer freezes the
+resulting hierarchy. This distinction is important in applications where a
+state vocabulary is learned in one cohort and reused elsewhere.
+
+The vaginal example shows why the representation can be useful: dominant
+features recover much of the broad structure encoded by VALENCIA CSTs while
+retaining labels tied directly to taxa. The differences are equally important.
+VALENCIA considers similarity to complete reference profiles, whereas dCSTs
+consider ordered dominance within a retained vocabulary. In more even
+communities, such as the gut demonstration, dominance strength provides
+essential context and a categorical label may be less informative.
+
+Future package development should emphasize diagnostics for threshold
+sensitivity, summaries of transfer uncertainty, and methods for comparing
+frozen hierarchies across cohorts. Such diagnostics can be added without
+changing the central separation between feature identity, fitted state
+vocabulary, and sample assignment.
+
+# Acknowledgments
+
+Generative AI tools were used for editorial assistance and software-supported
+quality checks during preparation of this article. The author reviewed and
+takes responsibility for the scientific interpretation, citations, code, and
+final text.

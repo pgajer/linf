@@ -1,0 +1,29 @@
+# `linf` R Journal paper
+
+This directory is the canonical workspace for the software-focused R Journal
+article describing the `linf` package. The mathematical development remains in
+the separate `Linf_paper` arXiv workspace; this article cites that work and
+focuses on package design, workflows, implementation, reproducibility, and
+limitations.
+
+The canonical manuscript source is `linf.Rmd`. Generated article wrappers,
+HTML, PDF, figures, and submission archives are build artifacts.
+
+## Build
+
+From this directory:
+
+```sh
+make render
+make citation-check
+make rj-check
+make audit
+make draft-bundle
+```
+
+`make render` installs the current package source into an isolated library and
+then evaluates the article. `make submission-audit` additionally requires the
+manuscript's target package version to be public on CRAN and runs the package's
+full clean CRAN-style check.
+
+Final rendered artifacts are written to `output/pdf/` and `output/html/`.
