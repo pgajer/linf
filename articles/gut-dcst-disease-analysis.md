@@ -1,0 +1,282 @@
+# Exploratory Gut dCST-Phenotype Analysis
+
+This companion article presents the full 5,000-sample American Gut
+Project (AGP) dCST analysis that underlies the curated subset in
+[`vignette("linf-intro")`](https://pgajer.github.io/linf/articles/linf-intro.md).
+Unlike the package vignette, this article is *not* built during
+`R CMD check`—it uses external data files and takes several minutes to
+run. The code below is fully reproducible given access to the
+PRIME-processed AGP abundance table.
+
+The association calculations are exploratory and unadjusted. They do not
+establish causal, diagnostic, or clinically validated relationships.
+
+## Data
+
+The analysis uses the PRIME-processed SILVA species-level abundance
+table for PRJEB11419 (American Gut Project, ~26,900 gut samples) and the
+accompanying sample metadata. These files are produced by the [PRIME
+pipeline](https://github.com/pgajer/PRIME). Their locations are supplied
+through environment variables rather than maintainer-specific paths.
+
+``` r
+
+library(linf)
+
+abundance_file <- Sys.getenv("LINF_AGP_ABUNDANCE")
+metadata_file  <- Sys.getenv("LINF_AGP_METADATA")
+if (!nzchar(abundance_file) || !nzchar(metadata_file)) {
+  stop("Set LINF_AGP_ABUNDANCE and LINF_AGP_METADATA before rendering.")
+}
+```
+
+## Phase 1: Data Loading and Subsampling
+
+``` r
+
+## Load full abundance table
+counts_full <- read.csv(gzfile(abundance_file), row.names = 1,
+                         check.names = FALSE)
+counts_full <- as.matrix(counts_full)
+storage.mode(counts_full) <- "integer"
+cat("Full abundance table:", nrow(counts_full), "samples x",
+    ncol(counts_full), "taxa\n")
+
+## Load metadata and filter to AGP
+meta_full <- read.csv(gzfile(metadata_file), stringsAsFactors = FALSE)
+agp_meta  <- meta_full[meta_full$BioProject == "PRJEB11419", ]
+cat("AGP metadata:", nrow(agp_meta), "samples\n")
+
+## Align to abundance table
+common <- intersect(rownames(counts_full), agp_meta$Run)
+counts_agp <- counts_full[common, ]
+agp_meta   <- agp_meta[match(common, agp_meta$Run), ]
+cat("Matched:", nrow(counts_agp), "samples\n")
+```
+
+``` r
+
+## Subsample 5,000 samples with adequate library size
+set.seed(42L)
+lib_sizes <- rowSums(counts_agp)
+good_idx  <- which(lib_sizes >= 1000)
+cat("Samples with lib >= 1000:", length(good_idx), "\n")
+
+sub_idx    <- sort(sample(good_idx, min(5000, length(good_idx))))
+counts_sub <- counts_agp[sub_idx, ]
+meta_sub   <- agp_meta[sub_idx, ]
+cat("Subsampled:", nrow(counts_sub), "samples\n")
+```
+
+## Phase 2: QC and dCST Construction
+
+``` r
+
+filt <- filter.asv(counts_sub, min.lib = 1000, prev.prop = 0.05,
+                   min.count = 2)
+cat("After filtering:", nrow(filt$counts), "samples x",
+    ncol(filt$counts), "taxa\n")
+```
+
+``` r
+
+## L-infinity normalization
+M <- normalize.linf(filt$counts)
+
+## Depth-1 dCSTs
+csts1 <- linf.csts(M, n0 = 50)
+cat("\nDepth-1 dCSTs:\n")
+print(sort(table(csts1$lineage.label), decreasing = TRUE))
+
+## Depth-2 refinement
+csts2 <- refine.linf.csts(M, csts1, n0 = 50)
+cat("\nDepth-2 dCSTs (n >= 50):\n")
+tab2 <- sort(table(csts2$lineage.label), decreasing = TRUE)
+print(tab2[tab2 >= 50])
+```
+
+``` r
+
+tab1 <- sort(table(csts1$lineage.label), decreasing = TRUE)
+par(mar = c(12, 4, 3, 1))
+barplot(tab1,
+        col = ifelse(names(tab1) == "RARE_DOMINANT", "#e74c3c", "#3498db"),
+        las = 2, cex.names = 0.8,
+        ylab = "Number of samples",
+        main = "Gut dCST Size Distribution (AGP, n=5000, depth 1)")
+```
+
+## Phase 3: Exploratory Phenotype Association Testing
+
+``` r
+
+## Parse disease indicators from AGP Phenotype field
+conditions <- c(
+  IBS = "irritable bowel syndrome",
+  IBD = "inflammatory bowel disease",
+  Diabetes = "diabetes",
+  Autoimmune = "autoimmune",
+  Seasonal_allergies = "seasonal allergies",
+  Migraine = "migraine",
+  Acid_reflux = "acid reflux",
+  Lung_disease = "lung disease",
+  Cardiovascular_disease = "cardiovascular disease",
+  Skin_condition = "skin condition"
+)
+
+## Build disease indicator matrix aligned to filtered samples
+kept_runs <- rownames(M)
+meta_aligned <- meta_sub[match(kept_runs, meta_sub$Run), ]
+
+disease_mat <- matrix(0L, nrow = nrow(meta_aligned), ncol = length(conditions),
+                      dimnames = list(kept_runs, names(conditions)))
+for (i in seq_along(conditions)) {
+  pheno <- tolower(as.character(meta_aligned$Phenotype))
+  disease_mat[, i] <- as.integer(grepl(conditions[i], pheno, fixed = TRUE))
+}
+
+## Add obesity from BMI
+bmi <- suppressWarnings(as.numeric(meta_aligned$Host_BMI))
+disease_mat <- cbind(disease_mat, Obesity = as.integer(!is.na(bmi) & bmi >= 30))
+```
+
+``` r
+
+## Fisher's exact test for each dCST x condition pair
+dcst_labels <- csts1$lineage.label
+kept_dcsts  <- names(tab1[tab1 >= 30])
+
+results <- data.frame()
+
+for (dcst in kept_dcsts) {
+  in_dcst <- dcst_labels == dcst
+
+  for (j in seq_len(ncol(disease_mat))) {
+    cond <- colnames(disease_mat)[j]
+    d <- disease_mat[, j]
+
+    a <- sum(in_dcst & d == 1)
+    b <- sum(in_dcst & d == 0)
+    cc <- sum(!in_dcst & d == 1)
+    dd <- sum(!in_dcst & d == 0)
+
+    ft <- fisher.test(matrix(c(a, b, cc, dd), nrow = 2))
+
+    ## Woolf CI for log-OR
+    if (all(c(a, b, cc, dd) > 0)) {
+      se <- sqrt(1/a + 1/b + 1/cc + 1/dd)
+      ci <- exp(log(ft$estimate) + c(-1, 1) * 1.96 * se)
+    } else {
+      ci <- c(NA, NA)
+    }
+
+    results <- rbind(results, data.frame(
+      dCST = dcst, Condition = cond,
+      n_dCST = sum(in_dcst), n_cases = a,
+      prev_dCST = round(a / sum(in_dcst), 3),
+      prev_pop  = round((a + cc) / length(dcst_labels), 3),
+      OR = round(ft$estimate, 2),
+      CI_low = round(ci[1], 2), CI_high = round(ci[2], 2),
+      p_value = ft$p.value,
+      stringsAsFactors = FALSE
+    ))
+  }
+}
+
+## BH correction
+results$q_value <- p.adjust(results$p_value, method = "BH")
+results <- results[order(results$p_value), ]
+rownames(results) <- NULL
+
+cat("Total tests:", nrow(results), "\n")
+cat("Exploratory q < 0.05 signals:", sum(results$q_value < 0.05), "\n")
+```
+
+``` r
+
+## Display top 20 associations
+top20 <- head(results, 20)
+top20$p_value <- formatC(top20$p_value, format = "e", digits = 2)
+top20$q_value <- formatC(top20$q_value, format = "e", digits = 2)
+knitr::kable(top20, caption = "Top 20 exploratory dCST-phenotype results by p-value",
+             row.names = FALSE)
+```
+
+``` r
+
+## Heatmap of exploratory signals
+sig <- results[results$q_value < 0.2, ]
+if (nrow(sig) > 0) {
+  or_mat <- tapply(sig$OR, list(sig$dCST, sig$Condition), identity)
+  or_mat[is.na(or_mat)] <- 1  # neutral OR
+
+  log2_or <- log2(or_mat)
+  log2_or[log2_or > 3] <- 3
+  log2_or[log2_or < -3] <- -3
+
+  ## Simple heatmap
+  image(t(log2_or), col = colorRampPalette(c("#2166AC", "white", "#B2182B"))(50),
+        axes = FALSE, main = "Exploratory dCST x Phenotype Results (q < 0.2)")
+  axis(1, at = seq(0, 1, length.out = nrow(log2_or)),
+       labels = rownames(log2_or), las = 2, cex.axis = 0.7)
+  axis(2, at = seq(0, 1, length.out = ncol(log2_or)),
+       labels = colnames(log2_or), las = 1, cex.axis = 0.8)
+}
+```
+
+## Phase 4: Landmark Analysis
+
+``` r
+
+## Landmark points for depth-1 dCSTs
+lm1 <- linf.landmarks(M, csts1, depth = 1,
+                       landmark.types = c("endpoint.max", "endpoint.min",
+                                          "mean.rep"))
+
+## Focus on disease-associated dCSTs
+disease_dcsts <- unique(sig$dCST[sig$q_value < 0.1])
+
+for (dcst_name in disease_dcsts) {
+  if (!dcst_name %in% names(lm1)) next
+  cat("\n===", dcst_name, "===\n")
+  lm_dcst <- lm1[[dcst_name]]
+
+  for (ltype in c("endpoint.max", "mean.rep")) {
+    if (!ltype %in% names(lm_dcst)) next
+    cat(ltype, ": sample", lm_dcst[[ltype]]$sample, "\n")
+    profile <- lm_dcst[[ltype]]$profile
+    top5 <- head(sort(profile, decreasing = TRUE), 5)
+    for (i in seq_along(top5)) {
+      cat(sprintf("  %-40s %.3f\n", names(top5)[i], top5[i]))
+    }
+  }
+}
+```
+
+## Descriptive and Exploratory Summary
+
+Using 5,000 AGP gut samples, the dCST pipeline identified:
+
+- **14 depth-1 dCSTs** (n0 = 50), dominated by *Bacteroides* (~35%) and
+  *Escherichia-Shigella* (~23%).
+- **12.8% of samples in RARE_DOMINANT**, representing the tail of
+  unusual single-species dominance.
+- **11 exploratory dCST-disease signals** with q \< 0.05 after
+  Benjamini-Hochberg correction in this analysis cohort.
+
+The strongest signals include *Prevotella_7* enrichment in obesity (OR ~
+4.0), *Pasteurellaceae* enrichment in cardiovascular disease (OR ~ 8.8),
+*Prevotella_9* depletion in autoimmune conditions (OR ~ 0.3), and
+*Escherichia-Shigella* enrichment in IBS (OR ~ 1.5).
+
+These unadjusted results show how dCST labels can be carried into a
+downstream association workflow. They require covariate adjustment,
+sensitivity analyses, and independent validation before biological or
+clinical interpretation.
+
+## Session Info
+
+``` r
+
+sessionInfo()
+```
