@@ -8,8 +8,8 @@ dcst.view(csts, view = c("absorb", "pure"))
 }
 \arguments{
 \item{csts}{A \code{"linf.csts"} object produced by \code{\link{linf.csts}}
-and optionally refined by \code{\link{refine.linf.csts}} /
-\code{\link{refine.linf.csts.iter}}.}
+and optionally refined by repeated calls to
+\code{\link{refine.linf.csts}}.}
 
 \item{view}{Character. The stored policy view to activate: \code{"pure"} or
 \code{"absorb"}.}

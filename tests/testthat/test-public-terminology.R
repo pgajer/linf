@@ -29,4 +29,7 @@ test_that("removed public aliases are not present", {
   expect_false(exists("linf.cells", envir = ns, inherits = FALSE))
   expect_false(exists("collapse.rare", envir = ns, inherits = FALSE))
   expect_false(exists("expand.rare", envir = ns, inherits = FALSE))
+  expect_false(exists("asv.to.linf.csts", envir = ns, inherits = FALSE))
+  expect_false(exists("latex.linf.csts", envir = ns, inherits = FALSE))
+  expect_false(exists("refine.linf.csts.iter", envir = ns, inherits = FALSE))
 })

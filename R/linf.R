@@ -189,10 +189,6 @@ linf.normalize.low.freq.policy <- function(low.freq.policy) {
 }
 
 linf.active.low.freq.view <- function(low.freq.policy) {
-  if (is.null(low.freq.policy)) {
-    return("active")
-  }
-
   if (identical(low.freq.policy, "pure")) {
     return("pure")
   }
@@ -481,71 +477,83 @@ linf.csts <- function(S,
     out
 }
 
-#' From counts to filtered, normalized, truncated dCSTs
-#'
-#' Convenience pipeline: runs \code{filter.asv()} on counts, computes
-#' L-infinity-normalized relatives on the filtered counts, and assigns
-#' truncated dCSTs.
-#'
-#' @param S.counts Numeric matrix of counts (samples x features).
-#' @param ... Arguments passed to \code{filter.asv()} (e.g., \code{min.lib},
-#'   \code{prev.prop}, \code{min.count}, \code{min.rel}).
-#' @param backend Character. Matrix backend to use: \code{"auto"},
-#'   \code{"dense"}, or \code{"sparse"}.
-#' @return A list with:
-#' \itemize{
-#'   \item \code{filter}: the full result from \code{filter.asv()}.
-#'   \item \code{linf.rel}: L-infinity-normalized matrix on filtered counts.
-#'   \item \code{csts}: result from \code{linf.csts()} on \code{linf.rel}.
-#' }
-#'
-#' @examples
-#' set.seed(1)
-#' S <- matrix(rpois(100, lambda = 5), nrow = 20, ncol = 5)
-#' res <- asv.to.linf.csts(S, min.lib = 10, prev.prop = 0.1, min.count = 1)
-#' names(res)
-#' apply(res$linf.rel, 1, max)  # should be 1 (or 0 for all-zero rows)
-#'
-#' @export
-asv.to.linf.csts <- function(S.counts,
-                             ...,
-                             backend = c("auto", "dense", "sparse")) {
-  filt <- filter.asv(S.counts, ...)
-  M <- normalize.linf(filt$counts, backend = backend)
-  cst <- linf.csts(M, backend = backend)
-  list(filter = filt, linf.rel = M, csts = cst)
-}
-
 validate.linf.csts <- function(obj) {
-
-  stopifnot(is.list(obj))
-  stopifnot(!is.null(obj$lineage.label))
-
-  n <- length(obj$lineage.label)
-
-  ## Case 1: explicit hierarchy (refined dCSTs)
-  if (!is.null(obj$lineage.labels)) {
-
-    stopifnot(is.list(obj$lineage.labels))
-    stopifnot(!is.null(obj$depth))
-    stopifnot(obj$depth == length(obj$lineage.labels))
-
-    for (lvl in obj$lineage.labels) {
-      stopifnot(length(lvl) == n)
-    }
-
-    return(invisible(TRUE))
+  if (!inherits(obj, "linf.csts") || !is.list(obj)) {
+    stop("dCST object must inherit from class 'linf.csts'", call. = FALSE)
   }
 
-  ## A depth-1 dCST has no explicit hierarchy.
-  return(invisible(TRUE))
+  required <- c(
+    "depth1.feature.index", "depth1.feature.id", "depth1.feature.label",
+    "depth1.feature.index.pure", "depth1.feature.id.pure",
+    "depth1.feature.label.pure", "depth1.feature.index.absorb",
+    "depth1.feature.id.absorb", "depth1.feature.label.absorb",
+    "lineage.id", "lineage.label", "lineage.id.pure",
+    "lineage.label.pure", "lineage.id.absorb", "lineage.label.absorb",
+    "lineage.ids", "lineage.labels", "lineage.ids.pure",
+    "lineage.labels.pure", "lineage.ids.absorb", "lineage.labels.absorb",
+    "feature.ids", "feature.labels", "matrix.backend", "depth", "n0",
+    "low.freq.policy", "rare.label"
+  )
+  missing.fields <- setdiff(required, names(obj))
+  if (length(missing.fields)) {
+    stop(
+      paste0(
+        "incompatible dCST object; rebuild it with linf >= 0.2.0. Missing: ",
+        paste(missing.fields, collapse = ", ")
+      ),
+      call. = FALSE
+    )
+  }
+
+  if (!is.numeric(obj$depth) || length(obj$depth) != 1L ||
+      is.na(obj$depth) || obj$depth < 1L || obj$depth %% 1 != 0) {
+    stop("dCST object has an invalid depth", call. = FALSE)
+  }
+  depth <- as.integer(obj$depth)
+  n <- length(obj$lineage.label)
+
+  hierarchy.fields <- c(
+    "lineage.ids", "lineage.labels", "lineage.ids.pure",
+    "lineage.labels.pure", "lineage.ids.absorb", "lineage.labels.absorb"
+  )
+  for (field in hierarchy.fields) {
+    hierarchy <- obj[[field]]
+    if (!is.list(hierarchy) || length(hierarchy) != depth ||
+        any(lengths(hierarchy) != n)) {
+      stop(
+        sprintf("dCST object has an invalid %s hierarchy", field),
+        call. = FALSE
+      )
+    }
+  }
+
+  sample.fields <- c(
+    "depth1.feature.index", "depth1.feature.id", "depth1.feature.label",
+    "depth1.feature.index.pure", "depth1.feature.id.pure",
+    "depth1.feature.label.pure", "depth1.feature.index.absorb",
+    "depth1.feature.id.absorb", "depth1.feature.label.absorb",
+    "lineage.id", "lineage.label", "lineage.id.pure",
+    "lineage.label.pure", "lineage.id.absorb", "lineage.label.absorb"
+  )
+  if (any(vapply(obj[sample.fields], length, integer(1)) != n)) {
+    stop("dCST object contains sample assignments of inconsistent length", call. = FALSE)
+  }
+
+  if (length(obj$feature.ids) != length(obj$feature.labels)) {
+    stop("dCST object has inconsistent feature metadata", call. = FALSE)
+  }
+  if (!obj$low.freq.policy %in% c("pure", "absorb")) {
+    stop("dCST object has an invalid low.freq.policy", call. = FALSE)
+  }
+
+  invisible(TRUE)
 }
 
 #' Refine a dCST hierarchy by one level
 #'
 #' @description
-#' Selects well-supported leaf dominance-lineages and refines them by dropping
-#' the dominant feature(s) encoded in the parent label path and re-applying
+#' Selects leaf dominance-lineages and refines them by dropping the dominant
+#' feature(s) encoded in the parent lineage-ID path and re-applying
 #' \code{\link{linf.csts}} to the remaining features. The resulting child
 #' labels are appended to the parent label using \code{sep}.
 #'
@@ -553,9 +561,12 @@ validate.linf.csts <- function(obj) {
 #' \code{low.freq.policy = "pure"}, rare buckets at depth >= 2 become
 #' parent-prefixed automatically via the hierarchical \code{paste(parent, child, sep = sep)}.
 #'
-#' @param M Numeric matrix (samples x features) used for refinement. Column names
-#'   should match feature labels used in dCST names.
+#' @param M Numeric matrix (samples x features) used for refinement. Columns
+#'   must correspond, in order, to the stable feature IDs stored in \code{csts}.
 #' @param csts A \code{"linf.csts"} object.
+#' @param lineages.to.refine Optional character vector of leaf
+#'   dominance-lineage IDs to refine. When \code{NULL}, lineages are selected
+#'   automatically using \code{refinement.factor * n0}.
 #' @param n0 Integer >= 1. Minimum support required to retain a child lineage
 #'   (passed to \code{linf.csts}).
 #' @param refinement.factor Numeric > 0. Auto-refine parent lineages with
@@ -576,6 +587,7 @@ validate.linf.csts <- function(obj) {
 #' @export
 refine.linf.csts <- function(M,
                              csts,
+                             lineages.to.refine = NULL,
                              n0 = 50,
                              refinement.factor = 2,
                              sep = "__",
@@ -587,7 +599,7 @@ refine.linf.csts <- function(M,
     validate.linf.csts(csts)
 
     low.freq.policy <- linf.normalize.low.freq.policy(low.freq.policy)
-    if (missing(backend) && !is.null(csts$matrix.backend)) {
+    if (missing(backend)) {
         backend <- csts$matrix.backend
     }
     prep <- linf.prepare.matrix(M, backend = backend, fun.name = "refine.linf.csts")
@@ -609,41 +621,6 @@ refine.linf.csts <- function(M,
         stop("refine.linf.csts: rare.label must be a non-empty character scalar")
     }
 
-    ## Initialize hierarchy if missing
-    if (is.null(csts$lineage.labels)) {
-        csts$lineage.labels <- list(level1 = csts$lineage.label)
-        csts$depth <- 1L
-        csts$sep <- sep
-
-        ## Ensure both policy-specific views exist at depth 1
-        if (is.null(csts$lineage.label.pure)) {
-            csts$lineage.label.pure <- csts$lineage.label
-        }
-        if (is.null(csts$lineage.label.absorb)) {
-            csts$lineage.label.absorb <- csts$lineage.label
-        }
-
-        csts$lineage.labels.pure <- list(level1 = csts$lineage.label.pure)
-        csts$lineage.labels.absorb <- list(level1 = csts$lineage.label.absorb)
-    }
-
-    if (is.null(csts$lineage.ids)) {
-        csts$lineage.ids <- list(level1 = csts$lineage.id %||% csts$lineage.label)
-    }
-
-    if (is.null(csts$feature.ids)) {
-        csts$feature.ids <- colnames(M)
-    }
-    if (is.null(csts$feature.labels)) {
-        csts$feature.labels <- csts$feature.ids
-    }
-
-    ## Ensure both stored policy views are present.
-    if (is.null(csts$lineage.labels.pure)) csts$lineage.labels.pure <- csts$lineage.labels
-    if (is.null(csts$lineage.labels.absorb)) csts$lineage.labels.absorb <- csts$lineage.labels
-    if (is.null(csts$lineage.ids.pure)) csts$lineage.ids.pure <- csts$lineage.ids
-    if (is.null(csts$lineage.ids.absorb)) csts$lineage.ids.absorb <- csts$lineage.ids
-
     depth <- csts$depth + 1L
     parent.ids <- csts$lineage.ids[[depth - 1L]]
     parent.ids.pure <- csts$lineage.ids.pure[[depth - 1L]]
@@ -661,21 +638,40 @@ refine.linf.csts <- function(M,
     lineage.sizes <- sort(table(parent.ids), decreasing = TRUE)
 
     threshold <- refinement.factor * n0
-    refine.lineages <- names(lineage.sizes[lineage.sizes >= threshold])
+    if (is.null(lineages.to.refine)) {
+        lineages.to.refine <- names(lineage.sizes[lineage.sizes >= threshold])
+        lineages.to.refine <- setdiff(lineages.to.refine, rare.label)
+        selection.mode <- "automatic"
+    } else {
+        if (!is.character(lineages.to.refine) || anyNA(lineages.to.refine) ||
+            any(!nzchar(lineages.to.refine))) {
+            stop("refine.linf.csts: lineages.to.refine must be NULL or a character vector of lineage IDs")
+        }
+        lineages.to.refine <- unique(lineages.to.refine)
+        unknown <- setdiff(lineages.to.refine, names(lineage.sizes))
+        if (length(unknown)) {
+            stop(
+                "refine.linf.csts: unknown lineage ID(s): ",
+                paste(unknown, collapse = ", ")
+            )
+        }
+        if (rare.label %in% lineages.to.refine) {
+            stop("refine.linf.csts: the synthetic rare lineage cannot be refined")
+        }
+        selection.mode <- "explicit"
+    }
 
     if (verbose) {
         cat("========================================\n")
-        cat("AUTO-REFINEMENT MODE\n")
+        cat(toupper(selection.mode), "REFINEMENT MODE\n")
         cat("========================================\n")
-        cat("Refinement threshold:", threshold, "\n")
-        cat("Dominance-lineages selected for refinement:", length(refine.lineages), "\n\n")
+        if (selection.mode == "automatic") {
+            cat("Refinement threshold:", threshold, "\n")
+        }
+        cat("Dominance-lineages selected for refinement:", length(lineages.to.refine), "\n\n")
     }
 
-    for (lineage in refine.lineages) {
-        ## Rare buckets are synthetic catch-all groups, not real feature paths.
-        ## They should never be refined further.
-        if (identical(lineage, rare.label)) next
-
+    for (lineage in lineages.to.refine) {
         idx <- which(parent.ids == lineage)
         parent.id.pure <- parent.ids.pure[idx[1L]]
         parent.id.absorb <- parent.ids.absorb[idx[1L]]
@@ -708,8 +704,8 @@ refine.linf.csts <- function(M,
                              rare.label = rare.label,
                              backend = backend)
 
-        sub.ids.pure <- sub.csts$lineage.id.pure %||% sub.csts$lineage.label.pure
-        sub.ids.absorb <- sub.csts$lineage.id.absorb %||% sub.csts$lineage.label.absorb
+        sub.ids.pure <- sub.csts$lineage.id.pure
+        sub.ids.absorb <- sub.csts$lineage.id.absorb
         sub.labels.pure <- sub.csts$lineage.label.pure
         sub.labels.absorb <- sub.csts$lineage.label.absorb
 
@@ -756,190 +752,6 @@ refine.linf.csts <- function(M,
     csts
 }
 
-#' Iteratively refine dCSTs by one additional level
-#'
-#' @description
-#' Appends one refinement level to an existing dCST hierarchy produced by
-#' \code{\link{refine.linf.csts}} or \code{\link{refine.linf.csts.iter}}.
-#' Dominance-lineages to refine can be provided explicitly or selected
-#' automatically based on \code{refinement.factor * n0}.
-#'
-#' @param M Numeric matrix used for refinement.
-#' @param refined A \code{"linf.csts"} object with an existing hierarchy.
-#' @param lineages.to.refine Character vector of leaf dominance-lineage IDs to
-#'   refine, or NULL for auto-selection.
-#' @param n0 Integer >= 1. Minimum support required to retain a child lineage.
-#' @param refinement.factor Numeric > 0. Auto-selection threshold multiplier.
-#' @param sep Character scalar used to concatenate hierarchical labels.
-#' @param low.freq.policy Character. One of \code{"pure"} or \code{"absorb"}.
-#'   Default: \code{"pure"}.
-#' @param rare.label Character scalar for rare buckets when \code{low.freq.policy = "pure"}.
-#' @param verbose Logical. If TRUE, print progress information.
-#' @param backend Character. Matrix backend to use: \code{"auto"},
-#'   \code{"dense"}, or \code{"sparse"}. The default \code{"auto"} inherits the
-#'   backend from \code{M} or from \code{refined} when available.
-#'
-#' @return Updated \code{"linf.csts"} object with \code{depth} increased by one.
-#'
-#' @export
-refine.linf.csts.iter <- function(M,
-                                  refined,
-                                  lineages.to.refine = NULL,
-                                  n0 = 50,
-                                  refinement.factor = 5,
-                                  sep = "__",
-                                  low.freq.policy = c("pure", "absorb"),
-                                  rare.label = "RARE_DOMINANT",
-                                  verbose = TRUE,
-                                  backend = c("auto", "dense", "sparse")) {
-
-    validate.linf.csts(refined)
-
-    low.freq.policy <- linf.normalize.low.freq.policy(low.freq.policy)
-    if (missing(backend) && !is.null(refined$matrix.backend)) {
-        backend <- refined$matrix.backend
-    }
-    prep <- linf.prepare.matrix(M, backend = backend, fun.name = "refine.linf.csts.iter")
-    M <- prep$X
-    backend <- prep$backend
-    linf.validate.matrix(M, backend = backend, fun.name = "refine.linf.csts.iter")
-
-    if (!is.numeric(n0) || length(n0) != 1L || n0 < 1 || n0 %% 1 != 0) {
-        stop("refine.linf.csts.iter: n0 must be integer >= 1")
-    }
-    if (!is.numeric(refinement.factor) || length(refinement.factor) != 1L ||
-        !is.finite(refinement.factor) || refinement.factor <= 0) {
-        stop("refine.linf.csts.iter: refinement.factor must be a finite numeric > 0")
-    }
-    if (!is.character(sep) || length(sep) != 1L || !nzchar(sep)) {
-        stop("refine.linf.csts.iter: sep must be a non-empty character scalar")
-    }
-    if (!is.character(rare.label) || length(rare.label) != 1L || !nzchar(rare.label)) {
-        stop("refine.linf.csts.iter: rare.label must be a non-empty character scalar")
-    }
-
-    ## Ensure both stored policy views are present.
-    if (is.null(refined$lineage.labels.pure)) refined$lineage.labels.pure <- refined$lineage.labels
-    if (is.null(refined$lineage.labels.absorb)) refined$lineage.labels.absorb <- refined$lineage.labels
-    if (is.null(refined$lineage.ids)) refined$lineage.ids <- list(level1 = refined$lineage.id %||% refined$lineage.label)
-    if (is.null(refined$lineage.ids.pure)) refined$lineage.ids.pure <- refined$lineage.ids
-    if (is.null(refined$lineage.ids.absorb)) refined$lineage.ids.absorb <- refined$lineage.ids
-    if (is.null(refined$feature.ids)) refined$feature.ids <- colnames(M)
-    if (is.null(refined$feature.labels)) refined$feature.labels <- refined$feature.ids
-
-    depth <- refined$depth
-
-    parent.ids <- refined$lineage.ids[[depth]]
-    parent.ids.pure <- refined$lineage.ids.pure[[depth]]
-    parent.ids.absorb <- refined$lineage.ids.absorb[[depth]]
-    parent.labels <- refined$lineage.labels[[depth]]
-    parent.labels.pure <- refined$lineage.labels.pure[[depth]]
-    parent.labels.absorb <- refined$lineage.labels.absorb[[depth]]
-
-    lineage.sizes <- sort(table(parent.ids), decreasing = TRUE)
-    threshold <- refinement.factor * n0
-
-    if (is.null(lineages.to.refine)) {
-        lineages.to.refine <- names(lineage.sizes[lineage.sizes >= threshold])
-    }
-
-    if (verbose) {
-        cat("Auto-selecting dominance-lineages for iterative refinement (threshold =", threshold, "):\n")
-        for (c in lineages.to.refine) {
-            cat(" -", c, ":", lineage.sizes[c], "samples\n")
-        }
-        cat("\n")
-    }
-
-    new.ids.pure <- parent.ids.pure
-    new.ids.absorb <- parent.ids.absorb
-    new.labels.pure <- parent.labels.pure
-    new.labels.absorb <- parent.labels.absorb
-
-    for (lineage in lineages.to.refine) {
-        ## Rare buckets are synthetic catch-all groups, not real feature paths.
-        ## They should never be refined further.
-        if (identical(lineage, rare.label)) next
-
-        idx <- which(parent.ids == lineage)
-        parent.id.pure <- parent.ids.pure[idx[1L]]
-        parent.id.absorb <- parent.ids.absorb[idx[1L]]
-        parent.label.pure <- parent.labels.pure[idx[1L]]
-        parent.label.absorb <- parent.labels.absorb[idx[1L]]
-
-        parents <- strsplit(lineage, sep, fixed = TRUE)[[1]]
-        drop.idx <- match(parents, refined$feature.ids)
-        drop.idx <- drop.idx[!is.na(drop.idx)]
-
-        ## If no parent features match columns (e.g., the lineage is a rare
-        ## bucket), do not drop any columns.
-        ## Note: x[, -integer(0)] selects *zero* columns, so we must handle this explicitly.
-        if (length(drop.idx) == 0L) {
-            M.sub <- M[idx, , drop = FALSE]
-        } else if (length(drop.idx) >= ncol(M)) {
-            ## Dropping all columns would yield an empty matrix; nothing to refine.
-            next
-        } else {
-            M.sub <- M[idx, -drop.idx, drop = FALSE]
-        }
-
-        if (nrow(M.sub) == 0L || ncol(M.sub) == 0L) next
-
-        sub.csts <- linf.csts(M.sub,
-                             feature.ids = refined$feature.ids[-drop.idx],
-                             feature.labels = refined$feature.labels[-drop.idx],
-                             n0 = n0,
-                             low.freq.policy = low.freq.policy,
-                             rare.label = rare.label,
-                             backend = backend)
-
-        sub.ids.pure <- sub.csts$lineage.id.pure %||% sub.csts$lineage.label.pure
-        sub.ids.absorb <- sub.csts$lineage.id.absorb %||% sub.csts$lineage.label.absorb
-        sub.labels.pure <- sub.csts$lineage.label.pure
-        sub.labels.absorb <- sub.csts$lineage.label.absorb
-
-        ## If refinement yields no retained child lineages, skip.
-        if (all(sub.labels.pure == rare.label)) next
-
-        new.ids.pure[idx] <- paste(parent.id.pure, sub.ids.pure, sep = sep)
-        new.ids.absorb[idx] <- paste(parent.id.absorb, sub.ids.absorb, sep = sep)
-        new.labels.pure[idx] <- paste(parent.label.pure, sub.labels.pure, sep = sep)
-        new.labels.absorb[idx] <- paste(parent.label.absorb, sub.labels.absorb, sep = sep)
-    }
-
-    refined$lineage.ids[[depth + 1L]] <- if (low.freq.policy == "pure") new.ids.pure else new.ids.absorb
-    refined$lineage.ids.pure[[depth + 1L]] <- new.ids.pure
-    refined$lineage.ids.absorb[[depth + 1L]] <- new.ids.absorb
-    refined$lineage.labels.pure[[depth + 1L]] <- new.labels.pure
-    refined$lineage.labels.absorb[[depth + 1L]] <- new.labels.absorb
-
-    if (low.freq.policy == "pure") {
-        new.labels <- new.labels.pure
-    } else {
-        new.labels <- new.labels.absorb
-    }
-
-    refined$lineage.labels[[depth + 1L]] <- new.labels
-    refined$depth <- depth + 1L
-
-    refined$lineage.id.pure <- new.ids.pure
-    refined$lineage.id.absorb <- new.ids.absorb
-    refined$lineage.id <- refined$lineage.ids[[depth + 1L]]
-    refined$lineage.label.pure <- new.labels.pure
-    refined$lineage.label.absorb <- new.labels.absorb
-    refined$lineage.label <- new.labels
-
-    refined$low.freq.policy <- low.freq.policy
-    refined$rare.label <- rare.label
-    refined$matrix.backend <- backend
-    refined$sep <- sep
-    refined$landmarks <- NULL
-
-    class(refined) <- "linf.csts"
-
-    refined
-}
-
 #' Select a stored dCST policy view
 #'
 #' @description
@@ -947,8 +759,8 @@ refine.linf.csts.iter <- function(M,
 #' \code{"pure"} or \code{"absorb"} hierarchy. This does not recompute dCSTs.
 #'
 #' @param csts A \code{"linf.csts"} object produced by \code{\link{linf.csts}}
-#'   and optionally refined by \code{\link{refine.linf.csts}} /
-#'   \code{\link{refine.linf.csts.iter}}.
+#'   and optionally refined by repeated calls to
+#'   \code{\link{refine.linf.csts}}.
 #' @param view Character. The stored policy view to activate: \code{"pure"} or
 #'   \code{"absorb"}.
 #'
@@ -996,14 +808,8 @@ print.linf.csts <- function(x, ...) {
 
   validate.linf.csts(x)
 
-  ## Determine hierarchy
-  if (is.null(x$lineage.labels)) {
-    levels <- list(level1 = x$lineage.label)
-    max.depth <- 1L
-  } else {
-    levels <- x$lineage.labels
-    max.depth <- x$depth
-  }
+  levels <- x$lineage.labels
+  max.depth <- x$depth
 
   cat("\n================================================================================\n")
   cat("Dominant Community State Type Hierarchy\n")
@@ -1011,11 +817,8 @@ print.linf.csts <- function(x, ...) {
   cat("Total samples: ", length(x$lineage.label), "\n")
   cat("Max depth:     ", max.depth, "\n")
 
-  ## Policy stamp (if available)
-  if (!is.null(x$low.freq.policy) && !is.null(x$rare.label)) {
-    cat("Low-freq policy: ", x$low.freq.policy,
-        " (rare.label: ", x$rare.label, ")\n", sep = "")
-  }
+  cat("Low-freq policy: ", x$low.freq.policy,
+      " (rare.label: ", x$rare.label, ")\n", sep = "")
 
   cat("--------------------------------------------------------------------------------\n\n")
 
@@ -1041,12 +844,7 @@ summary.linf.csts <- function(object, ...) {
 
   validate.linf.csts(object)
 
-  ## Determine hierarchy
-  if (is.null(object$lineage.labels)) {
-    levels <- list(level1 = object$lineage.label)
-  } else {
-    levels <- object$lineage.labels
-  }
+  levels <- object$lineage.labels
 
   out <- data.frame(
     depth = integer(0),
@@ -1074,140 +872,4 @@ summary.linf.csts <- function(object, ...) {
   }
 
   out
-}
-
-escape.latex <- function(x) {
-  x <- gsub("\\\\", "\\\\textbackslash{}", x, fixed = TRUE)
-  x <- gsub("([#$%&_{}])", "\\\\\\1", x, perl = TRUE)
-  x <- gsub("~", "\\\\textasciitilde{}", x, fixed = TRUE)
-  x <- gsub("\\^", "\\\\textasciicircum{}", x, perl = TRUE)
-  x
-}
-
-df.to.latex <- function(df,
-                        caption = NULL,
-                        label = NULL,
-                        digits = 1,
-                        include.rownames = FALSE,
-                        booktabs = TRUE,
-                        use.float = TRUE,
-                        print = FALSE) {
-  if (!is.data.frame(df)) stop("df.to.latex: df must be a data.frame")
-
-  if (!include.rownames) {
-    row_spec <- "l"
-  } else {
-    row_spec <- "l"
-    df <- cbind(Row = rownames(df), df, stringsAsFactors = FALSE)
-  }
-
-  col_spec <- paste0(row_spec, paste(rep("r", ncol(df) - 1L), collapse = ""))
-  if (ncol(df) == 1L) col_spec <- "l"
-
-  tab_top <- if (booktabs) "\\toprule" else "\\hline"
-  tab_mid <- if (booktabs) "\\midrule" else "\\hline"
-  tab_bot <- if (booktabs) "\\bottomrule" else "\\hline"
-
-  lines <- character(0)
-  if (use.float) lines <- c(lines, "\\begin{table}[htbp]", "\\centering")
-  if (!is.null(caption)) lines <- c(lines, paste0("\\caption{", escape.latex(caption), "}"))
-  if (!is.null(label)) lines <- c(lines, paste0("\\label{", escape.latex(label), "}"))
-
-  lines <- c(lines, paste0("\\begin{tabular}{", col_spec, "}"), tab_top)
-
-  header <- paste(escape.latex(colnames(df)), collapse = " & ")
-  lines <- c(lines, paste0(header, " \\\\"), tab_mid)
-
-  for (i in seq_len(nrow(df))) {
-    vals <- vapply(df[i, , drop = FALSE], function(v) {
-      if (is.numeric(v)) {
-        format(round(v, digits), trim = TRUE, scientific = FALSE)
-      } else {
-        as.character(v)
-      }
-    }, character(1))
-    vals <- escape.latex(vals)
-    lines <- c(lines, paste0(paste(vals, collapse = " & "), " \\\\"))
-  }
-
-  lines <- c(lines, tab_bot, "\\end{tabular}")
-  if (use.float) lines <- c(lines, "\\end{table}")
-
-  if (isTRUE(print)) cat(paste(lines, collapse = "\n"), "\n")
-  lines
-}
-
-#' Render dCSTs as a LaTeX table
-#'
-#' @description
-#' Generates LaTeX code summarizing dCSTs at a specified hierarchy depth.
-#' Uses the explicit dCST hierarchy stored in \code{lineage.labels} when available.
-#'
-#' @param csts A dCST object produced by \code{linf.csts()} and optionally refined
-#'   by \code{refine.linf.csts()} or \code{refine.linf.csts.iter()}.
-#' @param depth Integer. dCST depth to render. Default is the leaf level
-#'   (\code{csts$depth}). If \code{lineage.labels} is missing, depth is ignored.
-#' @param caption Character or NULL. LaTeX table caption.
-#' @param label Character or NULL. LaTeX label for referencing the table.
-#' @param digits Integer. Digits to display for percentages. Default: 1.
-#' @param include.percent Logical. If TRUE, include percent of total samples.
-#'
-#' @return Character vector containing LaTeX table code.
-#'
-#' @details
-#' This function is hierarchy-aware. It does not infer dCST depth from label
-#' strings. If the dCST object does not contain \code{lineage.labels}, the function
-#' falls back to using \code{lineage.label} as a single-level dCST.
-#'
-#' @export
-latex.linf.csts <- function(csts,
-                            depth = NULL,
-                            caption = NULL,
-                            label = NULL,
-                            digits = 1,
-                            include.percent = TRUE) {
-
-  validate.linf.csts(csts)
-
-  ## Determine labels at requested depth
-  if (!is.null(csts$lineage.labels)) {
-    if (is.null(depth)) {
-      depth <- csts$depth
-    }
-    if (depth < 1 || depth > csts$depth) {
-      stop("latex.linf.csts: invalid depth")
-    }
-    labels <- csts$lineage.labels[[depth]]
-  } else {
-    ## Backward compatibility: flat dCST
-    labels <- csts$lineage.label
-    depth <- 1L
-  }
-
-  tab <- sort(table(labels), decreasing = TRUE)
-  total <- sum(tab)
-
-  df <- data.frame(
-    CST = names(tab),
-    Samples = as.integer(tab),
-    stringsAsFactors = FALSE
-  )
-
-  if (include.percent) {
-    df$Percent <- round(100 * df$Samples / total, digits)
-  }
-
-  ## Build LaTeX using df.to.latex()
-  latex <- df.to.latex(
-    df,
-    caption = caption,
-    label = label,
-    digits = digits,
-    include.rownames = FALSE,
-    booktabs = TRUE,
-    use.float = TRUE,
-    print = FALSE
-  )
-
-  invisible(latex)
 }

@@ -72,7 +72,7 @@ dcst2 <- refine.linf.csts(
   verbose = FALSE
 )
 
-dcst3 <- refine.linf.csts.iter(
+dcst3 <- refine.linf.csts(
   linf.rel,
   dcst2,
   n0 = n0,

@@ -1,7 +1,7 @@
 Package: linf
 Type: Package
 Title: L-Infinity Normalization and Dominant Community State Types
-Version: 0.2.0
+Version: 0.3.0
 Authors@R:
     person("Pawel", "Gajer", , "pgajer@gmail.com", role = c("aut", "cre"))
 Author: Pawel Gajer [aut, cre]

@@ -12,7 +12,7 @@
 #'   retained features are treated as zero.
 #' @param csts A fitted \code{"linf.csts"} object produced by
 #'   \code{\link{linf.csts}} and optionally refined by
-#'   \code{\link{refine.linf.csts}} or \code{\link{refine.linf.csts.iter}}.
+#'   repeated calls to \code{\link{refine.linf.csts}}.
 #' @param depth Integer vector of requested depths. Defaults to all fitted
 #'   depths in \code{csts}.
 #' @param view Which fitted hierarchy view to transfer into. \code{"absorb"}
@@ -112,16 +112,6 @@ transfer.dcsts <- function(X,
     feature.ids = csts$feature.ids,
     feature.labels = csts$feature.labels
   )
-  if (is.null(ref.features)) {
-    ref.features <- switch(
-      match.by,
-      feature.ids = csts$feature.labels,
-      feature.labels = csts$feature.ids
-    )
-  }
-  if (is.null(ref.features)) {
-    stop("transfer.dcsts: csts does not contain feature metadata for matching")
-  }
   ref.features <- as.character(ref.features)
 
   query.features <- switch(
