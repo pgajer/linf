@@ -1,3 +1,22 @@
+# linf 0.3.0
+
+This release simplifies the public API and requires the explicit dCST object
+structure introduced in `linf` 0.2.0.
+
+- `refine.linf.csts()` now supports both automatic and explicit
+  dominance-lineage selection through `lineages.to.refine`; it can be called
+  repeatedly to add successive hierarchy depths.
+- `refine.linf.csts.iter()` has been removed in favor of repeated calls to
+  `refine.linf.csts()`.
+- The narrow convenience wrapper `asv.to.linf.csts()` has been removed. Use
+  `filter.asv()`, `normalize.linf()`, and `linf.csts()` explicitly so that each
+  stage and its dCST parameters remain visible.
+- The standalone formatter `latex.linf.csts()` has been removed; dCST summary
+  tables can be formatted with general reporting tools such as `knitr::kable()`.
+- Pre-0.2 flat dCST objects are no longer accepted. Functions consuming fitted
+  dCSTs now require the explicit active, pure-policy, and absorb-policy
+  hierarchies produced by `linf.csts()`.
+
 # linf 0.2.0
 
 This release adopts the dominance-sample-set and dominance-lineage terminology

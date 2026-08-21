@@ -1,24 +1,17 @@
 ## Submission
 
-This is an update to `linf`. Version 0.2.0 adopts the dominance-sample-set and
-dominance-lineage terminology used in the methods paper. This intentionally
-changes the public function and result-field names; the changes are listed in
-`NEWS.md`. CRAN currently reports no reverse dependencies for `linf`.
+This is an update to `linf`. Version 0.3.0 consolidates hierarchy refinement in
+`refine.linf.csts()`, removes three superseded public functions, and requires
+the explicit dCST object structure introduced in version 0.2.0. These
+intentional API changes are listed in `NEWS.md`. CRAN currently reports no
+reverse dependencies for `linf`.
 
 ## Test environments
 
 * Local macOS 26.6.1 (Apple Silicon), R-devel (2026-06-24 r90190):
   0 errors | 0 warnings | 1 note
-* Win-builder, Windows Server 2022, R 4.6.1:
-  0 errors | 0 warnings | 0 notes
-* Win-builder, Windows Server 2022, R-devel (2026-08-17 r90424):
-  0 errors | 0 warnings | 0 notes
-* Win-builder, Windows Server 2022, R 4.5.3:
-  0 errors | 0 warnings | 0 notes
-* R-hub, Linux, Windows, and macOS, R-devel:
-  0 errors | 0 warnings | 0 notes on each platform
-* GitHub Actions, Ubuntu release/devel/oldrel, Windows release, and macOS
-  release: 0 errors | 0 warnings | 0 notes on each job
+
+Remote checks for version 0.3.0 have not yet been run.
 
 ## R CMD check results
 
@@ -26,10 +19,11 @@ changes the public function and result-field names; the changes are listed in
 
 ## Notes
 
-* The local NOTE is environmental: HTML-manual validation was skipped because
-  the installed HTML Tidy is not recent enough. Win-builder reports no NOTE.
-* The compatibility-breaking terminology changes are intentional and are
-  documented in `NEWS.md`; the package has no CRAN reverse dependencies.
+* One NOTE records that version 0.2.0 was updated on CRAN today. Version 0.3.0
+  is not being submitted immediately; this file will be refreshed before its
+  eventual submission.
+* The API cleanup is intentional and documented in `NEWS.md`; the package has
+  no CRAN reverse dependencies.
 
 ## Additional checks
 

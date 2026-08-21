@@ -15,8 +15,7 @@ the lineage mean or median.
 In the current `linf` implementation:
 
 - depth-1 dominance sample sets are computed by `linf.csts()`
-- deeper dCST levels are computed by `refine.linf.csts()` or
-  `refine.linf.csts.iter()`
+- deeper dCST levels are computed by repeated calls to `refine.linf.csts()`
 - landmark points are computed by `linf.landmarks()`
 - depth-1 landmarks can optionally be attached directly by
   `linf.csts(..., return.landmarks = TRUE)`
@@ -190,10 +189,9 @@ d2 <- refine.linf.csts(
 )
 ```
 
-Further depth can be added with either:
-
-- repeated calls to `refine.linf.csts.iter()`
-- repeated calls to `refine.linf.csts()` if that matches the workflow better
+Further depth is added by passing each refined object to another call to
+`refine.linf.csts()`. Lineages can be selected automatically or supplied
+explicitly through `lineages.to.refine`.
 
 Internally, refinement drops the parent dominant feature(s) and recomputes
 dominance on the remaining columns. This is exactly why a refined lineage has

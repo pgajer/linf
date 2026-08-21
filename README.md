@@ -60,13 +60,12 @@ install.packages("linf")
   and either group low-support samples together or absorb them into
   retained states.
 - **Iterative refinement** — `refine.linf.csts()`: depth-2+ dCSTs via
-  successive rank decomposition.
+  successive rank decomposition, with automatic or explicit lineage
+  selection.
 - **Landmark profiles** — `linf.landmarks()`: representative
   compositional profiles (endpoint max/min, mean) for each dCST.
 - **ASV filtering** — `filter.asv()`: library-size and prevalence
   filtering for amplicon count matrices.
-- **Pipeline wrapper** — `asv.to.linf.csts()`: counts → filter →
-  normalise → truncated dCSTs in one call.
 
 ## Quick Start
 

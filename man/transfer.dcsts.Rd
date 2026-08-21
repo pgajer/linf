@@ -25,7 +25,7 @@ retained features are treated as zero.}
 
 \item{csts}{A fitted \code{"linf.csts"} object produced by
 \code{\link{linf.csts}} and optionally refined by
-\code{\link{refine.linf.csts}} or \code{\link{refine.linf.csts.iter}}.}
+repeated calls to \code{\link{refine.linf.csts}}.}
 
 \item{depth}{Integer vector of requested depths. Defaults to all fitted
 depths in \code{csts}.}

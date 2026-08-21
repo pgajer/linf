@@ -1,6 +1,6 @@
 ---
 title: "Linf: L-Infinity Normalization and Dominant Community State Types in R"
-date: "2026-08-20"
+date: "2026-08-21"
 abstract: >
   The linf package provides dependency-light tools for L-infinity
   normalization of nonnegative compositional matrices and for constructing
@@ -63,7 +63,7 @@ knitr::opts_chunk$set(
 library(linf)
 library(Matrix)
 
-stopifnot(packageVersion("linf") >= "0.2.0")
+stopifnot(packageVersion("linf") >= "0.3.0")
 
 pretty_taxon <- function(x) {
   x <- sub("^g_", "", x)
@@ -326,8 +326,9 @@ data.frame(
 repeats the support calculation within selected parent lineages. For example,
 a lineage led by *Lactobacillus iners* and then *Gardnerella vaginalis* records
 an ordered dominance sequence rather than an unordered pair. Automated refinement uses
-`refinement.factor` to restrict refinement to sufficiently large parents;
-`refine.linf.csts.iter()` also permits an explicit set of lineages.
+`refinement.factor` to restrict refinement to sufficiently large parents. The
+optional `lineages.to.refine` argument instead permits an explicit set of
+lineages. Repeated calls add successive hierarchy depths.
 
 ## Frozen transfer and zero-aware coordinates
 

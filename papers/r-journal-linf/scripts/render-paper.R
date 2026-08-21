@@ -6,8 +6,8 @@ if (length(missing)) {
   stop("Missing build package(s): ", paste(missing, collapse = ", "))
 }
 
-if (utils::packageVersion("linf") < "0.2.0") {
-  stop("The article requires linf >= 0.2.0; found ", utils::packageVersion("linf"))
+if (utils::packageVersion("linf") < "0.3.0") {
+  stop("The article requires linf >= 0.3.0; found ", utils::packageVersion("linf"))
 }
 
 dir.create("build", showWarnings = FALSE, recursive = TRUE)

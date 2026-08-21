@@ -6,26 +6,13 @@ resolve.linf.lineage.labels <- function(csts,
 
   if (kind == "id") {
     active <- csts$lineage.ids
-    if (is.null(active)) active <- list(level1 = csts$lineage.id %||% csts$lineage.label)
-
     pure <- csts$lineage.ids.pure
-    if (is.null(pure) && !is.null(csts$lineage.id.pure)) pure <- list(level1 = csts$lineage.id.pure)
-
     absorb <- csts$lineage.ids.absorb
-    if (is.null(absorb) && !is.null(csts$lineage.id.absorb)) absorb <- list(level1 = csts$lineage.id.absorb)
   } else {
     active <- csts$lineage.labels
-    if (is.null(active)) active <- list(level1 = csts$lineage.label)
-
     pure <- csts$lineage.labels.pure
-    if (is.null(pure) && !is.null(csts$lineage.label.pure)) pure <- list(level1 = csts$lineage.label.pure)
-
     absorb <- csts$lineage.labels.absorb
-    if (is.null(absorb) && !is.null(csts$lineage.label.absorb)) absorb <- list(level1 = csts$lineage.label.absorb)
   }
-
-  pure <- pure %||% active
-  absorb <- absorb %||% active
 
   switch(view,
          active = active,
@@ -37,7 +24,7 @@ resolve.linf.landmark.view <- function(csts,
                                        view = c("active", "pure", "absorb")) {
   view <- match.arg(view)
   if (view == "active") {
-    return(linf.active.low.freq.view(csts$low.freq.policy %||% "active"))
+    return(linf.active.low.freq.view(csts$low.freq.policy))
   }
   view
 }
@@ -178,7 +165,7 @@ linf.landmarks <- function(M,
   view <- match.arg(view)
   tie.method <- match.arg(tie.method)
   landmark.types <- match.arg(landmark.types, several.ok = TRUE)
-  if (missing(backend) && !is.null(csts$matrix.backend)) {
+  if (missing(backend)) {
     backend <- csts$matrix.backend
   }
 
@@ -190,7 +177,7 @@ linf.landmarks <- function(M,
     stop("linf.landmarks: nrow(M) must match the number of samples in csts")
   }
 
-  max.depth <- csts$depth %||% 1L
+  max.depth <- csts$depth
   if (is.null(depth)) depth <- max.depth
 
   if (!is.numeric(depth) || length(depth) != 1L || depth < 1L || depth %% 1 != 0) {
@@ -222,7 +209,7 @@ linf.landmarks <- function(M,
   )
 
   sep <- csts$sep %||% "__"
-  rare.label <- csts$rare.label %||% "RARE_DOMINANT"
+  rare.label <- csts$rare.label
   row.ids <- rownames(X)
   if (is.null(row.ids)) row.ids <- rep(NA_character_, nrow(X))
 

@@ -7,6 +7,7 @@
 refine.linf.csts(
   M,
   csts,
+  lineages.to.refine = NULL,
   n0 = 50,
   refinement.factor = 2,
   sep = "__",
@@ -17,10 +18,14 @@ refine.linf.csts(
 )
 }
 \arguments{
-\item{M}{Numeric matrix (samples x features) used for refinement. Column names
-should match feature labels used in dCST names.}
+\item{M}{Numeric matrix (samples x features) used for refinement. Columns
+must correspond, in order, to the stable feature IDs stored in \code{csts}.}
 
 \item{csts}{A \code{"linf.csts"} object.}
+
+\item{lineages.to.refine}{Optional character vector of leaf
+dominance-lineage IDs to refine. When \code{NULL}, lineages are selected
+automatically using \code{refinement.factor * n0}.}
 
 \item{n0}{Integer >= 1. Minimum support required to retain a child lineage
 (passed to \code{linf.csts}).}
@@ -47,8 +52,8 @@ updated \code{lineage.label}. Policy-specific views are stored in
 \code{lineage.label.pure} and \code{lineage.label.absorb}.
 }
 \description{
-Selects well-supported leaf dominance-lineages and refines them by dropping
-the dominant feature(s) encoded in the parent label path and re-applying
+Selects leaf dominance-lineages and refines them by dropping the dominant
+feature(s) encoded in the parent lineage-ID path and re-applying
 \code{\link{linf.csts}} to the remaining features. The resulting child
 labels are appended to the parent label using \code{sep}.
 

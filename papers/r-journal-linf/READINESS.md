@@ -1,8 +1,8 @@
 # R Journal readiness
 
-## Verified state (2026-08-20)
+## Verified state (2026-08-21)
 
-- The article builds from the local `linf` 0.2.0 source in 26 seconds and
+- The article builds from the local `linf` 0.3.0 source and
   produces a visually reviewed seven-page PDF plus a self-contained HTML
   article.
 - All applicable `rjtools` checks pass, including file structure, title and
@@ -11,7 +11,8 @@
 - The citation audit maps all 10 cited keys to verified source links and
   supporting claims.
 - `R CMD check --as-cran` under the locally installed R-devel completes with
-  `Status: OK`, including examples, tests, vignettes, and HTML/PDF manuals.
+  no errors or warnings and one expected timing NOTE, including examples,
+  tests, vignettes, and HTML/PDF manuals.
 - The minimal 12-file review archive rebuilds successfully after extraction.
 
 ## Automated gates
@@ -30,14 +31,14 @@
 
 ## Current submission blocker
 
-The article describes `linf` 0.2.0. Submission is blocked until that version is
+The article describes `linf` 0.3.0. Submission is blocked until that version is
 publicly available on CRAN. Drafting and technical review can proceed against
-the isolated installation of the local 0.2.0 source. The automated gate
-currently finds CRAN version 0.1.0 and therefore fails as intended.
+the isolated installation of the local 0.3.0 source. The automated gate
+currently finds CRAN version 0.2.0 and therefore fails as intended.
 
 ## Human gates
 
 The author must approve authorship metadata, the AI-use disclosure, all
 publication-facing prose and results, the motivating letter, and the exact
 submission archive. The article date must also be changed to the actual
-submission date if submission occurs after 2026-08-20.
+submission date if submission occurs after 2026-08-21.
