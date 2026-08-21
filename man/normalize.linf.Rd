@@ -29,3 +29,13 @@ Zero rows have undefined L-infinity direction. By convention, they are
 preserved as all-zero rows and will yield NA labels in downstream
 dominant-feature or dCST assignment.
 }
+\examples{
+X <- rbind(
+  sample1 = c(A = 2, B = 1, C = 0),
+  sample2 = c(A = 0, B = 0, C = 0)
+)
+Z <- normalize.linf(X)
+Z
+apply(Z, 1, max)
+
+}

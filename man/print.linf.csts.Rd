@@ -17,3 +17,11 @@ The input object, invisibly.
 \description{
 Print method for \code{"linf.csts"}
 }
+\examples{
+M <- rbind(
+  s1 = c(A = 1.0, B = 0.2),
+  s2 = c(A = 0.8, B = 1.0)
+)
+fit <- linf.csts(M, n0 = 1)
+print(fit)
+}

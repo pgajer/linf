@@ -17,3 +17,12 @@ Data frame with depth-wise statistics
 \description{
 Summarize dCST hierarchy statistics
 }
+\examples{
+M <- rbind(
+  s1 = c(A = 1.0, B = 0.2),
+  s2 = c(A = 0.9, B = 0.3),
+  s3 = c(A = 0.2, B = 1.0)
+)
+fit <- linf.csts(M, n0 = 1)
+summary(fit)
+}
