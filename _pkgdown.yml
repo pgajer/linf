@@ -1,4 +1,5 @@
 # pkgdown.yml
+url: https://pgajer.github.io/linf/
 destination: docs
 
 template:

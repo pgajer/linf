@@ -78,3 +78,19 @@ test_that("pre-0.2 flat dCST objects are rejected", {
     "incompatible dCST object"
   )
 })
+
+test_that("refinement progress uses suppressible messages", {
+  M <- rbind(
+    s1 = c(A = 1, B = 0.2),
+    s2 = c(A = 0.9, B = 0.3),
+    s3 = c(A = 0.2, B = 1),
+    s4 = c(A = 0.3, B = 0.9)
+  )
+  fit <- linf.csts(M, n0 = 1, low.freq.policy = "absorb")
+
+  expect_message(
+    refine.linf.csts(M, fit, n0 = 1, verbose = TRUE),
+    "AUTOMATIC REFINEMENT MODE"
+  )
+  expect_silent(refine.linf.csts(M, fit, n0 = 1, verbose = FALSE))
+})

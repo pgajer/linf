@@ -596,7 +596,7 @@ validate.linf.csts <- function(obj) {
 #' @param low.freq.policy Character. One of \code{"pure"} or \code{"absorb"}.
 #'   Default: \code{"pure"}.
 #' @param rare.label Character scalar for rare buckets when \code{low.freq.policy = "pure"}.
-#' @param verbose Logical. If TRUE, print progress information.
+#' @param verbose Logical. If TRUE, emit progress messages.
 #' @param backend Character. Matrix backend to use: \code{"auto"},
 #'   \code{"dense"}, or \code{"sparse"}. The default \code{"auto"} inherits the
 #'   backend from \code{M} or from \code{csts} when available.
@@ -703,13 +703,22 @@ refine.linf.csts <- function(M,
     }
 
     if (verbose) {
-        cat("========================================\n")
-        cat(toupper(selection.mode), "REFINEMENT MODE\n")
-        cat("========================================\n")
+        progress <- c(
+            "========================================",
+            paste(toupper(selection.mode), "REFINEMENT MODE"),
+            "========================================"
+        )
         if (selection.mode == "automatic") {
-            cat("Refinement threshold:", threshold, "\n")
+            progress <- c(progress, paste("Refinement threshold:", threshold))
         }
-        cat("Dominance-lineages selected for refinement:", length(lineages.to.refine), "\n\n")
+        progress <- c(
+            progress,
+            paste(
+                "Dominance-lineages selected for refinement:",
+                length(lineages.to.refine)
+            )
+        )
+        message(paste(progress, collapse = "\n"))
     }
 
     for (lineage in lineages.to.refine) {
