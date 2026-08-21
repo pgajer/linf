@@ -3,7 +3,7 @@
 ## Verified state (2026-08-21)
 
 - The article builds from the local `linf` 0.3.0 source and
-  produces a visually reviewed seven-page PDF plus a self-contained HTML
+  produces a visually reviewed eight-page PDF plus a self-contained HTML
   article.
 - All applicable `rjtools` checks pass, including file structure, title and
   section case, abstract format, spelling, package availability, bibliography,
