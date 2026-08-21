@@ -27,3 +27,12 @@ manuscript's target package version to be public on CRAN and runs the package's
 full clean CRAN-style check.
 
 Final rendered artifacts are written to `output/pdf/` and `output/html/`.
+
+The archive produced by `make draft-bundle` contains this Makefile, the audit
+scripts, the rendered article and motivating letter, and an installable source
+tarball for the exact `linf` version used by the article. After extracting the
+archive, a reviewer can run `make audit`; the bundled tarball is installed into
+the archive's local `library/` before every result is regenerated. The
+`version-check`, `package-check`, and `submission-audit` targets are intended
+for the source repository because they additionally inspect CRAN and the full
+package checkout.

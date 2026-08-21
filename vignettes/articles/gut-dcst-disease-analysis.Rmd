@@ -1,6 +1,10 @@
 ---
 title: "Exploratory Gut dCST-Phenotype Analysis"
 output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Exploratory Gut dCST-Phenotype Analysis}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include=FALSE}

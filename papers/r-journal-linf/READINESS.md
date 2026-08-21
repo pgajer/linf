@@ -9,11 +9,16 @@
   section case, abstract format, spelling, package availability, bibliography,
   and the fixed submission date.
 - The citation audit maps all 10 cited keys to verified source links and
-  supporting claims.
+  supporting claims, and identifies 0.3.0 as the manuscript's development
+  version while retaining a separate public-CRAN gate.
 - `R CMD check --as-cran` under the locally installed R-devel completes with
   no errors or warnings and one expected timing NOTE, including examples,
   tests, vignettes, and HTML/PDF manuals.
-- The minimal 12-file review archive rebuilds successfully after extraction.
+- The review archive includes the Makefile, audit scripts, exact 0.3.0 package
+  source tarball, manuscript sources, motivating letter, and rendered outputs.
+  Its automated test clears user R-library/profile variables, installs the
+  bundled tarball into a fresh library, and reruns the article audit after
+  extraction.
 
 ## Automated gates
 
@@ -40,5 +45,6 @@ currently finds CRAN version 0.2.0 and therefore fails as intended.
 
 The author must approve authorship metadata, the AI-use disclosure, all
 publication-facing prose and results, the motivating letter, and the exact
-submission archive. The article date must also be changed to the actual
-submission date if submission occurs after 2026-08-21.
+submission archive; and must confirm that the article is not published,
+submitted, or under review elsewhere. The article date must also be changed to
+the actual submission date if submission occurs after 2026-08-21.

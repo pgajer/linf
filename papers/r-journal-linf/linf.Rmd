@@ -81,6 +81,21 @@ output_alt <- function(text) {
   if (knitr::is_html_output()) text else NULL
 }
 
+accessible_kable <- function(x, caption, alt) {
+  args <- list(x = x, caption = caption)
+  if (knitr::is_latex_output()) {
+    args$format <- "latex"
+    args$booktabs <- TRUE
+  } else if (knitr::is_html_output()) {
+    escaped_alt <- gsub('"', "&quot;", alt, fixed = TRUE)
+    args$format <- "html"
+    args$table.attr <- paste0('aria-label="', escaped_alt, '"')
+  } else {
+    args$format <- "pipe"
+  }
+  do.call(knitr::kable, args)
+}
+
 data(valencia2k, package = "linf")
 valencia_linf <- normalize.linf(valencia2k$rel)
 valencia_dominant <- linf.dominant.features(valencia_linf)
@@ -230,13 +245,43 @@ retained state vocabulary is selected by a minimum support threshold. The
 geometric construction is developed separately by @gajerRavel2025linf. This
 article focuses on its implementation in R.
 
+# Related R software
+
+The neighboring packages differ from `linf` in both purpose and treatment of
+zeros.
+
+- `compositions` provides log-ratio coordinates and statistical
+  methods for positive compositional data; zero replacement is a separate
+  preprocessing decision rather than part of those coordinates
+  [@compositionsPackage].
+- `zCompositions` estimates replacements for zeros, left-censored
+  values, and missing observations so that downstream compositional methods
+  can be applied [@zCompositionsPackage]. It is a preprocessing package, not a
+  fitted state-classification system.
+- `robCompositions` supplies robust estimation, principal components,
+  regression, and several zero-handling methods [@robCompositionsPackage]. Its
+  estimators are cohort-fitted and model-specific; it does not define a frozen
+  dominance vocabulary for transfer.
+- `linf` preserves observed zeros and performs normalization and raw
+  dominant-feature assignment sample by sample. Support-thresholded dCSTs are
+  cohort-fitted, and `transfer.dcsts()` applies a frozen fitted hierarchy to
+  new samples. The core normalization and dCST workflow accepts sparse
+  `Matrix` input, but its output is descriptive and is not a substitute for
+  inferential compositional models.
+
+Thus, the packages are complementary rather than interchangeable: zero
+replacement followed by log-ratio modeling addresses estimation and
+inference, whereas `linf` supplies a directly labeled dominance summary and a
+transferable state vocabulary.
+
 # Representation and software design
 
 For a nonzero nonnegative row vector $x=(x_1,\ldots,x_p)$,
 
-$$
-z = \frac{x}{\max_j x_j}
-$$
+\begin{equation}
+z = \frac{x}{\max_j x_j} .
+(\#eq:linf-normalization)
+\end{equation}
 
 is its L-infinity-normalized representation. Its largest coordinate is one,
 and every zero in $x$ remains zero. The identity of the largest component is
@@ -255,11 +300,11 @@ The interface follows four design choices.
    default `backend = "auto"` preserves sparse input where the operation can
    remain sparse [@MatrixPackage].
 
-Table \@ref(tab:interface) summarizes the public workflow. The low-level
-functions remain available for inspection, while
-`linf.dcst.landmark.pipeline()` supplies a compact end-to-end route.
+Table \@ref(tab:interface) summarizes the public workflow. The focused public
+functions expose each analysis stage, while `linf.dcst.landmark.pipeline()`
+supplies a compact end-to-end route.
 
-```{r interface, echo=FALSE}
+```{r interface, echo=FALSE, tab.alt="Table listing the eight public workflow stages, their linf functions, and the object returned at each stage."}
 interface <- data.frame(
   Stage = c(
     "Preparation", "Normalization", "Dominance", "Depth 1",
@@ -277,10 +322,14 @@ interface <- data.frame(
     "observed and summary profiles", "bounded reference-component chart"
   )
 )
-knitr::kable(
+accessible_kable(
   interface,
-  caption = "Main stages of the linf interface.",
-  booktabs = TRUE
+  caption = paste(
+    "Main stages of the linf interface.",
+    "Rows follow the workflow from count filtering through bounded coordinates and identify the principal output at each stage.",
+    "The same fitted hierarchy supports inspection, refinement, transfer, and representative profiles without changing feature identifiers."
+  ),
+  alt = knitr::opts_current$get("tab.alt")
 )
 ```
 
@@ -350,11 +399,18 @@ coordinate_example <- rbind(
   zero_reference = c(A = 0, B = 2, C = 1)
 )
 
-round(linf.hypercube.embedding(
+coordinate_embedding <- linf.hypercube.embedding(
   coordinate_example,
   reference = "A",
   lambda = log(2)
-), 3)
+)
+round(as.data.frame(coordinate_embedding), 3)
+data.frame(
+  reference = attr(coordinate_embedding, "reference.id"),
+  finite_reference_rows = attr(coordinate_embedding, "finite.reference.count"),
+  zero_reference_rows = attr(coordinate_embedding, "zero.reference.count"),
+  row.names = NULL
+)
 ```
 
 # Vaginal microbiome workflow
@@ -499,7 +555,7 @@ The values are build-machine measurements rather than general performance
 guarantees. In this example the sparse representation reduces object size by
 about two orders of magnitude and also lowers elapsed time.
 
-```{r benchmark-table, echo=FALSE}
+```{r benchmark-table, echo=FALSE, tab.alt="Table comparing memory use and median elapsed time for dense and sparse linf workflows on synthetic matrices with 1,000 and 5,000 samples."}
 benchmark_display <- benchmark_results
 benchmark_display[, c("Dense MB", "Sparse MB")] <- round(
   benchmark_display[, c("Dense MB", "Sparse MB")], 2
@@ -507,11 +563,14 @@ benchmark_display[, c("Dense MB", "Sparse MB")] <- round(
 benchmark_display[, c("Dense seconds", "Sparse seconds")] <- round(
   benchmark_display[, c("Dense seconds", "Sparse seconds")], 3
 )
-knitr::kable(
+accessible_kable(
   benchmark_display,
-  format = "pipe",
-  caption = "Dense and sparse backend benchmark on synthetic matrices with 1% nonzero entries.",
-  booktabs = TRUE
+  caption = paste(
+    "Dense and sparse backend benchmark on synthetic matrices.",
+    "Matrices contain 1,000 features and 1% nonzero entries; elapsed values are medians of five normalization-plus-dCST fits on the build machine.",
+    "Sparse storage reduces both memory use and elapsed time in this demonstration, but the timings are not general performance guarantees."
+  ),
+  alt = knitr::opts_current$get("tab.alt")
 )
 ```
 

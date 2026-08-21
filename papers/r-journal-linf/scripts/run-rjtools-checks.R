@@ -60,7 +60,7 @@ checks <- list(
       "linf", "compositional", "microbiome", "dcst", "asv", "csts",
       "dcsts", "iter", "valencia", "agp", "rrrrrr", "densify", "asize",
       "nonnegative", "interpretable", "centroid", "centroids", "backend",
-      "backends", "thresholded", "dataset", "datasets"
+      "backends", "thresholded", "dataset", "datasets", "preprocessing"
     )
   ),
   proposed_package = rjtools::check_proposed_pkg("linf", ask = FALSE),

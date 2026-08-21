@@ -40,7 +40,7 @@ Default: \code{"pure"}.}
 
 \item{rare.label}{Character scalar for rare buckets when \code{low.freq.policy = "pure"}.}
 
-\item{verbose}{Logical. If TRUE, print progress information.}
+\item{verbose}{Logical. If TRUE, emit progress messages.}
 
 \item{backend}{Character. Matrix backend to use: \code{"auto"},
 \code{"dense"}, or \code{"sparse"}. The default \code{"auto"} inherits the

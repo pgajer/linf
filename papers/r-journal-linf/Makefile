@@ -1,9 +1,11 @@
 SHELL := /bin/sh
 
-PACKAGE_ROOT := ../..
+PACKAGE_ROOT ?= ../..
+BUNDLED_PACKAGE := $(firstword $(wildcard package/linf_*.tar.gz))
+PACKAGE_SOURCE := $(if $(BUNDLED_PACKAGE),$(BUNDLED_PACKAGE),$(PACKAGE_ROOT))
 ARTICLE := linf.Rmd
-LIBRARY := $(abspath library)
-R_ENV := env R_MAKEVARS_USER=/dev/null R_LIBS=$(LIBRARY)
+LIBRARY ?= $(abspath library)
+R_ENV := env R_MAKEVARS_USER=/dev/null R_LIBS=$(LIBRARY) R_LIBS_USER=$(LIBRARY)
 TIDY_DIR := $(if $(wildcard /opt/homebrew/opt/tidy-html5/bin/tidy),/opt/homebrew/opt/tidy-html5/bin,)
 CHECK_PROFILE := $(abspath scripts/check-profile.R)
 PDF_OUT := output/pdf/linf-r-journal.pdf
@@ -13,7 +15,7 @@ HTML_OUT := output/html/linf-r-journal.html
 
 package-install:
 	mkdir -p $(LIBRARY)
-	env R_MAKEVARS_USER=/dev/null R CMD INSTALL --library=$(LIBRARY) $(PACKAGE_ROOT)
+	env R_MAKEVARS_USER=/dev/null R CMD INSTALL --library=$(LIBRARY) $(PACKAGE_SOURCE)
 
 render: package-install
 	mkdir -p build output/pdf output/html
@@ -44,7 +46,7 @@ package-check:
 submission-audit: audit version-check package-check
 
 draft-bundle: audit
-	$(R_ENV) python3 scripts/create-draft-bundle.py
+	python3 scripts/create-draft-bundle.py
 
 clean:
 	$(R_ENV) Rscript scripts/clean-generated.R
