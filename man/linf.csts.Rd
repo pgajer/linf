@@ -88,3 +88,16 @@ state with the largest value among the retained features (ties handled
 by \code{tie.method}).
 }
 }
+\examples{
+X <- rbind(
+  s1 = c(A = 10, B = 2, C = 1),
+  s2 = c(A = 9, B = 3, C = 1),
+  s3 = c(A = 1, B = 10, C = 2),
+  s4 = c(A = 1, B = 9, C = 3),
+  s5 = c(A = 1, B = 2, C = 10)
+)
+fit <- linf.csts(normalize.linf(X), n0 = 2, low.freq.policy = "pure")
+table(fit$lineage.label)
+fit$retained.feature.ids
+
+}

@@ -56,3 +56,19 @@ Lineages whose leaf token is \code{rare.label} are reported but skipped for
 landmark computation because they do not correspond to a unique target
 feature.
 }
+\examples{
+M <- rbind(
+  s1 = c(A = 1.0, B = 0.2),
+  s2 = c(A = 0.9, B = 0.4),
+  s3 = c(A = 0.3, B = 1.0),
+  s4 = c(A = 0.1, B = 0.9)
+)
+fit <- linf.csts(M, n0 = 2, low.freq.policy = "absorb")
+landmarks <- linf.landmarks(
+  M,
+  fit,
+  landmark.types = c("endpoint.max", "mean.rep")
+)
+landmarks$landmarks
+
+}

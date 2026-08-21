@@ -20,6 +20,15 @@
 #' preserved as all-zero rows and will yield NA labels in downstream
 #' dominant-feature or dCST assignment.
 #'
+#' @examples
+#' X <- rbind(
+#'   sample1 = c(A = 2, B = 1, C = 0),
+#'   sample2 = c(A = 0, B = 0, C = 0)
+#' )
+#' Z <- normalize.linf(X)
+#' Z
+#' apply(Z, 1, max)
+#'
 #' @export
 normalize.linf <- function(X,
                            tol = 0,
@@ -253,6 +262,18 @@ linf.active.low.freq.view <- function(low.freq.policy) {
 #'     \item \code{diagnostics} (if \code{return.diagnostics = TRUE})
 #'     \item \code{landmarks} (if \code{return.landmarks = TRUE})
 #'   }
+#'
+#' @examples
+#' X <- rbind(
+#'   s1 = c(A = 10, B = 2, C = 1),
+#'   s2 = c(A = 9, B = 3, C = 1),
+#'   s3 = c(A = 1, B = 10, C = 2),
+#'   s4 = c(A = 1, B = 9, C = 3),
+#'   s5 = c(A = 1, B = 2, C = 10)
+#' )
+#' fit <- linf.csts(normalize.linf(X), n0 = 2, low.freq.policy = "pure")
+#' table(fit$lineage.label)
+#' fit$retained.feature.ids
 #'
 #' @export
 linf.csts <- function(S,
@@ -584,6 +605,26 @@ validate.linf.csts <- function(obj) {
 #'   updated \code{lineage.label}. Policy-specific views are stored in
 #'   \code{lineage.label.pure} and \code{lineage.label.absorb}.
 #'
+#' @examples
+#' M <- rbind(
+#'   s1 = c(A = 1.0, B = 0.8, C = 0.1),
+#'   s2 = c(A = 1.0, B = 0.7, C = 0.2),
+#'   s3 = c(A = 1.0, B = 0.6, C = 0.3),
+#'   s4 = c(A = 0.2, B = 1.0, C = 0.8),
+#'   s5 = c(A = 0.1, B = 1.0, C = 0.7),
+#'   s6 = c(A = 0.3, B = 1.0, C = 0.6)
+#' )
+#' depth1 <- linf.csts(M, n0 = 2, low.freq.policy = "absorb")
+#' depth2 <- refine.linf.csts(
+#'   M,
+#'   depth1,
+#'   lineages.to.refine = "A",
+#'   n0 = 2,
+#'   low.freq.policy = "absorb",
+#'   verbose = FALSE
+#' )
+#' depth2$lineage.labels[[2]]
+#'
 #' @export
 refine.linf.csts <- function(M,
                              csts,
@@ -766,6 +807,17 @@ refine.linf.csts <- function(M,
 #'
 #' @return A \code{"linf.csts"} object using the requested view.
 #'
+#' @examples
+#' M <- rbind(
+#'   s1 = c(A = 1.0, B = 0.2, C = 0.1),
+#'   s2 = c(A = 0.9, B = 0.3, C = 0.1),
+#'   s3 = c(A = 0.2, B = 1.0, C = 0.1),
+#'   s4 = c(A = 0.2, B = 0.1, C = 1.0)
+#' )
+#' fit <- linf.csts(M, n0 = 2, low.freq.policy = "pure")
+#' table(fit$lineage.label)
+#' table(dcst.view(fit, view = "absorb")$lineage.label)
+#'
 #' @export
 dcst.view <- function(csts, view = c("absorb", "pure")) {
 
@@ -803,6 +855,13 @@ dcst.view <- function(csts, view = c("absorb", "pure")) {
 #' @param x A \code{"linf.csts"} object.
 #' @param ... Unused.
 #' @return The input object, invisibly.
+#' @examples
+#' M <- rbind(
+#'   s1 = c(A = 1.0, B = 0.2),
+#'   s2 = c(A = 0.8, B = 1.0)
+#' )
+#' fit <- linf.csts(M, n0 = 1)
+#' print(fit)
 #' @export
 print.linf.csts <- function(x, ...) {
 
@@ -839,6 +898,14 @@ print.linf.csts <- function(x, ...) {
 #' @param object A \code{"linf.csts"} object.
 #' @param ... Unused.
 #' @return Data frame with depth-wise statistics
+#' @examples
+#' M <- rbind(
+#'   s1 = c(A = 1.0, B = 0.2),
+#'   s2 = c(A = 0.9, B = 0.3),
+#'   s3 = c(A = 0.2, B = 1.0)
+#' )
+#' fit <- linf.csts(M, n0 = 1)
+#' summary(fit)
 #' @export
 summary.linf.csts <- function(object, ...) {
 

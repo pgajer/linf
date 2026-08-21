@@ -61,3 +61,24 @@ Low-support child lineages are handled by \code{low.freq.policy}. When
 \code{low.freq.policy = "pure"}, rare buckets at depth >= 2 become
 parent-prefixed automatically via the hierarchical \code{paste(parent, child, sep = sep)}.
 }
+\examples{
+M <- rbind(
+  s1 = c(A = 1.0, B = 0.8, C = 0.1),
+  s2 = c(A = 1.0, B = 0.7, C = 0.2),
+  s3 = c(A = 1.0, B = 0.6, C = 0.3),
+  s4 = c(A = 0.2, B = 1.0, C = 0.8),
+  s5 = c(A = 0.1, B = 1.0, C = 0.7),
+  s6 = c(A = 0.3, B = 1.0, C = 0.6)
+)
+depth1 <- linf.csts(M, n0 = 2, low.freq.policy = "absorb")
+depth2 <- refine.linf.csts(
+  M,
+  depth1,
+  lineages.to.refine = "A",
+  n0 = 2,
+  low.freq.policy = "absorb",
+  verbose = FALSE
+)
+depth2$lineage.labels[[2]]
+
+}
