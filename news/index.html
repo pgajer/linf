@@ -38,7 +38,7 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.3.1" id="linf-031">linf 0.3.1<a class="anchor" aria-label="anchor" href="#linf-031"></a></h2>
-<ul><li>Frozen transfer now correctly matches stable feature IDs that differ from display labels, including reordered columns and refined hierarchies.</li>
+<ul><li>Frozen transfer now correctly matches stable feature IDs that differ from display labels, including reordered columns and refined hierarchies. Unnamed query matrices use the same synthetic IDs as hierarchy fitting.</li>
 <li>Transfer returns <code>NA</code> when no realized child has positive feature abundance; it no longer invents an unretained depth-1 state. The existing <code>carry.forward.terminal.depths</code> argument cannot enable an out-of-tree fallback.</li>
 <li>Dense and sparse absorption use the same original-column ordering for positive ties, including seeded random ties. With no positive retained value, the fallback remains the state with greatest reference support.</li>
 <li>Invalid feature-metadata lengths and non-finite normalization tolerances are rejected explicitly. Normalization documentation now distinguishes unscaled small rows, exact-zero rows, and downstream absorption.</li>
