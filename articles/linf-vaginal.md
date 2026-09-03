@@ -370,8 +370,8 @@ pct2[dcst2_sizes >= 20, , drop = FALSE]
 #>   Lactobacillus_iners__g_Corynebacterium_1          0.0   0.0   0.0  91.3   8.7
 #>   Lactobacillus_iners__g_Finegoldia                 0.0   0.0   0.0  81.6  18.4
 #>   Lactobacillus_iners__g_Streptococcus              0.0   0.0   0.0  67.7  29.0
-#>   Lactobacillus_iners__Gardnerella_vaginalis        0.0   0.0   0.0  39.3  50.8
-#>   Lactobacillus_iners__Lactobacillus_crispatus      0.0   0.0   0.0  48.2  51.8
+#>   Lactobacillus_iners__Gardnerella_vaginalis        0.0   0.0   0.0  39.0  51.0
+#>   Lactobacillus_iners__Lactobacillus_crispatus      0.0   0.0   0.0  48.7  51.3
 #>   Lactobacillus_iners__Lactobacillus_gasseri        0.0   0.0   5.0  80.0  15.0
 #>   Lactobacillus_iners__Lactobacillus_jensenii       0.0   0.0   0.0  77.6  13.1
 #>   Lactobacillus_jensenii__Gardnerella_vaginalis     0.0   0.0   0.0   0.0   0.0
@@ -400,7 +400,7 @@ pct2[dcst2_sizes >= 20, , drop = FALSE]
 #>   Lactobacillus_iners__g_Corynebacterium_1          0.0   0.0   0.0   0.0   0.0
 #>   Lactobacillus_iners__g_Finegoldia                 0.0   0.0   0.0   0.0   0.0
 #>   Lactobacillus_iners__g_Streptococcus              0.0   0.0   0.0   0.0   0.0
-#>   Lactobacillus_iners__Gardnerella_vaginalis        1.2   8.7   0.0   0.0   0.0
+#>   Lactobacillus_iners__Gardnerella_vaginalis        1.2   8.8   0.0   0.0   0.0
 #>   Lactobacillus_iners__Lactobacillus_crispatus      0.0   0.0   0.0   0.0   0.0
 #>   Lactobacillus_iners__Lactobacillus_gasseri        0.0   0.0   0.0   0.0   0.0
 #>   Lactobacillus_iners__Lactobacillus_jensenii       0.0   0.0   0.0   0.0   0.0

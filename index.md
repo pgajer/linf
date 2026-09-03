@@ -177,5 +177,6 @@ If you use this package, please cite:
 
 ## License
 
-MIT © 2025 Pawel Gajer. See `LICENSE` / `LICENSE.md`. Bundled-data
-sources and upstream terms are recorded in `inst/DATA_PROVENANCE.md`.
+MIT © 2025 Pawel Gajer. See
+[LICENSE](https://pgajer.github.io/linf/LICENSE). Bundled-data sources
+and upstream terms are recorded in `inst/DATA_PROVENANCE.md`.

@@ -73,10 +73,9 @@ transfer.dcsts(
 
 - carry.forward.terminal.depths:
 
-  Logical. If `TRUE`, an unmatched depth-1 sample may fall back to its
-  dominant retained feature. Terminal lineages at later depths are
-  assigned only when they appear as realized stable lineage sets in the
-  fitted hierarchy.
+  Logical, retained for call compatibility. Under either setting,
+  terminal lineages are assigned only where they occur in the fitted
+  hierarchy. No out-of-hierarchy fallback is performed.
 
 - sep:
 
@@ -98,6 +97,10 @@ A list of class `"linf.dcst.transfer"` with components:
 - `depth`: requested depth vector.
 
 - `view`, `match.by`, `tie.method`: settings used.
+
+At any depth with no realized candidate or no positive abundance for its
+candidate features, that depth and all subsequent depths are `NA`.
+Returned lineages use display labels regardless of `match.by`.
 
 ## Examples
 

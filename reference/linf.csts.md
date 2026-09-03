@@ -65,6 +65,10 @@ linf.csts(
   Character. Tie handling passed to
   [`linf.dominant.features()`](https://pgajer.github.io/linf/reference/linf.dominant.features.md)
   and used during absorb reassignment ("first", "random", "error").
+  Positive ties use original matrix column order for `"first"` on both
+  backends. If all retained values are zero, absorption uses the
+  retained state with greatest reference support (then lexical label
+  order), regardless of `tie.method`.
 
 - return.diagnostics:
 

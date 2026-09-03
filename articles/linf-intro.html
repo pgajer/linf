@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">linf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -261,22 +261,32 @@ diverse gut environment.</p>
 <span><span class="va">tab2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">csts2</span><span class="op">$</span><span class="va">lineage.label</span><span class="op">)</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">tab2</span><span class="op">[</span><span class="va">tab2</span> <span class="op">&gt;=</span> <span class="fl">20</span><span class="op">]</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;                           d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__Bacteroidaceae;g__Bacteroides;s__ </span></span>
-<span><span class="co">#&gt;                                                                                                                        174 </span></span>
-<span><span class="co">#&gt;                                                                                                              RARE_DOMINANT </span></span>
-<span><span class="co">#&gt;                                                                                                                        159 </span></span>
-<span><span class="co">#&gt; d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Enterobacterales;f__Enterobacteriaceae;g__Escherichia-Shigella;s__ </span></span>
-<span><span class="co">#&gt;                                                                                                                        114 </span></span>
-<span><span class="co">#&gt;                          d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__Prevotellaceae;g__Prevotella_7;s__ </span></span>
-<span><span class="co">#&gt;                                                                                                                         89 </span></span>
-<span><span class="co">#&gt;                        d__Bacteria;p__Firmicutes;c__Bacilli;o__Staphylococcales;f__Staphylococcaceae;g__Staphylococcus;s__ </span></span>
-<span><span class="co">#&gt;                                                                                                                         77 </span></span>
-<span><span class="co">#&gt;           d__Bacteria;p__Verrucomicrobiota;c__Verrucomicrobiae;o__Verrucomicrobiales;f__Akkermansiaceae;g__Akkermansia;s__ </span></span>
-<span><span class="co">#&gt;                                                                                                                         63 </span></span>
-<span><span class="co">#&gt;                          d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Enterobacterales;f__Pasteurellaceae;__;__ </span></span>
-<span><span class="co">#&gt;                                                                                                                         51 </span></span>
-<span><span class="co">#&gt;                          d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__Prevotellaceae;g__Prevotella_9;s__ </span></span>
-<span><span class="co">#&gt;                                                                                                                         36</span></span></code></pre></div>
+<span><span class="co">#&gt;                                                                                                                                                                                                                RARE_DOMINANT </span></span>
+<span><span class="co">#&gt;                                                                                                                                                                                                                          159 </span></span>
+<span><span class="co">#&gt;                                                                                                              d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__Bacteroidaceae;g__Bacteroides;s____RARE_DOMINANT </span></span>
+<span><span class="co">#&gt;                                                                                                                                                                                                                          105 </span></span>
+<span><span class="co">#&gt;                                                                                                                          d__Bacteria;p__Firmicutes;c__Bacilli;o__Staphylococcales;f__Staphylococcaceae;g__Staphylococcus;s__ </span></span>
+<span><span class="co">#&gt;                                                                                                                                                                                                                           77 </span></span>
+<span><span class="co">#&gt; d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Enterobacterales;f__Enterobacteriaceae;g__Escherichia-Shigella;s____d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__Bacteroidaceae;g__Bacteroides;s__ </span></span>
+<span><span class="co">#&gt;                                                                                                                                                                                                                           68 </span></span>
+<span><span class="co">#&gt;                                                                                                             d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__Prevotellaceae;g__Prevotella_7;s____RARE_DOMINANT </span></span>
+<span><span class="co">#&gt;                                                                                                                                                                                                                           52 </span></span>
+<span><span class="co">#&gt;                                                                                                                            d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Enterobacterales;f__Pasteurellaceae;__;__ </span></span>
+<span><span class="co">#&gt;                                                                                                                                                                                                                           51 </span></span>
+<span><span class="co">#&gt;                                                                                    d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Enterobacterales;f__Enterobacteriaceae;g__Escherichia-Shigella;s____RARE_DOMINANT </span></span>
+<span><span class="co">#&gt;                                                                                                                                                                                                                           46 </span></span>
+<span><span class="co">#&gt;           d__Bacteria;p__Verrucomicrobiota;c__Verrucomicrobiae;o__Verrucomicrobiales;f__Akkermansiaceae;g__Akkermansia;s____d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__Bacteroidaceae;g__Bacteroides;s__ </span></span>
+<span><span class="co">#&gt;                                                                                                                                                                                                                           38 </span></span>
+<span><span class="co">#&gt;        d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__Prevotellaceae;g__Prevotella_7;s____d__Bacteria;p__Firmicutes;c__Negativicutes;o__Veillonellales-Selenomonadales;f__Veillonellaceae;g__Veillonella;s__ </span></span>
+<span><span class="co">#&gt;                                                                                                                                                                                                                           37 </span></span>
+<span><span class="co">#&gt;                      d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__Bacteroidaceae;g__Bacteroides;s____d__Bacteria;p__Firmicutes;c__Clostridia;o__Oscillospirales;f__Ruminococcaceae;g__Faecalibacterium;s__ </span></span>
+<span><span class="co">#&gt;                                                                                                                                                                                                                           36 </span></span>
+<span><span class="co">#&gt;                                                                                                                            d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__Prevotellaceae;g__Prevotella_9;s__ </span></span>
+<span><span class="co">#&gt;                                                                                                                                                                                                                           36 </span></span>
+<span><span class="co">#&gt;                                         d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__Bacteroidaceae;g__Bacteroides;s____d__Bacteria;p__Firmicutes;c__Clostridia;o__Lachnospirales;f__Lachnospiraceae;__;__ </span></span>
+<span><span class="co">#&gt;                                                                                                                                                                                                                           33 </span></span>
+<span><span class="co">#&gt;                                                                                              d__Bacteria;p__Verrucomicrobiota;c__Verrucomicrobiae;o__Verrucomicrobiales;f__Akkermansiaceae;g__Akkermansia;s____RARE_DOMINANT </span></span>
+<span><span class="co">#&gt;                                                                                                                                                                                                                           25</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="dominance-strength">Dominance strength<a class="anchor" aria-label="anchor" href="#dominance-strength"></a>
