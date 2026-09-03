@@ -48,10 +48,9 @@ sample abundance. \code{"support"} chooses the tied lineage with largest
 reference support and then lexical order; \code{"first"} uses frozen child
 order; \code{"random"} samples one tied lineage; \code{"error"} stops.}
 
-\item{carry.forward.terminal.depths}{Logical. If \code{TRUE}, an unmatched
-depth-1 sample may fall back to its dominant retained feature. Terminal
-lineages at later depths are assigned only when they appear as realized
-stable lineage sets in the fitted hierarchy.}
+\item{carry.forward.terminal.depths}{Logical, retained for call compatibility.
+Under either setting, terminal lineages are assigned only where they occur
+in the fitted hierarchy. No out-of-hierarchy fallback is performed.}
 
 \item{sep}{Separator used in lineage labels. Defaults to \code{csts$sep} or
 \code{"__"}.}
@@ -67,6 +66,9 @@ requested depths.
 \item \code{depth}: requested depth vector.
 \item \code{view}, \code{match.by}, \code{tie.method}: settings used.
 }
+At any depth with no realized candidate or no positive abundance for its
+candidate features, that depth and all subsequent depths are \code{NA}.
+Returned lineages use display labels regardless of \code{match.by}.
 }
 \description{
 Assigns rows of a new sample-by-feature matrix into the realized lineage sets

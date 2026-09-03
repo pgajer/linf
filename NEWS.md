@@ -1,3 +1,21 @@
+# linf 0.3.1
+
+- Frozen transfer now correctly matches stable feature IDs that differ from
+  display labels, including reordered columns and refined hierarchies.
+- Transfer returns `NA` when no realized child has positive feature abundance;
+  it no longer invents an unretained depth-1 state. The existing
+  `carry.forward.terminal.depths` argument cannot enable an out-of-tree fallback.
+- Dense and sparse absorption use the same original-column ordering for
+  positive ties, including seeded random ties. With no positive retained value,
+  the fallback remains the state with greatest reference support.
+- Invalid feature-metadata lengths and non-finite normalization tolerances are
+  rejected explicitly. Normalization documentation now distinguishes unscaled
+  small rows, exact-zero rows, and downstream absorption.
+- Refinement and transfer recover feature identities from fitted transitions,
+  so taxonomy IDs or display labels containing `__` are not split apart.
+- Sparse matrix preparation avoids deprecated direct triangular-to-general
+  coercion. The DESCRIPTION citation now includes authors and year.
+
 # linf 0.3.0
 
 This release simplifies the public API and requires the explicit dCST object

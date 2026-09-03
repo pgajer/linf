@@ -3,11 +3,11 @@
 #' L-infinity normalization (row-wise)
 #'
 #' Scales each row of a numeric matrix by its L-infinity norm (row maximum).
-#' Rows whose maximum is zero (or below tolerance) are left unchanged
-#' and remain all-zero.
+#' Rows whose maximum is at or below tolerance are left unchanged; nonzero
+#' entries in these rows are not replaced by zeros.
 #'
 #' @param X Numeric matrix (samples x features).
-#' @param tol Numeric >= 0. Values with row max <= tol are treated as zero rows.
+#' @param tol Finite numeric >= 0. Rows with maximum <= tol are not scaled.
 #'   Default: 0 (exact zero only).
 #' @param backend Character. Matrix backend to use: \code{"auto"},
 #'   \code{"dense"}, or \code{"sparse"}. The default \code{"auto"} preserves
@@ -17,8 +17,10 @@
 #'
 #' @details
 #' Zero rows have undefined L-infinity direction. By convention, they are
-#' preserved as all-zero rows and will yield NA labels in downstream
-#' dominant-feature or dCST assignment.
+#' preserved as all-zero rows and yield \code{NA} in dominant-feature assignment.
+#' The pure dCST view places them in the rare category; the absorb view assigns
+#' them to its fallback retained state, if any. A nonzero row left unscaled
+#' because of \code{tol} still has a dominant feature.
 #'
 #' @examples
 #' X <- rbind(
@@ -38,8 +40,8 @@ normalize.linf <- function(X,
   backend <- prep$backend
 
   linf.validate.matrix(X, backend = backend, fun.name = "normalize.linf")
-  if (!is.numeric(tol) || length(tol) != 1L || tol < 0) {
-    stop("normalize.linf: tol must be a single non-negative number")
+  if (!is.numeric(tol) || length(tol) != 1L || !is.finite(tol) || tol < 0) {
+    stop("normalize.linf: tol must be a single non-negative finite number")
   }
 
   if (backend == "sparse") {
@@ -233,6 +235,10 @@ linf.active.low.freq.view <- function(low.freq.policy) {
 #'   Default: \code{"RARE_DOMINANT"}.
 #' @param tie.method Character. Tie handling passed to \code{linf.dominant.features()} and used
 #'   during absorb reassignment ("first", "random", "error").
+#'   Positive ties use original matrix column order for \code{"first"} on both
+#'   backends. If all retained values are zero, absorption uses the retained
+#'   state with greatest reference support (then lexical label order), regardless
+#'   of \code{tie.method}.
 #' @param return.diagnostics Logical. If TRUE, return reassignment diagnostics.
 #' @param return.landmarks Logical. If TRUE, attach a depth-1 landmark summary
 #'   computed by \code{\link{linf.landmarks}}.
@@ -375,7 +381,7 @@ linf.csts <- function(S,
                     ## If there is no positive evidence among kept taxa, avoid arbitrary ties
                     if (!is.finite(m) || m <= 0) return(fallback.idx)
 
-                    j <- kept.idx[kvals == m]
+                    j <- sort(kept.idx[kvals == m])
                     if (length(j) == 1L) return(j)
                     if (tie.method == "first") return(j[1L])
                     if (tie.method == "random") return(sample(j, 1L))
@@ -728,9 +734,22 @@ refine.linf.csts <- function(M,
         parent.label.pure <- parent.labels.pure[idx[1L]]
         parent.label.absorb <- parent.labels.absorb[idx[1L]]
 
-        parent.features <- strsplit(lineage, sep, fixed = TRUE)[[1]]
+        # Recover one feature per fitted transition, without splitting IDs that
+        # themselves contain the separator (as taxonomy strings often do).
+        path <- vapply(csts$lineage.ids, function(level) level[[idx[1L]]], character(1))
+        parent.features <- path[[1L]]
+        if (length(path) > 1L) {
+            for (d in 2:length(path)) {
+                if (identical(path[[d]], path[[d - 1L]])) next
+                prefix <- paste0(path[[d - 1L]], csts$sep %||% sep)
+                if (startsWith(path[[d]], prefix)) {
+                    parent.features <- c(parent.features, substring(path[[d]], nchar(prefix) + 1L))
+                }
+            }
+        }
         drop.idx <- match(parent.features, csts$feature.ids)
         drop.idx <- drop.idx[!is.na(drop.idx)]
+        keep.idx <- setdiff(seq_len(ncol(M)), drop.idx)
 
         ## If no parent features match columns (e.g., the lineage is a rare
         ## bucket), do not drop any columns.
@@ -747,8 +766,8 @@ refine.linf.csts <- function(M,
         if (nrow(M.sub) == 0L || ncol(M.sub) == 0L) next
 
         sub.csts <- linf.csts(M.sub,
-                             feature.ids = csts$feature.ids[-drop.idx],
-                             feature.labels = csts$feature.labels[-drop.idx],
+                             feature.ids = csts$feature.ids[keep.idx],
+                             feature.labels = csts$feature.labels[keep.idx],
                              n0 = n0,
                              low.freq.policy = low.freq.policy,
                              rare.label = rare.label,

@@ -1,32 +1,21 @@
-## Submission
+## Update
 
-This is an update to `linf`. Version 0.3.0 consolidates hierarchy refinement in
-`refine.linf.csts()`, removes three superseded public functions, and requires
-the explicit dCST object structure introduced in version 0.2.0. These
-intentional API changes are listed in `NEWS.md`. CRAN currently reports no
-reverse dependencies for `linf`.
+Version 0.3.1 fixes frozen transfer with distinct feature IDs and display labels,
+prevents transfer outside the fitted hierarchy, and makes dense and sparse
+absorption agree on ties. It also fixes taxonomy identifiers containing the
+lineage separator, validates feature-metadata lengths, and clarifies zero-row
+and tolerance behavior. Regression tests cover these corrections.
 
-## Test environments
+The license, maintainer, exports, dependencies, and bundled data are unchanged.
+CRAN lists no reverse dependencies (checked 2026-09-03).
 
-* Local macOS 26.6.1 (Apple Silicon), R-devel (2026-06-24 r90190):
-  0 errors | 0 warnings | 1 note
+## Checks (2026-09-03)
 
-Remote checks for version 0.3.0 have not yet been run.
+* macOS 26.6.1 arm64, R-devel 2026-06-24 r90190, full incoming-enabled
+  `R CMD check --as-cran` with clean user build flags and current HTML Tidy:
+  0 errors, 0 warnings, 1 NOTE: "Days since last update: 3".
+* All 230 test assertions pass, with no failures, warnings, or skips.
+* Examples, both vignettes (including rebuilding), and PDF/HTML manuals pass.
 
-## R CMD check results
-
-0 errors | 0 warnings | 1 note
-
-## Notes
-
-* One NOTE records that version 0.2.0 was updated on CRAN today. Version 0.3.0
-  is not being submitted immediately; this file will be refreshed before its
-  eventual submission.
-* The API cleanup is intentional and documented in `NEWS.md`; the package has
-  no CRAN reverse dependencies.
-
-## Additional checks
-
-* Examples, tests, vignettes, and PDF and HTML manuals pass locally.
-* The built source package contains no personal paths, debugging hooks, paper
-  sources, project notes, or data-preparation directories.
+Cross-platform results for this version are pending. This is a preparation
+record, not a statement that all pre-submission checks are complete.

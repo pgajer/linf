@@ -28,10 +28,9 @@
 #'   sample abundance. \code{"support"} chooses the tied lineage with largest
 #'   reference support and then lexical order; \code{"first"} uses frozen child
 #'   order; \code{"random"} samples one tied lineage; \code{"error"} stops.
-#' @param carry.forward.terminal.depths Logical. If \code{TRUE}, an unmatched
-#'   depth-1 sample may fall back to its dominant retained feature. Terminal
-#'   lineages at later depths are assigned only when they appear as realized
-#'   stable lineage sets in the fitted hierarchy.
+#' @param carry.forward.terminal.depths Logical, retained for call compatibility.
+#'   Under either setting, terminal lineages are assigned only where they occur
+#'   in the fitted hierarchy. No out-of-hierarchy fallback is performed.
 #' @param sep Separator used in lineage labels. Defaults to \code{csts$sep} or
 #'   \code{"__"}.
 #' @param backend Matrix backend; passed to the internal matrix preparer.
@@ -44,6 +43,9 @@
 #'     \item \code{depth}: requested depth vector.
 #'     \item \code{view}, \code{match.by}, \code{tie.method}: settings used.
 #'   }
+#'   At any depth with no realized candidate or no positive abundance for its
+#'   candidate features, that depth and all subsequent depths are \code{NA}.
+#'   Returned lineages use display labels regardless of \code{match.by}.
 #'
 #' @examples
 #' X <- rbind(
@@ -120,20 +122,20 @@ transfer.dcsts <- function(X,
     feature.labels = as.character(feature.labels)
   )
   X.aligned <- linf.align.transfer.matrix(X, query.features, ref.features, backend = backend)
-  colnames(X.aligned) <- ref.features
+  # Alignment uses the requested identity; tree nodes use fitted display labels.
+  colnames(X.aligned) <- csts$feature.labels
 
   tree <- linf.dcst.transfer.tree(levels, max.depth = max.depth, sep = sep)
   assigned.raw <- vapply(
     seq_len(nrow(X.aligned)),
     function(i) {
       vals <- X.aligned[i, , drop = TRUE]
-      names(vals) <- ref.features
+      names(vals) <- csts$feature.labels
       linf.transfer.one.sample(
         vals,
         tree = tree,
         max.depth = max.depth,
         tie.method = tie.method,
-        carry.forward.terminal.depths = carry.forward.terminal.depths,
         sep = sep
       )
     },
@@ -221,22 +223,21 @@ linf.transfer.one.sample <- function(sample.values,
                                      tree,
                                      max.depth,
                                      tie.method,
-                                     carry.forward.terminal.depths,
                                      sep) {
   out <- rep(NA_character_, max.depth)
   parent.key <- "__ROOT__"
+  parent.feature <- ""
 
-  fallback.to.dominant <- function() {
-    vals <- sample.values
-    vals[is.na(vals)] <- 0
-    best <- max(vals)
-    if (!is.finite(best) || best <= 0) return(NA_character_)
-    top <- names(vals)[vals == best]
-    sort(top)[[1L]]
+  child.feature <- function(label, depth) {
+    if (depth == 1L) return(label)
+    if (identical(label, parent.key)) return(parent.feature)
+    prefix <- paste0(parent.key, sep)
+    if (!startsWith(label, prefix)) return("")
+    substring(label, nchar(prefix) + 1L)
   }
 
-  child.score <- function(label) {
-    component <- linf.lineage.last.component(label, sep = sep)
+  child.score <- function(label, depth) {
+    component <- child.feature(label, depth)
     if (!nzchar(component)) return(0)
     val <- unname(sample.values[component])
     if (!length(val) || is.na(val)) return(0)
@@ -246,20 +247,12 @@ linf.transfer.one.sample <- function(sample.values,
   for (d in seq_len(max.depth)) {
     candidates <- tree$children[[d]][[parent.key]]
     if (is.null(candidates) || !length(candidates)) {
-      if (d == 1L && carry.forward.terminal.depths) {
-        fallback <- fallback.to.dominant()
-        if (!is.na(fallback)) out[[d]] <- fallback
-      }
       break
     }
 
-    vals <- vapply(candidates, child.score, numeric(1L))
+    vals <- vapply(candidates, child.score, numeric(1L), depth = d)
     best <- max(vals)
     if (!is.finite(best) || best <= 0) {
-      if (d == 1L && carry.forward.terminal.depths) {
-        fallback <- fallback.to.dominant()
-        if (!is.na(fallback)) out[[d]] <- fallback
-      }
       break
     }
 
@@ -281,14 +274,9 @@ linf.transfer.one.sample <- function(sample.values,
 
     chosen <- top[[1L]]
     out[[d]] <- chosen
+    parent.feature <- child.feature(chosen, d)
     parent.key <- chosen
   }
 
   out
-}
-
-linf.lineage.last.component <- function(label, sep) {
-  if (is.na(label) || !nzchar(label)) return("")
-  parts <- strsplit(label, sep, fixed = TRUE)[[1L]]
-  utils::tail(parts, 1L)[[1L]]
 }
