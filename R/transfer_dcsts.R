@@ -90,7 +90,7 @@ transfer.dcsts <- function(X,
   linf.validate.matrix(X, backend = backend, fun.name = "transfer.dcsts")
 
   feature.ids <- feature.ids %||% colnames(X)
-  if (is.null(feature.ids)) feature.ids <- paste0("feature", seq_len(ncol(X)))
+  if (is.null(feature.ids)) feature.ids <- paste0("V", seq_len(ncol(X)))
   feature.labels <- feature.labels %||% feature.ids
   if (length(feature.ids) != ncol(X)) {
     stop("transfer.dcsts: feature.ids must have length ncol(X)")
