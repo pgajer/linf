@@ -9,7 +9,7 @@ normalize.linf(X, tol = 0, backend = c("auto", "dense", "sparse"))
 \arguments{
 \item{X}{Numeric matrix (samples x features).}
 
-\item{tol}{Numeric >= 0. Values with row max <= tol are treated as zero rows.
+\item{tol}{Finite numeric >= 0. Rows with maximum <= tol are not scaled.
 Default: 0 (exact zero only).}
 
 \item{backend}{Character. Matrix backend to use: \code{"auto"},
@@ -21,13 +21,15 @@ Numeric matrix of same dimensions as X, L-infinity normalized.
 }
 \description{
 Scales each row of a numeric matrix by its L-infinity norm (row maximum).
-Rows whose maximum is zero (or below tolerance) are left unchanged
-and remain all-zero.
+Rows whose maximum is at or below tolerance are left unchanged; nonzero
+entries in these rows are not replaced by zeros.
 }
 \details{
 Zero rows have undefined L-infinity direction. By convention, they are
-preserved as all-zero rows and will yield NA labels in downstream
-dominant-feature or dCST assignment.
+preserved as all-zero rows and yield \code{NA} in dominant-feature assignment.
+The pure dCST view places them in the rare category; the absorb view assigns
+them to its fallback retained state, if any. A nonzero row left unscaled
+because of \code{tol} still has a dominant feature.
 }
 \examples{
 X <- rbind(

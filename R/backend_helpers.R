@@ -22,12 +22,10 @@ linf.prepare.matrix <- function(X, backend = c("auto", "dense", "sparse"), fun.n
     stop(fun.name, ": sparse backend requires the 'Matrix' package")
   }
 
-  if (inherits(X, "sparseMatrix")) {
-    X <- as(X, "dgCMatrix")
-  } else {
+  if (!inherits(X, "sparseMatrix")) {
     X <- Matrix::Matrix(X, sparse = TRUE)
-    X <- as(X, "dgCMatrix")
   }
+  X <- as(as(as(X, "generalMatrix"), "dMatrix"), "CsparseMatrix")
 
   X <- Matrix::drop0(X)
   X@x <- as.numeric(X@x)

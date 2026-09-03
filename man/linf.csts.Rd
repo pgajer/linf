@@ -38,7 +38,11 @@ Default: \code{"pure"}.}
 Default: \code{"RARE_DOMINANT"}.}
 
 \item{tie.method}{Character. Tie handling passed to \code{linf.dominant.features()} and used
-during absorb reassignment ("first", "random", "error").}
+during absorb reassignment ("first", "random", "error").
+Positive ties use original matrix column order for \code{"first"} on both
+backends. If all retained values are zero, absorption uses the retained
+state with greatest reference support (then lexical label order), regardless
+of \code{tie.method}.}
 
 \item{return.diagnostics}{Logical. If TRUE, return reassignment diagnostics.}
 

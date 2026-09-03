@@ -130,6 +130,9 @@ resolve.linf.feature.meta <- function(X,
   if (is.null(ids)) {
     ids <- paste0("V", seq_len(ncol(X)))
   }
+  if (length(ids) != ncol(X)) {
+    stop("resolve.linf.feature.meta: feature.ids must have length ncol(X)")
+  }
   ids <- make.unique(as.character(ids), sep = "_")
 
   labels <- feature.labels
