@@ -4,7 +4,8 @@
 
 - Frozen transfer now correctly matches stable feature IDs that differ
   from display labels, including reordered columns and refined
-  hierarchies.
+  hierarchies. Unnamed query matrices use the same synthetic IDs as
+  hierarchy fitting.
 - Transfer returns `NA` when no realized child has positive feature
   abundance; it no longer invents an unretained depth-1 state. The
   existing `carry.forward.terminal.depths` argument cannot enable an
