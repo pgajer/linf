@@ -1,0 +1,10 @@
+{
+  "package": "linf",
+  "version": "0.3.0",
+  "publication_date": "2026-08-31",
+  "urls": [
+    "https://cran.r-project.org/src/contrib/linf_0.3.0.tar.gz",
+    "https://cran.r-project.org/src/contrib/Archive/linf/linf_0.3.0.tar.gz"
+  ],
+  "sha256": "3ec09b7d8c23b5c7041e98873cde183a63cd70a19cb4e8d0ced9b931ad2fc390"
+}

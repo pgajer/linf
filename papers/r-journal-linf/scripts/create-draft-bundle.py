@@ -1,115 +1,120 @@
 #!/usr/bin/env python3
-"""Create and independently clean-build the R Journal review bundle."""
-
-from __future__ import annotations
+"""Create and independently rebuild the checksum-pinned R Journal bundle."""
 
 import hashlib
+import json
 import os
 import subprocess
 import tempfile
+import time
 import zipfile
 from pathlib import Path
 
+from article_assets import latex_figure_files
 
 ROOT = Path(__file__).resolve().parents[1]
-PACKAGE_ROOT = ROOT.parents[1]
 OUTPUT = ROOT / "output" / "linf-r-journal-draft.zip"
-
-required = [
-    "Makefile",
-    "linf.Rmd",
-    "linf.pdf",
-    "linf.html",
-    "linf.R",
-    "linf.tex",
-    "RJournal.sty",
-    "RJreferences.bib",
-    "_Rpackages.txt",
-    "README.md",
-    "ACTION_PLAN.md",
-    "READINESS.md",
-    "citation_verification.html",
-    "motivation-letter/motivation-letter.md",
-    "motivation-letter/motivation-letter.pdf",
-    "scripts/render-paper.R",
-    "scripts/check-citation-verification.py",
-    "scripts/run-rjtools-checks.R",
-    "scripts/readiness-scan.py",
-]
-missing = [name for name in required if not (ROOT / name).is_file()]
-if missing:
-    raise SystemExit("Missing bundle input(s): " + ", ".join(missing))
-
-published_pdf = ROOT / "output" / "pdf" / "linf-r-journal.pdf"
-if not published_pdf.is_file():
-    raise SystemExit("Missing current rendered PDF: output/pdf/linf-r-journal.pdf")
 
 
 def sha256(path: Path) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as handle:
-        for block in iter(lambda: handle.read(1024 * 1024), b""):
-            digest.update(block)
-    return digest.hexdigest()
+    return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-if sha256(ROOT / "linf.pdf") != sha256(published_pdf):
-    raise SystemExit(
-        "linf.pdf is not the current output/pdf/linf-r-journal.pdf; rerun make audit"
-    )
+subprocess.run(["python3", "scripts/fetch-package.py"], cwd=ROOT, check=True)
+subprocess.run(
+    ["python3", "scripts/artifact-manifest.py", "verify"], cwd=ROOT, check=True
+)
+pin = json.loads((ROOT / "package-source.json").read_text())
+manifest = json.loads((ROOT / "build" / "artifact-manifest.json").read_text())
+required = [
+    "Makefile", "linf.Rmd", "linf.pdf", "linf.html", "linf.R", "linf.tex", "RJwrapper.tex",
+    "RJournal.sty", "RJreferences.bib", "_Rpackages.txt", "README.md",
+    "READINESS.md", "citation_verification.html",
+    "package-source.json", f"package/{pin['package']}_{pin['version']}.tar.gz",
+    "motivation-letter/motivation-letter.md",
+    "motivation-letter/motivation-letter.pdf",
+    "build/artifact-manifest.json", "build/render-info.txt",
+    "build/benchmark-results.csv", "build/session-info.txt",
+    "build/benchmark-environment.json",
+]
+required += sorted(
+    str(path.relative_to(ROOT))
+    for path in (ROOT / "scripts").glob("*")
+    if path.suffix in (".py", ".R")
+)
+required += latex_figure_files(ROOT)
+missing = [name for name in required if not (ROOT / name).is_file()]
+if missing:
+    raise SystemExit("Missing bundle input(s): " + ", ".join(missing))
+checksums = {name: sha256(ROOT / name) for name in required}
+checksum_text = "".join(f"{digest}  {name}\n" for name, digest in checksums.items())
 
 OUTPUT.parent.mkdir(parents=True, exist_ok=True)
-with tempfile.TemporaryDirectory(prefix="linf-rjournal-package-") as package_tmp:
-    build = subprocess.run(
-        ["R", "CMD", "build", str(PACKAGE_ROOT)],
-        cwd=package_tmp,
-        text=True,
-        capture_output=True,
-    )
-    if build.returncode != 0:
-        print(build.stdout)
-        print(build.stderr)
-        raise SystemExit("Could not build the exact linf source tarball")
-    tarballs = sorted(Path(package_tmp).glob("linf_*.tar.gz"))
-    if len(tarballs) != 1:
-        raise SystemExit("Expected exactly one linf source tarball")
-    package_tarball = tarballs[0]
-
-    with zipfile.ZipFile(OUTPUT, "w", compression=zipfile.ZIP_DEFLATED) as archive:
+with tempfile.TemporaryDirectory(prefix="linf-rjournal-bundle-") as tmp:
+    staging = Path(tmp)
+    candidate = staging / OUTPUT.name
+    with zipfile.ZipFile(candidate, "w", compression=zipfile.ZIP_DEFLATED) as archive:
         for name in required:
             archive.write(ROOT / name, arcname=name)
-        archive.write(package_tarball, arcname=f"package/{package_tarball.name}")
+        archive.writestr("SHA256SUMS", checksum_text)
 
-with tempfile.TemporaryDirectory(prefix="linf-rjournal-bundle-") as tmp:
-    extracted = Path(tmp)
-    with zipfile.ZipFile(OUTPUT) as archive:
+    # Include spaces in the extraction path to exercise the documented commands.
+    extracted = staging / "review copy"
+    with zipfile.ZipFile(candidate) as archive:
         archive.extractall(extracted)
+    for name, expected in checksums.items():
+        if sha256(extracted / name) != expected:
+            raise SystemExit(f"Archived file differs from its source: {name}")
+    if latex_figure_files(extracted) != latex_figure_files(ROOT):
+        raise SystemExit("The archive does not contain all referenced TeX figures")
 
-    if sha256(extracted / "linf.pdf") != sha256(published_pdf):
-        raise SystemExit("The archived PDF differs from the current rendered PDF")
+    # Force regeneration: an old PDF, HTML file, or plot cannot satisfy this test.
+    for name in manifest["outputs"]:
+        path = extracted / name
+        if not path.resolve().is_relative_to(extracted.resolve()):
+            raise SystemExit(f"Output path escapes the extracted archive: {name}")
+        if path.is_file():
+            path.unlink()
 
     clean_env = os.environ.copy()
-    for name in ("R_LIBS", "R_LIBS_USER", "R_PROFILE", "R_PROFILE_USER"):
+    for name in (
+        "R_LIBS", "R_LIBS_USER", "R_LIBS_SITE", "R_PROFILE", "R_PROFILE_USER",
+        "R_ENVIRON", "R_ENVIRON_USER",
+    ):
         clean_env.pop(name, None)
     clean_env["R_ENVIRON_USER"] = "/dev/null"
     clean_env["R_PROFILE_USER"] = "/dev/null"
     clean_env["R_MAKEVARS_USER"] = "/dev/null"
-    review_library = extracted / "review-library"
-    result = subprocess.run(
-        ["make", "audit", f"LIBRARY={review_library}"],
-        cwd=extracted,
-        text=True,
-        capture_output=True,
-        env=clean_env,
+    # Dependency installation is a prerequisite, not part of analysis timing.
+    prerequisites = subprocess.run(
+        ["make", "dependencies", f"LIBRARY={extracted / 'review-library'}"],
+        cwd=extracted, text=True, capture_output=True, env=clean_env,
     )
+    if prerequisites.returncode != 0:
+        print(prerequisites.stdout)
+        print(prerequisites.stderr)
+        raise SystemExit("Could not prepare the clean review library dependencies")
+    started = time.monotonic()
+    result = subprocess.run(
+        ["make", "audit", f"LIBRARY={extracted / 'review-library'}"],
+        cwd=extracted, text=True, capture_output=True, env=clean_env,
+    )
+    elapsed = time.monotonic() - started
+    (ROOT / "build" / "bundle-check.log").write_text(result.stdout + result.stderr)
     if result.returncode != 0:
         print(result.stdout)
         print(result.stderr)
-        raise SystemExit("The extracted review bundle did not pass its clean audit")
-    if not (extracted / "output" / "pdf" / "linf-r-journal.pdf").is_file():
-        raise SystemExit("The extracted review bundle did not reproduce the PDF")
+        raise SystemExit("The extracted bundle failed its clean audit")
+    for name in manifest["outputs"]:
+        if not (extracted / name).is_file():
+            raise SystemExit(f"The extracted bundle did not reproduce {name}")
+    if elapsed >= 600:
+        raise SystemExit("The extracted bundle took at least ten minutes to reproduce")
+    if candidate.stat().st_size > 10_000_000:
+        raise SystemExit("The bundle exceeds the journal's 10 MB guidance")
+    OUTPUT.write_bytes(candidate.read_bytes())
 
 print(
-    f"Created and independently clean-built {OUTPUT} "
-    f"with {len(required) + 1} files."
+    f"Created and independently rebuilt {OUTPUT} with {len(required) + 1} files "
+    f"in {elapsed:.1f} seconds; SHA-256 {sha256(OUTPUT)}."
 )

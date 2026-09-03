@@ -1,13 +1,12 @@
 # linf Notes
 
-This directory holds package-adjacent planning material and exploratory work
-that should stay with the `linf` project but should not be included in package
-builds.
+This directory holds scientific and technical reference material that belongs
+with the project but is not included in package builds. Internal task plans,
+agent handoffs, and review working files are kept outside the repository.
 
 ## Layout
 
-- `action_plans/`: package and vignette planning documents
-- `project/`: ownership notes, landmarks, downstream pipeline references, and other project-level notes
+- `project/`: landmarks, downstream pipeline references, and data inventories
 - `explorations/`: side explorations such as figure or concept sketches
 
 The main manuscript now lives under

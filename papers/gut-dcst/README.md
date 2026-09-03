@@ -10,8 +10,8 @@ microbiome application paper.
 - `assets/tables/`: manuscript-ready table files
 - `scripts/`: builders for figures, tables, and manuscript exports
 - `build/`: generated PDF output and visual check artifacts
-- `notes/`: action plans, handoffs, claim inventories, figure plans, and
-  journal-target planning
+- `notes/`: scientific provenance, claim inventories, validation records,
+  and formal submission material
 - `archive/2026-03-24-phase1/`: the phase-1 report and related archived paper files
 - `archive/2026-04-03-markdown-source/`: archived Pandoc-era Markdown source
 
@@ -28,18 +28,10 @@ The canonical manuscript source is
 The older Markdown draft was archived after the workflow switched to
 direct LaTeX editing for better float placement and layout control.
 
-The current journal-target shortlist is tracked in
-[`JOURNAL_TARGETS_gut_application_paper.md`](/Users/pgajer/current_projects/linf/papers/gut-dcst/notes/JOURNAL_TARGETS_gut_application_paper.md).
-
-The absorb-policy rerun plan is tracked in
-[`ACTION_PLAN_absorb_dcst_rerun_2026-04-10.md`](/Users/pgajer/current_projects/linf/papers/gut-dcst/notes/action_plans/ACTION_PLAN_absorb_dcst_rerun_2026-04-10.md).
-
-The local-AGP-QZA SILVA transfer rerun handoff is tracked in
-[`HANDOFF_agp_local_qza_silva_transfer_2026-04-26.md`](/Users/pgajer/current_projects/linf/papers/gut-dcst/notes/handoffs/HANDOFF_agp_local_qza_silva_transfer_2026-04-26.md).
-
-The Bayesian expansion plan beyond IBD, IBS, and autoimmune disease is
-tracked in
-[`ACTION_PLAN_bayesian_followup_expansion_2026-04-11.md`](/Users/pgajer/current_projects/linf/papers/gut-dcst/notes/action_plans/ACTION_PLAN_bayesian_followup_expansion_2026-04-11.md).
+The historical local-AGP-QZA taxonomy and transfer procedure is recorded in
+[AGP taxonomy and transfer provenance](notes/AGP_TAXONOMY_TRANSFER_PROVENANCE_2026-04-26.md).
+Internal planning, handoffs, and review drafts are maintained outside the
+repository; they are not required to build the manuscript.
 
 ## Versioning Policy
 

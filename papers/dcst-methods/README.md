@@ -15,7 +15,9 @@ Suggested purpose:
 Recommended top-level structure:
 
 - `manuscript/` for the new manuscript source
-- `notes/` for outlines, decisions, and migration plans
+- scientific provenance belongs with the corresponding sources and assets;
+  internal outlines, review prompts, and migration plans are kept outside the
+  repository
 - `assets/` for manuscript-facing figures and tables
 - `scripts/` for figure/table builders specific to this manuscript
 - `build/` for local compiled outputs

@@ -13,8 +13,14 @@
 </head>
 <body>
 <h1>Citation verification: <code>linf</code> R Journal article</h1>
-<p>All entries were checked on 2026-08-21. “Verified” means that the source
-supports the specific manuscript claim recorded below.</p>
+<p>The original source checks were completed on 2026-08-21.
+The <code>linfPackage</code> entry was reverified against CRAN 0.3.0 on
+2026-09-02. The <code>compositionsPackage</code> metadata and claim support
+were reverified against the official CRAN manual on the same date, correcting
+its citation year to 2025. The <code>MatrixPackage</code> entry was aligned to
+the installed 1.7-5 release and reverified against its archived CRAN source on
+2026-09-02. “Verified” means that the source supports the specific manuscript
+claim recorded below.</p>
 <table>
 <thead>
 <tr><th>Key and status</th><th>Manuscript claim</th><th>Source evidence</th><th>Metadata</th></tr>
@@ -30,17 +36,18 @@ supports the specific manuscript claim recorded below.</p>
   <td>John Aitchison (1986), <em>The Statistical Analysis of Compositional
   Data</em>, Chapman and Hall. DOI 10.1007/978-94-009-4109-0.</td>
 </tr>
-<tr data-citation-key="compositionsPackage" data-status="verified">
+<tr data-citation-key="compositionsPackage" data-status="verified" data-package-version="2.0-9" data-bib-year="2025">
   <td><code>compositionsPackage</code><br>verified</td>
   <td>Introduction and software comparison: <code>compositions</code>
   implements the Aitchison approach to positive compositional data, including
   log-ratio coordinates and statistical methods.</td>
-  <td>The CRAN description says that the package provides analysis of
-  compositional and positive data in the approach proposed by Aitchison and
-  Pawlowsky-Glahn; the reference manual documents the compositional classes and
-  log-ratio operations.
-  <a data-source-link href="https://CRAN.R-project.org/package=compositions">source</a></td>
-  <td>van den Boogaart, Tolosana-Delgado, and Bren (2026),
+  <td>The official CRAN manual lists version 2.0-9, Date 2025-08-20, and
+  Date/Publication 2025-08-21. Its package overview describes the Aitchison
+  approach; the <code>clr</code> and <code>ilr</code> sections define the
+  log-ratio coordinates and their use with multivariate statistical methods.
+  Metadata and claim support reverified on 2026-09-02.
+  <a data-source-link href="https://cran.r-project.org/web/packages/compositions/refman/compositions.html">official manual</a></td>
+  <td>van den Boogaart, Tolosana-Delgado, and Bren (2025),
   <em>compositions</em> 2.0-9.</td>
 </tr>
 <tr data-citation-key="robCompositionsPackage" data-status="verified">
@@ -65,29 +72,35 @@ supports the specific manuscript claim recorded below.</p>
   <td>Palarea-Albaladejo and Martín-Fernández (2026),
   <em>zCompositions</em> 1.6.2.</td>
 </tr>
-<tr data-citation-key="MatrixPackage" data-status="verified">
+<tr data-citation-key="MatrixPackage" data-status="verified" data-package-version="1.7-5" data-bib-year="2026">
   <td><code>MatrixPackage</code><br>verified</td>
   <td>Software design: <code>Matrix</code> provides the sparse matrix classes
   accepted by the <code>linf</code> sparse backend.</td>
-  <td>The CRAN description documents a hierarchy of sparse and dense matrix
-  classes and efficient operations backed by BLAS, LAPACK, and SuiteSparse.
-  <a data-source-link href="https://CRAN.R-project.org/package=Matrix">source</a></td>
-  <td>Bates, Maechler, and Jagan (2026), <em>Matrix</em> 1.7-6.</td>
+  <td>The archived 1.7-5 DESCRIPTION (Date 2026-03-20; publication 2026-03-21)
+  documents sparse and dense classes and operations backed by BLAS, LAPACK,
+  and SuiteSparse. Its <code>man/dgCMatrix-class.Rd</code> describes compressed
+  column-oriented sparse numeric matrices, storage, construction, and methods.
+  Metadata and claim support reverified on 2026-09-02. This citation matches
+  the installed version used for this draft's benchmarks; each rebuild records
+  its actual runtime versions separately.
+  <a data-source-link href="https://cran.r-project.org/src/contrib/Archive/Matrix/Matrix_1.7-5.tar.gz">versioned CRAN source and manual files</a></td>
+  <td>Bates, Maechler, and Jagan (2026), <em>Matrix</em> 1.7-5.</td>
 </tr>
-<tr data-citation-key="linfPackage" data-status="verified">
+<tr data-citation-key="linfPackage" data-status="verified" data-package-version="0.3.0">
   <td><code>linfPackage</code><br>verified</td>
   <td>Introduction and availability: <code>linf</code> implements L-infinity
   normalization, dominance assignment, hierarchical dCSTs, transfer,
   landmarks, and the demonstrated data workflows.</td>
-  <td>The version-controlled DESCRIPTION, exported documentation, tests, and
-  vignettes in the public repository support the software description. The
-  development version 0.3.0 is directly supported by the public repository;
-  the article's submission gate separately requires that version to be public
-  on CRAN.
-  <a data-source-link href="https://github.com/pgajer/linf">source</a></td>
-  <td>Pawel Gajer (2026), <em>linf</em> 0.3.0 development source. The package
-  DOI 10.32614/CRAN.package.linf currently resolves to the public CRAN release;
-  the version gate prevents article submission until CRAN publishes 0.3.0.</td>
+  <td>The CRAN 0.3.0 source DESCRIPTION and NAMESPACE, together with the
+  normalize.linf, linf.csts, refine.linf.csts, transfer.dcsts, linf.landmarks,
+  and linf.hypercube.embedding help topics and evaluated examples, support
+  the software description. The source archive is pinned by SHA-256 in
+  <a href="package-source.json">package-source.json</a>. Verified 2026-09-02.
+  <a data-source-link href="https://cran.r-project.org/src/contrib/linf_0.3.0.tar.gz">CRAN source</a>
+  <a data-source-link href="https://cran.r-project.org/web/packages/linf/linf.pdf">reference manual</a></td>
+  <td>Pawel Gajer (2026), <em>linf: L-Infinity Normalization and Dominant
+  Community State Types</em>, R package version 0.3.0. Published on CRAN
+  2026-08-31. DOI 10.32614/CRAN.package.linf.</td>
 </tr>
 <tr data-citation-key="gajerRavel2025linf" data-status="verified">
   <td><code>gajerRavel2025linf</code><br>verified</td>

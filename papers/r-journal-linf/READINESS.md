@@ -1,28 +1,51 @@
 # R Journal readiness
 
-## Verified state (2026-08-21)
+## Verified state (2026-09-02)
 
-- The article builds from the local `linf` 0.3.0 source and
+- The article builds from the checksum-pinned CRAN `linf` 0.3.0 source and
   produces a visually reviewed eight-page PDF plus a self-contained HTML
   article.
 - All applicable `rjtools` checks pass, including file structure, title and
   section case, abstract format, spelling, package availability, bibliography,
   and the fixed submission date.
 - The citation audit maps all 10 cited keys to verified source links and
-  supporting claims, and identifies 0.3.0 as the manuscript's development
-  version while retaining a separate public-CRAN gate.
+  supporting claims. The `linfPackage` row was reverified against the published
+  CRAN 0.3.0 source and manual, and its version is checked against the source
+  pin and BibTeX entry.
 - `R CMD check --as-cran` under the locally installed R-devel completes with
-  no errors or warnings and one expected timing NOTE, including examples,
-  tests, vignettes, and HTML/PDF manuals.
+  no errors, warnings, or notes with CRAN incoming-upload checks disabled for
+  this already-published version. Examples, tests, vignettes, and HTML/PDF
+  manuals are included. An unmodified incoming check warns only that 0.3.0 is
+  already on CRAN; this is not a journal-submission defect.
 - The review archive includes the Makefile, audit scripts, exact 0.3.0 package
-  source tarball, manuscript sources, motivating letter, and rendered outputs.
+  source tarball, manuscript sources, motivating letter, LaTeX figure files,
+  rendered outputs, and SHA-256 manifests.
   Its automated test clears user R-library/profile variables, installs the
-  bundled tarball into a fresh library, and reruns the article audit after
-  extraction.
+  bundled tarball into a fresh library, removes extracted generated outputs,
+  and reruns the article audit in a path containing spaces. Missing build
+  dependencies are installed before the timed reproduction test.
+- The benchmark table's percent sign is escaped for LaTeX, and tables are
+  placed after their introductions. The readiness scan rejects escaped table
+  markup, missing equation/table labels, and missing HTML accessibility labels.
+- Transfer coverage is reported separately at depths 1 and 2, and absorb-policy
+  labels are not interpreted as necessarily naming a sample's largest feature.
+  Benchmark storage is explicitly input-object size, not peak workflow memory.
+- The compositions 2.0-9 citation year is corrected to 2025 against the official
+  CRAN manual; its source-verified year is checked against the bibliography and
+  visible verification record. Figure 2 has headroom for all count labels.
+- Every figure referenced by the generated TeX must exist and be included in
+  the archive; a final PDF render preserves the supporting figure files.
+- The printed transfer example includes the split and reference fitting;
+  both figure captions explain their annotations. The archive records the
+  PDF benchmark's unrounded results, session information, package versions,
+  and basic machine information. The Matrix citation matches version 1.7-5
+  used in this draft; other build environments may use different versions.
+- The pkgdown website is live at <https://pgajer.github.io/linf/> (HTTP 200).
 
 ## Automated gates
 
-- `make render`: installs the current `linf` source into an isolated library
+- `make dependencies`: installs missing article build dependencies.
+- `make render`: installs the pinned CRAN `linf` source into an isolated library
   and evaluates the article in the official `rjtools` format.
 - `make citation-check`: requires one verified evidence row for every cited
   key and rejects unresolved bibliography entries.
@@ -34,12 +57,12 @@
 - `make submission-audit`: adds the public CRAN version gate and a full clean
   CRAN-style package check.
 
-## Current submission blocker
+## Public-version gate
 
-The article describes `linf` 0.3.0. Submission is blocked until that version is
-publicly available on CRAN. Drafting and technical review can proceed against
-the isolated installation of the local 0.3.0 source. The automated gate
-currently finds CRAN version 0.2.0 and therefore fails as intended.
+The article describes `linf` 0.3.0, published on CRAN on 2026-08-31. The
+source pin, isolated installation, and public CRAN version all agree, and the
+automated gate passes. No package version bump or further CRAN submission is
+needed for this article.
 
 ## Human gates
 
@@ -47,4 +70,6 @@ The author must approve authorship metadata, the AI-use disclosure, all
 publication-facing prose and results, the motivating letter, and the exact
 submission archive; and must confirm that the article is not published,
 submitted, or under review elsewhere. The article date must also be changed to
-the actual submission date if submission occurs after 2026-08-21.
+the actual submission date if submission occurs after the current draft date,
+2026-09-02. These human approvals have not been inferred from the package's
+CRAN acceptance.

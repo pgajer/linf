@@ -5,7 +5,10 @@ from __future__ import annotations
 
 import re
 import subprocess
+from html.parser import HTMLParser
 from pathlib import Path
+
+from article_assets import latex_figure_files
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -13,7 +16,6 @@ TEXT_FILES = [
     ROOT / "linf.Rmd",
     ROOT / "RJreferences.bib",
     ROOT / "README.md",
-    ROOT / "ACTION_PLAN.md",
     ROOT / "READINESS.md",
     ROOT / "motivation-letter" / "motivation-letter.md",
     ROOT / "_Rpackages.txt",
@@ -90,6 +92,18 @@ else:
     tex_text = tex.read_text(encoding="utf-8", errors="replace")
     if tex_text.count(r"\includegraphics") < 2:
         errors.append("generated LaTeX contains fewer than two plot inclusions")
+    try:
+        latex_figure_files(ROOT)
+    except ValueError as error:
+        errors.append(str(error))
+    for command in ("begin", "end", "caption"):
+        if rf"\textbackslash {command}" in tex_text:
+            errors.append(f"generated LaTeX contains escaped {command} markup")
+    if tex_text.count(r"\begin{table}") != 2 or tex_text.count(r"\end{table}") != 2:
+        errors.append("generated LaTeX must contain two complete table environments")
+    for label in ("eq:linf-normalization", "tab:interface", "tab:benchmark-table"):
+        if rf"\label{{{label}}}" not in tex_text:
+            errors.append(f"missing generated equation/table label: {label}")
 
 for log in sorted(ROOT.glob("*.log")) + sorted((ROOT / "build").glob("*.log")):
     text = log.read_text(encoding="utf-8", errors="replace")
@@ -105,6 +119,26 @@ if html.exists():
     html_text = html.read_text(encoding="utf-8", errors="replace")
     if re.search(r"citeproc-not-found|data-cites=\"\"", html_text):
         errors.append("rendered HTML contains unresolved citations")
+
+    class AccessibilityParser(HTMLParser):
+        def __init__(self):
+            super().__init__()
+            self.tables = []
+            self.alt_images = 0
+
+        def handle_starttag(self, tag, attrs):
+            values = dict(attrs)
+            if tag == "table":
+                self.tables.append(values.get("aria-label", ""))
+            if tag == "img" and values.get("alt", "").strip():
+                self.alt_images += 1
+
+    accessibility = AccessibilityParser()
+    accessibility.feed(html_text)
+    if len(accessibility.tables) != 2 or not all(accessibility.tables):
+        errors.append("the two HTML tables must have nonempty accessibility labels")
+    if accessibility.alt_images < 2:
+        errors.append("the HTML figures must have nonempty alternative text")
 
 if errors:
     print("Readiness scan failed:")

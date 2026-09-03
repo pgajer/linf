@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 
-description <- read.dcf("../../DESCRIPTION")
-target <- package_version(description[1, "Version"])
+pin <- jsonlite::fromJSON("package-source.json")
+target <- package_version(pin$version)
 installed <- utils::packageVersion("linf")
 
 available <- utils::available.packages(

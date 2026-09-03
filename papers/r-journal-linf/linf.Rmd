@@ -1,6 +1,6 @@
 ---
 title: "Linf: L-Infinity Normalization and Dominant Community State Types in R"
-date: "2026-08-21"
+date: "2026-09-03"
 abstract: >
   The linf package provides dependency-light tools for L-infinity
   normalization of nonnegative compositional matrices and for constructing
@@ -63,7 +63,7 @@ knitr::opts_chunk$set(
 library(linf)
 library(Matrix)
 
-stopifnot(packageVersion("linf") >= "0.3.0")
+stopifnot(packageVersion("linf") == "0.3.0")
 
 pretty_taxon <- function(x) {
   x <- sub("^g_", "", x)
@@ -86,6 +86,8 @@ accessible_kable <- function(x, caption, alt) {
   if (knitr::is_latex_output()) {
     args$format <- "latex"
     args$booktabs <- TRUE
+    args$position <- "H"
+    args$caption <- gsub("%", "\\%", caption, fixed = TRUE)
   } else if (knitr::is_html_output()) {
     escaped_alt <- gsub('"', "&quot;", alt, fixed = TRUE)
     args$format <- "html"
@@ -148,6 +150,13 @@ transfer_concordance <- table(
 )
 transfer_majority_fraction <-
   sum(apply(transfer_concordance, 1, max)) / sum(transfer_concordance)
+transfer_assigned <- colSums(!is.na(transferred$assignment))
+transfer_unassigned <- colSums(is.na(transferred$assignment))
+stopifnot(
+  transfer_assigned[["depth1"]] == 500L,
+  transfer_assigned[["depth2"]] == 486L,
+  transfer_unassigned[["depth2"]] == 14L
+)
 
 data(agp_gut, package = "linf")
 gut_filtered <- suppressMessages(filter.asv(
@@ -201,8 +210,8 @@ benchmark_linf <- function(n, p = 1000, repetitions = 5L) {
   data.frame(
     Samples = n,
     Features = p,
-    `Dense MB` = as.numeric(object.size(dense_x)) / 1024^2,
-    `Sparse MB` = as.numeric(object.size(sparse_x)) / 1024^2,
+    `Dense MiB` = as.numeric(object.size(dense_x)) / 1024^2,
+    `Sparse MiB` = as.numeric(object.size(sparse_x)) / 1024^2,
     `Dense seconds` = run(dense_x, "dense"),
     `Sparse seconds` = run(sparse_x, "sparse"),
     check.names = FALSE
@@ -213,6 +222,8 @@ benchmark_results <- rbind(
   benchmark_linf(1000),
   benchmark_linf(5000)
 )
+input_storage_ratio <- benchmark_results[["Dense MiB"]] /
+  benchmark_results[["Sparse MiB"]]
 ```
 
 # Introduction
@@ -276,14 +287,15 @@ transferable state vocabulary.
 
 # Representation and software design
 
-For a nonzero nonnegative row vector $x=(x_1,\ldots,x_p)$,
+For a nonzero nonnegative row vector $x=(x_1,\ldots,x_p)$, its
+L-infinity-normalized representation is
 
 \begin{equation}
 z = \frac{x}{\max_j x_j} .
 (\#eq:linf-normalization)
 \end{equation}
 
-is its L-infinity-normalized representation. Its largest coordinate is one,
+The largest coordinate of $z$ is one,
 and every zero in $x$ remains zero. The identity of the largest component is
 unchanged by the normalization. The package nevertheless keeps normalization
 as an explicit step because the normalized matrix is also used by refinement,
@@ -367,9 +379,17 @@ toy_fit <- linf.csts(
 data.frame(
   sample = rownames(toy),
   dominant = toy_dominant$label,
-  dCST = toy_fit$lineage.label
+  fitted = toy_fit$lineage.label,
+  transferred = transfer.dcsts(toy_linf, toy_fit, depth = 1,
+                              view = "absorb")$assignment[, "depth1"]
 )
 ```
+
+On these same inputs, raw largest-component assignment gives A, B, and C,
+whereas only A has support of at least two samples. Fitting retains A, and
+transfer reuses that vocabulary without recounting support in the query data.
+Thus `s4` receives A from the fitted and transferred classifications even
+though its largest component is C.
 
 `refine.linf.csts()` removes the feature used at the current lineage depth and
 repeats the support calculation within selected parent lineages. For example,
@@ -452,7 +472,7 @@ the cross-tabulation and is not an accuracy estimate against a biological gold
 standard. VALENCIA uses similarities to fitted reference centroids, whereas a
 dCST uses ordered component dominance and a support threshold.
 
-```{r valencia-concordance, echo=FALSE, fig.pos="H", fig.cap="Row percentages for absorb-policy depth-1 dCSTs versus VALENCIA CST assignments in the bundled 2,000-sample vaginal dataset. The constructions correspond closely but are not identical.", fig.alt=output_alt("Heat map with nine dCST rows and seven VALENCIA CST columns. Most rows have one dark cell, indicating that each dCST is concentrated in one VALENCIA CST.")}
+```{r valencia-concordance, echo=FALSE, fig.pos="!t", fig.cap="Row percentages for absorb-policy depth-1 dCSTs versus VALENCIA CST assignments in the bundled 2,000-sample vaginal dataset. Values at least 1 percent are labeled after rounding to whole percentages; unlabeled entries are below 1 percent, not necessarily zero. The constructions correspond closely but are not identical.", fig.alt=output_alt("Heat map with nine dCST rows and seven VALENCIA CST columns. Labels show rounded whole percentages for entries at least 1 percent; unlabeled entries may be nonzero. Most rows have one dark cell, indicating concentration in one VALENCIA CST.")}
 pct <- valencia_concordance_pct
 row_labels <- vapply(rownames(pct), pretty_taxon, character(1L))
 col_labels <- colnames(pct)
@@ -485,23 +505,38 @@ par(op)
 
 To demonstrate transfer without refitting, we selected 1,500 profiles with a
 fixed seed, fitted a depth-2 absorb-policy hierarchy, and assigned the 500 held
-out profiles with `transfer.dcsts()`. The held-out weighted within-dCST majority
-fraction relative to VALENCIA CSTs was
+out profiles with `transfer.dcsts()`. The held-out **depth-1** weighted
+within-dCST majority fraction relative to VALENCIA CSTs was
 `r sprintf("%.1f", 100 * transfer_majority_fraction)`%. The calculation tests
 the software's frozen-vocabulary path; it is not an independent clinical
 validation because both subsets originate from the same public training
 resource.
 
 ```{r transfer-example}
-transferred <- transfer.dcsts(
-  valencia_linf[test_index, ],
-  transfer_fit,
-  depth = 1:2,
-  view = "absorb"
+set.seed(20260820)
+training_index <- sort(sample(seq_len(nrow(z)), 1500))
+test_index <- setdiff(seq_len(nrow(z)), training_index)
+transfer_fit <- linf.csts(
+  z[training_index, ], n0 = 25, low.freq.policy = "absorb"
 )
+transfer_fit <- refine.linf.csts(
+  z[training_index, ], transfer_fit,
+  n0 = 12, refinement.factor = 2,
+  low.freq.policy = "absorb", verbose = FALSE
+)
+transferred <- transfer.dcsts(z[test_index, ], transfer_fit,
+                              depth = 1:2, view = "absorb")
 
-head(transferred$assignment, 4)
+colSums(!is.na(transferred$assignment))
 ```
+
+All `r transfer_assigned[["depth1"]]` held-out profiles receive depth-1 labels.
+At depth 2, `r transfer_assigned[["depth2"]]` receive labels and
+`r transfer_unassigned[["depth2"]]` remain unassigned (`NA`) under the frozen
+hierarchy. The `r sprintf("%.1f", 100 * transfer_majority_fraction)`% summary
+above therefore describes depth 1, not depth-2 coverage or agreement.
+Traversal stops when a parent has no fitted child or none of its child-defining
+features has positive abundance in the query sample; deeper labels remain `NA`.
 
 # Gut microbiome and sparse matrices
 
@@ -517,11 +552,11 @@ features. Seven features pass `n0 = 30` under the absorb policy. The median
 largest relative abundance is `r sprintf("%.2f", median(gut_dominance))`, much
 lower than in strongly single-species-dominated vaginal communities. Figure
 \@ref(fig:gut-summary) shows both the retained dCST sizes and the continuous
-dominance-strength distribution. The latter should be inspected alongside the
-categorical assignments because a dCST label alone does not record how strongly
-the named feature dominates.
+dominance-strength distribution. The histogram measures each sample's largest
+relative abundance, which need not belong to its assigned dCST feature under
+the absorb policy.
 
-```{r gut-summary, echo=FALSE, fig.pos="H", fig.cap="Absorb-policy depth-1 dCST sizes (left) and dominance strength (right) in the filtered, stratified American Gut demonstration subset. The subset is intended for software demonstration rather than population inference.", fig.alt=output_alt("Two panels. The left is a bar chart of seven gut dCST sizes, led by Bacteroides. The right is a histogram of the largest relative abundance per sample, concentrated below one half with a right tail.")}
+```{r gut-summary, echo=FALSE, fig.pos="H", fig.cap="Absorb-policy depth-1 dCST sizes (left) and dominance strength (right) in the filtered, stratified American Gut demonstration subset. The dashed line marks the median largest relative abundance. The subset is intended for software demonstration rather than population inference.", fig.alt=output_alt("Two panels. The left is a bar chart of seven gut dCST sizes, led by Bacteroides. The right is a histogram of the largest relative abundance per sample, concentrated below one half with a right tail; the dashed line marks its median.")}
 op <- par(mfrow = c(1, 2), mar = c(7.5, 4, 2, 0.5))
 bars <- barplot(
   gut_sizes,
@@ -530,6 +565,7 @@ bars <- barplot(
   las = 2,
   cex.names = 0.72,
   ylab = "Samples",
+  ylim = c(0, max(gut_sizes) * 1.15),
   main = "Depth-1 dCST size"
 )
 text(bars, gut_sizes, labels = gut_sizes, pos = 3, cex = 0.7)
@@ -552,13 +588,20 @@ few observed features. Table \@ref(tab:benchmark-table) reports a small syntheti
 benchmark with 1,000 features and 1% nonzero entries. Each time is the median
 of five calls that normalize the matrix and fit absorb-policy depth-1 dCSTs.
 The values are build-machine measurements rather than general performance
-guarantees. In this example the sparse representation reduces object size by
-about two orders of magnitude and also lowers elapsed time.
+guarantees. The storage columns measure the input objects with `object.size()`,
+not peak memory during normalization or fitting. The sparse input objects are
+approximately `r sprintf("%.0f", min(input_storage_ratio))` to
+`r sprintf("%.0f", max(input_storage_ratio))` times smaller than the dense
+inputs in this example; the sparse workflow also has lower elapsed times.
+This rendering used R `r as.character(getRversion())` and Matrix
+`r packageDescription("Matrix", fields = "Version")`. The archive records the PDF
+benchmark results, `sessionInfo()`, package versions, and basic machine
+information in its `build/` directory.
 
-```{r benchmark-table, echo=FALSE, tab.alt="Table comparing memory use and median elapsed time for dense and sparse linf workflows on synthetic matrices with 1,000 and 5,000 samples."}
+```{r benchmark-table, echo=FALSE, tab.alt="Table comparing dense and sparse input-object storage in MiB and median workflow elapsed time on synthetic matrices with 1,000 and 5,000 samples. Storage is not peak workflow memory."}
 benchmark_display <- benchmark_results
-benchmark_display[, c("Dense MB", "Sparse MB")] <- round(
-  benchmark_display[, c("Dense MB", "Sparse MB")], 2
+benchmark_display[, c("Dense MiB", "Sparse MiB")] <- round(
+  benchmark_display[, c("Dense MiB", "Sparse MiB")], 2
 )
 benchmark_display[, c("Dense seconds", "Sparse seconds")] <- round(
   benchmark_display[, c("Dense seconds", "Sparse seconds")], 3
@@ -567,8 +610,8 @@ accessible_kable(
   benchmark_display,
   caption = paste(
     "Dense and sparse backend benchmark on synthetic matrices.",
-    "Matrices contain 1,000 features and 1% nonzero entries; elapsed values are medians of five normalization-plus-dCST fits on the build machine.",
-    "Sparse storage reduces both memory use and elapsed time in this demonstration, but the timings are not general performance guarantees."
+    "Matrices contain 1,000 features and 1% nonzero entries; storage is input-object size in MiB, not peak workflow memory, and times are medians of five normalization-plus-dCST fits.",
+    "Sparse input objects are smaller and fits are faster on this build machine; timings are not general performance guarantees."
   ),
   alt = knitr::opts_current$get("tab.alt")
 )
@@ -602,21 +645,23 @@ Several aspects of a dCST analysis require an explicit scientific decision.
 
 The pure policy is useful when the scientific question requires retained states
 to contain only samples originally dominated by the named feature. The absorb
-policy is easier to display and guarantees assignment when at least one state
-is retained, but its reassigned samples may be only weakly dominated by that
-feature. The package stores both views so this choice can be inspected rather
-than hidden.
+policy reassigns samples from small groups among the retained features, but
+reassigned samples need not be dominated by their assigned feature. In the toy
+example, `s4` is assigned to A even though C is its largest feature. The package
+stores both views so this choice can be inspected rather than hidden.
 
 # Reproducibility and availability
 
 \CRANpkg{linf} is distributed under the MIT license from CRAN and developed at
 <https://github.com/pgajer/linf>. The package includes the two demonstration
-datasets used here, source scripts under `data-raw/`, unit tests, and two
-installed workflow vignettes. This article is generated from `linf.Rmd` with
-the R Journal's \CRANpkg{rjtools} format. The build installs the current package
-into an isolated article library, evaluates every result, runs the citation and
-journal-format checks, and produces a submission archive. The submission gate
-also verifies that the described version is publicly available on CRAN.
+datasets used here, unit tests, and two installed workflow vignettes; the
+repository also provides the data-preparation scripts under `data-raw/`.
+This article is generated from `linf.Rmd` with the R Journal's
+\CRANpkg{rjtools} format. The build installs the checksum-verified CRAN 0.3.0
+source into an isolated article library, evaluates every result, and runs the
+citation and journal-format checks. The review archive includes that source
+tarball, the build scripts, and all inputs needed to regenerate the article.
+The submission gate also verifies public CRAN availability.
 
 # Discussion
 

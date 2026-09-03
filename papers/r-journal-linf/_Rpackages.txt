@@ -3,3 +3,4 @@ Matrix
 knitr
 rmarkdown
 rjtools
+jsonlite

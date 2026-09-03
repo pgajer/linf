@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import re
 from collections import Counter, defaultdict
 from html.parser import HTMLParser
@@ -48,11 +49,18 @@ class EvidenceParser(HTMLParser):
                 "status": values.get("data-status", "").strip(),
                 "links": [],
                 "tag": tag,
+                "version": values.get("data-package-version", ""),
+                "year": values.get("data-bib-year", ""),
+                "text": "",
             }
             self.entries.append(entry)
             self.stack.append(entry)
         if self.stack and tag == "a" and "data-source-link" in values:
             self.stack[-1]["links"].append(values.get("href", "").strip())
+
+    def handle_data(self, data: str) -> None:
+        if self.stack:
+            self.stack[-1]["text"] += data
 
     def handle_endtag(self, tag: str) -> None:
         if self.stack and self.stack[-1]["tag"] == tag:
@@ -105,6 +113,42 @@ def main() -> int:
             errors.append(f"missing source link for {key}")
     for status, status_keys in sorted(statuses.items()):
         errors.append(f"non-passing status {status}: " + ", ".join(sorted(status_keys)))
+
+    bib_text = read(args.bib)
+    for entry in entries:
+        key = str(entry["key"])
+        if key == "compositionsPackage" and (not entry["year"] or not entry["version"]):
+            errors.append("compositions citation lacks verified year/version metadata")
+        if not entry["year"] and not entry["version"]:
+            continue
+        block = re.search(r"@\w+\s*\{\s*" + re.escape(key) + r",(.*?)(?=\n@|\Z)",
+                          bib_text, re.S)
+        if not block:
+            continue  # A missing entry is reported by the key check above.
+        if entry["year"]:
+            year = re.search(r"\byear\s*=\s*\{(\d{4})\}", block[1])
+            if not year or year[1] != entry["year"]:
+                errors.append(f"{key} BibTeX year differs from verified source metadata")
+            visible_years = set(re.findall(r"\((\d{4})\)", str(entry["text"])))
+            if visible_years != {entry["year"]}:
+                errors.append(f"{key} visible citation year differs from verified source metadata")
+        if entry["version"] and f"R package version {entry['version']}" not in block[1]:
+            errors.append(f"{key} BibTeX version differs from verified source metadata")
+
+    pin = json.loads((args.source.parent / "package-source.json").read_text())
+    expected_version = pin["version"]
+    package_rows = [entry for entry in entries if entry["key"] == "linfPackage"]
+    if len(package_rows) == 1:
+        row = package_rows[0]
+        if row["version"] != expected_version:
+            errors.append("linf citation evidence does not match the pinned version")
+        versions = set(re.findall(r"\b\d+\.\d+\.\d+\b", str(row["text"])))
+        if versions != {expected_version}:
+            errors.append("linf citation evidence contains missing or stale version text")
+    bib_text = read(args.bib)
+    package_bib = re.search(r"@manual\{linfPackage,(.*?)(?=\n@|\Z)", bib_text, re.S)
+    if not package_bib or f"R package version {expected_version}" not in package_bib[1]:
+        errors.append("linf BibTeX version does not match the pinned version")
 
     if not cited:
         errors.append("no manuscript citations found")
