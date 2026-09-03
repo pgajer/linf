@@ -42,15 +42,13 @@ minimum-depth AGP count processing.
 ### PRIME AGP Data
 
 The PRIME/project AGP dataset available to the paper workflow was taxon-level.
-I did not find usable ASV sequences there, which means it cannot support a true
+No usable ASV sequences were found in that source, so it could not support a
 rerun of taxonomy assignment through the same sequence-level validation
 pipeline.
 
 ## Redbiom Search And Sequence Recovery
 
-I used a temporary environment with `redbiom` and `biom-format`:
-
-`/tmp/linf-redbiom-venv`
+Sequence recovery used `redbiom` and `biom-format`.
 
 The exact redbiom context exists:
 
@@ -59,7 +57,7 @@ The exact redbiom context exists:
 `redbiom summarize contexts` reported approximately 313,690 samples and
 8,625,124 features for this context.
 
-I also confirmed that related Deblur V4 contexts exist at 90, 100, 125, 150,
+Related Deblur V4 contexts were available at 90, 100, 125, 150,
 200, 250, and 300 nt. The 100 nt context is the one matching the local AGP
 preprocessing notes.
 
@@ -78,8 +76,8 @@ redbiom fetch features-contained \
   > /Users/pgajer/current_projects/gut_microbiome/outputs/agp_silva_taxonomy/2026-04-26-redbiom-md5-sequence-map/agp_context_features_100nt.txt
 ```
 
-I then computed md5(sequence) over all context feature sequences and matched
-those hashes to the 286,255 md5 feature IDs in the local AGP QZA.
+MD5(sequence) was computed over all context feature sequences and matched to
+the 286,255 md5 feature IDs in the local AGP QZA.
 
 Result:
 

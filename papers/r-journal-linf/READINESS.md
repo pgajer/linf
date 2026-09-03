@@ -1,5 +1,16 @@
 # R Journal readiness
 
+## Package correction gate (2026-09-03)
+
+The archived article remains reproducible with its pinned CRAN 0.3.0 source,
+but is not ready for journal submission. The 0.3.1 transfer correction removes
+one out-of-hierarchy fallback assignment in the held-out example: depth-1
+coverage becomes 499/500, while depth-2 coverage remains 486/500. Depth-1
+concordance among assigned samples remains 93.8% after rounding. After 0.3.1
+is public on CRAN, update the source pin, citation, coverage text and assertions,
+then regenerate and audit the article and archive. The successful 0.3.0 build
+below is reproduction evidence, not clearance of this correctness issue.
+
 ## Verified state (2026-09-02)
 
 - The article builds from the checksum-pinned CRAN `linf` 0.3.0 source and
@@ -60,9 +71,9 @@
 ## Public-version gate
 
 The article describes `linf` 0.3.0, published on CRAN on 2026-08-31. The
-source pin, isolated installation, and public CRAN version all agree, and the
-automated gate passes. No package version bump or further CRAN submission is
-needed for this article.
+source pin, isolated installation, and public CRAN version agree for that
+historical build. The package correction gate above now requires an updated
+public source version and article rebuild before submission.
 
 ## Human gates
 
