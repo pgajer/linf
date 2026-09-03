@@ -15,7 +15,7 @@ that sample.'></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">linf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -120,10 +120,9 @@ order; <code>"random"</code> samples one tied lineage; <code>"error"</code> stop
 
 
 <dt id="arg-carry-forward-terminal-depths">carry.forward.terminal.depths<a class="anchor" aria-label="anchor" href="#arg-carry-forward-terminal-depths"></a></dt>
-<dd><p>Logical. If <code>TRUE</code>, an unmatched
-depth-1 sample may fall back to its dominant retained feature. Terminal
-lineages at later depths are assigned only when they appear as realized
-stable lineage sets in the fitted hierarchy.</p></dd>
+<dd><p>Logical, retained for call compatibility.
+Under either setting, terminal lineages are assigned only where they occur
+in the fitted hierarchy. No out-of-hierarchy fallback is performed.</p></dd>
 
 
 <dt id="arg-sep">sep<a class="anchor" aria-label="anchor" href="#arg-sep"></a></dt>
@@ -142,7 +141,10 @@ requested depths.</p></li>
 <li><p><code>all.depths</code>: character matrix for all fitted depths.</p></li>
 <li><p><code>depth</code>: requested depth vector.</p></li>
 <li><p><code>view</code>, <code>match.by</code>, <code>tie.method</code>: settings used.</p></li>
-</ul></div>
+</ul><p>At any depth with no realized candidate or no positive abundance for its
+candidate features, that depth and all subsequent depths are <code>NA</code>.
+Returned lineages use display labels regardless of <code>match.by</code>.</p>
+    </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>

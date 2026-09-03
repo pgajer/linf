@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">linf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,6 +36,15 @@
       <small>Source: <a href="https://github.com/pgajer/linf/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.3.1" id="linf-031">linf 0.3.1<a class="anchor" aria-label="anchor" href="#linf-031"></a></h2>
+<ul><li>Frozen transfer now correctly matches stable feature IDs that differ from display labels, including reordered columns and refined hierarchies.</li>
+<li>Transfer returns <code>NA</code> when no realized child has positive feature abundance; it no longer invents an unretained depth-1 state. The existing <code>carry.forward.terminal.depths</code> argument cannot enable an out-of-tree fallback.</li>
+<li>Dense and sparse absorption use the same original-column ordering for positive ties, including seeded random ties. With no positive retained value, the fallback remains the state with greatest reference support.</li>
+<li>Invalid feature-metadata lengths and non-finite normalization tolerances are rejected explicitly. Normalization documentation now distinguishes unscaled small rows, exact-zero rows, and downstream absorption.</li>
+<li>Refinement and transfer recover feature identities from fitted transitions, so taxonomy IDs or display labels containing <code>__</code> are not split apart.</li>
+<li>Sparse matrix preparation avoids deprecated direct triangular-to-general coercion. The DESCRIPTION citation now includes authors and year.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.3.0" id="linf-030">linf 0.3.0<a class="anchor" aria-label="anchor" href="#linf-030"></a></h2>
 <p>This release simplifies the public API and requires the explicit dCST object structure introduced in <code>linf</code> 0.2.0.</p>

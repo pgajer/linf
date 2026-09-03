@@ -209,22 +209,32 @@ csts2 <- refine.linf.csts(M, csts, n0 = 30)
 tab2 <- sort(table(csts2$lineage.label), decreasing = TRUE)
 tab2[tab2 >= 20]
 #> 
-#>                           d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__Bacteroidaceae;g__Bacteroides;s__ 
-#>                                                                                                                        174 
-#>                                                                                                              RARE_DOMINANT 
-#>                                                                                                                        159 
-#> d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Enterobacterales;f__Enterobacteriaceae;g__Escherichia-Shigella;s__ 
-#>                                                                                                                        114 
-#>                          d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__Prevotellaceae;g__Prevotella_7;s__ 
-#>                                                                                                                         89 
-#>                        d__Bacteria;p__Firmicutes;c__Bacilli;o__Staphylococcales;f__Staphylococcaceae;g__Staphylococcus;s__ 
-#>                                                                                                                         77 
-#>           d__Bacteria;p__Verrucomicrobiota;c__Verrucomicrobiae;o__Verrucomicrobiales;f__Akkermansiaceae;g__Akkermansia;s__ 
-#>                                                                                                                         63 
-#>                          d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Enterobacterales;f__Pasteurellaceae;__;__ 
-#>                                                                                                                         51 
-#>                          d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__Prevotellaceae;g__Prevotella_9;s__ 
-#>                                                                                                                         36
+#>                                                                                                                                                                                                                RARE_DOMINANT 
+#>                                                                                                                                                                                                                          159 
+#>                                                                                                              d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__Bacteroidaceae;g__Bacteroides;s____RARE_DOMINANT 
+#>                                                                                                                                                                                                                          105 
+#>                                                                                                                          d__Bacteria;p__Firmicutes;c__Bacilli;o__Staphylococcales;f__Staphylococcaceae;g__Staphylococcus;s__ 
+#>                                                                                                                                                                                                                           77 
+#> d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Enterobacterales;f__Enterobacteriaceae;g__Escherichia-Shigella;s____d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__Bacteroidaceae;g__Bacteroides;s__ 
+#>                                                                                                                                                                                                                           68 
+#>                                                                                                             d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__Prevotellaceae;g__Prevotella_7;s____RARE_DOMINANT 
+#>                                                                                                                                                                                                                           52 
+#>                                                                                                                            d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Enterobacterales;f__Pasteurellaceae;__;__ 
+#>                                                                                                                                                                                                                           51 
+#>                                                                                    d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Enterobacterales;f__Enterobacteriaceae;g__Escherichia-Shigella;s____RARE_DOMINANT 
+#>                                                                                                                                                                                                                           46 
+#>           d__Bacteria;p__Verrucomicrobiota;c__Verrucomicrobiae;o__Verrucomicrobiales;f__Akkermansiaceae;g__Akkermansia;s____d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__Bacteroidaceae;g__Bacteroides;s__ 
+#>                                                                                                                                                                                                                           38 
+#>        d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__Prevotellaceae;g__Prevotella_7;s____d__Bacteria;p__Firmicutes;c__Negativicutes;o__Veillonellales-Selenomonadales;f__Veillonellaceae;g__Veillonella;s__ 
+#>                                                                                                                                                                                                                           37 
+#>                      d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__Bacteroidaceae;g__Bacteroides;s____d__Bacteria;p__Firmicutes;c__Clostridia;o__Oscillospirales;f__Ruminococcaceae;g__Faecalibacterium;s__ 
+#>                                                                                                                                                                                                                           36 
+#>                                                                                                                            d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__Prevotellaceae;g__Prevotella_9;s__ 
+#>                                                                                                                                                                                                                           36 
+#>                                         d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__Bacteroidaceae;g__Bacteroides;s____d__Bacteria;p__Firmicutes;c__Clostridia;o__Lachnospirales;f__Lachnospiraceae;__;__ 
+#>                                                                                                                                                                                                                           33 
+#>                                                                                              d__Bacteria;p__Verrucomicrobiota;c__Verrucomicrobiae;o__Verrucomicrobiales;f__Akkermansiaceae;g__Akkermansia;s____RARE_DOMINANT 
+#>                                                                                                                                                                                                                           25
 ```
 
 ### Dominance strength
