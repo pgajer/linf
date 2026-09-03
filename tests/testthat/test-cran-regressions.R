@@ -18,6 +18,16 @@ test_that("default transfer scores display lineages after ID alignment", {
   }
 })
 
+test_that("unnamed matrices use the fitted synthetic feature IDs", {
+  X <- matrix(c(10, 2, 1, 9, 3, 1, 1, 10, 2, 1, 9, 3), ncol = 3, byrow = TRUE)
+  for (backend in c("dense", "sparse")) {
+    fit <- linf.csts(X, n0 = 2, low.freq.policy = "absorb", backend = backend)
+    fit <- refine.linf.csts(X, fit, n0 = 1, low.freq.policy = "absorb", verbose = FALSE)
+    expect_equal(transfer.dcsts(X, fit, backend = backend)$assignment[, 1], fit$lineage.labels[[1]])
+    expect_equal(transfer.dcsts(X, fit, backend = backend)$assignment[, 2], fit$lineage.labels[[2]])
+  }
+})
+
 test_that("taxonomy separators do not split feature identities", {
   X <- rbind(s1 = c(10, 3, 1), s2 = c(9, 3, 2), s3 = c(1, 10, 3), s4 = c(2, 9, 3))
   colnames(X) <- c("g__A;s__a", "g__B;s__b", "g__C;s__c")
