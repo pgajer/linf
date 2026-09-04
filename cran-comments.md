@@ -16,7 +16,18 @@ CRAN lists no reverse dependencies (checked 2026-09-03).
   0 errors, 0 warnings, 1 NOTE: "Days since last update: 3".
 * All 234 test assertions pass, with no failures, warnings, or skips.
 * Examples, both vignettes (including rebuilding), and PDF/HTML manuals pass.
+* GitHub Actions: macOS and Windows release, Ubuntu release/devel/oldrel-1:
+  all five checks report Status: OK.
+* R-hub: Linux, Windows, and macOS R-devel: all three checks report Status: OK.
+  R-devel revisions are r90473, r90474, and r90478, respectively.
+* Win-builder release (R 4.6.1 ucrt) and oldrelease (R 4.5.3 ucrt):
+  each has 0 errors, 0 warnings, 1 NOTE.
 
-Final-source GitHub Actions, R-hub and Win-builder checks are pending. This is
-a preparation record, not a statement that every requested pre-submission
-check is complete.
+The Win-builder NOTE reports "Days since last update: 4" and flags "Gajer"
+as a possible misspelling. Gajer is the correctly spelled author surname.
+The update-interval difference from the local check reflects the check dates.
+The CI checks use `--no-manual --as-cran`; the local full check includes manuals
+and incoming feasibility checks. All completed platform suites pass 234 assertions.
+
+The final Win-builder devel result is pending; this preparation record
+will be finalized after its complete logs are reviewed.
