@@ -3,7 +3,7 @@
 - Milestone: `pre-external-ibd-refactor`
 - Date: `2026-04-24`
 - Git branch: `main`
-- Git commit: `d89c3de`
+- Git commit (mapped after the 2026-09-03 private-file history cleanup): `121659053028f9ab57bab7e8daf0d50cbfdb8555`
 - Repo root: `/Users/pgajer/current_projects/linf`
 
 Included current built PDF.
