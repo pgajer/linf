@@ -116,10 +116,7 @@ are *Bacteroides* (239 samples), *Escherichia-Shigella* (134), and
 *Staphylococcus* (102). In total, 159 samples from low-support provisional
 dominance sample sets are absorbed into retained states.
 
-See `vignette("linf-intro")` for the package-safe demonstration. The
-[full-analysis source](https://github.com/pgajer/linf/blob/main/vignettes/articles/gut-dcst-disease-analysis.Rmd)
-uses an independently selected 5,000-sample analysis cohort and is maintained
-as a companion repository article rather than a package vignette.
+See `vignette("linf-intro")` for a reproducible demonstration using the bundled data.
 
 ## Vignettes
 

@@ -20,16 +20,16 @@ document: attrs
 	@R -q -e "devtools::document()" > $(LOGDIR)/$(PKGNAME)_document.log 2>&1
 	@echo "Documentation generated (log: $(LOGDIR)/$(PKGNAME)_document.log)"
 
-build: clean document
+build: repo-hygiene clean document
 	@mkdir -p $(LOGDIR)
 	@echo "Building package..."
 	@R CMD build . > $(LOGDIR)/$(PKGNAME)_build.log 2>&1
 	@echo "Package built successfully (log: $(LOGDIR)/$(PKGNAME)_build.log)"
 
-build-verbose: clean document
+build-verbose: repo-hygiene clean document
 	R CMD build .
 
-build-log: clean document
+build-log: repo-hygiene clean document
 	@mkdir -p $(LOGDIR)
 	R CMD build . > $(LOGDIR)/$(PKGNAME)_build.log 2>&1
 	@echo "Build output saved to $(LOGDIR)/$(PKGNAME)_build.log"
@@ -57,3 +57,7 @@ winbuilder-devel: build
 
 winbuilder-oldrelease: build
 	Rscript tools/check-win-builder.R oldrelease
+
+.PHONY: repo-hygiene
+repo-hygiene:
+	python3 tools/check-no-manuscripts.py

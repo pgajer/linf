@@ -91,3 +91,9 @@ Meta/
 README.html
 /doc/
 /Meta/
+
+# Manuscripts and study assets live in the private manuscript repository.
+/papers/
+/notes/
+/vignettes/articles/gut-dcst-disease-analysis.Rmd
+/docs/
