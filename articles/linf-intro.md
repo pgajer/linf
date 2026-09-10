@@ -16,7 +16,6 @@ maximum value, projecting samples onto the L-infinity unit ball. Every
 normalized row has a maximum of exactly 1.
 
 ``` r
-
 set.seed(1)
 S.counts <- matrix(
   rpois(30, lambda = 5),
@@ -37,7 +36,6 @@ the within-sample maximum. Samples with the same dominant feature form a
 depth-1 *dominance sample set*.
 
 ``` r
-
 dominant.features <- linf.dominant.features(Z)
 table(dominant.features$label)
 #> 
@@ -53,7 +51,6 @@ threshold `n0`) into a `RARE_DOMINANT` bucket. This produces *Dominant
 Community State Types* (dCSTs).
 
 ``` r
-
 A <- matrix(c(5, 1, 0), nrow = 6, ncol = 3, byrow = TRUE)
 B <- matrix(c(1, 5, 0), nrow = 2, ncol = 3, byrow = TRUE)
 C <- matrix(c(1, 0, 5), nrow = 2, ncol = 3, byrow = TRUE)
@@ -95,7 +92,6 @@ phenotype frequencies, effect sizes, and hypothesis tests must not be
 interpreted as population results.
 
 ``` r
-
 data(agp_gut)
 str(agp_gut, max.level = 1)
 #> List of 4
@@ -113,7 +109,6 @@ Metadata includes self-reported health conditions parsed from the AGP
 questionnaire:
 
 ``` r
-
 disease_cols <- c("IBS", "IBD", "Obesity", "Cardiovascular_disease",
                   "Autoimmune", "Acid_reflux")
 sapply(disease_cols, function(col) sum(agp_gut$meta[[col]], na.rm = TRUE))
@@ -130,7 +125,6 @@ removes low-depth samples and rare taxa in one call. We require at least
 1,000 reads per sample and taxa present in at least 5% of samples.
 
 ``` r
-
 filt <- filter.asv(agp_gut$counts, min.lib = 1000, prev.prop = 0.05,
                    min.count = 2)
 #> Samples kept: 763 / 766  (min.lib = 1000)
@@ -144,7 +138,6 @@ dim(filt$rel)
 ### Step 2: L-infinity normalization
 
 ``` r
-
 M <- normalize.linf(filt$counts)
 
 # Verify: every row max is 1
@@ -154,7 +147,6 @@ stopifnot(all(abs(apply(M, 1, max) - 1) < 1e-10))
 ### Step 3: Depth-1 dCSTs
 
 ``` r
-
 csts <- linf.csts(M, n0 = 30)
 
 # dCST size distribution
@@ -197,7 +189,6 @@ This captures co-dominance patterns that are especially important in the
 diverse gut environment.
 
 ``` r
-
 csts2 <- refine.linf.csts(M, csts, n0 = 30)
 #> ========================================
 #> AUTOMATIC REFINEMENT MODE
@@ -209,32 +200,22 @@ csts2 <- refine.linf.csts(M, csts, n0 = 30)
 tab2 <- sort(table(csts2$lineage.label), decreasing = TRUE)
 tab2[tab2 >= 20]
 #> 
-#>                                                                                                                                                                                                                RARE_DOMINANT 
-#>                                                                                                                                                                                                                          159 
-#>                                                                                                              d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__Bacteroidaceae;g__Bacteroides;s____RARE_DOMINANT 
-#>                                                                                                                                                                                                                          105 
-#>                                                                                                                          d__Bacteria;p__Firmicutes;c__Bacilli;o__Staphylococcales;f__Staphylococcaceae;g__Staphylococcus;s__ 
-#>                                                                                                                                                                                                                           77 
-#> d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Enterobacterales;f__Enterobacteriaceae;g__Escherichia-Shigella;s____d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__Bacteroidaceae;g__Bacteroides;s__ 
-#>                                                                                                                                                                                                                           68 
-#>                                                                                                             d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__Prevotellaceae;g__Prevotella_7;s____RARE_DOMINANT 
-#>                                                                                                                                                                                                                           52 
-#>                                                                                                                            d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Enterobacterales;f__Pasteurellaceae;__;__ 
-#>                                                                                                                                                                                                                           51 
-#>                                                                                    d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Enterobacterales;f__Enterobacteriaceae;g__Escherichia-Shigella;s____RARE_DOMINANT 
-#>                                                                                                                                                                                                                           46 
-#>           d__Bacteria;p__Verrucomicrobiota;c__Verrucomicrobiae;o__Verrucomicrobiales;f__Akkermansiaceae;g__Akkermansia;s____d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__Bacteroidaceae;g__Bacteroides;s__ 
-#>                                                                                                                                                                                                                           38 
-#>        d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__Prevotellaceae;g__Prevotella_7;s____d__Bacteria;p__Firmicutes;c__Negativicutes;o__Veillonellales-Selenomonadales;f__Veillonellaceae;g__Veillonella;s__ 
-#>                                                                                                                                                                                                                           37 
-#>                      d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__Bacteroidaceae;g__Bacteroides;s____d__Bacteria;p__Firmicutes;c__Clostridia;o__Oscillospirales;f__Ruminococcaceae;g__Faecalibacterium;s__ 
-#>                                                                                                                                                                                                                           36 
-#>                                                                                                                            d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__Prevotellaceae;g__Prevotella_9;s__ 
-#>                                                                                                                                                                                                                           36 
-#>                                         d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__Bacteroidaceae;g__Bacteroides;s____d__Bacteria;p__Firmicutes;c__Clostridia;o__Lachnospirales;f__Lachnospiraceae;__;__ 
-#>                                                                                                                                                                                                                           33 
-#>                                                                                              d__Bacteria;p__Verrucomicrobiota;c__Verrucomicrobiae;o__Verrucomicrobiales;f__Akkermansiaceae;g__Akkermansia;s____RARE_DOMINANT 
-#>                                                                                                                                                                                                                           25
+#>                           d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__Bacteroidaceae;g__Bacteroides;s__ 
+#>                                                                                                                        174 
+#>                                                                                                              RARE_DOMINANT 
+#>                                                                                                                        159 
+#> d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Enterobacterales;f__Enterobacteriaceae;g__Escherichia-Shigella;s__ 
+#>                                                                                                                        114 
+#>                          d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__Prevotellaceae;g__Prevotella_7;s__ 
+#>                                                                                                                         89 
+#>                        d__Bacteria;p__Firmicutes;c__Bacilli;o__Staphylococcales;f__Staphylococcaceae;g__Staphylococcus;s__ 
+#>                                                                                                                         77 
+#>           d__Bacteria;p__Verrucomicrobiota;c__Verrucomicrobiae;o__Verrucomicrobiales;f__Akkermansiaceae;g__Akkermansia;s__ 
+#>                                                                                                                         63 
+#>                          d__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Enterobacterales;f__Pasteurellaceae;__;__ 
+#>                                                                                                                         51 
+#>                          d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Bacteroidales;f__Prevotellaceae;g__Prevotella_9;s__ 
+#>                                                                                                                         36
 ```
 
 ### Dominance strength
@@ -244,7 +225,6 @@ each sample. In the gut, most samples have modest dominance (\< 50%),
 consistent with the diverse nature of the ecosystem.
 
 ``` r
-
 rel <- filt$rel
 dom_strength <- apply(rel, 1, max)
 hist(dom_strength, breaks = 50, col = "#2ecc71", border = "white",
@@ -265,7 +245,6 @@ moderate dominance, with a tail of strongly dominated communities.
 ### dCST size distribution
 
 ``` r
-
 tab1 <- sort(table(csts$lineage.label), decreasing = TRUE)
 par(mar = c(10, 4, 3, 1))
 bp <- barplot(tab1,
@@ -292,7 +271,6 @@ precludes population prevalence estimation or treating association
 calculations as cohort results.
 
 ``` r
-
 meta <- agp_gut$meta[match(rownames(M), agp_gut$meta$Run), ]
 stopifnot(all(meta$Run == rownames(M)))
 
@@ -327,7 +305,7 @@ knitr::kable(
 | Acid_reflux            | Acid_reflux            |             68 |         763 |
 | Lung_disease           | Lung_disease           |             67 |         763 |
 
-Recorded phenotypes in the selected demonstration subset {.table}
+Recorded phenotypes in the selected demonstration subset
 
 ## Limitations
 

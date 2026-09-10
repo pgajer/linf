@@ -9,7 +9,6 @@ on a bundled VALENCIA-derived example dataset. The source object,
 training set. It keeps four phylotype coordinates,
 
 ``` r
-
 library(linf)
 
 candidate_roots <- normalizePath(c(file.path("..", ".."), "."), mustWork = FALSE)
@@ -42,7 +41,6 @@ reference component, the hypercube embedding gives a three-dimensional
 zero-aware homogeneous coordinate chart.
 
 ``` r
-
 X4 <- valencia_linf_hypercube_1k$rel4
 meta <- valencia_linf_hypercube_1k$meta
 
@@ -73,7 +71,6 @@ The figures below use two interactive three-dimensional views.
     source coordinate system.
 
 ``` r
-
 if (!requireNamespace("plotly", quietly = TRUE)) {
   stop("This article preview requires the plotly package.")
 }
@@ -231,7 +228,6 @@ This is the original four-component compositional dataset before
 choosing a homogeneous-coordinate reference component.
 
 ``` r
-
 embedding_panel("VALENCIA four-component data", X4)
 #> Warning: The shape palette can deal with a maximum of 6 discrete values because more
 #> than 6 becomes difficult to discriminate
@@ -262,7 +258,6 @@ The four panels below show the zero-aware hypercube chart obtained by
 taking each component in turn as the reference coordinate.
 
 ``` r
-
 panels <- lapply(colnames(X4), function(ref) {
   emb <- linf.hypercube.embedding(X4, reference = ref)
   embedding_panel("Hypercube embedding", emb, reference = ref)

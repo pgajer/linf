@@ -7,7 +7,7 @@
 ## Citation
 
 Source:
-[`inst/CITATION`](https://github.com/pgajer/linf/blob/main/inst/CITATION)
+[`inst/CITATION`](https://github.com/pgajer/linf/blob/HEAD/inst/CITATION)
 
 Gajer P, Ravel J (2025). “A New Approach to Compositional Data Analysis
 using L^\infty-normalization with Applications to Vaginal Microbiome.”

@@ -26,6 +26,8 @@
 
 ## linf 0.3.0
 
+CRAN release: 2026-08-31
+
 This release simplifies the public API and requires the explicit dCST
 object structure introduced in `linf` 0.2.0.
 

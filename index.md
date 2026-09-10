@@ -29,7 +29,6 @@ dominance sample set.
 ## Installation
 
 ``` r
-
 # From GitHub (development version)
 # install.packages("devtools")
 devtools::install_github("pgajer/linf", build_vignettes = TRUE)
@@ -38,7 +37,6 @@ devtools::install_github("pgajer/linf", build_vignettes = TRUE)
 or
 
 ``` r
-
 # From CRAN
 install.packages("linf")
 ```
@@ -72,7 +70,6 @@ install.packages("linf")
 ## Quick Start
 
 ``` r
-
 library(linf)
 
 set.seed(1)
@@ -125,11 +122,7 @@ provisional dominance sample sets are absorbed into retained states.
 
 See
 [`vignette("linf-intro")`](https://pgajer.github.io/linf/articles/linf-intro.md)
-for the package-safe demonstration. The [full-analysis
-source](https://github.com/pgajer/linf/blob/main/vignettes/articles/gut-dcst-disease-analysis.Rmd)
-uses an independently selected 5,000-sample analysis cohort and is
-maintained as a companion repository article rather than a package
-vignette.
+for a reproducible demonstration using the bundled data.
 
 ## Vignettes
 
@@ -144,7 +137,6 @@ The package ships with two vignettes:
   classical community state types (CST I–V) without supervised training.
 
 ``` r
-
 browseVignettes("linf")
 ```
 
