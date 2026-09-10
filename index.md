@@ -29,6 +29,7 @@ dominance sample set.
 ## Installation
 
 ``` r
+
 # From GitHub (development version)
 # install.packages("devtools")
 devtools::install_github("pgajer/linf", build_vignettes = TRUE)
@@ -37,6 +38,7 @@ devtools::install_github("pgajer/linf", build_vignettes = TRUE)
 or
 
 ``` r
+
 # From CRAN
 install.packages("linf")
 ```
@@ -70,6 +72,7 @@ install.packages("linf")
 ## Quick Start
 
 ``` r
+
 library(linf)
 
 set.seed(1)
@@ -137,6 +140,7 @@ The package ships with two vignettes:
   classical community state types (CST I–V) without supervised training.
 
 ``` r
+
 browseVignettes("linf")
 ```
 

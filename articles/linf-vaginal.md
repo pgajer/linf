@@ -32,6 +32,7 @@ al. 2020). It contains species-level relative abundances for 178 taxa
 along with the original Valencia CST and sub-CST assignments.
 
 ``` r
+
 data(valencia2k)
 
 ## Compositional matrix: 2000 samples x 178 taxa
@@ -71,6 +72,7 @@ require count-like input (e.g.,
 we can reconstruct approximate counts using the per-sample read depths:
 
 ``` r
+
 count_mat <- sweep(valencia2k$rel, 1, valencia2k$reads, "*")
 count_mat <- round(count_mat)
 storage.mode(count_mat) <- "integer"
@@ -93,6 +95,7 @@ normalization, every sample has at least one coordinate equal to 1, and
 all other coordinates lie in $`[0, 1]`$.
 
 ``` r
+
 Z <- normalize.linf(valencia2k$rel)
 
 ## Every row max should be 1
@@ -110,6 +113,7 @@ depends only on the sample’s own abundance profile, never on other
 samples.
 
 ``` r
+
 dominant.features <- linf.dominant.features(Z)
 
 ## How many distinct dominant taxa?
@@ -152,6 +156,7 @@ sets:
   retained state by restricted argmax
 
 ``` r
+
 dcst1 <- linf.csts(Z, n0 = 30, low.freq.policy = "pure")
 
 ## Retained depth-1 states
@@ -182,6 +187,7 @@ The key test: do dCSTs correspond to the established Valencia CSTs?
 Let’s build a cross-tabulation:
 
 ``` r
+
 ## Build concordance table: rows = dCSTs, columns = Valencia CSTs
 dcst_labels <- dcst1$lineage.label.absorb  # use absorb view for clean comparison
 val_cst     <- valencia2k$cst$Val_CST
@@ -216,6 +222,7 @@ Valencia CST:
 - *Lactobacillus jensenii* dCST $`\to`$ CST V
 
 ``` r
+
 ## Reverse view: what fraction of each Valencia CST falls in each dCST?
 pct_rev <- round(100 * prop.table(concordance, margin = 2), 1)
 pct_rev
@@ -243,6 +250,7 @@ repeating the procedure on the remaining taxa. This produces a two-level
 hierarchy that reveals sub-community structure.
 
 ``` r
+
 dcst2 <- refine.linf.csts(Z, dcst1, n0 = 15, refinement.factor = 2,
                            low.freq.policy = "pure", verbose = FALSE)
 
@@ -327,6 +335,7 @@ dcst2_tab
 ### Concordance with Valencia sub-CSTs
 
 ``` r
+
 dcst2_labels <- dcst2$lineage.label.absorb
 val_subcst   <- valencia2k$cst$Val_subCST
 
@@ -361,8 +370,8 @@ pct2[dcst2_sizes >= 20, , drop = FALSE]
 #>   Lactobacillus_iners__g_Corynebacterium_1          0.0   0.0   0.0  91.3   8.7
 #>   Lactobacillus_iners__g_Finegoldia                 0.0   0.0   0.0  81.6  18.4
 #>   Lactobacillus_iners__g_Streptococcus              0.0   0.0   0.0  67.7  29.0
-#>   Lactobacillus_iners__Gardnerella_vaginalis        0.0   0.0   0.0  39.3  50.8
-#>   Lactobacillus_iners__Lactobacillus_crispatus      0.0   0.0   0.0  48.2  51.8
+#>   Lactobacillus_iners__Gardnerella_vaginalis        0.0   0.0   0.0  39.0  51.0
+#>   Lactobacillus_iners__Lactobacillus_crispatus      0.0   0.0   0.0  48.7  51.3
 #>   Lactobacillus_iners__Lactobacillus_gasseri        0.0   0.0   5.0  80.0  15.0
 #>   Lactobacillus_iners__Lactobacillus_jensenii       0.0   0.0   0.0  77.6  13.1
 #>   Lactobacillus_jensenii__Gardnerella_vaginalis     0.0   0.0   0.0   0.0   0.0
@@ -391,7 +400,7 @@ pct2[dcst2_sizes >= 20, , drop = FALSE]
 #>   Lactobacillus_iners__g_Corynebacterium_1          0.0   0.0   0.0   0.0   0.0
 #>   Lactobacillus_iners__g_Finegoldia                 0.0   0.0   0.0   0.0   0.0
 #>   Lactobacillus_iners__g_Streptococcus              0.0   0.0   0.0   0.0   0.0
-#>   Lactobacillus_iners__Gardnerella_vaginalis        1.2   8.7   0.0   0.0   0.0
+#>   Lactobacillus_iners__Gardnerella_vaginalis        1.2   8.8   0.0   0.0   0.0
 #>   Lactobacillus_iners__Lactobacillus_crispatus      0.0   0.0   0.0   0.0   0.0
 #>   Lactobacillus_iners__Lactobacillus_gasseri        0.0   0.0   0.0   0.0   0.0
 #>   Lactobacillus_iners__Lactobacillus_jensenii       0.0   0.0   0.0   0.0   0.0
@@ -442,6 +451,7 @@ runs the entire workflow in one call: normalization, depth-1 dCSTs,
 depth-2 refinement, and landmark computation.
 
 ``` r
+
 out <- linf.dcst.landmark.pipeline(
   count_mat,
   feature.ids    = colnames(count_mat),
@@ -468,6 +478,7 @@ These help characterize what a “typical” or “extreme” member of each
 community type looks like.
 
 ``` r
+
 ## Depth-1 landmarks
 lm1 <- out$landmarks.depth1$landmarks
 
