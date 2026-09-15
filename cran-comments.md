@@ -21,8 +21,17 @@ and an example-dataset guide. Package help, README and the existing tutorials
 now distinguish fitting from frozen transfer, observed landmarks from averaged
 profiles, and descriptive source-data comparisons from independent validation.
 
-The license, maintainer, function exports, dependencies and bundled data are
-unchanged. CRAN lists no reverse dependencies across Depends, Imports, LinkingTo,
+The final craftsmanship pass adds pinned data inputs and reproduction scripts,
+an installed checksum manifest, verified source-row keys for valencia2k, and
+recorded generator versions. Saved merged Valencia assignments are refreshed to
+match current deterministic ties (two depth-2 and ten depth-3 assignments across
+ten source rows); abundance matrices and sample identities are unchanged.
+Measured transfer and landmark optimizations preserve all 36 complete benchmark
+results. Focused source files, contributor guidance and responsive installed/site
+tables improve maintenance and documentation access.
+
+The license, maintainer, function exports and dependencies are unchanged. CRAN
+lists no reverse dependencies across Depends, Imports, LinkingTo,
 Suggests and Enhances (checked 2026-09-14).
 
 ## Checks (2026-09-15)
@@ -31,7 +40,7 @@ Suggests and Enhances (checked 2026-09-14).
 * Full incoming-enabled `R CMD check --as-cran` of the current 0.3.1 tarball,
   with `R_MAKEVARS_USER=/dev/null` and HTML Tidy 5.8.0:
   0 errors, 0 warnings, 0 NOTEs.
-* All 730 test assertions pass, with no failures, warnings or skips.
+* All 736 test assertions pass, with no failures, warnings or skips.
 * Examples, all four installed vignettes and their rebuilding, and the PDF
   and HTML manuals pass. The installed index includes HTML, Rmd and R sources.
 * The installed package overview, both help aliases, all four vignette entries
@@ -41,7 +50,28 @@ Suggests and Enhances (checked 2026-09-14).
 
 ## Current platform checks
 
-Iteration 2 checked implementation commit: 89f5924 (2026-09-15).
+Iteration 3 checked implementation commit: 50288a9 (2026-09-15).
+
+* GitHub Actions: R release on Ubuntu, Windows and macOS, plus R oldrel-1
+  and R-devel on Ubuntu. All five report Status: OK, with 0 errors,
+  0 warnings, 0 NOTEs and 736 passing assertions.
+* These jobs use `--as-cran --no-manual`, with incoming checks disabled.
+  The full local check above additionally covers incoming checks and manuals.
+* Bundled-data checksum and source/installed guide audits pass. Explicit Git
+  line-ending rules preserve the hashed input bytes on Windows checkouts.
+* The pkgdown workflow, embedding graph/trace audit and rendered-guide
+  navigation/table audit pass. Deployment is skipped on push; no publication
+  was performed.
+
+Workflow evidence:
+https://github.com/pgajer/linf/actions/runs/35034271241
+https://github.com/pgajer/linf/actions/runs/35034271234
+
+The following results are historical for the iteration 3 changes.
+
+## Iteration 2 platform checks
+
+Checked implementation commit: 89f5924 (2026-09-15).
 
 * GitHub Actions: R release on Ubuntu, Windows and macOS, plus R oldrel-1
   and R-devel on Ubuntu. All five report Status: OK, with 0 errors,
@@ -74,7 +104,7 @@ https://github.com/pgajer/linf/actions/runs/34992320125
 https://github.com/pgajer/linf/actions/runs/34992320081
 
 The following R-hub and Win-builder results are historical; those services
-have not checked the new node representation or iteration 2 changes.
+have not checked the new node representation or iteration 2/3 changes.
 
 ## Earlier platform checks (2026-09-15)
 
