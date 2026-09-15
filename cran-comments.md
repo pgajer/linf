@@ -27,9 +27,29 @@ Suggests and Enhances (checked 2026-09-14).
 * Regression tests cover separator-containing IDs, suffix collisions, terminal
   lineages, custom rare labels, dense/sparse matrices and all policy views.
 
-The earlier September 3 platform checks apply to an older candidate. Fresh Windows,
-Linux, macOS and Win-builder checks are being run for this candidate; results
-will be recorded here before release coordination.
+## Additional platform checks (2026-09-15)
+
+These checks use the corrected package sources in commit 12422e8.
+
+* GitHub Actions: R 4.6.1 on Ubuntu, Windows and macOS; R 4.5.3 on Ubuntu;
+  R-devel 2026-09-14 r90539 on Ubuntu. All five report 0 errors, 0 warnings,
+  0 NOTEs and 476 passing assertions.
+* R-hub: R-devel 2026-09-14 r90539 on Linux, Windows and macOS. All three
+  report 0 errors, 0 warnings, 0 NOTEs and 476 passing assertions. The first
+  macOS attempt was manually interrupted during dependency compilation; the
+  completed retry used unchanged package sources and workflow configuration.
+* The GitHub and R-hub jobs use `--as-cran --no-manual`, with incoming checks
+  disabled. The full local and Win-builder checks additionally cover incoming
+  checks and manuals.
+* Win-builder: R 4.6.1, R 4.5.3 and R-devel 2026-09-14 r90539, all on Windows
+  Server 2022. Each reports 0 errors, 0 warnings and 1 NOTE, with all 476
+  assertions passing. The sole NOTE flags "Gajer" as possibly misspelled in
+  DESCRIPTION; this is the correctly spelled surname in the method citation.
+  All three received the same locally checked source archive.
+
+Workflow evidence:
+https://github.com/pgajer/linf/actions/runs/34982143909
+https://github.com/pgajer/linf/actions/runs/34982081022
 
 ## Preparation status
 
