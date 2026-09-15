@@ -6,7 +6,11 @@ stopifnot(!anyDuplicated(manifest$file), all(nchar(manifest$sha256) == 64L))
 for (kind in c('asset', 'agp-prepared')) {
  rows <- manifest[manifest$kind == kind, ]
  prefix <- if (kind == 'asset') 'data' else 'inst/extdata'
- stopifnot(identical(unname(tools::md5sum(file.path(prefix, rows$file))), rows$md5))
+ actual <- unname(tools::md5sum(file.path(prefix, rows$file)))
+ if (!identical(actual, rows$md5)) {
+   stop("Input/asset checksum mismatch: ", paste(rows$file[is.na(actual) | actual != rows$md5], collapse = ", "),
+        "; use the original bytes (including the .gitattributes line-ending rules).")
+ }
 }
 objects <- new.env()
 for (f in list.files('data', '[.]rda$', full.names = TRUE)) load(f, objects)

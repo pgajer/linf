@@ -1,0 +1,6 @@
+# These prepared inputs have byte-level hashes in inst/DATA_MANIFEST.csv.
+# Preserve their original LF bytes even in Windows checkouts.
+inst/extdata/agp_gut_meta.csv text eol=lf
+inst/extdata/agp_gut_taxa.txt text eol=lf
+*.rda -text
+*.gz -text

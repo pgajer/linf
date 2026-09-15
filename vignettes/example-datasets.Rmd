@@ -10,6 +10,7 @@ vignette: >
 ---
 
 <style>
+#TOC { width: auto; max-width: 100%; box-sizing: border-box; }
 .linf-table { max-width: 100%; overflow-x: auto; margin: 1em 0; }
 .linf-table:focus { outline: 2px solid #0072b2; outline-offset: 2px; }
 .linf-table table { display: table; overflow: visible; width: 100%; table-layout: auto; }
@@ -17,6 +18,7 @@ vignette: >
 .linf-table td, .linf-table th { vertical-align: top; overflow-wrap: normal; word-break: normal; }
 .linf-table td code, .linf-table th code { white-space: nowrap; }
 .linf-catalog td, .linf-catalog th { min-width: 12rem; hyphens: none; }
+.float img { max-width: 100%; height: auto; }
 </style>
 
 

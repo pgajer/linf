@@ -32,3 +32,4 @@
 ^\.\.Rcheck$
 ^build$
 ^CONTRIBUTING\.md$
+^\.gitattributes$

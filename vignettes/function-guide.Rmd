@@ -11,6 +11,7 @@ vignette: >
 ---
 
 <style>
+#TOC { width: auto; max-width: 100%; box-sizing: border-box; }
 .linf-table { max-width: 100%; overflow-x: auto; margin: 1em 0; }
 .linf-table:focus { outline: 2px solid #0072b2; outline-offset: 2px; }
 .linf-table table { display: table; overflow: visible; width: 100%; table-layout: auto; }
