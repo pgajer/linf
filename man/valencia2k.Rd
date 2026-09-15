@@ -9,8 +9,9 @@ A list with five components:
 \describe{
 \item{rel}{Numeric matrix (2000 x 178). Compositional relative abundances;
 each row sums to 1. Rows are samples, columns are taxonomic features.}
-\item{cst}{Data frame (2000 x 3) with columns:
-\code{sample_id} (character),
+\item{cst}{Data frame (2000 x 4) with columns:
+\code{sample_id} (character), \code{source_row} (verified row index
+in the pinned prepared 13k input; shared with other Valencia assets),
 \code{Val_CST} (Valencia CST assignment: I, II, III, IV-A, IV-B, IV-C, V),
 \code{Val_subCST} (Valencia sub-CST assignment: I-A, I-B, II, III-A, III-B,
 IV-A, IV-B, IV-C0, IV-C1, IV-C2, IV-C3, IV-C4, V).}
@@ -24,7 +25,7 @@ to reconstruct a count-like matrix, not original observed counts.}
 \source{
 Subsampled from the VALENCIA training data at
 \url{https://github.com/ravel-lab/VALENCIA}. See
-\code{data-raw/build_valencia2k.R} and the installed
+\href{https://github.com/pgajer/linf/blob/main/data-raw/build_valencia2k.R}{data-raw/build_valencia2k.R} and the installed
 \code{DATA_PROVENANCE.md} file for construction and licensing details.
 }
 \usage{
@@ -49,6 +50,14 @@ compositional matrix can be used directly with \code{\link{normalize.linf}}
 and downstream dCST functions. For workflows that require count-like input,
 reconstruct approximate counts using the \code{reads} vector.
 }
+\section{Reading provenance offline}{
+
+Read the installed source and preparation record at the console:
+\code{cat(readLines(system.file("DATA_PROVENANCE.md", package = "linf", mustWork = TRUE)), sep = "\\n")}. The installed \code{DATA_MANIFEST.csv} records
+pinned input checksums; see the
+\href{https://github.com/pgajer/linf/blob/main/data-raw/README.md}{reproduction recipe}.
+}
+
 \examples{
 data(valencia2k)
 dim(valencia2k$rel)           # 2000 x 178

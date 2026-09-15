@@ -1,3 +1,7 @@
+# Write to a separate directory for reproduction checks; default is data/.
+data.output <- Sys.getenv("LINF_DATA_OUTPUT", "data")
+dir.create(data.output, recursive = TRUE, showWarnings = FALSE)
+
 ## ============================================================================
 ## build_valencia_linf_hypercube_1k.R
 ## ============================================================================
@@ -132,9 +136,9 @@ valencia_linf_hypercube_1k <- list(
 
 save(
   valencia_linf_hypercube_1k,
-  file = "data/valencia_linf_hypercube_1k.rda",
+  file = file.path(data.output, "valencia_linf_hypercube_1k.rda"),
   compress = "xz"
 )
 
-cat("\nSaved data/valencia_linf_hypercube_1k.rda\n")
-cat("File size:", round(file.info("data/valencia_linf_hypercube_1k.rda")$size / 1024), "KB\n")
+cat("\nSaved", file.path(data.output, "valencia_linf_hypercube_1k.rda"), "\n")
+cat("File size:", round(file.info(file.path(data.output, "valencia_linf_hypercube_1k.rda"))$size / 1024), "KB\n")

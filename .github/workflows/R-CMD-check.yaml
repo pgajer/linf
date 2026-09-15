@@ -48,6 +48,9 @@ jobs:
           extra-packages: any::rcmdcheck
           needs: check
 
+      - name: Check bundled data records
+        run: Rscript tools/audit-data.R
+
       - name: Check guide coverage
         run: Rscript tools/audit-guides.R
 

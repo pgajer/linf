@@ -211,8 +211,13 @@ linf.landmarks <- function(M,
   landmarks <- empty.linf.landmark.rows()
   unique.lineages <- unique(lineage.ids[!is.na(lineage.ids)])
 
-  for (lineage in unique.lineages) {
-    members <- which(lineage.ids == lineage)
+  membership <- split(seq_along(lineage.ids), factor(lineage.ids, levels = unique.lineages))
+  lineage.rows <- vector("list", length(unique.lineages))
+  landmark.rows <- vector("list", length(unique.lineages) * length(landmark.types))
+  landmark.number <- 0L
+  for (lineage.number in seq_along(unique.lineages)) {
+    lineage <- unique.lineages[[lineage.number]]
+    members <- membership[[lineage.number]]
     lineage.label <- lineage.labels[members[1L]]
     nodes <- csts[[paste0("nodes.", resolved.view)]][[depth]]
     node <- nodes[match(lineage, nodes$lineage.id), , drop = FALSE]
@@ -224,7 +229,7 @@ linf.landmarks <- function(M,
       feature.label = if (node$is.rare) NA_character_ else meta$feature.labels[[node$feature.index]]
     )
 
-    lineages <- rbind(lineages, data.frame(
+    lineage.rows[[lineage.number]] <- data.frame(
       lineage.id = lineage,
       lineage.label = lineage.label,
       lineage.size = length(members),
@@ -233,7 +238,7 @@ linf.landmarks <- function(M,
       is.rare = target$is.rare,
       landmarks.computable = target$computable,
       stringsAsFactors = FALSE
-    ))
+    )
 
     if (!isTRUE(target$computable)) next
 
@@ -263,7 +268,8 @@ linf.landmarks <- function(M,
       }
 
       point.index <- members[[pick]]
-      landmarks <- rbind(landmarks, data.frame(
+      landmark.number <- landmark.number + 1L
+      landmark.rows[[landmark.number]] <- data.frame(
         lineage.id = lineage,
         lineage.label = lineage.label,
         landmark.type = landmark.type,
@@ -275,10 +281,12 @@ linf.landmarks <- function(M,
         target.value = target.value,
         abs.deviation = abs(observed - target.value),
         stringsAsFactors = FALSE
-      ))
+      )
     }
   }
 
+  if (length(lineage.rows)) lineages <- do.call(rbind, lineage.rows)
+  if (landmark.number) landmarks <- do.call(rbind, landmark.rows[seq_len(landmark.number)])
   structure(
     list(
       depth = as.integer(depth),

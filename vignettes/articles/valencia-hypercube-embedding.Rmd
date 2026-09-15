@@ -232,23 +232,25 @@ some one-way relations; an optional layout from it is a new computation.
 <summary>Reproduce the optional Li-reference graph layout with grip</summary>
 
 This optional experiment is off in ordinary website builds. Install a compatible
-`grip` version that exports `grip.optimize.edge.kk.layout`, set
+`grip` version that exports `edge.kk`, set
 `LINF_RUN_GRIP=true`, and render this article to run it. It uses the native
 Li-reference coordinates as initialization, k = 8 with all cutoff ties,
-20 optimizer iterations and seed 1. Keep its diagnostics when comparing
+one stage of at most 20 optimizer iterations and seed 1. Keep its diagnostics when comparing
 layouts; a rendered optimizer result is not a convergence guarantee.
 
 ```{r optional-grip}
 if (identical(Sys.getenv("LINF_RUN_GRIP"), "true")) {
   if (!requireNamespace("grip", quietly = TRUE) ||
-      !"grip.optimize.edge.kk.layout" %in% getNamespaceExports("grip")) {
+      !"edge.kk" %in% getNamespaceExports("grip")) {
     stop("This optional experiment needs a compatible grip installation.")
   }
-  optimize <- getExportedValue("grip", "grip.optimize.edge.kk.layout")
+  optimize <- getExportedValue("grip", "edge.kk")
   graph <- graphs[["Li"]]
   layout.result <- optimize(coords = embeddings[["Li"]], edges = graph$edges,
                              n = nrow(X4), edge_weights = graph$weights, dim = 3L,
-                             max_iter = 20L, return_trace = FALSE, diagnostics = TRUE, seed = 1L)
+                             max_iter = 20L, density_mix_schedule = 1, return_trace = FALSE,
+                             diagnostics = TRUE, seed = 1L)
+  print(layout.result$metadata$stage_summaries)
   layout.coords <- as.matrix(layout.result$coords)
   colnames(layout.coords) <- paste("Layout coordinate", 1:3)
   plot_embedding(layout.coords, "Li chart: optional graph layout",

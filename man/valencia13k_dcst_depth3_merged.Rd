@@ -16,14 +16,16 @@ A list with five components:
 contains \code{depth}, \code{dcst_label}, \code{n}, \code{prop}, and
 \code{path_length}.}
 \item{feature_labels}{Character vector of source taxon labels.}
-\item{params}{List recording the construction parameters.}
+\item{params}{Construction parameters, including \code{generator} with
+the linf version, R version and pinned upstream revision used to rebuild
+these assignments.}
 \item{source}{Character string documenting provenance.}
 }
 }
 \source{
 Generated from the VALENCIA training data at
 \url{https://github.com/ravel-lab/VALENCIA}. See
-\code{data-raw/build_valencia13k_merged_dcst_depths.R} and the installed
+\href{https://github.com/pgajer/linf/blob/main/data-raw/build_valencia13k_merged_dcst_depths.R}{data-raw/build_valencia13k_merged_dcst_depths.R} and the installed
 \code{DATA_PROVENANCE.md} file.
 }
 \usage{
@@ -43,6 +45,14 @@ recomputing the full hierarchy from the 13k source matrix.
 It is not a fitted \code{"linf.csts"} object and does not contain the
 source abundance matrix or complete policy hierarchies.
 }
+\section{Reading provenance offline}{
+
+Read the installed source and preparation record at the console:
+\code{cat(readLines(system.file("DATA_PROVENANCE.md", package = "linf", mustWork = TRUE)), sep = "\\n")}. The installed \code{DATA_MANIFEST.csv} records
+pinned input checksums; see the
+\href{https://github.com/pgajer/linf/blob/main/data-raw/README.md}{reproduction recipe}.
+}
+
 \examples{
 data(valencia13k_dcst_depth3_merged)
 nrow(valencia13k_dcst_depth3_merged$assignments)

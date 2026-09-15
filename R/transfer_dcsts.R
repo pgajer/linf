@@ -244,8 +244,11 @@ linf.dcst.transfer.tree <- function(levels, nodes, max.depth, sep) {
       parent <- parent[keep]
       child <- child[keep]
       pairs <- unique(data.frame(parent = parent, child = child, stringsAsFactors = FALSE))
-      counts <- as.data.frame(table(parent, child), stringsAsFactors = FALSE)
-      counts <- counts[counts$Freq > 0, , drop = FALSE]
+      # Count only observed pairs; preserve first-occurrence child ordering.
+      pair.index <- match(paste(match(parent, unique(parent)), match(child, unique(child))),
+                          paste(match(pairs$parent, unique(parent)), match(pairs$child, unique(child))))
+      counts <- pairs
+      counts$Freq <- tabulate(pair.index, nbins = nrow(pairs))
 
       tree[[d]] <- list()
       support[[d]] <- list()
@@ -262,7 +265,16 @@ linf.dcst.transfer.tree <- function(levels, nodes, max.depth, sep) {
     }
   }
 
-  list(children = tree, support = support, nodes = nodes, sep = sep)
+  feature.indices <- lapply(seq_len(max.depth), function(d) {
+    lapply(tree[[d]], function(keys) {
+      at <- match(keys, nodes[[d]]$node.id)
+      indices <- nodes[[d]]$feature.index[at]
+      indices[nodes[[d]]$is.rare[at]] <- NA_integer_
+      indices
+    })
+  })
+  list(children = tree, support = support, nodes = nodes,
+       feature.indices = feature.indices, sep = sep)
 }
 
 linf.transfer.one.sample <- function(sample.values,
@@ -277,12 +289,6 @@ linf.transfer.one.sample <- function(sample.values,
   stop.depth <- NA_integer_
   matched.at.stop <- missing.at.stop <- NA_integer_
   tie.depths <- integer()
-  child.score <- function(key, depth) {
-    nodes <- tree$nodes[[depth]]
-    node <- match(key, nodes$node.id)
-    if (nodes$is.rare[[node]]) return(0)
-    as.numeric(sample.values[[nodes$feature.index[[node]]]])
-  }
 
   for (d in seq_len(max.depth)) {
     candidates <- tree$children[[d]][[parent.key]]
@@ -293,11 +299,13 @@ linf.transfer.one.sample <- function(sample.values,
       break
     }
 
-    vals <- vapply(candidates, child.score, numeric(1L), depth = d)
+    indices <- tree$feature.indices[[d]][[parent.key]]
+    vals <- numeric(length(candidates))
+    real <- !is.na(indices)
+    vals[real] <- sample.values[indices[real]]
     best <- max(vals)
     if (!is.finite(best) || best <= 0) {
-      indices <- tree$nodes[[d]]$feature.index[match(candidates, tree$nodes[[d]]$node.id)]
-      indices <- unique(indices[!is.na(indices)])
+      indices <- unique(indices[real])
       matched.at.stop <- sum(feature.matched[indices])
       missing.at.stop <- sum(!feature.matched[indices])
       reason <- if (!length(indices)) "synthetic_only" else if (!matched.at.stop) {

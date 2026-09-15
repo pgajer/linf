@@ -1,4 +1,3 @@
-`%||%` <- function(a, b) if (is.null(a)) b else a
 
 #' Filter ASV count matrix by library size (samples) and prevalence (features)
 #'

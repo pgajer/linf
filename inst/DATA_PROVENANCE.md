@@ -61,3 +61,25 @@ Because inclusion probabilities differ by dCST, `agp_gut` is suitable for
 demonstrating data alignment, filtering, normalization, and dCST construction
 only. Its phenotype frequencies, effect sizes, and p-values must not be
 interpreted as population estimates.
+
+## Reproduction record (15 September 2026)
+
+VALENCIA input revision: `8559d454387479f7155333693d854961463c3b15`.
+`DATA_MANIFEST.csv` (installed beside this file) records exact input and asset
+checksums. The public source CSVs match the preserved originals; the maintained
+`data-raw/prepare_valencia.R` recipe reproduces all prepared R objects exactly.
+`valencia2k$cst$source_row` was verified against all abundances, annotations and
+read totals before being added. No existing sample ID, order or abundance changed.
+
+The merged assignment assets were refreshed using linf 0.3.1 and record their
+generator in `params$generator`. Relative to older saved results, two depth-2
+and ten depth-3 assignments change at tied choices or their descendants;
+depth 1 and input metadata remain unchanged. Saved summaries are regenerated
+from the same refreshed assignments.
+
+The complete public recipe is at
+<https://github.com/pgajer/linf/blob/main/data-raw/README.md>.
+For AGP the reproducible package boundary is the shipped prepared counts,
+taxonomy and metadata. Raw-read PRIME processing and the original upstream
+5,000-sample fit are outside this package recipe; the shipped asset rebuild
+does not independently validate that processing.

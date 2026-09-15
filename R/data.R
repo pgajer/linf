@@ -11,8 +11,9 @@
 #' \describe{
 #'   \item{rel}{Numeric matrix (2000 x 178). Compositional relative abundances;
 #'     each row sums to 1. Rows are samples, columns are taxonomic features.}
-#'   \item{cst}{Data frame (2000 x 3) with columns:
-#'     \code{sample_id} (character),
+#'   \item{cst}{Data frame (2000 x 4) with columns:
+#'     \code{sample_id} (character), \code{source_row} (verified row index
+#'     in the pinned prepared 13k input; shared with other Valencia assets),
 #'     \code{Val_CST} (Valencia CST assignment: I, II, III, IV-A, IV-B, IV-C, V),
 #'     \code{Val_subCST} (Valencia sub-CST assignment: I-A, I-B, II, III-A, III-B,
 #'       IV-A, IV-B, IV-C0, IV-C1, IV-C2, IV-C3, IV-C4, V).}
@@ -41,10 +42,17 @@
 #' composition. \emph{Microbiome}, 8(1), 166.
 #' \doi{10.1186/s40168-020-00934-6}
 #'
+#' @section Reading provenance offline:
+#' Read the installed source and preparation record at the console:
+#' `cat(readLines(system.file("DATA_PROVENANCE.md", package = "linf",
+#' mustWork = TRUE)), sep = "\n")`. The installed `DATA_MANIFEST.csv` records
+#' pinned input checksums; see the
+#' [reproduction recipe](https://github.com/pgajer/linf/blob/main/data-raw/README.md).
+#'
 #' @source
 #' Subsampled from the VALENCIA training data at
 #' \url{https://github.com/ravel-lab/VALENCIA}. See
-#' \code{data-raw/build_valencia2k.R} and the installed
+#' [data-raw/build_valencia2k.R](https://github.com/pgajer/linf/blob/main/data-raw/build_valencia2k.R) and the installed
 #' \code{DATA_PROVENANCE.md} file for construction and licensing details.
 #'
 #' @examples
@@ -92,10 +100,17 @@
 #' The stored object contains input abundances, not precomputed embedding
 #' coordinates; compute those with \code{\link{linf.hypercube.embedding}}.
 #'
+#' @section Reading provenance offline:
+#' Read the installed source and preparation record at the console:
+#' `cat(readLines(system.file("DATA_PROVENANCE.md", package = "linf",
+#' mustWork = TRUE)), sep = "\n")`. The installed `DATA_MANIFEST.csv` records
+#' pinned input checksums; see the
+#' [reproduction recipe](https://github.com/pgajer/linf/blob/main/data-raw/README.md).
+#'
 #' @source
 #' Generated from the VALENCIA training data at
 #' \url{https://github.com/ravel-lab/VALENCIA}. See
-#' \code{data-raw/build_valencia_linf_hypercube_1k.R} and the installed
+#' [data-raw/build_valencia_linf_hypercube_1k.R](https://github.com/pgajer/linf/blob/main/data-raw/build_valencia_linf_hypercube_1k.R) and the installed
 #' \code{DATA_PROVENANCE.md} file.
 #'
 #' @examples
@@ -127,7 +142,9 @@
 #'     contains \code{depth}, \code{dcst_label}, \code{n}, \code{prop}, and
 #'     \code{path_length}.}
 #'   \item{feature_labels}{Character vector of source taxon labels.}
-#'   \item{params}{List recording the construction parameters.}
+#'   \item{params}{Construction parameters, including \code{generator} with
+#'     the linf version, R version and pinned upstream revision used to rebuild
+#'     these assignments.}
 #'   \item{source}{Character string documenting provenance.}
 #' }
 #'
@@ -140,10 +157,17 @@
 #' This list is an assignment asset, not a fitted \code{"linf.csts"} hierarchy;
 #' it cannot be passed directly to refinement, landmark or transfer functions.
 #'
+#' @section Reading provenance offline:
+#' Read the installed source and preparation record at the console:
+#' `cat(readLines(system.file("DATA_PROVENANCE.md", package = "linf",
+#' mustWork = TRUE)), sep = "\n")`. The installed `DATA_MANIFEST.csv` records
+#' pinned input checksums; see the
+#' [reproduction recipe](https://github.com/pgajer/linf/blob/main/data-raw/README.md).
+#'
 #' @source
 #' Generated from the VALENCIA training data at
 #' \url{https://github.com/ravel-lab/VALENCIA}. See
-#' \code{data-raw/build_valencia13k_merged_dcst_depths.R} and the installed
+#' [data-raw/build_valencia13k_merged_dcst_depths.R](https://github.com/pgajer/linf/blob/main/data-raw/build_valencia13k_merged_dcst_depths.R) and the installed
 #' \code{DATA_PROVENANCE.md} file.
 #'
 #' @examples
@@ -171,7 +195,9 @@
 #'     contains \code{depth}, \code{dcst_label}, \code{n}, \code{prop}, and
 #'     \code{path_length}.}
 #'   \item{feature_labels}{Character vector of source taxon labels.}
-#'   \item{params}{List recording the construction parameters.}
+#'   \item{params}{Construction parameters, including \code{generator} with
+#'     the linf version, R version and pinned upstream revision used to rebuild
+#'     these assignments.}
 #'   \item{source}{Character string documenting provenance.}
 #' }
 #'
@@ -184,10 +210,17 @@
 #' It is not a fitted \code{"linf.csts"} object and does not contain the
 #' source abundance matrix or complete policy hierarchies.
 #'
+#' @section Reading provenance offline:
+#' Read the installed source and preparation record at the console:
+#' `cat(readLines(system.file("DATA_PROVENANCE.md", package = "linf",
+#' mustWork = TRUE)), sep = "\n")`. The installed `DATA_MANIFEST.csv` records
+#' pinned input checksums; see the
+#' [reproduction recipe](https://github.com/pgajer/linf/blob/main/data-raw/README.md).
+#'
 #' @source
 #' Generated from the VALENCIA training data at
 #' \url{https://github.com/ravel-lab/VALENCIA}. See
-#' \code{data-raw/build_valencia13k_merged_dcst_depths.R} and the installed
+#' [data-raw/build_valencia13k_merged_dcst_depths.R](https://github.com/pgajer/linf/blob/main/data-raw/build_valencia13k_merged_dcst_depths.R) and the installed
 #' \code{DATA_PROVENANCE.md} file.
 #'
 #' @examples
@@ -239,7 +272,7 @@
 #' The phenotype fields must not be used with this dCST-stratified subset for
 #' population prevalence estimates, effect-size estimation, or association
 #' testing. The exact selection is generated by
-#' \code{data-raw/create_agp_gut_subset.py}; run-ID membership, selection
+#' [data-raw/create_agp_gut_subset.py](https://github.com/pgajer/linf/blob/main/data-raw/create_agp_gut_subset.py); run-ID membership, selection
 #' reasons, and derived annotations are retained in
 #' \code{inst/extdata/agp_gut_meta.csv}.
 #'
@@ -258,11 +291,18 @@
 #' Open Platform for Citizen Science Microbiome Research. \emph{mSystems},
 #' 3(3), e00031-18. \doi{10.1128/mSystems.00031-18}
 #'
+#' @section Reading provenance offline:
+#' Read the installed source and preparation record at the console:
+#' `cat(readLines(system.file("DATA_PROVENANCE.md", package = "linf",
+#' mustWork = TRUE)), sep = "\n")`. The installed `DATA_MANIFEST.csv` records
+#' pinned input checksums; see the
+#' [reproduction recipe](https://github.com/pgajer/linf/blob/main/data-raw/README.md).
+#'
 #' @source
 #' Derived from the public American Gut Project records under ENA accession
 #' \href{https://www.ebi.ac.uk/ena/browser/view/PRJEB11419}{PRJEB11419} via the
 #' PRIME pipeline. See \code{data-raw/create_agp_gut_subset.py},
-#' \code{data-raw/build_agp_gut.R}, and the installed
+#' [data-raw/build_agp_gut.R](https://github.com/pgajer/linf/blob/main/data-raw/build_agp_gut.R), and the installed
 #' \code{DATA_PROVENANCE.md} file.
 #'
 #' @examples

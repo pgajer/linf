@@ -10,19 +10,31 @@ vignette: >
 ---
 
 <style>
-body { max-width: 960px; overflow-wrap: anywhere; }
-#TOC { width: auto; max-width: 100%; box-sizing: border-box; }
-table { width: 100%; table-layout: fixed; }
-td, th { vertical-align: top; overflow-wrap: anywhere; white-space: normal; }
-td code, th code { white-space: normal; }
-pre { overflow-x: auto; }
-img { max-width: 100%; height: auto; }
+.linf-table { max-width: 100%; overflow-x: auto; margin: 1em 0; }
+.linf-table:focus { outline: 2px solid #0072b2; outline-offset: 2px; }
+.linf-table table { display: table; overflow: visible; width: 100%; table-layout: auto; }
+.linf-table table { min-width: 38rem; }
+.linf-table td, .linf-table th { vertical-align: top; overflow-wrap: normal; word-break: normal; }
+.linf-table td code, .linf-table th code { white-space: nowrap; }
+.linf-catalog td, .linf-catalog th { min-width: 12rem; hyphens: none; }
 </style>
+
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(collapse = TRUE, comment = "#>",
                      fig.width = 6, fig.height = 4)
 library(linf)
+# Keep table rendering separate from the runnable analysis code.
+knitr::opts_chunk$set(render = function(x, options) {
+  rendered <- knitr::knit_print(x, options = options)
+  if (inherits(x, "knitr_kable")) {
+    knitr::asis_output(paste0(
+      '<div class="linf-table" role="region" aria-label="Computed table; scroll horizontally if needed" tabindex="0">\n\n',
+      rendered, '\n\n</div>\n'
+    ))
+  } else rendered
+})
 ```
 
 Choose a matrix if you want to fit a hierarchy, an assignment table if you want
@@ -34,16 +46,23 @@ stage fits together.
 
 ## Choose a dataset
 
+Tables scroll horizontally on narrow screens. Focus a table and use the arrow
+keys, or swipe within it, to read every column without breaking function or dataset names.
+
 Every object below is loaded with `data(object_name, package = "linf")` and has
 its own help page, for example `help("agp_gut", package = "linf")`.
 
+<div class="linf-table linf-catalog" role="region" aria-label="example-datasets table 1; scroll horizontally if needed" tabindex="0">
+
 | Dataset | Unit, orientation and dimensions | Identifiers and main fields | Suitable workflow |
 |---|---|---|---|
-| `agp_gut` | 766 gut samples by 314 taxa; integer read-count matrix. | `counts`, `meta`, `taxa`, `source`; row names join to `meta$Run` (SRA accessions). | Count filtering, normalization and descriptive dCST fitting. |
-| `valencia2k` | 2,000 vaginal samples by 178 taxa; unit-sum relative abundances. | `rel`, `cst`, `reads`, `taxa`, `source`; local row IDs join to `cst$sample_id`. | Fit dCSTs and compare descriptively with supplied Valencia labels. |
+| `agp_gut` | 766 gut samples by 314 taxa; integer read-count matrix. | `counts`, `meta`, `taxa`, `source`; row names join to `meta$Run` (SRA accessions). | [Count filtering and fitting](#reference-and-query). |
+| `valencia2k` | 2,000 vaginal samples by 178 taxa; unit-sum relative abundances. | `rel`, `cst`, `reads`, `taxa`, `source`; local row IDs join to `cst$sample_id`; `cst$source_row` joins to the pinned source. | [Align metadata](#align-data-and-metadata), then follow the [vaginal tutorial](linf-vaginal.html). |
 | `valencia13k_dcst_depth2_merged` | 12,881 source samples; assignment table with six columns, not an abundance matrix. | `assignments`, `summaries`, `feature_labels`, `params`, `source`; `sample_id` and `source_row`. | Inspect saved absorb-policy depth-1/2 assignments and sizes. |
 | `valencia13k_dcst_depth3_merged` | Same 12,881 source samples; assignment table with seven columns. | Same fields as depth 2, plus `dcst_depth3` and a depth-3 summary. | Inspect the saved deeper grouping and compare depths. |
-| `valencia_linf_hypercube_1k` | 1,000 vaginal samples by four selected taxa; unit-sum matrix. | `rel4`, `meta`, `component_map`, `source`; local `sample_id`, source-row index and selected mass. | Compute zero-aware charts; coordinates are not precomputed in this object. |
+| `valencia_linf_hypercube_1k` | 1,000 vaginal samples by four selected taxa; unit-sum matrix. | `rel4`, `meta`, `component_map`, `source`; local `sample_id`, source-row index and selected mass. | [Compute a static chart](#a-static-chart-from-the-four-component-data); coordinates are not precomputed. |
+
+</div>
 
 The two merged objects are ordinary lists of assignments and summary tables.
 They lack the complete `linf.csts` object and input matrix required by
@@ -139,17 +158,24 @@ source preparation and upstream terms (which are separate from the code's MIT
 license):
 
 ```{r provenance-location}
-basename(system.file("DATA_PROVENANCE.md", package = "linf"))
+provenance <- system.file("DATA_PROVENANCE.md", package = "linf", mustWork = TRUE)
+cat(readLines(provenance, warn = FALSE)[1:12], sep = "\n")
 ```
+
+Read the full installed record at the console with
+`cat(readLines(provenance), sep = "\n")`. This works offline. Repository readers
+can open [data provenance](https://github.com/pgajer/linf/blob/main/inst/DATA_PROVENANCE.md),
+the [input manifest](https://github.com/pgajer/linf/blob/main/inst/DATA_MANIFEST.csv),
+and the [reproduction recipe](https://github.com/pgajer/linf/blob/main/data-raw/README.md).
 
 ## Align data and metadata
 
 Sample names are keys within an object, not universal cross-dataset IDs. For
-`valencia2k`, IDs such as `s1` were reassigned after sampling and no original
-source-row mapping is bundled. Do not join them to another dataset by row
-position or apparent numeric suffix. The four-component and merged objects
-share the prepared source's `source_row` numbering; their anonymized sample
-IDs use different naming schemes.
+`valencia2k`, IDs such as `s1` were reassigned after sampling. Its verified
+`cst$source_row` now preserves the sampled row in the pinned prepared source.
+The four-component and merged objects share that `source_row` numbering.
+Join on this explicit key after checking provenance, never by row position or
+an apparent numeric suffix in the different local sample-ID schemes.
 
 ```{r alignment}
 X <- agp_gut$counts
@@ -192,6 +218,10 @@ chart.depth3 <- merged$assignments$dcst_depth3[join]
 stopifnot(identical(as.character(chart.meta$Val_CST),
                    as.character(merged$assignments$Val_CST[join])))
 length(chart.depth3)
+subset.join <- match(valencia2k$cst$source_row, merged$assignments$source_row)
+stopifnot(!anyNA(subset.join),
+          identical(as.character(valencia2k$cst$Val_CST),
+                    as.character(merged$assignments$Val_CST[subset.join])))
 ```
 
 This attaches in-source saved labels; it is not a new reference/query

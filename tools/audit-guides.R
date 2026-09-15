@@ -67,6 +67,11 @@ if (length(args)) {
   package <- find.package("linf", lib.loc = lib)
   stopifnot(length(utils::help("linf", package = "linf", lib.loc = lib)) == 1L,
             length(utils::help("linf-package", package = "linf", lib.loc = lib)) == 1L)
+  provenance <- file.path(package, "DATA_PROVENANCE.md")
+  manifest <- file.path(package, "DATA_MANIFEST.csv")
+  stopifnot(file.exists(provenance), file.exists(manifest),
+            any(grepl("Reproduction record", readLines(provenance), fixed = TRUE)),
+            nrow(read.csv(manifest)) >= 10L)
   index <- readLines(file.path(package, "html", "00Index.html"), warn = FALSE)
   stopifnot(any(grepl("linf-package.html", index, fixed = TRUE)))
   items <- utils::vignette(package = "linf", lib.loc = lib)$results[, "Item"]

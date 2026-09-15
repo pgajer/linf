@@ -1,3 +1,7 @@
+# Write to a separate directory for reproduction checks; default is data/.
+data.output <- Sys.getenv("LINF_DATA_OUTPUT", "data")
+dir.create(data.output, recursive = TRUE, showWarnings = FALSE)
+
 ## ============================================================================
 ## build_agp_gut.R
 ## ============================================================================
@@ -98,7 +102,7 @@ agp_gut <- list(
 
 ## --- Save ------------------------------------------------------------------
 
-save(agp_gut, file = "data/agp_gut.rda", compress = "xz")
+save(agp_gut, file = file.path(data.output, "agp_gut.rda"), compress = "xz")
 
-cat("\nSaved data/agp_gut.rda\n")
-cat("File size:", round(file.info("data/agp_gut.rda")$size / 1024), "KB\n")
+cat("\nSaved", file.path(data.output, "agp_gut.rda"), "\n")
+cat("File size:", round(file.info(file.path(data.output, "agp_gut.rda"))$size / 1024), "KB\n")

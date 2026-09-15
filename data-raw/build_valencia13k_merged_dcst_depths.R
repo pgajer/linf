@@ -1,3 +1,7 @@
+# Write to a separate directory for reproduction checks; default is data/.
+data.output <- Sys.getenv("LINF_DATA_OUTPUT", "data")
+dir.create(data.output, recursive = TRUE, showWarnings = FALSE)
+
 ## ============================================================================
 ## build_valencia13k_merged_dcst_depths.R
 ## ============================================================================
@@ -131,6 +135,9 @@ make_asset <- function(csts, depth) {
     summaries = summaries,
     feature_labels = colnames(tx),
     params = list(
+      generator = list(package = "linf", version = as.character(utils::packageVersion("linf")),
+                       R = as.character(getRversion()),
+                       upstream_revision = "8559d454387479f7155333693d854961463c3b15"),
       source_n = source_n,
       source_p = source_p,
       n0 = n0,
@@ -165,17 +172,17 @@ cat("Depth-3 merged dCST count:", nrow(valencia13k_dcst_depth3_merged$summaries$
 
 save(
   valencia13k_dcst_depth2_merged,
-  file = "data/valencia13k_dcst_depth2_merged.rda",
+  file = file.path(data.output, "valencia13k_dcst_depth2_merged.rda"),
   compress = "xz"
 )
 
 save(
   valencia13k_dcst_depth3_merged,
-  file = "data/valencia13k_dcst_depth3_merged.rda",
+  file = file.path(data.output, "valencia13k_dcst_depth3_merged.rda"),
   compress = "xz"
 )
 
-cat("\nSaved data/valencia13k_dcst_depth2_merged.rda\n")
-cat("File size:", round(file.info("data/valencia13k_dcst_depth2_merged.rda")$size / 1024), "KB\n")
+cat("\nSaved", file.path(data.output, "valencia13k_dcst_depth2_merged.rda"), "\n")
+cat("File size:", round(file.info(file.path(data.output, "valencia13k_dcst_depth2_merged.rda"))$size / 1024), "KB\n")
 cat("Saved data/valencia13k_dcst_depth3_merged.rda\n")
-cat("File size:", round(file.info("data/valencia13k_dcst_depth3_merged.rda")$size / 1024), "KB\n")
+cat("File size:", round(file.info(file.path(data.output, "valencia13k_dcst_depth3_merged.rda"))$size / 1024), "KB\n")

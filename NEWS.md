@@ -1,5 +1,20 @@
 # linf 0.3.1 (unreleased)
 
+* Complete craftsmanship iteration 3: add task links and scoped, keyboard-
+  scrollable guide tables; expose installed provenance, input manifests and
+  measured resource-use notes.
+* Pin the public VALENCIA preparation recipe and verify the complete 2,000-row
+  sampling map. `valencia2k$cst` adds `source_row`; existing IDs, ordering,
+  abundances and read totals are unchanged. Merged assets now record generator
+  versions and refresh older tied assignments (2 at depth 2; 10 at depth 3).
+* Organize fitting, refinement, validation and presentation in focused source
+  files without changing public interfaces. Transfer prepares candidate indices
+  once and counts observed pairs; landmarks assemble rows once. Complete
+  benchmark results remain identical to the previous implementation.
+* Update the optional embedding example to the supported `grip::edge.kk()` API
+  and retain optimizer diagnostics. The optimizer remains opt-in.
+
+
 - Matrix consumers validate fitted dimensions and, for new fits, original
   input dimnames independently of custom feature IDs. Named axis reorderings
   fail explicitly; unnamed axes and legacy fits retain positional matching.

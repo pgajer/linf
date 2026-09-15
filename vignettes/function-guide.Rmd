@@ -11,18 +11,30 @@ vignette: >
 ---
 
 <style>
-body { max-width: 960px; overflow-wrap: anywhere; }
-#TOC { width: auto; max-width: 100%; box-sizing: border-box; }
-table { width: 100%; table-layout: fixed; }
-td, th { vertical-align: top; overflow-wrap: anywhere; white-space: normal; }
-td code, th code { white-space: normal; }
-pre { overflow-x: auto; }
-img { max-width: 100%; height: auto; }
+.linf-table { max-width: 100%; overflow-x: auto; margin: 1em 0; }
+.linf-table:focus { outline: 2px solid #0072b2; outline-offset: 2px; }
+.linf-table table { display: table; overflow: visible; width: 100%; table-layout: auto; }
+.linf-table table { min-width: 38rem; }
+.linf-table td, .linf-table th { vertical-align: top; overflow-wrap: normal; word-break: normal; }
+.linf-table td code, .linf-table th code { white-space: nowrap; }
+.linf-catalog td, .linf-catalog th { min-width: 12rem; hyphens: none; }
 </style>
+
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 library(linf)
+# Keep table rendering separate from the runnable analysis code.
+knitr::opts_chunk$set(render = function(x, options) {
+  rendered <- knitr::knit_print(x, options = options)
+  if (inherits(x, "knitr_kable")) {
+    knitr::asis_output(paste0(
+      '<div class="linf-table" role="region" aria-label="Computed table; scroll horizontally if needed" tabindex="0">\n\n',
+      rendered, '\n\n</div>\n'
+    ))
+  } else rendered
+})
 ```
 
 Start with the result you need: a dominant feature for each sample, a supported
@@ -30,26 +42,29 @@ grouping of samples, a deeper hierarchy, or assignments to a reference you have
 already fitted. These are different stopping points. You do not need to run
 the full pipeline to use L-infinity normalization.
 
-This guide describes the 0.3.1 interface: **11 explicit function exports,
-two registered S3 methods, and five bundled datasets**. S3 methods are selected
-by R when you call `print()` or `summary()` on a fitted object. Neither method
-is also an explicit function export, so there is no overlap in these counts.
 The [example datasets guide](example-datasets.html) catalogs the data separately.
 For longer analyses, see the [normalization and gut tutorial](linf-intro.html)
 and [vaginal microbiome tutorial](linf-vaginal.html).
 
 ## Choose a task
 
+Tables scroll horizontally on narrow screens. Focus a table and use the arrow
+keys, or swipe within it, to read every column without breaking function or dataset names.
+
+<div class="linf-table linf-catalog" role="region" aria-label="function-guide table 1; scroll horizontally if needed" tabindex="0">
+
 | Your task | Entry point | When to stop |
 |---|---|---|
-| Remove low-depth samples and low-prevalence features from counts | `filter.asv()` | You need filtered counts or unit-sum relative abundances. |
-| Express abundance relative to each sample's largest feature | `normalize.linf()` | You need scaled profiles, without grouping samples. |
-| Name the largest feature in each sample | `linf.dominant.features()` | You need individual assignments, without a support threshold. |
-| Retain supported dominance groups | `linf.csts()` | A depth-1 dCST partition answers your question. |
-| Subdivide selected groups by remaining features | `refine.linf.csts()` | The chosen depth is sufficient; deeper is not automatically better. |
-| Inspect stored low-support policies or select representatives | `dcst.view()`, `summary()`, `linf.landmarks()` | You need a descriptive summary of the fitted samples. |
-| Assign new samples to an existing hierarchy | `transfer.dcsts()` | You need frozen-reference assignments, without learning new states. |
-| Prepare coordinate charts or readable names | `linf.hypercube.embedding()`, `linf.feature.labels()` | You need a representation for display or further analysis. |
+| [Remove low-depth samples and low-prevalence features from counts](#filtering-scaling-and-grouping-answer-different-questions) | `filter.asv()` | You need filtered counts or unit-sum relative abundances. |
+| [Express abundance relative to each sample's largest feature](#a-small-workflow-with-stopping-points) | `normalize.linf()` | You need scaled profiles, without grouping samples. |
+| [Name the largest feature in each sample](#a-small-workflow-with-stopping-points) | `linf.dominant.features()` | You need individual assignments, without a support threshold. |
+| [Retain supported dominance groups](#what-a-dcst-hierarchy-stores) | `linf.csts()` | A depth-1 dCST partition answers your question. |
+| [Subdivide selected groups by remaining features](#refinement-choices) | `refine.linf.csts()` | The chosen depth is sufficient; deeper is not automatically better. |
+| [Inspect stored low-support policies or select representatives](#landmarks-are-selected-observations) | `dcst.view()`, `summary()`, `linf.landmarks()` | You need a descriptive summary of the fitted samples. |
+| [Assign new samples to an existing hierarchy](#transfer-to-a-frozen-reference) | `transfer.dcsts()` | You need frozen-reference assignments, without learning new states. |
+| [Prepare coordinate charts or readable names](#embeddings-and-display-labels) | `linf.hypercube.embedding()`, `linf.feature.labels()` | You need a representation for display or further analysis. |
+
+</div>
 
 ## A small workflow, with stopping points
 
@@ -92,11 +107,21 @@ continues to mean assigned samples; use `input.samples` for the full denominator
 
 ## Function catalog
 
+On narrow screens, focus a table and scroll horizontally to read all columns.
+Function names remain intact for copying.
+
+This guide describes the 0.3.1 interface: **11 explicit function exports,
+two registered S3 methods, and five bundled datasets**. S3 methods are selected
+by R when you call `print()` or `summary()` on a fitted object. Neither method
+is also an explicit function export, so there is no overlap in these counts.
+
 Each explicit export appears once in the catalog below. Use `help("function.name",
 package = "linf")` for complete arguments and examples, for example
 `help("normalize.linf", package = "linf")`.
 
 ### Prepare and assign
+
+<div class="linf-table linf-catalog" role="region" aria-label="function-guide table 2; scroll horizontally if needed" tabindex="0">
 
 | Function | Purpose | Expected input | Principal result |
 |---|---|---|---|
@@ -104,7 +129,11 @@ package = "linf")` for complete arguments and examples, for example
 | `normalize.linf()` | Divide rows by their maximum above `tol`. | Finite, nonnegative dense or sparse matrix. | Same-sized matrix; zero and below-tolerance rows remain unchanged. |
 | `linf.dominant.features()` | Assign each sample's maximum feature. | Finite, nonnegative matrix and optional aligned IDs/labels. | Indices, IDs, labels and observed/full feature levels; optional row maxima. |
 
+</div>
+
 ### Fit and inspect a hierarchy
+
+<div class="linf-table linf-catalog" role="region" aria-label="function-guide table 3; scroll horizontally if needed" tabindex="0">
 
 | Function | Purpose | Expected input | Principal result |
 |---|---|---|---|
@@ -114,13 +143,19 @@ package = "linf")` for complete arguments and examples, for example
 | `linf.landmarks()` | Select observed samples by the lineage's leaf-feature value. | Fitted object, aligned matrix, depth and view. | `lineages` metadata and `landmarks` selection table, with row indices/names. |
 | `linf.dcst.landmark.pipeline()` | Normalize, fit depth 1, refine once and select landmarks. | Nonnegative matrix, feature metadata and stage-specific controls. | Normalized matrix, two fitted objects, two landmark objects and parameters. |
 
+</div>
+
 ### Reuse and display
+
+<div class="linf-table linf-catalog" role="region" aria-label="function-guide table 4; scroll horizontally if needed" tabindex="0">
 
 | Function | Purpose | Expected input | Principal result |
 |---|---|---|---|
 | `transfer.dcsts()` | Walk new samples through a frozen fitted hierarchy. | Query matrix, reference fit, feature-matching and view controls. | Label/ID assignment matrices, feature matches and stopping diagnostics; unassignable depths are `NA`. |
 | `linf.hypercube.embedding()` | Construct a zero-aware chart relative to one component. | Nonnegative matrix with at least two features and a reference index, ID or label. | Dense matrix with one fewer column; attributes record the reference and scaling. |
 | `linf.feature.labels()` | Format taxonomy for display while keeping separate stable IDs. | Equal-length feature-ID and taxonomy vectors; optional aliases/abbreviations. | Unique display labels. |
+
+</div>
 
 ## Matrix and identity conventions
 
@@ -402,6 +437,19 @@ scaling; coordinates alone do not demonstrate biological groups or validated
 prediction. The companion shows a static chart. The optional
 [interactive embedding article](https://pgajer.github.io/linf/articles/valencia-hypercube-embedding.html)
 is website-only and is not an installed vignette.
+
+## Resource planning
+
+Transfer and landmark calculations reuse prepared candidate positions and
+memberships. Embedding still returns a dense matrix even for sparse input;
+its numeric output alone occupies about `8 * nrow(X) * (ncol(X) - 1)` bytes,
+before temporary storage. The installed performance note gives measured
+workloads, timings and memory limits of the comparison:
+
+```{r performance-location, eval=FALSE}
+cat(readLines(system.file("PERFORMANCE.md", package = "linf", mustWork = TRUE)),
+    sep = "\n")
+```
 
 ## Finding help and migrating older code
 

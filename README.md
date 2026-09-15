@@ -186,4 +186,5 @@ If you use this package, please cite:
 ## License
 
 MIT © 2025 Pawel Gajer. See [LICENSE](LICENSE). Bundled-data sources and
-upstream terms are recorded in `inst/DATA_PROVENANCE.md`.
+upstream terms are recorded in [bundled-data
+provenance](https://github.com/pgajer/linf/blob/main/inst/DATA_PROVENANCE.md).

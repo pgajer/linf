@@ -1,3 +1,7 @@
+# Write to a separate directory for reproduction checks; default is data/.
+data.output <- Sys.getenv("LINF_DATA_OUTPUT", "data")
+dir.create(data.output, recursive = TRUE, showWarnings = FALSE)
+
 ## ============================================================================
 ## build_valencia2k.R
 ## ============================================================================
@@ -97,6 +101,7 @@ stopifnot(identical(rownames(rel), cst_sub$sample_id))
 ## Reset row names to simple integers for cleanliness
 rownames(rel)    <- paste0("s", seq_len(nrow(rel)))
 cst_sub$sample_id <- rownames(rel)
+cst_sub$source_row <- as.integer(sampled_rows)
 rownames(cst_sub) <- NULL
 
 ## Print sub-CST distribution
@@ -126,7 +131,7 @@ valencia2k <- list(
 
 ## --- Save ----------------------------------------------------------------
 
-save(valencia2k, file = "data/valencia2k.rda", compress = "xz")
+save(valencia2k, file = file.path(data.output, "valencia2k.rda"), compress = "xz")
 
-cat("\nSaved data/valencia2k.rda\n")
-cat("File size:", round(file.info("data/valencia2k.rda")$size / 1024), "KB\n")
+cat("\nSaved", file.path(data.output, "valencia2k.rda"), "\n")
+cat("File size:", round(file.info(file.path(data.output, "valencia2k.rda"))$size / 1024), "KB\n")

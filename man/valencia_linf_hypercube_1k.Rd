@@ -27,7 +27,7 @@ relative-abundance mass carried by the four selected taxa), and
 \source{
 Generated from the VALENCIA training data at
 \url{https://github.com/ravel-lab/VALENCIA}. See
-\code{data-raw/build_valencia_linf_hypercube_1k.R} and the installed
+\href{https://github.com/pgajer/linf/blob/main/data-raw/build_valencia_linf_hypercube_1k.R}{data-raw/build_valencia_linf_hypercube_1k.R} and the installed
 \code{DATA_PROVENANCE.md} file.
 }
 \usage{
@@ -49,6 +49,14 @@ compositional projective-space coordinate charts.
 The stored object contains input abundances, not precomputed embedding
 coordinates; compute those with \code{\link{linf.hypercube.embedding}}.
 }
+\section{Reading provenance offline}{
+
+Read the installed source and preparation record at the console:
+\code{cat(readLines(system.file("DATA_PROVENANCE.md", package = "linf", mustWork = TRUE)), sep = "\\n")}. The installed \code{DATA_MANIFEST.csv} records
+pinned input checksums; see the
+\href{https://github.com/pgajer/linf/blob/main/data-raw/README.md}{reproduction recipe}.
+}
+
 \examples{
 data(valencia_linf_hypercube_1k)
 dim(valencia_linf_hypercube_1k$rel4)
