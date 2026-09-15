@@ -72,3 +72,7 @@ audit-guides:
 
 vignette-previews: audit-guides
 	Rscript tools/render-vignette-previews.R
+
+.PHONY: audit-embedding-article
+audit-embedding-article:
+	Rscript tools/audit-embedding-article.R

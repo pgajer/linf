@@ -114,6 +114,12 @@ empty.linf.landmark.rows <- function() {
 #'   \code{"dense"}, or \code{"sparse"}. The default \code{"auto"} preserves
 #'   sparse input and otherwise uses the dense path.
 #'
+#' @details
+#' Both matrix dimensions must match the fit. For new fits, named axes must
+#' match the original input names/order saved in `csts$input.dimnames`, which
+#' are independent of custom feature IDs. No automatic alignment is performed.
+#' Unnamed axes and legacy fits without original dimnames use positional order.
+#'
 #' @return A list of class \code{"linf.landmarks"} with components:
 #' \itemize{
 #'   \item \code{depth}, \code{view}, \code{sep}, \code{rare.label}
@@ -163,9 +169,7 @@ linf.landmarks <- function(M,
   X <- prep$X
   backend <- prep$backend
   linf.validate.matrix(X, backend = backend, fun.name = "linf.landmarks")
-  if (nrow(X) != length(csts$lineage.label)) {
-    stop("linf.landmarks: nrow(M) must match the number of samples in csts")
-  }
+  linf.validate.fit.matrix(X, csts, "linf.landmarks")
 
   max.depth <- csts$depth
   if (is.null(depth)) depth <- max.depth

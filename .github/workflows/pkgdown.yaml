@@ -29,8 +29,12 @@ jobs:
         with:
           extra-packages: |
             any::pkgdown
+            any::pkgload
             local::.
           needs: website
+
+      - name: Check embedding article graphs and traces
+        run: Rscript tools/audit-embedding-article.R
 
       - name: Build site
         run: pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)

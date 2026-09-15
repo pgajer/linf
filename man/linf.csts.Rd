@@ -93,6 +93,20 @@ by \code{tie.method}).
 }
 }
 \details{
+New fits retain the original input dimnames in \code{input.dimnames}, separately
+from custom feature IDs. Refinement and landmarks require the same dimensions
+and reject mismatching names/order when both the fitted and supplied axis
+are named. They never reorder automatically. Unnamed axes and older fits
+lacking this metadata retain positional matching; names alone cannot detect
+changed values or permutations within duplicated names.
+
+The \code{history} list records settings for each stored depth. The first entry
+records fitting support, policy and ties. Refinement entries additionally
+record selection mode, selected lineage/node IDs, nodes actually refined,
+source policy, separator and refinement factor. \code{available = FALSE} marks
+older levels whose history was not saved when a legacy fit is refined.
+The top-level \code{n0} remains the original depth-1 threshold.
+
 Fitted objects store explicit feature paths and node metadata in
 \code{nodes} and \code{node.ids}, with \code{.pure} and \code{.absorb}
 variants. A node path contains original column indices; zero marks a

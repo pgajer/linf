@@ -20,7 +20,9 @@ refine.linf.csts(
 \arguments{
 \item{M}{Numeric matrix (samples x features) used for refinement. Columns
 must correspond, in order, to the stable feature IDs stored in \code{csts}.
-Rows must remain in fitted sample order; names do not trigger alignment.}
+Rows must remain in fitted sample order. Both dimensions are checked;
+named axes are checked against \code{csts$input.dimnames} when available.
+Unnamed axes/legacy fits use positional matching. No automatic reordering.}
 
 \item{csts}{A \code{"linf.csts"} object.}
 
@@ -49,7 +51,8 @@ backend from \code{M} or from \code{csts} when available.}
 }
 \value{
 Updated \code{"linf.csts"} object with \code{depth} increased by one and
-updated \code{lineage.label}. Policy-specific views are stored in
+updated \code{lineage.label} and a new \code{history} entry recording the
+settings and selected/refined nodes at this depth. Policy-specific views are stored in
 \code{lineage.label.pure} and \code{lineage.label.absorb}.
 }
 \description{

@@ -1,5 +1,29 @@
 # linf 0.3.1 (unreleased)
 
+- Matrix consumers validate fitted dimensions and, for new fits, original
+  input dimnames independently of custom feature IDs. Named axis reorderings
+  fail explicitly; unnamed axes and legacy fits retain positional matching.
+  Transfer rejects duplicate, missing or empty keys in the selected matching
+  vector while allowing repeated display labels when matching by stable IDs.
+- Hypercube calculations avoid overflowing reference ratios and preserve small
+  positive radii. Automatic scaling includes extreme norms; a new optional
+  `log.lambda` argument and result attribute allow reuse of scales beyond the
+  ordinary numeric range. The `lambda` attribute is NA for those scales.
+  Inputs with fewer than two features receive a direct error.
+- Transfer adds lineage-ID matrices, a feature-match table and per-query
+  stopping/tie diagnostics while preserving the original label matrices.
+  Fitted objects record per-depth settings and selection history; earlier
+  unsaved history is marked unavailable when legacy fits are refined.
+- The website embedding article shows native component coordinates first,
+  preserves all seven CST categories in hover text without symbol warnings,
+  includes a static preview, and fixes its optional graph to use the union of
+  nearest-neighbor relations including cutoff ties. Connectivity is reported;
+  grip optimization is an explicitly enabled, separate experiment.
+- The gut tutorial compares support thresholds under both policies on the
+  same filtered samples. Replace the unsupported primer-cross-reactivity
+  attribution with a cited discussion of AGP sample handling and the limits
+  of attributing causes from this bundled subset.
+
 - Fitted hierarchies now store explicit node paths independently of displayed
   lineage strings. Literal separator-containing feature IDs and refined paths
   remain distinct, including real features sharing the rare-category name.

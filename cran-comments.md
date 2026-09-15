@@ -11,6 +11,11 @@ literal-path and rare-sentinel collisions; validates count filtering and empty
 results; and reports assigned, unassigned and rare sample counts explicitly.
 Unambiguous legacy fits upgrade on use; ambiguous legacy fits require rebuilding.
 
+This candidate additionally validates matrix/fit alignment and query matching keys,
+stabilizes extreme finite hypercube calculations, adds reusable transfer IDs and
+stopping diagnostics, and records per-depth fit/refinement settings. The optional
+trailing log.lambda argument supports reuse of extreme radial scales.
+
 This candidate also adds two installed vignettes: a task-oriented function guide
 and an example-dataset guide. Package help, README and the existing tutorials
 now distinguish fitting from frozen transfer, observed landmarks from averaged
@@ -26,7 +31,7 @@ Suggests and Enhances (checked 2026-09-14).
 * Full incoming-enabled `R CMD check --as-cran` of the current 0.3.1 tarball,
   with `R_MAKEVARS_USER=/dev/null` and HTML Tidy 5.8.0:
   0 errors, 0 warnings, 0 NOTEs.
-* All 628 test assertions pass, with no failures, warnings or skips.
+* All 730 test assertions pass, with no failures, warnings or skips.
 * Examples, all four installed vignettes and their rebuilding, and the PDF
   and HTML manuals pass. The installed index includes HTML, Rmd and R sources.
 * The installed package overview, both help aliases, all four vignette entries
@@ -35,6 +40,12 @@ Suggests and Enhances (checked 2026-09-14).
   lineages, custom rare labels, dense/sparse matrices and all policy views.
 
 ## Current platform checks
+
+Iteration 2: fresh platform checks will run on the implementation push.
+The local check above covers iteration 2; the following remote results cover
+iteration 1 and are historical for the new changes.
+
+## Iteration 1 platform checks
 
 Checked implementation commit: f537826 (2026-09-15).
 
@@ -51,7 +62,7 @@ https://github.com/pgajer/linf/actions/runs/34992320125
 https://github.com/pgajer/linf/actions/runs/34992320081
 
 The following R-hub and Win-builder results are historical; those services
-have not checked the new node representation.
+have not checked the new node representation or iteration 2 changes.
 
 ## Earlier platform checks (2026-09-15)
 

@@ -161,9 +161,51 @@ group counts differ even though both start with the same filtered samples.
 The `RARE_DOMINANT` bucket collects samples dominated by taxa too infrequent
 to form their own dCST at this threshold.
 
-Note on *Escherichia-Shigella*: this genus is known to be inflated in 16S V4
-data due to primer cross-reactivity. Its high prevalence should be interpreted
-with caution.
+The *Escherichia-Shigella* values are processed 16S read counts.
+[McDonald et al. (2018)](https://doi.org/10.1128/mSystems.00031-18) describe
+microbial overgrowth during room-temperature shipping in American Gut,
+including *E. coli* blooms. That source does not establish the cause of the
+abundance in this bundled subset. The displayed dominance count alone cannot
+establish organismal abundance or a particular technical cause, including
+primer cross-reactivity.
+
+### How sensitive is depth 1 to the support threshold?
+
+The following comparison uses the same `r nrow(M)` filtered samples and
+`r ncol(M)` features at every setting. Only the minimum support and the
+low-support policy change; no phenotype information enters these fits.
+
+```{r support-sensitivity}
+sensitivity <- do.call(rbind, lapply(c(10L, 30L, 60L, 200L), function(support) {
+  do.call(rbind, lapply(c("pure", "absorb"), function(policy) {
+    fit <- linf.csts(M, n0 = support, low.freq.policy = policy,
+                     return.diagnostics = TRUE)
+    counts <- summary(fit)
+    stopifnot(counts$input.samples == nrow(M),
+              counts$input.samples == counts$assigned.samples + counts$unassigned.samples)
+    data.frame(n0 = support, Policy = policy, Groups = counts$retained.lineages,
+               Rare = counts$rare.samples,
+               Reassigned = if (policy == "absorb") sum(fit$diagnostics$reassigned) else 0L,
+               Unassigned = counts$unassigned.samples)
+  }))
+}))
+knitr::kable(sensitivity)
+```
+
+At `n0 = 30`, the pure view has
+`r sensitivity$Rare[sensitivity$n0 == 30 & sensitivity$Policy == "pure"]`
+samples in a synthetic rare category; absorption reassigns
+`r sensitivity$Reassigned[sensitivity$n0 == 30 & sensitivity$Policy == "absorb"]`
+samples to the retained groups. Raising the support threshold reduces the
+number of retained groups. At 200, no feature has enough provisional support:
+the pure view puts every sample in the rare category, while absorption leaves
+every sample unassigned. Rare samples are assigned to a synthetic category;
+"Unassigned" means an `NA` assignment and is counted separately.
+
+This is a descriptive sensitivity check, not a search for an optimal or
+clinically validated threshold. Stable group counts would not by themselves
+establish stable membership, biological validity or predictive accuracy. The
+stratified sampling limitation applies to every row of this comparison.
 
 ### Step 4: Depth-2 refinement
 

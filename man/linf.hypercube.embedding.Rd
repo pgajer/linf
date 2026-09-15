@@ -13,7 +13,8 @@ linf.hypercube.embedding(
   feature.ids = NULL,
   feature.labels = NULL,
   tol = 0,
-  backend = c("auto", "dense", "sparse")
+  backend = c("auto", "dense", "sparse"),
+  log.lambda = NULL
 )
 }
 \arguments{
@@ -27,10 +28,10 @@ feature label.}
 using \code{sigma.quantile} and \code{sigma.target}.}
 
 \item{sigma.quantile}{Quantile of positive finite-reference \eqn{\|z\|_1}
-values used when \code{lambda = NULL}.}
+values used for automatic scaling.}
 
 \item{sigma.target}{Target value of \eqn{\sigma_\lambda(t)} at the selected
-quantile when \code{lambda = NULL}.}
+quantile during automatic scaling.}
 
 \item{feature.ids}{Optional stable feature identifiers, length \code{ncol(X)}.}
 
@@ -40,8 +41,11 @@ quantile when \code{lambda = NULL}.}
 zero, and L-infinity norms \verb{<= tol} are treated as zero.}
 
 \item{backend}{Matrix backend: \code{"auto"}, \code{"dense"}, or \code{"sparse"}. Sparse
-inputs are accepted, but the returned embedding is a dense matrix because
-homogeneous-coordinate embeddings are generally dense.}
+inputs are accepted, but this implementation returns a dense matrix.
+Non-reference zeros remain zero; account for dense storage in large inputs.}
+
+\item{log.lambda}{Optional finite natural logarithm of the radial scale,
+as an alternative to \code{lambda}. Supply at most one of these two arguments.}
 }
 \value{
 A numeric matrix with \code{nrow(X)} rows and \code{ncol(X) - 1} columns. The
@@ -72,10 +76,20 @@ vector
 }
 All-zero rows are mapped to all-zero embedded rows by convention.
 
-If \code{lambda} is not supplied, it is chosen from the positive finite-reference
+If neither \code{lambda} nor \code{log.lambda} is supplied, the scale is chosen from positive-reference
 rows so that \code{sigma.target} is attained at the \code{sigma.quantile} quantile of
 \eqn{\|z\|_1}. This is a numerical scaling convention for finite datasets; it
 does not change the reference component or the boundary extension rule.
+Direction is computed from scaled non-reference values, and radial products
+and the type-7 quantile are evaluated using logarithms to avoid overflow.
+The radial map uses \code{expm1} to preserve very small positive coordinates.
+Norms beyond the ordinary numeric range are included in automatic calibration.
+
+The \code{log.lambda} attribute always records the natural logarithm of the scale.
+The \code{lambda} attribute is \code{NA_real_} if that scale cannot be represented as a
+positive finite number. Reuse any fitted scale with
+\code{log.lambda = attr(reference.embedding, "log.lambda")}; this also works for
+extreme calibration data. The all-zero/reference-only fallback scale is one.
 }
 \examples{
 X <- rbind(

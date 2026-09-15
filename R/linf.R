@@ -270,6 +270,20 @@ linf.active.low.freq.view <- function(low.freq.policy) {
 #'   }
 #'
 #' @details
+#' New fits retain the original input dimnames in `input.dimnames`, separately
+#' from custom feature IDs. Refinement and landmarks require the same dimensions
+#' and reject mismatching names/order when both the fitted and supplied axis
+#' are named. They never reorder automatically. Unnamed axes and older fits
+#' lacking this metadata retain positional matching; names alone cannot detect
+#' changed values or permutations within duplicated names.
+#'
+#' The `history` list records settings for each stored depth. The first entry
+#' records fitting support, policy and ties. Refinement entries additionally
+#' record selection mode, selected lineage/node IDs, nodes actually refined,
+#' source policy, separator and refinement factor. `available = FALSE` marks
+#' older levels whose history was not saved when a legacy fit is refined.
+#' The top-level `n0` remains the original depth-1 threshold.
+#'
 #' Fitted objects store explicit feature paths and node metadata in
 #' \code{nodes} and \code{node.ids}, with \code{.pure} and \code{.absorb}
 #' variants. A node path contains original column indices; zero marks a
@@ -479,6 +493,7 @@ linf.csts <- function(S,
         provisional.feature.label        = raw$label,
         size.table       = tab,
         size.table.id    = tab.id,
+        input.dimnames   = dimnames(X) %||% list(NULL, NULL),
         feature.ids      = fid,
         feature.labels   = lev,
         matrix.backend   = backend,
@@ -502,6 +517,11 @@ linf.csts <- function(S,
     out$lineage.labels.pure <- list(level1 = out$lineage.label.pure)
     out$lineage.labels.absorb <- list(level1 = out$lineage.label.absorb)
     out$depth <- 1L
+    out$history <- list(list(
+        depth = 1L, available = TRUE, operation = "fit", n0 = as.integer(n0),
+        low.freq.policy = low.freq.policy, rare.label = rare.label,
+        tie.method = tie.method, backend = backend
+    ))
 
     for (view in c("pure", "absorb")) {
         indices <- out[[paste0("depth1.feature.index.", view)]]
@@ -614,7 +634,9 @@ validate.linf.csts <- function(obj) {
 #'
 #' @param M Numeric matrix (samples x features) used for refinement. Columns
 #'   must correspond, in order, to the stable feature IDs stored in \code{csts}.
-#'   Rows must remain in fitted sample order; names do not trigger alignment.
+#'   Rows must remain in fitted sample order. Both dimensions are checked;
+#'   named axes are checked against `csts$input.dimnames` when available.
+#'   Unnamed axes/legacy fits use positional matching. No automatic reordering.
 #' @param csts A \code{"linf.csts"} object.
 #' @param lineages.to.refine Optional character vector of leaf
 #'   dominance-lineage IDs to refine. When \code{NULL}, lineages are selected
@@ -633,7 +655,8 @@ validate.linf.csts <- function(obj) {
 #'   backend from \code{M} or from \code{csts} when available.
 #'
 #' @return Updated \code{"linf.csts"} object with \code{depth} increased by one and
-#'   updated \code{lineage.label}. Policy-specific views are stored in
+#'   updated \code{lineage.label} and a new `history` entry recording the
+#'   settings and selected/refined nodes at this depth. Policy-specific views are stored in
 #'   \code{lineage.label.pure} and \code{lineage.label.absorb}.
 #'
 #' @details
@@ -690,6 +713,7 @@ refine.linf.csts <- function(M,
     M <- prep$X
     backend <- prep$backend
     linf.validate.matrix(M, backend = backend, fun.name = "refine.linf.csts")
+    linf.validate.fit.matrix(M, csts, "refine.linf.csts")
 
     if (!is.numeric(n0) || length(n0) != 1L || !is.finite(n0) || n0 < 1 || n0 %% 1 != 0) {
         stop("refine.linf.csts: n0 must be integer >= 1")
@@ -758,6 +782,7 @@ refine.linf.csts <- function(M,
         message(paste(progress, collapse = "\n"))
     }
 
+    refined.node.ids <- character()
     for (lineage in lineages.to.refine) {
         idx <- which(parent.ids == lineage)
         drop.idx <- active.paths[[idx[1L]]]
@@ -787,6 +812,7 @@ refine.linf.csts <- function(M,
                              backend = backend)
 
         if (!length(sub.csts$retained.feature.indices)) next
+        refined.node.ids <- c(refined.node.ids, csts$node.ids[[depth - 1L]][idx[1L]])
         for (j in seq_along(idx)) {
             row <- idx[[j]]
             # A stored synthetic/undefined parent remains terminal in its view.
@@ -802,6 +828,16 @@ refine.linf.csts <- function(M,
         }
     }
 
+    csts$history <- linf.fit.history(csts)
+    csts$history[[depth]] <- list(
+        depth = depth, available = TRUE, operation = "refine", n0 = as.integer(n0),
+        refinement.factor = refinement.factor, selection.mode = selection.mode,
+        selected.lineage.ids = lineages.to.refine,
+        selected.node.ids = active.nodes$node.id[match(lineages.to.refine, active.nodes$lineage.id)],
+        refined.node.ids = unname(refined.node.ids),
+        source.view = csts$low.freq.policy, low.freq.policy = low.freq.policy,
+        rare.label = rare.label, sep = sep, tie.method = "first", backend = backend
+    )
     csts$depth <- depth
     csts$sep <- sep
     csts$low.freq.policy <- low.freq.policy

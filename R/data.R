@@ -246,8 +246,12 @@
 #' The count matrix can be used directly with \code{\link{filter.asv}},
 #' \code{\link{normalize.linf}}, and downstream dCST functions.
 #'
-#' Note on Escherichia-Shigella: this genus is inflated in 16S V4 data due to
-#' primer cross-reactivity and should be interpreted with caution.
+#' The Escherichia-Shigella values are processed 16S read counts. McDonald et al.
+#' (2018), cited below, describe microbial overgrowth during room-temperature
+#' shipping in American Gut, including E. coli blooms. The bundled subset does
+#' not identify the cause of its Escherichia-Shigella abundance or establish
+#' primer cross-reactivity. Do not infer a biological abundance or a particular
+#' technical cause from the displayed dominance count alone.
 #'
 #' @references
 #' McDonald, D., Hyde, E., Debelius, J. W., et al. (2018). American Gut: an

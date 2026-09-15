@@ -22,9 +22,11 @@
 #' @param match.by Whether columns in \code{X} are aligned to
 #'   \code{csts$feature.ids} or \code{csts$feature.labels}.
 #' @param feature.ids Optional feature identifiers for columns of \code{X}.
-#'   Defaults to \code{colnames(X)}.
+#'   Defaults to \code{colnames(X)}. When used for matching, keys must be
+#'   unique, nonmissing and nonempty; ambiguous query keys are rejected.
 #' @param feature.labels Optional feature labels for columns of \code{X}.
-#'   Defaults to \code{feature.ids}.
+#'   Defaults to \code{feature.ids}. The same key requirements apply when
+#'   matching by labels; repeated display labels are allowed when matching by IDs.
 #' @param tie.method How to resolve ties among frozen child lineages with equal
 #'   sample abundance. \code{"support"} chooses the tied lineage with largest
 #'   reference support and then lexical order; \code{"first"} uses frozen child
@@ -43,12 +45,36 @@
 #'     \item \code{assignment}: character matrix of transferred labels for the
 #'       requested depths.
 #'     \item \code{all.depths}: character matrix for all fitted depths.
+#'     \item \code{assignment.ids}, \code{all.depths.ids}: corresponding
+#'       lineage-ID matrices whose identifiers do not encode display labels. IDs belong
+#'       to the fitted feature mapping; they are not universal across fits.
+#'     \item \code{feature.match}: one row per fitted feature, with ID, label,
+#'       query column index (NA if absent) and a logical matched flag.
+#'     \item \code{diagnostics}: one row per query, with sample index/name,
+#'       deepest assigned depth, stopping depth/reason, counts of present and
+#'       absent candidate features at that stop, and number of depths with ties.
+#'       Diagnostics describe the full walk, regardless of requested depths.
 #'     \item \code{depth}: requested depth vector.
 #'     \item \code{view}, \code{match.by}, \code{tie.method}: settings used.
 #'   }
 #'   At any depth with no realized candidate or no positive abundance for its
 #'   candidate features, that depth and all subsequent depths are \code{NA}.
-#'   Returned lineages use display labels regardless of \code{match.by}.
+#'   The original assignment matrices retain display labels regardless of
+#'   \code{match.by}; use their `.ids` counterparts for joins.
+#'
+#' @details
+#' Diagnostic reasons are `complete` (every fitted depth assigned),
+#' `no_candidates` (no realized children), `synthetic_only` (only unscorable
+#' rare categories), `missing_candidate_features` (all real candidate features
+#' absent from the query), or `no_positive_candidate_values` (some real candidate
+#' features are present but none has positive abundance). A partially missing
+#' candidate set can have the last reason; inspect `missing.candidates` too.
+#' Completed walks have NA stopping depth and candidate counts. A terminal
+#' lineage carried through later stored levels counts as an assignment at each
+#' such level; `assigned.depth` is not the number of distinct feature choices.
+#' ID output does not change the existing tie rule: lexical display-label order
+#' still resolves equal-support ties. Relabeling and refitting can therefore
+#' change tied assignments; inspect `n.tied.depths` when comparing results.
 #'
 #' @examples
 #' X <- rbind(
@@ -79,7 +105,7 @@ transfer.dcsts <- function(X,
   match.by <- match.arg(match.by)
   tie.method <- match.arg(tie.method)
   if (is.null(sep)) sep <- csts$sep %||% "__"
-  if (!is.character(sep) || length(sep) != 1L || !nzchar(sep)) {
+  if (!is.character(sep) || length(sep) != 1L || is.na(sep) || !nzchar(sep)) {
     stop("transfer.dcsts: sep must be a non-empty character scalar")
   }
   if (!is.logical(carry.forward.terminal.depths) ||
@@ -96,11 +122,15 @@ transfer.dcsts <- function(X,
   feature.ids <- feature.ids %||% colnames(X)
   if (is.null(feature.ids)) feature.ids <- paste0("V", seq_len(ncol(X)))
   feature.labels <- feature.labels %||% feature.ids
-  if (length(feature.ids) != ncol(X)) {
-    stop("transfer.dcsts: feature.ids must have length ncol(X)")
+  if (length(feature.ids) != ncol(X) || length(feature.labels) != ncol(X)) {
+    stop("transfer.dcsts: feature.ids and feature.labels must have length ncol(X)")
   }
-  if (length(feature.labels) != ncol(X)) {
-    stop("transfer.dcsts: feature.labels must have length ncol(X)")
+  # Only the selected matching vector must be unique; display labels may repeat
+  # when stable IDs are the selected keys.
+  if (match.by == "feature.ids") {
+    feature.ids <- linf.validate.query.keys(feature.ids, "feature.ids", ncol(X))
+  } else {
+    feature.labels <- linf.validate.query.keys(feature.labels, "feature.labels", ncol(X))
   }
 
   resolved.view <- resolve.linf.landmark.view(csts, view)
@@ -132,35 +162,40 @@ transfer.dcsts <- function(X,
   colnames(X.aligned) <- csts$feature.labels
 
   tree <- linf.dcst.transfer.tree(levels, nodes, max.depth = max.depth, sep = sep)
-  assigned.raw <- vapply(
-    seq_len(nrow(X.aligned)),
-    function(i) {
-      vals <- X.aligned[i, , drop = TRUE]
-      names(vals) <- csts$feature.labels
-      linf.transfer.one.sample(
-        vals,
-        tree = tree,
-        max.depth = max.depth,
-        tie.method = tie.method,
-        sep = sep
-      )
-    },
-    character(max.depth)
-  )
-  assignments <- if (is.null(dim(assigned.raw))) {
-    matrix(assigned.raw, ncol = 1L)
-  } else {
-    t(assigned.raw)
-  }
+  query.index <- match(ref.features, query.features)
+  matched <- !is.na(query.index)
+  walks <- lapply(seq_len(nrow(X.aligned)), function(i) {
+    linf.transfer.one.sample(
+      as.numeric(X.aligned[i, , drop = TRUE]), tree = tree,
+      max.depth = max.depth, tie.method = tie.method, sep = sep,
+      feature.matched = matched
+    )
+  })
+  node.assignments <- do.call(rbind, lapply(walks, `[[`, "assignment"))
+  rownames(node.assignments) <- rownames(X)
+  colnames(node.assignments) <- paste0("depth", seq_len(max.depth))
+  assignments <- assignment.ids <- node.assignments
   for (d in seq_len(max.depth)) {
-    assignments[, d] <- nodes[[d]]$lineage.label[match(assignments[, d], nodes[[d]]$node.id)]
+    index <- match(node.assignments[, d], nodes[[d]]$node.id)
+    assignments[, d] <- nodes[[d]]$lineage.label[index]
+    assignment.ids[, d] <- nodes[[d]]$lineage.id[index]
   }
-  rownames(assignments) <- rownames(X)
-  colnames(assignments) <- paste0("depth", seq_len(max.depth))
+  diagnostics <- do.call(rbind, lapply(walks, `[[`, "diagnostics"))
+  diagnostics <- data.frame(sample.index = seq_len(nrow(X)),
+                            sample.id = rownames(X) %||% rep(NA_character_, nrow(X)),
+                            diagnostics, row.names = NULL)
+  feature.match <- data.frame(
+    feature.id = csts$feature.ids, feature.label = csts$feature.labels,
+    query.index = query.index, matched = matched, stringsAsFactors = FALSE
+  )
 
   out <- list(
     assignment = assignments[, depth, drop = FALSE],
     all.depths = assignments,
+    assignment.ids = assignment.ids[, depth, drop = FALSE],
+    all.depths.ids = assignment.ids,
+    diagnostics = diagnostics,
+    feature.match = feature.match,
     depth = depth,
     view = view,
     match.by = match.by,
@@ -234,9 +269,14 @@ linf.transfer.one.sample <- function(sample.values,
                                      tree,
                                      max.depth,
                                      tie.method,
-                                     sep) {
+                                     sep,
+                                     feature.matched) {
   out <- rep(NA_character_, max.depth)
   parent.key <- "__ROOT__"
+  reason <- "complete"
+  stop.depth <- NA_integer_
+  matched.at.stop <- missing.at.stop <- NA_integer_
+  tie.depths <- integer()
   child.score <- function(key, depth) {
     nodes <- tree$nodes[[depth]]
     node <- match(key, nodes$node.id)
@@ -247,17 +287,29 @@ linf.transfer.one.sample <- function(sample.values,
   for (d in seq_len(max.depth)) {
     candidates <- tree$children[[d]][[parent.key]]
     if (is.null(candidates) || !length(candidates)) {
+      reason <- "no_candidates"
+      stop.depth <- d
+      matched.at.stop <- missing.at.stop <- 0L
       break
     }
 
     vals <- vapply(candidates, child.score, numeric(1L), depth = d)
     best <- max(vals)
     if (!is.finite(best) || best <= 0) {
+      indices <- tree$nodes[[d]]$feature.index[match(candidates, tree$nodes[[d]]$node.id)]
+      indices <- unique(indices[!is.na(indices)])
+      matched.at.stop <- sum(feature.matched[indices])
+      missing.at.stop <- sum(!feature.matched[indices])
+      reason <- if (!length(indices)) "synthetic_only" else if (!matched.at.stop) {
+        "missing_candidate_features"
+      } else "no_positive_candidate_values"
+      stop.depth <- d
       break
     }
 
     top <- candidates[vals == best]
     if (length(top) > 1L) {
+      tie.depths <- c(tie.depths, d)
       if (tie.method == "support") {
         supp <- tree$support[[d]][[parent.key]][top]
         supp[is.na(supp)] <- 0
@@ -280,5 +332,10 @@ linf.transfer.one.sample <- function(sample.values,
     parent.key <- chosen
   }
 
-  out
+  list(assignment = out, diagnostics = data.frame(
+    assigned.depth = sum(!is.na(out)), stop.depth = stop.depth,
+    reason = reason, matched.candidates = matched.at.stop,
+    missing.candidates = missing.at.stop, n.tied.depths = length(tie.depths),
+    stringsAsFactors = FALSE
+  ))
 }

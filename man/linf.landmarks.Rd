@@ -69,6 +69,11 @@ Target features come from explicit node paths, preserving separators inside
 IDs and separating literal feature names from concatenated paths. Terminal lineages retain their last
 feature at later stored depths. Inspect \code{lineages$landmarks.computable}
 to identify synthetic rare categories without a target feature.
+
+Both matrix dimensions must match the fit. For new fits, named axes must
+match the original input names/order saved in \code{csts$input.dimnames}, which
+are independent of custom feature IDs. No automatic alignment is performed.
+Unnamed axes and legacy fits without original dimnames use positional order.
 }
 \examples{
 M <- rbind(

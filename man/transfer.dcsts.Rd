@@ -38,10 +38,12 @@ uses \code{lineage.labels.absorb}; \code{"pure"} uses
 \code{csts$feature.ids} or \code{csts$feature.labels}.}
 
 \item{feature.ids}{Optional feature identifiers for columns of \code{X}.
-Defaults to \code{colnames(X)}.}
+Defaults to \code{colnames(X)}. When used for matching, keys must be
+unique, nonmissing and nonempty; ambiguous query keys are rejected.}
 
 \item{feature.labels}{Optional feature labels for columns of \code{X}.
-Defaults to \code{feature.ids}.}
+Defaults to \code{feature.ids}. The same key requirements apply when
+matching by labels; repeated display labels are allowed when matching by IDs.}
 
 \item{tie.method}{How to resolve ties among frozen child lineages with equal
 sample abundance. \code{"support"} chooses the tied lineage with largest
@@ -65,12 +67,22 @@ A list of class \code{"linf.dcst.transfer"} with components:
 \item \code{assignment}: character matrix of transferred labels for the
 requested depths.
 \item \code{all.depths}: character matrix for all fitted depths.
+\item \code{assignment.ids}, \code{all.depths.ids}: corresponding
+lineage-ID matrices whose identifiers do not encode display labels. IDs belong
+to the fitted feature mapping; they are not universal across fits.
+\item \code{feature.match}: one row per fitted feature, with ID, label,
+query column index (NA if absent) and a logical matched flag.
+\item \code{diagnostics}: one row per query, with sample index/name,
+deepest assigned depth, stopping depth/reason, counts of present and
+absent candidate features at that stop, and number of depths with ties.
+Diagnostics describe the full walk, regardless of requested depths.
 \item \code{depth}: requested depth vector.
 \item \code{view}, \code{match.by}, \code{tie.method}: settings used.
 }
 At any depth with no realized candidate or no positive abundance for its
 candidate features, that depth and all subsequent depths are \code{NA}.
-Returned lineages use display labels regardless of \code{match.by}.
+The original assignment matrices retain display labels regardless of
+\code{match.by}; use their \code{.ids} counterparts for joins.
 }
 \description{
 Assigns rows of a new sample-by-feature matrix into the realized lineage sets
@@ -79,6 +91,20 @@ sample is walked through the frozen tree by choosing, at each depth, the
 realized child lineage whose newly added feature has the largest abundance in
 that sample. Scoring uses explicit node feature indices, independently of
 display labels and separator-containing feature IDs.
+}
+\details{
+Diagnostic reasons are \code{complete} (every fitted depth assigned),
+\code{no_candidates} (no realized children), \code{synthetic_only} (only unscorable
+rare categories), \code{missing_candidate_features} (all real candidate features
+absent from the query), or \code{no_positive_candidate_values} (some real candidate
+features are present but none has positive abundance). A partially missing
+candidate set can have the last reason; inspect \code{missing.candidates} too.
+Completed walks have NA stopping depth and candidate counts. A terminal
+lineage carried through later stored levels counts as an assignment at each
+such level; \code{assigned.depth} is not the number of distinct feature choices.
+ID output does not change the existing tie rule: lexical display-label order
+still resolves equal-support ties. Relabeling and refitting can therefore
+change tied assignments; inspect \code{n.tied.depths} when comparing results.
 }
 \examples{
 X <- rbind(

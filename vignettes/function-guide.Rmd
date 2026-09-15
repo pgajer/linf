@@ -118,7 +118,7 @@ package = "linf")` for complete arguments and examples, for example
 
 | Function | Purpose | Expected input | Principal result |
 |---|---|---|---|
-| `transfer.dcsts()` | Walk new samples through a frozen fitted hierarchy. | Query matrix, reference fit, feature-matching and view controls. | Display-label matrices `assignment` and `all.depths`; unassignable depths are `NA`. |
+| `transfer.dcsts()` | Walk new samples through a frozen fitted hierarchy. | Query matrix, reference fit, feature-matching and view controls. | Label/ID assignment matrices, feature matches and stopping diagnostics; unassignable depths are `NA`. |
 | `linf.hypercube.embedding()` | Construct a zero-aware chart relative to one component. | Nonnegative matrix with at least two features and a reference index, ID or label. | Dense matrix with one fewer column; attributes record the reference and scaling. |
 | `linf.feature.labels()` | Format taxonomy for display while keeping separate stable IDs. | Equal-length feature-ID and taxonomy vectors; optional aliases/abbreviations. | Unique display labels. |
 
@@ -134,7 +134,12 @@ disambiguates duplicates with `make.unique(..., sep = "_")`; supplying unique
 IDs from the start avoids an order-dependent mapping.
 
 For refinement and landmarks, reuse the fitted matrix's **row and column
-order**. These functions do not join the matrix back to the fit by names.
+order**. Both dimensions are checked. New fits save `input.dimnames` separately
+from custom feature IDs; if an axis is named in both the fit and the supplied
+matrix, its names/order must match. The error identifies the axis to align.
+There is no automatic reordering. Unnamed axes and older fits without saved
+input names retain the positional contract; prefer unique names because
+permutations within duplicated names cannot be detected.
 Align sample metadata with `match(rownames(X), metadata$sample_id)` and verify
 all matches before analysis. After filtering, use `kept.sample.idx` and
 `kept.feature.idx` to subset metadata. See the companion's
@@ -316,7 +321,9 @@ may be reordered; extra features are ignored and missing reference features
 are filled with zero. Pass query `feature.ids` in query-column order when column
 names are not those IDs. Label matching is optional. Unnamed matrices use
 synthetic `V1`, `V2`, ... IDs, which require consistent positional meanings.
-Supply unique query IDs: matching uses the first occurrence of a duplicate.
+Matching keys must be unique, nonmissing and nonempty. Duplicate keys are
+rejected; choose an explicit biological aggregation or disambiguation upstream.
+Repeated display labels remain allowed when matching by unique feature IDs.
 
 At each depth, the query chooses among realized children using the abundance
 of the newly added feature. The default `tie.method = "support"` resolves
@@ -329,12 +336,43 @@ fitting-style zero-evidence fallback**, even under `view = "absorb"`.
 `carry.forward.terminal.depths` is retained for call compatibility; neither
 setting permits assignments outside the fitted hierarchy.
 
-The return value contains display labels even when matching by IDs.
+The original assignment matrices contain display labels even when matching by IDs.
+Their `assignment.ids` and `all.depths.ids` counterparts contain lineage IDs for
+joins using identifiers that do not encode display labels. The existing
+lexical display-label tie rule still applies: relabeling and refitting can
+change tied assignments even though the identifiers themselves are unchanged.
 `assignment` contains requested depths and `all.depths` contains all fitted
 depths. A pure rare bucket has no feature to score; it is not a learned query
 class. Reference fitting and frozen transfer thus need not reproduce every
 training assignment, especially for rare, zero or tied rows. The companion
 includes a [separate reference/query example](example-datasets.html#reference-and-query).
+
+### Inspect a transfer decision and saved refinement settings
+
+```{r transfer-records}
+query <- M[c("s1", "s5"), c("asv_2", "asv_1"), drop = FALSE]
+transferred <- transfer.dcsts(query, fit2, view = "pure")
+transferred$assignment.ids
+knitr::kable(transferred$feature.match)
+knitr::kable(transferred$diagnostics[, c("sample.id", "assigned.depth", "reason")])
+fit2$history[[2]][c("n0", "selection.mode", "selected.lineage.ids", "tie.method")]
+```
+
+The feature-match table shows that `asv_3` is absent, even if both queries can
+complete this particular walk through other features. For an unassigned query,
+`missing_candidate_features` means every real candidate at the stopping depth
+was absent; `no_positive_candidate_values` means some candidates were present
+but none was positive. Check the present/missing candidate counts if some were
+absent. `no_candidates` and `synthetic_only` describe the frozen reference.
+These diagnostics describe every fitted depth even when fewer are requested.
+They explain the rule applied, not confidence or predictive accuracy.
+
+The `history` list records the support threshold, selection, source/returned
+policy and tie handling for every new depth. `refined.node.ids` excludes selected
+parents that stayed terminal because no child could be retained. Switching views
+preserves this history. The top-level `n0` remains the depth-1 setting; use the
+corresponding history entry for a later depth. Older fits can still be used;
+refining one marks previously unsaved history entries `available = FALSE`.
 
 ## Embeddings and display labels
 
@@ -349,9 +387,14 @@ rule of `normalize.linf()`.
 With *p* input features it returns a dense samples-by-(*p* − 1) matrix, plus
 attributes recording reference identity, other feature IDs, `lambda` and
 finite/zero-reference row counts. By default `lambda` is scaled so the radial
-map reaches 0.95 at the 0.95 quantile of positive finite reference-ratio norms
-(fallback `lambda = 1` if none exist). For comparable charts of reference and
-query data, reuse the reference choice and its fitted `lambda`.
+map reaches 0.95 at the 0.95 quantile of positive reference-ratio norms
+(fallback scale one if none exceed tolerance). Logarithmic calculations include
+norms outside the ordinary numeric range without overflow. For comparable charts
+of reference and query data, reuse the reference choice and
+`log.lambda = attr(reference.embedding, "log.lambda")`. The ordinary `lambda`
+attribute is `NA` if that scale is not representable as a positive finite number;
+the logarithmic value remains usable. `-expm1(-t)` preserves small positive radii.
+The result is dense by implementation choice; non-reference zeros stay zero.
 
 This is a coordinate representation, not a clustering or predictive fit.
 Distances and apparent separation depend on the feature subset, reference and

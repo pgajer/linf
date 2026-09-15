@@ -24,10 +24,20 @@
 #' }
 #' All-zero rows are mapped to all-zero embedded rows by convention.
 #'
-#' If `lambda` is not supplied, it is chosen from the positive finite-reference
+#' If neither `lambda` nor `log.lambda` is supplied, the scale is chosen from positive-reference
 #' rows so that `sigma.target` is attained at the `sigma.quantile` quantile of
 #' \eqn{\|z\|_1}. This is a numerical scaling convention for finite datasets; it
 #' does not change the reference component or the boundary extension rule.
+#' Direction is computed from scaled non-reference values, and radial products
+#' and the type-7 quantile are evaluated using logarithms to avoid overflow.
+#' The radial map uses `expm1` to preserve very small positive coordinates.
+#' Norms beyond the ordinary numeric range are included in automatic calibration.
+#'
+#' The `log.lambda` attribute always records the natural logarithm of the scale.
+#' The `lambda` attribute is `NA_real_` if that scale cannot be represented as a
+#' positive finite number. Reuse any fitted scale with
+#' `log.lambda = attr(reference.embedding, "log.lambda")`; this also works for
+#' extreme calibration data. The all-zero/reference-only fallback scale is one.
 #'
 #' @param X Nonnegative numeric matrix with samples in rows and features in
 #'   columns.
@@ -36,16 +46,18 @@
 #' @param lambda Positive numeric scalar. If `NULL`, choose a data-scaled value
 #'   using `sigma.quantile` and `sigma.target`.
 #' @param sigma.quantile Quantile of positive finite-reference \eqn{\|z\|_1}
-#'   values used when `lambda = NULL`.
+#'   values used for automatic scaling.
 #' @param sigma.target Target value of \eqn{\sigma_\lambda(t)} at the selected
-#'   quantile when `lambda = NULL`.
+#'   quantile during automatic scaling.
 #' @param feature.ids Optional stable feature identifiers, length `ncol(X)`.
 #' @param feature.labels Optional display labels, length `ncol(X)`.
 #' @param tol Nonnegative tolerance. Reference entries `<= tol` are treated as
 #'   zero, and L-infinity norms `<= tol` are treated as zero.
 #' @param backend Matrix backend: `"auto"`, `"dense"`, or `"sparse"`. Sparse
-#'   inputs are accepted, but the returned embedding is a dense matrix because
-#'   homogeneous-coordinate embeddings are generally dense.
+#'   inputs are accepted, but this implementation returns a dense matrix.
+#'   Non-reference zeros remain zero; account for dense storage in large inputs.
+#' @param log.lambda Optional finite natural logarithm of the radial scale,
+#'   as an alternative to `lambda`. Supply at most one of these two arguments.
 #'
 #' @return A numeric matrix with `nrow(X)` rows and `ncol(X) - 1` columns. The
 #'   columns correspond to the non-reference components. Attributes record the
@@ -67,11 +79,14 @@ linf.hypercube.embedding <- function(X,
                                      feature.ids = NULL,
                                      feature.labels = NULL,
                                      tol = 0,
-                                     backend = c("auto", "dense", "sparse")) {
+                                     backend = c("auto", "dense", "sparse"),
+                                     log.lambda = NULL) {
   prep <- linf.prepare.matrix(X, backend = backend, fun.name = "linf.hypercube.embedding")
   X <- prep$X
   backend <- prep$backend
   linf.validate.matrix(X, backend = backend, fun.name = "linf.hypercube.embedding")
+
+  if (ncol(X) < 2L) stop("linf.hypercube.embedding: X must have at least two features")
 
   if (backend == "sparse") {
     X <- as.matrix(X)
@@ -108,54 +123,59 @@ linf.hypercube.embedding <- function(X,
   others <- X[, other.idx, drop = FALSE]
   finite <- denom > tol
 
-  z.norm1 <- rep(NA_real_, nrow(X))
-  if (any(finite)) {
-    z.norm1[finite] <- rowSums(others[finite, , drop = FALSE] / denom[finite])
-  }
+  # Separate direction from radius. No reference ratio or unscaled row sum
+  # is needed, so finite inputs cannot overflow either intermediate.
+  other.max <- apply(others, 1L, max)
+  direction <- matrix(0, nrow(others), ncol(others))
+  positive <- other.max > 0
+  direction[positive, ] <- others[positive, , drop = FALSE] / other.max[positive]
+  log.norm1 <- log.norm.inf <- rep(-Inf, nrow(X))
+  log.norm.inf[finite] <- log(other.max[finite]) - log(denom[finite])
+  log.norm1[finite] <- log.norm.inf[finite] + log(rowSums(direction[finite, , drop = FALSE]))
+  log.tol <- log(tol)
 
+  if (!is.null(lambda) && !is.null(log.lambda)) {
+    stop("linf.hypercube.embedding: supply only one of lambda and log.lambda")
+  }
   lambda.policy <- "fixed"
-  if (is.null(lambda)) {
-    lambda.policy <- "quantile"
-    positive.norms <- z.norm1[is.finite(z.norm1) & z.norm1 > tol]
-    if (length(positive.norms)) {
-      q <- stats::quantile(
-        positive.norms,
-        probs = sigma.quantile,
-        names = FALSE,
-        na.rm = TRUE,
-        type = 7
-      )
-      lambda <- if (is.finite(q) && q > tol) -log(1 - sigma.target) / q else 1
-    } else {
-      lambda <- 1
+  if (!is.null(log.lambda)) {
+    if (!is.numeric(log.lambda) || length(log.lambda) != 1L || !is.finite(log.lambda)) {
+      stop("linf.hypercube.embedding: log.lambda must be a single finite number")
     }
+    lambda.policy <- "log.fixed"
+  } else if (!is.null(lambda)) {
+    if (!is.numeric(lambda) || length(lambda) != 1L || !is.finite(lambda) || lambda <= 0) {
+      stop("linf.hypercube.embedding: lambda must be a single positive finite number")
+    }
+    log.lambda <- log(lambda)
+  } else {
+    lambda.policy <- "quantile"
+    positive.logs <- log.norm1[finite & log.norm1 > log.tol]
+    log.lambda <- if (length(positive.logs)) {
+      log(-log1p(-sigma.target)) - linf.log.quantile(positive.logs, sigma.quantile)
+    } else 0
   }
-  if (!is.numeric(lambda) || length(lambda) != 1L || !is.finite(lambda) || lambda <= 0) {
-    stop("linf.hypercube.embedding: lambda must be a single positive finite number")
-  }
+  # log.lambda is authoritative when the corresponding lambda lies outside the
+  # representable positive finite range. Do not expose a misleading zero/Inf.
+  lambda <- exp(log.lambda)
+  if (!is.finite(lambda) || lambda == 0) lambda <- NA_real_
 
   out <- matrix(0, nrow = nrow(X), ncol = length(other.idx))
   rownames(out) <- rownames(X)
   colnames(out) <- paste0(other.labels, "_rel_", ref.label)
 
   if (any(finite)) {
-    z <- others[finite, , drop = FALSE] / denom[finite]
-    z.inf <- apply(z, 1L, max)
-    z.one <- rowSums(z)
-    direction <- matrix(0, nrow = nrow(z), ncol = ncol(z))
-    nz <- z.inf > tol
-    direction[nz, ] <- z[nz, , drop = FALSE] / z.inf[nz]
-    out[finite, ] <- direction * (1 - exp(-lambda * z.one))
+    radius <- -expm1(-exp(log.lambda + log.norm1[finite]))
+    finite.direction <- direction[finite, , drop = FALSE]
+    finite.direction[log.norm.inf[finite] <= log.tol, ] <- 0
+    out[finite, ] <- finite.direction * radius
   }
 
   boundary <- !finite
   if (any(boundary)) {
-    boundary.x <- others[boundary, , drop = FALSE]
-    boundary.inf <- apply(boundary.x, 1L, max)
-    boundary.out <- matrix(0, nrow = nrow(boundary.x), ncol = ncol(boundary.x))
-    nz <- boundary.inf > tol
-    boundary.out[nz, ] <- boundary.x[nz, , drop = FALSE] / boundary.inf[nz]
-    out[boundary, ] <- boundary.out
+    boundary.direction <- direction[boundary, , drop = FALSE]
+    boundary.direction[other.max[boundary] <= tol, ] <- 0
+    out[boundary, ] <- boundary.direction
   }
 
   attr(out, "reference.index") <- ref.idx
@@ -164,6 +184,7 @@ linf.hypercube.embedding <- function(X,
   attr(out, "other.ids") <- other.ids
   attr(out, "other.labels") <- other.labels
   attr(out, "lambda") <- lambda
+  attr(out, "log.lambda") <- log.lambda
   attr(out, "lambda.policy") <- lambda.policy
   attr(out, "sigma.quantile") <- sigma.quantile
   attr(out, "sigma.target") <- sigma.target
@@ -178,7 +199,7 @@ linf.resolve.reference.index <- function(reference, feature.ids, feature.labels)
   }
 
   if (is.numeric(reference)) {
-    if (reference %% 1 != 0 || reference < 1 || reference > length(feature.ids)) {
+    if (!is.finite(reference) || reference %% 1 != 0 || reference < 1 || reference > length(feature.ids)) {
       stop("linf.hypercube.embedding: numeric reference is out of range")
     }
     return(as.integer(reference))
@@ -193,4 +214,18 @@ linf.resolve.reference.index <- function(reference, feature.ids, feature.labels)
     stop("linf.hypercube.embedding: reference must match exactly one feature ID or label")
   }
   idx
+}
+
+
+# Type-7 quantile with interpolation in the original scale, calculated in logs.
+# Interpolating the logs themselves would change the established calibration.
+linf.log.quantile <- function(log.values, probability) {
+  values <- sort(log.values)
+  h <- 1 + (length(values) - 1) * probability
+  lower <- floor(h)
+  weight <- h - lower
+  if (weight == 0) return(values[[lower]])
+  lo <- values[[lower]]
+  hi <- values[[lower + 1L]]
+  hi + log(weight + (1 - weight) * exp(lo - hi))
 }
