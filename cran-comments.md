@@ -41,9 +41,21 @@ Suggests and Enhances (checked 2026-09-14).
 
 ## Current platform checks
 
-Iteration 2: fresh platform checks will run on the implementation push.
-The local check above covers iteration 2; the following remote results cover
-iteration 1 and are historical for the new changes.
+Iteration 2 checked implementation commit: 89f5924 (2026-09-15).
+
+* GitHub Actions: R release on Ubuntu, Windows and macOS, plus R oldrel-1
+  and R-devel on Ubuntu. All five report Status: OK, with 0 errors,
+  0 warnings, 0 NOTEs and 730 passing assertions.
+* These jobs use `--as-cran --no-manual`, with incoming checks disabled.
+  The full local check above additionally covers incoming checks and manuals.
+* The pkgdown workflow and new embedding article graph/trace audit pass.
+  Website deployment is skipped on push; no publication was performed.
+
+Workflow evidence:
+https://github.com/pgajer/linf/actions/runs/34996172673
+https://github.com/pgajer/linf/actions/runs/34996172758
+
+The following iteration 1 and earlier results are historical for the new changes.
 
 ## Iteration 1 platform checks
 
