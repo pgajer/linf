@@ -10,6 +10,49 @@ navbar:
     left:  [reference, articles]
     right: [pdf]
   components:
+    articles:
+      text: "Guides and articles"
+      menu:
+        - text: "Finding your way around linf"
+          href: articles/function-guide.html
+        - text: "Example datasets and reproducible workflows"
+          href: articles/example-datasets.html
+        - text: "Normalization and gut workflow"
+          href: articles/linf-intro.html
+        - text: "Vaginal microbiome workflow"
+          href: articles/linf-vaginal.html
+        - text: "Interactive embedding (website only)"
+          href: articles/valencia-hypercube-embedding.html
     pdf:
       text: "Download PDF"
       href: articles/linf-intro.pdf
+
+articles:
+  - title: "Start here"
+    navbar: ~
+    contents:
+      - function-guide
+      - example-datasets
+  - title: "Installed workflows"
+    navbar: ~
+    contents:
+      - linf-intro
+      - linf-vaginal
+  - title: "Website-only exploration"
+    navbar: ~
+    contents:
+      - articles/valencia-hypercube-embedding
+
+reference:
+  - title: "Package overview"
+    contents: linf-package
+  - title: "Prepare and assign"
+    contents: [filter.asv, normalize.linf, linf.dominant.features]
+  - title: "Fit and inspect"
+    contents: [linf.csts, refine.linf.csts, dcst.view, linf.landmarks,
+               linf.dcst.landmark.pipeline, print.linf.csts, summary.linf.csts]
+  - title: "Reuse and display"
+    contents: [transfer.dcsts, linf.hypercube.embedding, linf.feature.labels]
+  - title: "Bundled examples"
+    contents: [agp_gut, valencia2k, valencia13k_dcst_depth2_merged,
+               valencia13k_dcst_depth3_merged, valencia_linf_hypercube_1k]

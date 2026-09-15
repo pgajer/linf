@@ -18,7 +18,7 @@
 #'       IV-A, IV-B, IV-C0, IV-C1, IV-C2, IV-C3, IV-C4, V).}
 #'   \item{reads}{Integer vector of length 2000. Per-sample read counts after
 #'     taxonomic filtering. Use \code{sweep(valencia2k$rel, 1, valencia2k$reads, "*")}
-#'     to reconstruct a count-like matrix.}
+#'     to reconstruct a count-like matrix, not original observed counts.}
 #'   \item{taxa}{Character vector of 178 taxon names (column names of \code{rel}).}
 #'   \item{source}{Character string documenting provenance.}
 #' }
@@ -89,6 +89,8 @@
 #' using \code{set.seed(20261604)}. The object is not intended to replace the
 #' full Valencia matrix; it is a compact reproducible example for visualizing
 #' compositional projective-space coordinate charts.
+#' The stored object contains input abundances, not precomputed embedding
+#' coordinates; compute those with \code{\link{linf.hypercube.embedding}}.
 #'
 #' @source
 #' Generated from the VALENCIA training data at
@@ -135,6 +137,8 @@
 #' \code{low.freq.policy = "absorb"} view, so samples from low-support
 #' provisional states are reassigned to retained states rather than stored as
 #' explicit rare buckets.
+#' This list is an assignment asset, not a fitted \code{"linf.csts"} hierarchy;
+#' it cannot be passed directly to refinement, landmark or transfer functions.
 #'
 #' @source
 #' Generated from the VALENCIA training data at
@@ -177,6 +181,8 @@
 #' \code{low.freq.policy = "absorb"}. This object is intended as a reusable
 #' source for selecting richer VALENCIA-derived component sets without
 #' recomputing the full hierarchy from the 13k source matrix.
+#' It is not a fitted \code{"linf.csts"} object and does not contain the
+#' source abundance matrix or complete policy hierarchies.
 #'
 #' @source
 #' Generated from the VALENCIA training data at

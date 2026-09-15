@@ -15,7 +15,8 @@ linf.landmarks(
 )
 }
 \arguments{
-\item{M}{Numeric matrix (samples x features) used to build or refine the dCSTs.}
+\item{M}{Numeric matrix (samples x features) used to build or refine the dCSTs,
+in the same row and column order; no name-based alignment is performed.}
 
 \item{csts}{A \code{"linf.csts"} object.}
 
@@ -55,6 +56,19 @@ the last feature ID in the lineage ID path.
 Lineages whose leaf token is \code{rare.label} are reported but skipped for
 landmark computation because they do not correspond to a unique target
 feature.
+}
+\details{
+All four methods select observed rows, not averaged profiles. Endpoints
+maximize/minimize the leaf-feature value; mean and median representatives
+minimize absolute deviation from that feature's mean or median. Values use
+the scale of \code{M}; L-infinity-normalized values are relative to the row
+maximum, not fractions of total abundance. Depth-1 pure dominant values can
+all equal one, leaving tied selections.
+
+Target feature IDs are recovered from successive fitted hierarchy levels,
+preserving separators inside IDs. Terminal lineages retain their last
+feature at later stored depths. Inspect \code{lineages$landmarks.computable}
+to identify synthetic rare categories without a target feature.
 }
 \examples{
 M <- rbind(

@@ -24,16 +24,17 @@ every sample as containing every feature in the analysed feature set.
 For vaginal 16S rRNA or metagenomic data, this would imply that every
 vaginal microbial community contains every phylotype included in the
 analysis, a biologically implausible assumption. L∞ normalization
-retains zeros: dividing each sample by its maximum places the
-observation on the boundary of the unit L∞ ball. The dominant feature —
-the one that achieves the maximum — defines a natural, parameter-free
-partition of samples into **dominance sample sets**.
+retains zeros: dividing each sample by its maximum places positive rows
+on the boundary of the unit L∞ ball at the default tolerance. Exact-zero
+rows remain zero; rows at or below a positive tolerance remain
+unchanged. The dominant feature defines **dominance sample sets**, with
+ties resolved by the selected rule.
 
 dCST construction is rank based. Depth-1 dCSTs partition samples by the
-rank-1 (most abundant) feature. Deeper dCSTs iteratively refine each
-retained dominance-lineage using the next-ranked feature. The support
-threshold *n*₀ sets the minimum sample count required to retain a
-dominance sample set.
+rank-1 (most abundant) feature. Deeper dCSTs refine selected active
+lineages using remaining features. Support and absorption can affect
+which feature represents a group. The support threshold *n*₀ sets the
+minimum sample count required to retain a dominance sample set.
 
 ## Installation
 
@@ -53,7 +54,8 @@ install.packages("linf")
 ## Features
 
 - **L∞ normalization** — `normalize.linf()`: row-wise division by
-  maximum, mapping each sample to the L∞ unit-ball boundary.
+  maximum, scaling rows above tolerance while preserving zeros and
+  smaller rows.
 - **Dominant-feature assignment** — `linf.dominant.features()`: rank-1
   assignment per sample, returning indices, labels, and level sets.
 - **Truncated dCSTs** — `linf.csts()`: apply the support threshold *n*₀
@@ -62,8 +64,9 @@ install.packages("linf")
 - **Iterative refinement** — `refine.linf.csts()`: depth-2+ dCSTs via
   successive rank decomposition, with automatic or explicit lineage
   selection.
-- **Landmark profiles** — `linf.landmarks()`: representative
-  compositional profiles (endpoint max/min, mean) for each dCST.
+- **Landmark profiles** — `linf.landmarks()`: observed rows selected by
+  endpoint max/min or proximity to the mean/median of the lineage target
+  feature; these are not averaged profiles.
 - **ASV filtering** — `filter.asv()`: library-size and prevalence
   filtering for amplicon count matrices.
 
@@ -124,15 +127,28 @@ bundled data.
 
 ## Vignettes
 
-The package ships with two vignettes:
+The package ships with four installed vignettes:
 
-- **Dominant Community State Types: From Normalization to a Gut
-  Demonstration** — a step-by-step tutorial covering L∞ normalization,
-  dominant-feature assignment, truncated dCSTs, and descriptive
-  exploration of the bundled AGP gut data.
-- **dCSTs for Vaginal Microbiome Data** — applying the pipeline to the
-  Valencia 2k vaginal dataset, demonstrating how dCSTs recover the
-  classical community state types (CST I–V) without supervised training.
+- [Finding your way around linf](vignettes/function-guide.Rmd) —
+  task-oriented function catalog, matrix conventions, policies,
+  landmarks and frozen-reference transfer. Open locally with
+  `vignette("function-guide")`.
+- [Example datasets and reproducible
+  workflows](vignettes/example-datasets.Rmd) — choose among the five
+  bundled objects, align metadata, inspect edge cases and try a separate
+  reference/query example. Open with `vignette("example-datasets")`.
+- [Dominant Community State Types: From Normalization to a Gut
+  Demonstration](https://pgajer.github.io/linf/articles/linf-intro.html)
+  — normalization, dCST construction and descriptive exploration of the
+  stratified AGP gut subset.
+- [dCSTs for Vaginal Microbiome
+  Data](https://pgajer.github.io/linf/articles/linf-vaginal.html) —
+  fitting and descriptive agreement with Valencia labels on samples from
+  the classifier’s training source, not held-out validation.
+
+The [interactive embedding
+article](https://pgajer.github.io/linf/articles/valencia-hypercube-embedding.html)
+is website-only. It is not an installed vignette.
 
 ``` r
 browseVignettes("linf")

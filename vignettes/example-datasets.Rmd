@@ -1,0 +1,324 @@
+---
+title: "Example datasets and reproducible workflows"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{Example datasets and reproducible workflows}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+<style>
+body { max-width: 960px; overflow-wrap: anywhere; }
+#TOC { width: auto; max-width: 100%; box-sizing: border-box; }
+table { width: 100%; table-layout: fixed; }
+td, th { vertical-align: top; overflow-wrap: anywhere; white-space: normal; }
+td code, th code { white-space: normal; }
+pre { overflow-x: auto; }
+img { max-width: 100%; height: auto; }
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>",
+                     fig.width = 6, fig.height = 4)
+library(linf)
+```
+
+Choose a matrix if you want to fit a hierarchy, an assignment table if you want
+to inspect a saved grouping, and the four-component Valencia subset if you
+want to explore coordinate charts. The package supplies five datasets and
+small examples can be constructed directly in R; it has no synthetic-data
+generation API. The [function guide](function-guide.html) explains how each
+stage fits together.
+
+## Choose a dataset
+
+Every object below is loaded with `data(object_name, package = "linf")` and has
+its own help page, for example `help("agp_gut", package = "linf")`.
+
+| Dataset | Unit, orientation and dimensions | Identifiers and main fields | Suitable workflow |
+|---|---|---|---|
+| `agp_gut` | 766 gut samples by 314 taxa; integer read-count matrix. | `counts`, `meta`, `taxa`, `source`; row names join to `meta$Run` (SRA accessions). | Count filtering, normalization and descriptive dCST fitting. |
+| `valencia2k` | 2,000 vaginal samples by 178 taxa; unit-sum relative abundances. | `rel`, `cst`, `reads`, `taxa`, `source`; local row IDs join to `cst$sample_id`. | Fit dCSTs and compare descriptively with supplied Valencia labels. |
+| `valencia13k_dcst_depth2_merged` | 12,881 source samples; assignment table with six columns, not an abundance matrix. | `assignments`, `summaries`, `feature_labels`, `params`, `source`; `sample_id` and `source_row`. | Inspect saved absorb-policy depth-1/2 assignments and sizes. |
+| `valencia13k_dcst_depth3_merged` | Same 12,881 source samples; assignment table with seven columns. | Same fields as depth 2, plus `dcst_depth3` and a depth-3 summary. | Inspect the saved deeper grouping and compare depths. |
+| `valencia_linf_hypercube_1k` | 1,000 vaginal samples by four selected taxa; unit-sum matrix. | `rel4`, `meta`, `component_map`, `source`; local `sample_id`, source-row index and selected mass. | Compute zero-aware charts; coordinates are not precomputed in this object. |
+
+The two merged objects are ordinary lists of assignments and summary tables.
+They lack the complete `linf.csts` object and input matrix required by
+`refine.linf.csts()`, `dcst.view()`, `linf.landmarks()` and `transfer.dcsts()`.
+Do not change their class to make them look like fresh fits.
+
+```{r inventory}
+data(agp_gut, package = "linf")
+data(valencia2k, package = "linf")
+data(valencia13k_dcst_depth2_merged, package = "linf")
+data(valencia13k_dcst_depth3_merged, package = "linf")
+data(valencia_linf_hypercube_1k, package = "linf")
+
+observed <- rbind(
+  gut_counts = dim(agp_gut$counts),
+  vaginal_rel = dim(valencia2k$rel),
+  merged_depth2 = dim(valencia13k_dcst_depth2_merged$assignments),
+  merged_depth3 = dim(valencia13k_dcst_depth3_merged$assignments),
+  four_component_rel = dim(valencia_linf_hypercube_1k$rel4)
+)
+colnames(observed) <- c("Rows", "Columns")
+stopifnot(identical(unname(observed),
+                   matrix(c(766L, 2000L, 12881L, 12881L, 1000L,
+                            314L, 178L, 6L, 7L, 4L), ncol = 2)))
+knitr::kable(observed, caption = "Dimensions read from the bundled objects")
+```
+
+## Provenance and scope
+
+### Gut counts
+
+`agp_gut` comes from American Gut Project public 16S V4 records under
+[PRJEB11419](https://www.ebi.ac.uk/ena/browser/view/PRJEB11419), processed to
+SILVA taxonomic counts through PRIME. The source preparation first selected
+up to 5,000 samples with at least 1,000 reads. The 766-sample bundle includes
+all samples assigned to four selected uncommon demonstration dCSTs
+(Prevotella_7, Pasteurellaceae, Akkermansia and Staphylococcus), excludes
+Eukaryota/Unassigned depth-1 labels, and fills remaining slots from the eligible
+background using Python's seeded random sampling with seed 42.
+
+The stored `dcst_depth1`/`dcst_depth2` metadata were derived in the source
+analysis; refitting on this selected subset need not reproduce them. Phenotype
+fields were joined **after** membership was fixed. Selection differs by dCST,
+so this is not a probability sample for population inference. Self-reported
+phenotypes are available for alignment demonstrations, not general prevalence,
+association, causal or clinical claims. They are not independent validation
+labels. Counts retain the limitations of 16S taxonomic assignment and the
+documented caution about Escherichia-Shigella in V4 data.
+
+### Valencia abundance data and saved assignments
+
+The four Valencia-derived objects use the filtered training source for the
+[VALENCIA classifier](https://github.com/ravel-lab/VALENCIA) described by
+[France et al. (2020)](https://doi.org/10.1186/s40168-020-00934-6).
+The prepared source has 12,881 samples and 178 taxa. `valencia2k` was sampled
+with R seed 42 within the 13 supplied sub-CST groups, approximately preserving
+their proportions with rounding and a minimum of five per stratum.
+
+`valencia2k$reads` contains post-taxonomic-filter read totals. Multiplying
+`rel` by `reads` gives **count-like reconstructions**; rounding them does not
+recover or certify original observed integer counts. Use `rel` directly for
+normalization and rank-based fitting. The upstream filtering is described in
+the existing [vaginal tutorial](linf-vaginal.html); the subset-building script
+takes that prepared matrix as input and does not repeat its filtering.
+
+The supplied `Val_CST` and `Val_subCST` labels belong to the Valencia training
+source. A comparison made on these bundled rows overlaps that source, even
+though dCST fitting does not use its class labels. Such agreement is descriptive,
+not held-out validation of a classifier or evidence of clinical performance.
+
+The merged assignment assets were built on the full prepared source with
+`n0 = 50`, `low.freq.policy = "absorb"` and `refinement.factor = 2`, with one
+or two refinements. Their summaries contain `depth`, `dcst_label`, `n`, `prop`
+and `path_length`. Proportions refer to this source sample set. Path lengths
+may be shorter than the stored depth for terminal lineages; treat saved labels
+as labels, not as a source of stable feature IDs.
+
+### Four-component data
+
+`valencia_linf_hypercube_1k` selects Lactobacillus iners (`Li`), Lactobacillus
+crispatus (`Lc`), Gardnerella vaginalis (`Gv`) and BVAB1 (`Bv`). Rows with zero
+total mass in those four taxa were removed, and retained rows were renormalized
+to sum to one **over those four features**. R seed 20261604 was used for a
+1,000-row sample stratified by the dominant selected component.
+
+`meta$selected_mass` records how much of the original full profile these four
+taxa represented. A large fraction within `rel4` can still correspond to little
+of the full community. `component_map` connects abbreviations to source taxa;
+neither the subset nor its charts replace the full 178-feature profiles.
+
+All objects include a provenance string. The installed provenance file records
+source preparation and upstream terms (which are separate from the code's MIT
+license):
+
+```{r provenance-location}
+basename(system.file("DATA_PROVENANCE.md", package = "linf"))
+```
+
+## Align data and metadata
+
+Sample names are keys within an object, not universal cross-dataset IDs. For
+`valencia2k`, IDs such as `s1` were reassigned after sampling and no original
+source-row mapping is bundled. Do not join them to another dataset by row
+position or apparent numeric suffix. The four-component and merged objects
+share the prepared source's `source_row` numbering; their anonymized sample
+IDs use different naming schemes.
+
+```{r alignment}
+X <- agp_gut$counts
+stopifnot(!anyDuplicated(agp_gut$meta$Run),
+          !anyDuplicated(agp_gut$taxa))
+sample.order <- match(rownames(X), agp_gut$meta$Run)
+feature.order <- match(colnames(X), agp_gut$taxa)
+stopifnot(!anyNA(sample.order), !anyNA(feature.order))
+meta <- agp_gut$meta[sample.order, , drop = FALSE]
+features <- data.frame(
+  id = paste0("asv_", seq_len(ncol(X))),
+  taxonomy = agp_gut$taxa[feature.order]
+)
+stopifnot(identical(rownames(X), meta$Run))
+
+# After filtering, indices refer to the supplied X, in its original order.
+filtered <- filter.asv(X, min.lib = 1000, prev.prop = 0.05,
+                       min.count = 2, verbose = FALSE)
+meta.filtered <- meta[filtered$kept.sample.idx, , drop = FALSE]
+features.filtered <- features[filtered$kept.feature.idx, , drop = FALSE]
+stopifnot(identical(rownames(filtered$counts), meta.filtered$Run),
+          nrow(features.filtered) == ncol(filtered$counts))
+```
+
+The stable IDs here describe the original column order and are subsetted with
+the features; they are not regenerated after filtering. Pass
+`features.filtered$id` and display labels made from its taxonomy in that same
+order when fitting. Keep the mapping with the fit. Landmarks preserve complete stable IDs, including taxonomy strings containing
+`__`; see [landmark interpretation](function-guide.html#landmarks-are-selected-observations).
+
+The following join uses the explicit shared source-row key:
+
+```{r shared-source-join}
+merged <- valencia13k_dcst_depth3_merged
+chart.meta <- valencia_linf_hypercube_1k$meta
+stopifnot(!anyDuplicated(merged$assignments$source_row))
+join <- match(chart.meta$source_row, merged$assignments$source_row)
+stopifnot(!anyNA(join))
+chart.depth3 <- merged$assignments$dcst_depth3[join]
+stopifnot(identical(as.character(chart.meta$Val_CST),
+                   as.character(merged$assignments$Val_CST[join])))
+length(chart.depth3)
+```
+
+This attaches in-source saved labels; it is not a new reference/query
+experiment.
+
+## Constructed edge cases
+
+This deterministic matrix needs no random seed. It includes two supported
+dominant features, a low-support feature, a positive tie, an exact-zero row and
+a small row left unchanged by a positive tolerance. IDs differ from labels.
+
+```{r toy-edge-cases}
+toy <- rbind(
+  a1 = c(10, 3, 1), a2 = c(9, 2, 1),
+  b1 = c(2, 10, 1), b2 = c(3, 9, 1),
+  low_support = c(1, 2, 10), tie = c(4, 4, 0),
+  zero = c(0, 0, 0), small = c(0.01, 0.005, 0)
+)
+colnames(toy) <- c("asv_1", "asv_2", "asv_3")
+display <- c("Taxon A", "Taxon B", "Taxon C")
+M <- normalize.linf(toy, tol = 0.02)
+d <- linf.dominant.features(M, feature.labels = display)
+fit <- linf.csts(M, feature.labels = display, n0 = 2)
+edge.table <- data.frame(
+  sample = rownames(M), maximum = apply(M, 1, max),
+  dominant_ID = d$id, pure = fit$lineage.label.pure,
+  absorb = fit$lineage.label.absorb
+)
+knitr::kable(edge.table, row.names = FALSE)
+stopifnot(is.na(d$id[7]), d$id[6] == "asv_1", d$id[8] == "asv_1",
+          identical(unname(M["small", ]), unname(toy["small", ])))
+```
+
+The tied row chooses the first column. The small row retains maximum 0.01
+and still has a dominant feature. The zero row has no dominant feature; pure
+fitting puts it in the rare bucket and absorb fitting uses the most-supported
+retained state. The low-support row is absorbed into Taxon B, its largest
+retained feature. Neither absorption is evidence that the assigned feature was
+the original maximum.
+
+For random ties, reset the seed before each call you want to reproduce:
+
+```{r random-tie}
+set.seed(17)
+random1 <- linf.dominant.features(M, tie.method = "random")$id
+set.seed(17)
+random2 <- linf.dominant.features(M, tie.method = "random")$id
+stopifnot(identical(random1, random2))
+```
+
+## Reference and query
+
+Use a small seeded sample of 160 Valencia rows. The first 120 sampled rows form
+the reference; the other 40 are kept out of fitting and refinement. This split
+demonstrates frozen transfer mechanics within one source dataset, not external
+validation, and no outcome or CST label is used to fit the reference.
+
+```{r real-transfer}
+set.seed(20260914)
+rows <- sample(seq_len(nrow(valencia2k$rel)), 160)
+reference.rows <- rows[1:120]
+query.rows <- rows[121:160]
+stopifnot(length(intersect(reference.rows, query.rows)) == 0L)
+reference <- valencia2k$rel[reference.rows, , drop = FALSE]
+query <- valencia2k$rel[query.rows, , drop = FALSE]
+reference.M <- normalize.linf(reference)
+reference.fit <- linf.csts(reference.M, n0 = 5,
+                           low.freq.policy = "absorb")
+reference.fit <- refine.linf.csts(
+  reference.M, reference.fit, n0 = 3, refinement.factor = 2,
+  low.freq.policy = "absorb", verbose = FALSE
+)
+
+# Deliberately reverse query columns. Matching uses the unchanged feature IDs.
+query <- query[, rev(seq_len(ncol(query))), drop = FALSE]
+stopifnot(setequal(colnames(query), reference.fit$feature.ids))
+transferred <- transfer.dcsts(query, reference.fit, match.by = "feature.ids")
+knitr::kable(data.frame(
+  depth = colnames(transferred$assignment),
+  assigned = colSums(!is.na(transferred$assignment)),
+  unassigned = colSums(is.na(transferred$assignment))
+), row.names = FALSE)
+```
+
+No query filtering rule or hierarchy is learned here. Missing reference columns
+would be filled with zero; extra query columns would be ignored. Counts and
+positive row-scaled abundances give the same ranking for this transfer.
+`NA` means the walk found no positive realized candidate at that depth; it does
+not create a new dCST. A partial depth-1 assignment can coexist with a depth-2
+`NA`.
+
+```{r no-matching-feature}
+unmatched <- matrix(5, nrow = 1, ncol = 1,
+                    dimnames = list("unmatched_query", "not_in_reference"))
+no.assignment <- transfer.dcsts(unmatched, reference.fit)$assignment
+stopifnot(all(is.na(no.assignment)))
+no.assignment
+```
+
+For a longer count-based workflow use the [gut demonstration](linf-intro.html);
+for descriptive comparisons to source CST labels use the
+[vaginal workflow](linf-vaginal.html).
+
+## A static chart from the four-component data
+
+The returned chart has three coordinates. This plot shows two of them for all
+1,000 bundled samples; color identifies which of the four selected components
+has the largest abundance. It is a projection of a representation, with no
+learned classifier or biological-separation test.
+
+```{r static-chart, fig.cap="Two coordinates of the Li-reference chart. Colors describe dominance within the selected four taxa; overlapping points and the omitted third coordinate limit what this projection shows."}
+four <- valencia_linf_hypercube_1k
+embedding <- linf.hypercube.embedding(four$rel4, reference = "Li")
+stopifnot(identical(dim(embedding), c(1000L, 3L)),
+          all(is.finite(embedding)))
+colors <- c(Li = "#0072B2", Lc = "#D55E00", Gv = "#009E73", Bv = "#CC79A7")
+plot(embedding[, 1], embedding[, 2],
+     col = colors[as.character(four$meta$dominant_component)],
+     pch = 16, cex = 0.5, xlim = c(0, 1), ylim = c(0, 1),
+     xlab = "Lc coordinate (reference Li)",
+     ylab = "Gv coordinate (reference Li)")
+legend("topright", legend = names(colors), col = colors, pch = 16,
+       title = "Dominant component", bty = "n", cex = 0.8)
+```
+
+Check `summary(four$meta$selected_mass)` before interpreting the four-taxon
+composition. The optional [interactive embedding article](https://pgajer.github.io/linf/articles/valencia-hypercube-embedding.html)
+adds three-dimensional views and is website-only. The four installed vignettes
+are listed by `browseVignettes("linf")`; their normal builds need no network
+downloads, interactive device or external dataset.

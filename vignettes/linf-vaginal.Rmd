@@ -19,15 +19,16 @@ vaginal microbial communities. They were originally defined by hierarchical
 clustering of 16S rRNA data (Ravel et al. 2011) and later standardized by the
 VALENCIA nearest-centroid classifier (France et al. 2020).
 
-**Dominant Community State Types (dCSTs)** offer an alternative that requires no
-clustering and no training data. A dCST is defined by
-$L^\infty$-normalization: divide each sample's abundance vector by its maximum
-value, then group samples by which taxon achieves that maximum. This is a
-purely geometric operation on compositional data --- it identifies the dominant
-species in each sample and groups samples accordingly.
+**Dominant Community State Types (dCSTs)** group samples by their largest
+features and retain groups meeting a sample-support threshold. Fitting uses
+abundances rather than supplied CST labels; the retained states still depend
+on the fitting sample set. L-infinity normalization divides positive rows by
+their maximum at default tolerance, preserving their within-row rankings.
 
-This vignette demonstrates the dCST workflow on a real vaginal 16S dataset and
-shows that dCSTs recover the established CST structure with high concordance.
+This vignette compares dCSTs with supplied Valencia labels on source training
+samples. It is a descriptive comparison, not held-out validation. See the
+[function guide](function-guide.html) for fitting versus frozen transfer and the
+[dataset guide](example-datasets.html) for provenance and alignment.
 
 **Reference:** Gajer, P. & Ravel, J. (2025). A New Approach to Compositional
 Data Analysis using $L^\infty$-normalization with Applications to Vaginal
@@ -64,7 +65,8 @@ biologically meaningful.
 
 The bundled matrix is compositional (rows sum to 1). For workflows that require
 count-like input (e.g., `filter.asv()`), we can reconstruct approximate counts
-using the per-sample read depths:
+using the per-sample read depths. These reconstructed and rounded values are
+not original observed counts:
 
 ```{r reconstruct-counts}
 count_mat <- sweep(valencia2k$rel, 1, valencia2k$reads, "*")
@@ -75,15 +77,16 @@ storage.mode(count_mat) <- "integer"
 summary(rowSums(count_mat))
 ```
 
-Since the Valencia 13k data was already filtered (min 3,000 reads, taxa present
-in $\ge$ 1% of samples), we skip `filter.asv()` here and work directly with
-the compositional matrix.
+The bundled Valencia matrix was already filtered upstream. The subset-building
+script takes that prepared matrix as input; we skip `filter.asv()` here and
+work directly with the compositional matrix.
 
 ## $L^\infty$ normalization
 
 $L^\infty$-normalization divides each row by its maximum value. After
-normalization, every sample has at least one coordinate equal to 1, and all
-other coordinates lie in $[0, 1]$.
+normalization at default tolerance, every positive row has at least one
+coordinate equal to 1. Exact-zero rows remain zero, and rows at or below a
+positive `tol` remain unchanged. All rows in this example are positive.
 
 ```{r linf-normalize}
 Z <- normalize.linf(valencia2k$rel)
@@ -96,7 +99,8 @@ summary(apply(Z, 1, max))
 
 The dominant species is the column that achieves the maximum in each row.
 Samples with the same dominant species form a depth-1 dominance sample set.
-The assignment is deterministic and sample-independent: it depends only on
+With the default first-column tie rule, dominant-feature assignment is
+deterministic and sample-independent: it depends only on
 the sample's own abundance profile, never on other samples.
 
 ```{r linf-dominant.features}
@@ -117,7 +121,7 @@ a long tail of rarer dominant taxa.
 ## Depth-1 dCSTs
 
 In practice, many provisional dominance sample sets contain very few samples.
-**Dominant Community State Types (dCSTs)** retain only states above a minimum
+**Dominant Community State Types (dCSTs)** retain states at or above a minimum
 support threshold ($n_0$) and handle samples from low-support sets according
 to the selected policy.
 
@@ -141,13 +145,17 @@ dcst1_tab
 
 ### Concordance with Valencia CSTs
 
-The key test: do dCSTs correspond to the established Valencia CSTs? Let's
-build a cross-tabulation:
+The following cross-tabulation describes all 2,000 bundled rows, which were
+subsampled from the Valencia classifier training source. The dCST hierarchy
+was fitted on those same rows, without using their supplied CST labels.
+This overlap precludes interpreting agreement as held-out validation:
 
 ```{r concordance-depth1}
 ## Build concordance table: rows = dCSTs, columns = Valencia CSTs
 dcst_labels <- dcst1$lineage.label.absorb  # use absorb view for clean comparison
-val_cst     <- valencia2k$cst$Val_CST
+metadata.order <- match(rownames(Z), valencia2k$cst$sample_id)
+stopifnot(!anyNA(metadata.order), !anyDuplicated(valencia2k$cst$sample_id))
+val_cst     <- valencia2k$cst$Val_CST[metadata.order]
 
 concordance <- table(dCST = dcst_labels, Valencia = val_cst)
 
@@ -156,8 +164,8 @@ pct <- round(100 * prop.table(concordance, margin = 1), 1)
 pct
 ```
 
-The concordance is striking. Each dCST maps predominantly to a single Valencia
-CST:
+Several dCSTs map predominantly to a single supplied Valencia CST in this
+source subset:
 
 - *Lactobacillus crispatus* dCST $\to$ CST I (dominated by *L. crispatus*)
 - *Lactobacillus iners* dCST $\to$ CST III (dominated by *L. iners*)
@@ -172,9 +180,8 @@ pct_rev <- round(100 * prop.table(concordance, margin = 2), 1)
 pct_rev
 ```
 
-This two-way concordance confirms that dCSTs are an alternative construct of
-CSTs: they recover the same groupings without any clustering algorithm or
-training data.
+The two tables describe overlap between different grouping rules on shared
+source samples. They do not estimate performance on an independent cohort.
 
 ## Depth-2 refinement
 
@@ -195,7 +202,7 @@ dcst2_tab
 
 ```{r concordance-depth2}
 dcst2_labels <- dcst2$lineage.label.absorb
-val_subcst   <- valencia2k$cst$Val_subCST
+val_subcst   <- valencia2k$cst$Val_subCST[metadata.order]
 
 concordance2 <- table(dCST = dcst2_labels, Valencia = val_subcst)
 
@@ -219,9 +226,9 @@ computation.
 
 ```{r full-pipeline}
 out <- linf.dcst.landmark.pipeline(
-  count_mat,
-  feature.ids    = colnames(count_mat),
-  feature.labels = colnames(count_mat),
+  valencia2k$rel,
+  feature.ids    = colnames(valencia2k$rel),
+  feature.labels = colnames(valencia2k$rel),
   n0.depth1      = 30,
   n0.depth2      = 15,
   refinement.factor = 2,
@@ -235,11 +242,11 @@ names(out)
 
 ## Landmark points
 
-Each dCST dominance-lineage has characteristic landmark points: the most
-extreme sample
-(highest value of the dominant taxon), the least extreme (lowest value while
-still dominant), and mean/median representatives. These help characterize what
-a "typical" or "extreme" member of each community type looks like.
+All four landmark methods select observed rows by the lineage's leaf-feature
+value: its maximum, minimum, or the observation nearest its mean or median.
+They do not construct averaged community profiles. The pipeline supplies
+L-infinity-normalized values, so these measurements are relative to the sample
+maximum, not proportions of total community abundance.
 
 ```{r landmarks}
 ## Depth-1 landmarks
@@ -251,40 +258,33 @@ key_lineages <- c("Lactobacillus_crispatus", "Lactobacillus_iners",
 key_lm <- lm1[lm1$lineage.id %in% key_lineages, ]
 
 ## For each dCST, show the endpoint.max landmark's target value
-## (how dominant is the dominant species in the most extreme sample?)
+## (target-feature abundance relative to the row maximum)
 ep_max <- key_lm[key_lm$landmark.type == "endpoint.max",
                  c("lineage.label", "point.name", "target.value")]
 ep_max
 
-## And the endpoint.min (least dominant while still assigned to this lineage)
+## And the endpoint.min (lowest target value among assigned rows)
 ep_min <- key_lm[key_lm$landmark.type == "endpoint.min",
                  c("lineage.label", "point.name", "target.value")]
 ep_min
 ```
 
-The endpoint.max landmarks show samples where the dominant species comprises
-nearly the entire community, while endpoint.min landmarks show the boundary
-cases --- samples where dominance is marginal.
+A depth-1 pure dominant feature has normalized value one in every positive
+member, so endpoint selection can consist entirely of ties. Absorbed samples
+may have a smaller target value because their assigned feature is not their
+original maximum. Neither endpoint establishes near-total or marginal
+unit-sum dominance. Inspect unit-sum relative abundances for that question.
 
 ## Summary
 
-This vignette demonstrated the dCST workflow on real vaginal 16S data:
-
-1. **$L^\infty$-normalization** maps compositional data to the $L^\infty$-simplex
-2. **Dominant-feature assignment** assigns each sample to its dominant taxon
-3. **Truncated dCSTs** retain well-supported states and handle rare dominance
-   patterns
-4. **Depth-2 refinement** reveals sub-community structure
-5. **Landmark points** characterize extreme and typical community members
-
-The concordance with established Valencia CSTs is high, validating dCSTs as a
-principled, deterministic alternative to clustering-based community typing. Key
-advantages:
-
-- **No clustering algorithm:** assignment depends only on the sample itself
-- **No training data:** new samples can be assigned without a reference database
-- **Interpretable:** dCST labels directly name the dominant species
-- **Hierarchical:** refinement naturally produces sub-types
+This workflow fits supported dominance groups, refines selected parents and
+selects observed landmark rows. Its concordance tables describe overlap with
+Valencia labels on source training samples. To assign separate samples while
+preserving the fitted states, use `transfer.dcsts()` and inspect unassigned
+(`NA`) depths; fitting on new samples would learn a different hierarchy.
+The [function guide](function-guide.html) explains these contracts and the
+[dataset guide](example-datasets.html#reference-and-query) gives a disjoint
+reference/query demonstration.
 
 ## References
 

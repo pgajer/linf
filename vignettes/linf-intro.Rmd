@@ -8,7 +8,7 @@ vignette: >
 ---
 
 ```{css, echo=FALSE}
-table td, table th { white-space: nowrap; }
+table td, table th { white-space: normal; overflow-wrap: anywhere; }
 ```
 
 ```{r setup, include=FALSE}
@@ -28,13 +28,17 @@ the core functions, then a real-data analysis of gut microbiome samples from
 the American Gut Project showing how to inspect dominant and subdominant
 community structure.
 
+For entry points and policy contracts see the [function guide](function-guide.html);
+for dataset selection and safe joins see [example datasets](example-datasets.html).
+
 ## Part 1: Quick Start with Toy Data
 
 ### L-infinity normalization
 
 L-infinity normalization scales each row of a count matrix by its maximum
-value, projecting samples onto the L-infinity unit ball. Every normalized row
-has a maximum of exactly 1.
+value when that maximum exceeds `tol`. At the default `tol = 0`, positive
+rows have maximum one and exact-zero rows remain zero. With positive tolerance,
+rows at or below it remain unchanged, including small nonzero entries.
 
 ```{r toy-normalize}
 set.seed(1)
@@ -86,7 +90,7 @@ collapsed into `RARE_DOMINANT`.
 ### Background
 
 Single-species dominance is common in some microbial ecosystems and less
-common in others. dCSTs provide a deterministic way to summarize the dominant
+common in others. With default first-column tie handling, dCSTs provide a deterministic way to summarize the dominant
 feature and then refine large groups by subdominant features. The gut example
 below demonstrates those mechanics without treating the selected package
 subset as an epidemiologic sample.
@@ -254,14 +258,10 @@ This analysis has several important caveats:
   mean the object must not be used for population prevalence estimates,
   effect-size estimation, or association testing.
 
-The repository also contains the source for a separate 5,000-sample companion
-analysis. It is not installed as a package vignette.
-
 ## Summary
 
-The dCST framework provides a clustering-free approach to
-community typing that is deterministic, hierarchical, and biologically
-interpretable. The combination of depth-1 dCSTs (dominant species) and depth-2
-refinement (co-dominance patterns) captures structure at multiple resolutions
-without requiring any parameter tuning beyond the minimum support threshold
-`n0`.
+This workflow summarizes dominant features and refines selected groups using
+remaining features. The support threshold, refinement selection, low-support
+policy and tie handling determine the stored hierarchy. Its descriptive
+patterns apply to this selected dataset; they do not establish population
+associations or clinical utility.

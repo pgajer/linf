@@ -30,3 +30,4 @@
 ^dcst_size_distribution\.png$
 ^dominance_strength_distribution\.png$
 ^\.\.Rcheck$
+^build$

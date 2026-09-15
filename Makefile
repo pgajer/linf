@@ -22,6 +22,7 @@ document: attrs
 
 build: repo-hygiene clean document
 	@mkdir -p $(LOGDIR)
+	@Rscript tools/audit-guides.R
 	@echo "Building package..."
 	@R CMD build . > $(LOGDIR)/$(PKGNAME)_build.log 2>&1
 	@echo "Package built successfully (log: $(LOGDIR)/$(PKGNAME)_build.log)"
@@ -61,3 +62,13 @@ winbuilder-oldrelease: build
 .PHONY: repo-hygiene
 repo-hygiene:
 	python3 tools/check-no-manuscripts.py
+
+.PHONY: readme audit-guides vignette-previews
+readme:
+	Rscript -e 'rmarkdown::render("README.Rmd", quiet = TRUE)'
+
+audit-guides:
+	Rscript tools/audit-guides.R
+
+vignette-previews: audit-guides
+	Rscript tools/render-vignette-previews.R

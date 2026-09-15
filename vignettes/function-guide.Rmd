@@ -1,0 +1,374 @@
+---
+title: "Finding your way around linf"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+    math_method: mathml
+vignette: >
+  %\VignetteIndexEntry{Finding your way around linf}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+<style>
+body { max-width: 960px; overflow-wrap: anywhere; }
+#TOC { width: auto; max-width: 100%; box-sizing: border-box; }
+table { width: 100%; table-layout: fixed; }
+td, th { vertical-align: top; overflow-wrap: anywhere; white-space: normal; }
+td code, th code { white-space: normal; }
+pre { overflow-x: auto; }
+img { max-width: 100%; height: auto; }
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+library(linf)
+```
+
+Start with the result you need: a dominant feature for each sample, a supported
+grouping of samples, a deeper hierarchy, or assignments to a reference you have
+already fitted. These are different stopping points. You do not need to run
+the full pipeline to use L-infinity normalization.
+
+This guide describes the 0.3.1 interface: **11 explicit function exports,
+two registered S3 methods, and five bundled datasets**. S3 methods are selected
+by R when you call `print()` or `summary()` on a fitted object. Neither method
+is also an explicit function export, so there is no overlap in these counts.
+The [example datasets guide](example-datasets.html) catalogs the data separately.
+For longer analyses, see the [normalization and gut tutorial](linf-intro.html)
+and [vaginal microbiome tutorial](linf-vaginal.html).
+
+## Choose a task
+
+| Your task | Entry point | When to stop |
+|---|---|---|
+| Remove low-depth samples and low-prevalence features from counts | `filter.asv()` | You need filtered counts or unit-sum relative abundances. |
+| Express abundance relative to each sample's largest feature | `normalize.linf()` | You need scaled profiles, without grouping samples. |
+| Name the largest feature in each sample | `linf.dominant.features()` | You need individual assignments, without a support threshold. |
+| Retain supported dominance groups | `linf.csts()` | A depth-1 dCST partition answers your question. |
+| Subdivide selected groups by remaining features | `refine.linf.csts()` | The chosen depth is sufficient; deeper is not automatically better. |
+| Inspect stored low-support policies or select representatives | `dcst.view()`, `summary()`, `linf.landmarks()` | You need a descriptive summary of the fitted samples. |
+| Assign new samples to an existing hierarchy | `transfer.dcsts()` | You need frozen-reference assignments, without learning new states. |
+| Prepare coordinate charts or readable names | `linf.hypercube.embedding()`, `linf.feature.labels()` | You need a representation for display or further analysis. |
+
+## Function catalog
+
+Each explicit export appears once in the catalog below. Use `help("function.name",
+package = "linf")` for complete arguments and examples, for example
+`help("normalize.linf", package = "linf")`.
+
+### Prepare and assign
+
+| Function | Purpose | Expected input | Principal result |
+|---|---|---|---|
+| `filter.asv()` | Filter library size and feature prevalence. | Dense samples-by-features counts; numeric data frames also accepted. | List with `counts`, unit-sum `rel`, kept row/column indices, prevalence and thresholds. |
+| `normalize.linf()` | Divide rows by their maximum above `tol`. | Finite, nonnegative dense or sparse matrix. | Same-sized matrix; zero and below-tolerance rows remain unchanged. |
+| `linf.dominant.features()` | Assign each sample's maximum feature. | Finite, nonnegative matrix and optional aligned IDs/labels. | Indices, IDs, labels and observed/full feature levels; optional row maxima. |
+
+### Fit and inspect a hierarchy
+
+| Function | Purpose | Expected input | Principal result |
+|---|---|---|---|
+| `linf.csts()` | Retain dominance sample sets with support at least `n0`. | Samples-by-features matrix, usually L-infinity normalized. | Class `linf.csts`, with active, pure and absorb hierarchies. |
+| `refine.linf.csts()` | Add one hierarchy level within selected active leaf lineages. | Fitted object and its matrix in the original row/column order. | Updated `linf.csts`; previous levels and feature metadata retained. |
+| `dcst.view()` | Activate a stored policy without recomputing it. | Fitted object; `view = "pure"` or `"absorb"`. | Copy with active assignments switched and attached landmarks cleared. |
+| `linf.landmarks()` | Select observed samples by the lineage's leaf-feature value. | Fitted object, aligned matrix, depth and view. | `lineages` metadata and `landmarks` selection table, with row indices/names. |
+| `linf.dcst.landmark.pipeline()` | Normalize, fit depth 1, refine once and select landmarks. | Nonnegative matrix, feature metadata and stage-specific controls. | Normalized matrix, two fitted objects, two landmark objects and parameters. |
+
+### Reuse and display
+
+| Function | Purpose | Expected input | Principal result |
+|---|---|---|---|
+| `transfer.dcsts()` | Walk new samples through a frozen fitted hierarchy. | Query matrix, reference fit, feature-matching and view controls. | Display-label matrices `assignment` and `all.depths`; unassignable depths are `NA`. |
+| `linf.hypercube.embedding()` | Construct a zero-aware chart relative to one component. | Nonnegative matrix with at least two features and a reference index, ID or label. | Dense matrix with one fewer column; attributes record the reference and scaling. |
+| `linf.feature.labels()` | Format taxonomy for display while keeping separate stable IDs. | Equal-length feature-ID and taxonomy vectors; optional aliases/abbreviations. | Unique display labels. |
+
+## Matrix and identity conventions
+
+Rows are **samples** and columns are **features**. Give samples unique row names
+and features unique, nonmissing stable IDs. Keep taxonomy or other display text
+in a separate vector. `feature.ids` and `feature.labels` are positional: each
+must have length `ncol(X)` and describe columns in exactly that order. Metadata
+vector names do not perform a join. Defaults use column names as IDs, or
+`V1`, `V2`, ... for unnamed columns, and use IDs as display labels. Fitting
+disambiguates duplicates with `make.unique(..., sep = "_")`; supplying unique
+IDs from the start avoids an order-dependent mapping.
+
+For refinement and landmarks, reuse the fitted matrix's **row and column
+order**. These functions do not join the matrix back to the fit by names.
+Align sample metadata with `match(rownames(X), metadata$sample_id)` and verify
+all matches before analysis. After filtering, use `kept.sample.idx` and
+`kept.feature.idx` to subset metadata. See the companion's
+[alignment example](example-datasets.html#align-data-and-metadata).
+
+Core matrix functions accept ordinary dense numeric matrices and `Matrix`
+sparse matrices. `backend = "auto"` normally preserves sparse input;
+refinement and landmarks inherit the fitted backend when their backend argument
+is omitted. Explicit `"dense"` and `"sparse"` choose a conversion path.
+Sparse output is numeric compressed-column storage. Embeddings always return
+dense coordinates. `filter.asv()` is a separate dense count-filtering interface;
+it does not accept a sparse `Matrix` object directly.
+
+### Filtering, scaling and grouping answer different questions
+
+Count filtering removes samples/features using library size and prevalence.
+`filter.asv()` applies the library-size threshold first, computes prevalence
+among those retained samples, then drops samples left with no counts. Its `rel`
+matrix sums to one across the retained features in each row.
+
+For a nonnegative row, L-infinity normalization instead divides by its largest
+entry when that maximum exceeds `tol`:
+
+\[
+M_{ij} = X_{ij}/\max_k X_{ik}\quad\text{when }\max_k X_{ik}>\mathrm{tol}.
+\]
+
+It is neither unit-sum normalization nor a log-ratio transform. No pseudocount
+is added. At the default `tol = 0`, a positive row has maximum one; an all-zero
+row remains zero. With positive tolerance, a row whose maximum is **at or
+below** the tolerance is left unchanged, including its small nonzero entries.
+Such a row still has a dominant feature. Only exact-zero rows receive `NA`
+from `linf.dominant.features()`.
+
+The core matrix functions reject missing (`NA`, `NaN`), infinite and negative
+entries and empty matrices; they do not impute missing values. Supply valid
+finite nonnegative counts to `filter.asv()` as well, rather than relying on
+that helper to clean invalid values.
+
+Dominant-feature assignment and refinement depend on within-row rankings.
+Positive row scaling preserves those rankings. L-infinity scaling is useful
+for interpreting feature values but is not required to discover the maximum.
+The retained feature set, column order for ties, support thresholds and policy
+still affect the resulting grouping.
+
+### Ties and random seeds
+
+The default `tie.method = "first"` selects the first exactly maximal column.
+`"random"` samples among exact ties using R's current random-number state;
+these functions have no private seed and do not restore the caller's state.
+Set `set.seed()` immediately before a reproducible random-tie call. Dense and
+sparse paths use the same column ordering for dominance and positive absorption
+ties. `"error"` stops at a positive tie. Zero rows do not trigger a dominance tie.
+
+Refinement has **no `tie.method` argument**: its child fits use `"first"`, even
+if the parent was fitted with random ties. The pipeline's tie argument controls
+depth-1 fitting and landmark selection, not refinement. Landmark `"first"`
+selects the first tied sample in matrix row order. Frozen transfer has its own
+default, `"support"`, described below.
+
+## A small workflow, with stopping points
+
+These six samples have stable IDs that differ from the display names. Two
+depth-1 groups have support at least two. One parent can be split into two
+supported children.
+
+```{r first-workflow}
+X <- rbind(
+  s1 = c(10, 8, 1), s2 = c(9, 7, 2),
+  s3 = c(10, 1, 8), s4 = c(9, 2, 7),
+  s5 = c(1, 10, 2), s6 = c(2, 9, 1)
+)
+colnames(X) <- c("asv_1", "asv_2", "asv_3")
+labels <- c("Taxon A", "Taxon B", "Taxon C")
+M <- normalize.linf(X)
+dominant <- linf.dominant.features(M, feature.labels = labels)
+dominant$id
+
+fit1 <- linf.csts(M, feature.labels = labels, n0 = 2,
+                  low.freq.policy = "pure")
+fit2 <- refine.linf.csts(M, fit1, n0 = 2, refinement.factor = 2,
+                         low.freq.policy = "pure", verbose = FALSE)
+knitr::kable(summary(fit2))
+```
+
+Stop at `M` for normalized profiles or at `dominant` for sample-level maximum
+features. `fit1` adds the support threshold; `fit2` adds a level of subdivision.
+The two registered methods work through these objects: `print(fit2)` displays
+counts at each active depth, while `summary(fit2)` returns a data frame of
+lineage counts and sizes. These summaries include rare buckets but omit `NA`
+assignments, so check missing assignments separately with
+`table(fit2$lineage.label, useNA = "ifany")`.
+
+### What a dCST hierarchy stores
+
+A **dominant feature** is one sample's largest feature. Samples sharing it form
+a provisional **dominance sample set**. A set retained at support `n0` becomes
+a named depth-1 dCST. A **dominance lineage** records successive feature choices
+as a group is refined. **Depth** counts stored hierarchy levels; it need not
+equal the number of features in every terminal lineage.
+
+Under the **pure policy**, low-support samples enter a synthetic rare bucket
+(default `RARE_DOMINANT`). Under the **absorb policy**, they are reassigned to
+the retained feature with greatest abundance in that sample. If every retained
+feature is zero, fitting falls back to the state with greatest reference
+support, then lexical label order, regardless of tie method. Exact-zero rows
+also follow that fitting fallback. With no retained states, pure assignments
+are all rare and absorb assignments are all `NA`.
+
+Both representations are stored. Unsuffixed fields are the **active** view:
+`lineage.id`/`lineage.label` hold current leaves;
+`lineage.ids`/`lineage.labels` hold a list of levels. Their `.pure` and `.absorb`
+counterparts preserve stored policies. `dcst.view(fit2, "absorb")` changes which
+stored hierarchy is active without fitting again, and clears attached landmarks
+so that summaries from a different view are not reused accidentally.
+`size.table` describes provisional depth-1 support, not current leaf sizes.
+
+### Refinement choices
+
+With `lineages.to.refine = NULL`, automatic selection uses **active** leaf
+support at least `refinement.factor * n0` (defaults: `2 * 50`). An explicit
+character vector selects existing active leaf **IDs**, bypassing that parent
+size rule; it does not bypass the child support threshold. Unknown IDs and
+the top-level synthetic rare ID are rejected. For example:
+
+```{r explicit-refinement}
+explicit <- refine.linf.csts(
+  M, fit1, lineages.to.refine = "asv_1", n0 = 2,
+  low.freq.policy = "pure", verbose = FALSE
+)
+stopifnot(identical(explicit$lineage.ids, fit2$lineage.ids))
+```
+
+Within each selected active group, refinement removes features already used
+on its fitted path and fits the remaining columns. It appends a stored level
+on every call. Parents with no retained child, no remaining feature, or no
+selection keep their labels at that level. Repeated calls extend the hierarchy;
+they do not guarantee an additional feature for every sample. Parent-prefixed
+rare buckets at deeper levels are stored synthetic categories, not features.
+
+Selection and child fitting use the active membership. The saved policy views
+are representations of that fitted history, not two independently refitted
+analyses. Choose the active policy before refining and keep `low.freq.policy`,
+`rare.label` and `sep` consistent across calls. Refinement recovers feature IDs
+from successive fitted transitions, including IDs containing `__`. Do not
+recover IDs by splitting display labels or concatenated lineage strings.
+
+### Landmarks are selected observations
+
+```{r landmark-example}
+landmarks <- linf.landmarks(M, fit2, view = "absorb",
+                           landmark.types = c("endpoint.min", "mean.rep"))
+knitr::kable(landmarks$landmarks[, c(
+  "lineage.label", "landmark.type", "point.name", "observed.value",
+  "target.value"
+) ], digits = 3)
+# Retrieve the complete observed profiles, if needed:
+profiles <- M[landmarks$landmarks$point.index, , drop = FALSE]
+```
+
+Landmarks target the leaf feature of each lineage at the requested depth.
+`endpoint.max` and `endpoint.min` select rows with the largest and smallest
+target-feature value. `mean.rep` and `median.rep` select the **observed row
+closest to the mean or median of that one feature**. None constructs a mean
+profile or a centroid across features. Several methods may choose the same row.
+
+Values are on the scale of the supplied matrix. With `M` above they measure
+abundance relative to each sample's row maximum, not a fraction of total
+abundance. At depth 1 under the pure policy, normalized dominant values are
+usually all one, so endpoint methods can reduce to tied selections. Under
+absorption the target need not be the sample's true maximum. These summaries
+alone do not establish whole-community typicality or biological distinctness.
+
+Inspect `landmarks$lineages$landmarks.computable`: rare categories have no unique
+target and are skipped. Target IDs are recovered from successive fitted levels,
+so IDs containing `__` remain intact and cannot be confused with a suffix
+feature. Terminal lineages retain their last feature at later stored depths.
+Keep stable IDs and display labels separate; neither display labels nor
+concatenated lineage strings should be split to infer feature identities.
+
+### The optional pipeline
+
+```{r pipeline}
+out <- linf.dcst.landmark.pipeline(
+  X, feature.labels = labels, n0.depth1 = 2, n0.depth2 = 2,
+  refinement.factor = 2, verbose = FALSE
+)
+names(out)
+stopifnot(identical(out$dcst.depth2$lineage.ids, fit2$lineage.ids))
+```
+
+Defaults are `n0.depth1 = 50`, `n0.depth2 = 25`, `refinement.factor = 2`,
+`low.freq.policy = "pure"`, `landmark.view = "absorb"`, `tie.method = "first"`,
+`sep = "__"`, and `backend = "auto"`. All four landmark types are requested
+at both depths. The wrapper normalizes with default tolerance zero; it does
+not filter counts. It returns `linf.rel`, `dcst.depth1`, `dcst.depth2`,
+`landmarks.depth1`, `landmarks.depth2` and `params`. Use explicit stages when
+you want another tolerance, selected lineages, more depths, or fewer results.
+
+## Transfer to a frozen reference
+
+`transfer.dcsts()` assigns new rows to realized reference lineages, without
+changing their features, support counts or structure. It defaults to the
+**absorb** view, matching by **feature IDs**, and all fitted depths. Columns
+may be reordered; extra features are ignored and missing reference features
+are filled with zero. Pass query `feature.ids` in query-column order when column
+names are not those IDs. Label matching is optional. Unnamed matrices use
+synthetic `V1`, `V2`, ... IDs, which require consistent positional meanings.
+Supply unique query IDs: matching uses the first occurrence of a duplicate.
+
+At each depth, the query chooses among realized children using the abundance
+of the newly added feature. The default `tie.method = "support"` resolves
+positive ties using reference support, then lexical order. `"first"` uses
+frozen child order, not query-column order; `"random"` uses the current R seed;
+`"error"` stops on ties. A terminal label can recur only where it is actually
+stored, scored using its last feature. With no candidate or no positive
+candidate feature, this depth and subsequent depths are `NA`. There is **no
+fitting-style zero-evidence fallback**, even under `view = "absorb"`.
+`carry.forward.terminal.depths` is retained for call compatibility; neither
+setting permits assignments outside the fitted hierarchy.
+
+The return value contains display labels even when matching by IDs.
+`assignment` contains requested depths and `all.depths` contains all fitted
+depths. A pure rare bucket has no feature to score; it is not a learned query
+class. Reference fitting and frozen transfer thus need not reproduce every
+training assignment, especially for rare, zero or tied rows. The companion
+includes a [separate reference/query example](example-datasets.html#reference-and-query).
+
+## Embeddings and display labels
+
+`linf.hypercube.embedding(X, reference)` needs a finite nonnegative matrix and
+one unambiguous reference component. For positive reference entries it forms
+ratios to that component, then maps their direction radially into the unit cube.
+For a zero reference it uses the L-infinity boundary extension; an all-zero
+sample maps to zero by convention. Its tolerance controls which reference
+entries and norms are treated as zero, unlike the leave-unchanged tolerance
+rule of `normalize.linf()`.
+
+With *p* input features it returns a dense samples-by-(*p* − 1) matrix, plus
+attributes recording reference identity, other feature IDs, `lambda` and
+finite/zero-reference row counts. By default `lambda` is scaled so the radial
+map reaches 0.95 at the 0.95 quantile of positive finite reference-ratio norms
+(fallback `lambda = 1` if none exist). For comparable charts of reference and
+query data, reuse the reference choice and its fitted `lambda`.
+
+This is a coordinate representation, not a clustering or predictive fit.
+Distances and apparent separation depend on the feature subset, reference and
+scaling; coordinates alone do not demonstrate biological groups or validated
+prediction. The companion shows a static chart. The optional
+[interactive embedding article](https://pgajer.github.io/linf/articles/valencia-hypercube-embedding.html)
+is website-only and is not an installed vignette.
+
+## Finding help and migrating older code
+
+```{r help-navigation, eval=FALSE}
+help(package = "linf")
+help("linf-package", package = "linf")
+browseVignettes("linf")
+vignette("example-datasets", package = "linf")
+```
+
+Use `lineage.id`/`lineage.label` for leaf assignments and
+`lineage.ids`/`lineage.labels` for levels. The 0.2 release introduced these
+explicit policy hierarchies; rebuild pre-0.2 flat objects from their matrices.
+Use `linf.dominant.features()` for depth-1 assignment and `dcst.view()` for
+policy selection. Since 0.3, repeat `refine.linf.csts()` for additional depths,
+use the explicit filtering/normalization/fitting stages, and format summary
+tables with ordinary reporting tools. Removed cell-based aliases and former
+convenience functions are not part of the current API.
+
+The organization follows the short purpose descriptions and help cross-references
+in [Hmisc's documentation](https://hbiostat.org/r/hmisc/) and
+[package overview](https://CRAN.R-project.org/package=Hmisc),
+adapted to these few workflows. Maintainers can run `make audit-guides` to check
+the catalog against `NAMESPACE`, registered methods, help aliases and bundled
+data; vignette builds execute the examples independently.

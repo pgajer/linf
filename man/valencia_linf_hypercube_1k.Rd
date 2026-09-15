@@ -46,6 +46,8 @@ renormalization. Sampling is stratified by the dominant selected component,
 using \code{set.seed(20261604)}. The object is not intended to replace the
 full Valencia matrix; it is a compact reproducible example for visualizing
 compositional projective-space coordinate charts.
+The stored object contains input abundances, not precomputed embedding
+coordinates; compute those with \code{\link{linf.hypercube.embedding}}.
 }
 \examples{
 data(valencia_linf_hypercube_1k)

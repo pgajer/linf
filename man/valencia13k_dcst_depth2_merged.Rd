@@ -39,6 +39,8 @@ L-infinity normalization. dCSTs use \code{n0 = 50} and the merged
 \code{low.freq.policy = "absorb"} view, so samples from low-support
 provisional states are reassigned to retained states rather than stored as
 explicit rare buckets.
+This list is an assignment asset, not a fitted \code{"linf.csts"} hierarchy;
+it cannot be passed directly to refinement, landmark or transfer functions.
 }
 \examples{
 data(valencia13k_dcst_depth2_merged)

@@ -1,5 +1,12 @@
-# linf 0.3.1
+# linf 0.3.1 (unreleased)
 
+- Landmark lookup now preserves complete feature IDs containing the lineage
+  separator, including suffix collisions, refined and terminal lineages, and
+  custom rare labels. It recovers the target from fitted hierarchy transitions.
+- Add installed task-oriented function and example-dataset guides, with
+  executable workflows, catalog coverage checks and package-help navigation.
+  Clarify normalization exceptions, fitting versus transfer, landmark scale,
+  and the limits of comparisons using bundled source-training data.
 - Frozen transfer now correctly matches stable feature IDs that differ from
   display labels, including reordered columns and refined hierarchies.
   Unnamed query matrices use the same synthetic IDs as hierarchy fitting.

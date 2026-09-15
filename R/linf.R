@@ -580,7 +580,7 @@ validate.linf.csts <- function(obj) {
 #'
 #' @description
 #' Selects leaf dominance-lineages and refines them by dropping the dominant
-#' feature(s) encoded in the parent lineage-ID path and re-applying
+#' feature(s) recovered from successive fitted lineage transitions and re-applying
 #' \code{\link{linf.csts}} to the remaining features. The resulting child
 #' labels are appended to the parent label using \code{sep}.
 #'
@@ -590,6 +590,7 @@ validate.linf.csts <- function(obj) {
 #'
 #' @param M Numeric matrix (samples x features) used for refinement. Columns
 #'   must correspond, in order, to the stable feature IDs stored in \code{csts}.
+#'   Rows must remain in fitted sample order; names do not trigger alignment.
 #' @param csts A \code{"linf.csts"} object.
 #' @param lineages.to.refine Optional character vector of leaf
 #'   dominance-lineage IDs to refine. When \code{NULL}, lineages are selected
@@ -610,6 +611,14 @@ validate.linf.csts <- function(obj) {
 #' @return Updated \code{"linf.csts"} object with \code{depth} increased by one and
 #'   updated \code{lineage.label}. Policy-specific views are stored in
 #'   \code{lineage.label.pure} and \code{lineage.label.absorb}.
+#'
+#' @details
+#' Selection and child fitting use active leaf membership. Explicit selection
+#' bypasses the automatic parent-support rule but not the child threshold.
+#' Every call appends a stored level; unselected parents and parents without
+#' retained children keep their labels there. Child fits use first-column tie
+#' handling; the parent fit's random-tie setting is not inherited. Keep policy,
+#' rare label and separator consistent across repeated refinements.
 #'
 #' @examples
 #' M <- rbind(

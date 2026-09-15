@@ -40,6 +40,8 @@ additional hierarchical dCST refinement. All levels use \code{n0 = 50} and
 \code{low.freq.policy = "absorb"}. This object is intended as a reusable
 source for selecting richer VALENCIA-derived component sets without
 recomputing the full hierarchy from the 13k source matrix.
+It is not a fitted \code{"linf.csts"} object and does not contain the
+source abundance matrix or complete policy hierarchies.
 }
 \examples{
 data(valencia13k_dcst_depth3_merged)

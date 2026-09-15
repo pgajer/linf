@@ -36,7 +36,14 @@ jobs:
         run: pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
         shell: Rscript {0}
 
+      - name: Include vignette sources linked from README
+        run: |
+          mkdir -p docs/vignettes
+          cp vignettes/*.Rmd docs/vignettes/
+
       - name: Deploy site
+        # Publishing is an explicit release-coordination action.
+        if: github.event_name == 'workflow_dispatch'
         uses: JamesIves/github-pages-deploy-action@v4.7.3
         with:
           folder: docs

@@ -48,6 +48,9 @@ jobs:
           extra-packages: any::rcmdcheck
           needs: check
 
+      - name: Check guide coverage
+        run: Rscript tools/audit-guides.R
+
       - uses: r-lib/actions/check-r-package@v2
         with:
           upload-snapshots: true

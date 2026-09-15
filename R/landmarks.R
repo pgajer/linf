@@ -29,6 +29,24 @@ resolve.linf.landmark.view <- function(csts,
   view
 }
 
+resolve.linf.landmark.leaf <- function(id.levels, depth, member, sep) {
+  leaf <- as.character(id.levels[[1L]][[member]])
+  if (depth == 1L) return(leaf)
+
+  for (d in 2:depth) {
+    parent <- as.character(id.levels[[d - 1L]][[member]])
+    child <- as.character(id.levels[[d]][[member]])
+    if (is.na(parent) || is.na(child)) return(NA_character_)
+    # A terminal lineage keeps its most recently added feature.
+    if (identical(child, parent)) next
+    prefix <- paste0(parent, sep)
+    if (!startsWith(child, prefix)) return(NA_character_)
+    # Remove the whole fitted parent, preserving separators inside the ID.
+    leaf <- substring(child, nchar(prefix) + 1L)
+  }
+  leaf
+}
+
 resolve.linf.landmark.feature <- function(leaf.id,
                                           feature.ids,
                                           feature.labels,
@@ -125,7 +143,21 @@ empty.linf.landmark.rows <- function() {
 #' landmark computation because they do not correspond to a unique target
 #' feature.
 #'
-#' @param M Numeric matrix (samples x features) used to build or refine the dCSTs.
+#' @details
+#' All four methods select observed rows, not averaged profiles. Endpoints
+#' maximize/minimize the leaf-feature value; mean and median representatives
+#' minimize absolute deviation from that feature's mean or median. Values use
+#' the scale of \code{M}; L-infinity-normalized values are relative to the row
+#' maximum, not fractions of total abundance. Depth-1 pure dominant values can
+#' all equal one, leaving tied selections.
+#'
+#' Target feature IDs are recovered from successive fitted hierarchy levels,
+#' preserving separators inside IDs. Terminal lineages retain their last
+#' feature at later stored depths. Inspect \code{lineages$landmarks.computable}
+#' to identify synthetic rare categories without a target feature.
+#'
+#' @param M Numeric matrix (samples x features) used to build or refine the dCSTs,
+#'   in the same row and column order; no name-based alignment is performed.
 #' @param csts A \code{"linf.csts"} object.
 #' @param depth Integer. dCST depth to inspect. Defaults to the leaf depth
 #'   \code{csts$depth}.
@@ -235,8 +267,7 @@ linf.landmarks <- function(M,
   for (lineage in unique.lineages) {
     members <- which(lineage.ids == lineage)
     lineage.label <- lineage.labels[members[1L]]
-    parts <- strsplit(lineage, sep, fixed = TRUE)[[1L]]
-    leaf.id <- parts[[length(parts)]]
+    leaf.id <- resolve.linf.landmark.leaf(id.levels, depth, members[1L], sep)
     target <- resolve.linf.landmark.feature(
       leaf.id,
       feature.ids = meta$feature.ids,

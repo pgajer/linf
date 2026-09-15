@@ -19,7 +19,8 @@ refine.linf.csts(
 }
 \arguments{
 \item{M}{Numeric matrix (samples x features) used for refinement. Columns
-must correspond, in order, to the stable feature IDs stored in \code{csts}.}
+must correspond, in order, to the stable feature IDs stored in \code{csts}.
+Rows must remain in fitted sample order; names do not trigger alignment.}
 
 \item{csts}{A \code{"linf.csts"} object.}
 
@@ -53,13 +54,21 @@ updated \code{lineage.label}. Policy-specific views are stored in
 }
 \description{
 Selects leaf dominance-lineages and refines them by dropping the dominant
-feature(s) encoded in the parent lineage-ID path and re-applying
+feature(s) recovered from successive fitted lineage transitions and re-applying
 \code{\link{linf.csts}} to the remaining features. The resulting child
 labels are appended to the parent label using \code{sep}.
 
 Low-support child lineages are handled by \code{low.freq.policy}. When
 \code{low.freq.policy = "pure"}, rare buckets at depth >= 2 become
 parent-prefixed automatically via the hierarchical \code{paste(parent, child, sep = sep)}.
+}
+\details{
+Selection and child fitting use active leaf membership. Explicit selection
+bypasses the automatic parent-support rule but not the child threshold.
+Every call appends a stored level; unselected parents and parents without
+retained children keep their labels there. Child fits use first-column tie
+handling; the parent fit's random-tie setting is not inherited. Keep policy,
+rare label and separator consistent across repeated refinements.
 }
 \examples{
 M <- rbind(

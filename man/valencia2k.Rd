@@ -16,7 +16,7 @@ each row sums to 1. Rows are samples, columns are taxonomic features.}
 IV-A, IV-B, IV-C0, IV-C1, IV-C2, IV-C3, IV-C4, V).}
 \item{reads}{Integer vector of length 2000. Per-sample read counts after
 taxonomic filtering. Use \code{sweep(valencia2k$rel, 1, valencia2k$reads, "*")}
-to reconstruct a count-like matrix.}
+to reconstruct a count-like matrix, not original observed counts.}
 \item{taxa}{Character vector of 178 taxon names (column names of \code{rel}).}
 \item{source}{Character string documenting provenance.}
 }
