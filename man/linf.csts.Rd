@@ -92,6 +92,22 @@ state with the largest value among the retained features (ties handled
 by \code{tie.method}).
 }
 }
+\details{
+Fitted objects store explicit feature paths and node metadata in
+\code{nodes} and \code{node.ids}, with \code{.pure} and \code{.absorb}
+variants. A node path contains original column indices; zero marks a
+synthetic rare component. Node keys are local to the fitted feature mapping.
+Metadata records parent keys, leaf-feature index, rare status and whether
+the node was carried unchanged from the preceding stored level.
+
+Readable lineage IDs and labels are preserved when unambiguous. If different
+paths produce the same string (for example, feature \code{A__B} and path
+\code{A} then \code{B}), colliding strings receive a \code{[node ...]}
+suffix. Use the returned IDs for explicit refinement; never split them to
+recover features. Real features named like \code{rare.label} remain distinct
+from synthetic rare groups. Consumers upgrade unambiguous older objects on
+use and reject ambiguous legacy hierarchies with a rebuild message.
+}
 \examples{
 X <- rbind(
   s1 = c(A = 10, B = 2, C = 1),

@@ -38,5 +38,5 @@
 #' The interactive embedding article on the package website is website-only.
 #'
 #' @seealso \code{browseVignettes("linf")}
-#' @keywords internal
+#' @keywords package
 "_PACKAGE"

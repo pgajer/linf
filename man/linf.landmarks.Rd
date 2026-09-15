@@ -52,8 +52,8 @@ Computes representative landmark points for the dominance-lineages of a
 \code{"linf.csts"} object at a chosen depth and view.
 
 Landmark types are defined with respect to the leaf feature of the dCST path:
-the last feature ID in the lineage ID path.
-Lineages whose leaf token is \code{rare.label} are reported but skipped for
+the last observed feature in the stored node path.
+Synthetic rare nodes are reported but skipped for
 landmark computation because they do not correspond to a unique target
 feature.
 }
@@ -65,8 +65,8 @@ the scale of \code{M}; L-infinity-normalized values are relative to the row
 maximum, not fractions of total abundance. Depth-1 pure dominant values can
 all equal one, leaving tied selections.
 
-Target feature IDs are recovered from successive fitted hierarchy levels,
-preserving separators inside IDs. Terminal lineages retain their last
+Target features come from explicit node paths, preserving separators inside
+IDs and separating literal feature names from concatenated paths. Terminal lineages retain their last
 feature at later stored depths. Inspect \code{lineages$landmarks.computable}
 to identify synthetic rare categories without a target feature.
 }

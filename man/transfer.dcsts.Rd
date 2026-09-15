@@ -52,7 +52,9 @@ order; \code{"random"} samples one tied lineage; \code{"error"} stops.}
 Under either setting, terminal lineages are assigned only where they occur
 in the fitted hierarchy. No out-of-hierarchy fallback is performed.}
 
-\item{sep}{Separator used in lineage labels. Defaults to \code{csts$sep} or
+\item{sep}{Separator recorded with the result for call compatibility. Node
+identity and feature lookup use the fitted metadata, not this string.
+Defaults to \code{csts$sep} or
 \code{"__"}.}
 
 \item{backend}{Matrix backend; passed to the internal matrix preparer.}
@@ -75,7 +77,8 @@ Assigns rows of a new sample-by-feature matrix into the realized lineage sets
 of a fitted \code{"linf.csts"} hierarchy. The hierarchy is not refit: each
 sample is walked through the frozen tree by choosing, at each depth, the
 realized child lineage whose newly added feature has the largest abundance in
-that sample.
+that sample. Scoring uses explicit node feature indices, independently of
+display labels and separator-containing feature IDs.
 }
 \examples{
 X <- rbind(

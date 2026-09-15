@@ -12,7 +12,9 @@
 \item{...}{Unused.}
 }
 \value{
-The input object, invisibly.
+The input object, invisibly. Printing shows sample accounting and up
+to ten groups per depth. Use \code{table(x$lineage.labels[[d]],
+  useNA = "ifany")} for the complete counts at depth \code{d}.
 }
 \description{
 Print method for \code{"linf.csts"}

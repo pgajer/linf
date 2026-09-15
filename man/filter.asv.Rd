@@ -17,7 +17,7 @@ filter.asv(
 \arguments{
 \item{S.counts}{Numeric matrix (samples x features) of nonnegative counts.}
 
-\item{min.lib}{Integer. Minimum library size (row sum of counts) to keep a sample. Default: 1000.}
+\item{min.lib}{Integer >= 0. Minimum library size (row sum of counts) to keep a sample. Default: 1000.}
 
 \item{prev.prop}{Numeric in (0,1]. Minimum fraction of samples where a feature must be present.
 Default: 0.05.}
@@ -49,13 +49,23 @@ Filters an ASV \strong{count} matrix by:
 defined by either \code{min.count} (counts) or \code{min.rel} (relative).
 After feature filtering, zero-total samples are dropped and a row-normalized
 relative-abundance matrix is returned alongside the filtered counts.
+Fractional count-like values are accepted, but entries must be finite and
+nonnegative. Thresholds are validated even when overridden by another rule.
 }
 \details{
 Sample filtering is applied on raw counts first. Prevalence is computed on the
 post-sample-filter matrix using either a count or relative rule. A feature is
 retained if prevalence \eqn{\ge \lceil \text{prev.prop} \times n_{\text{samples}} \rceil}.
 After feature filtering, samples with zero remaining counts are dropped and
-the relative matrix \code{rel} is row-normalized.
+the relative matrix \code{rel} is row-normalized. Zero-total rows have no
+present features under a relative threshold, and are removed at the final
+sample-filtering stage. They still count in the prevalence denominator if
+retained by \code{min.lib = 0}.
+
+Empty results retain all documented fields. If no samples survive the initial
+filter, no features are retained and the returned matrices are 0 by 0.
+Otherwise, features retained by prevalence can remain as columns of a
+zero-row result; the returned indices always describe the returned matrices.
 }
 \section{Conventions}{
 

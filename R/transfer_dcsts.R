@@ -5,7 +5,8 @@
 #' of a fitted \code{"linf.csts"} hierarchy. The hierarchy is not refit: each
 #' sample is walked through the frozen tree by choosing, at each depth, the
 #' realized child lineage whose newly added feature has the largest abundance in
-#' that sample.
+#' that sample. Scoring uses explicit node feature indices, independently of
+#' display labels and separator-containing feature IDs.
 #'
 #' @param X Nonnegative sample-by-feature matrix to transfer. Columns may be in
 #'   any order and may include features not present in \code{csts}; missing
@@ -31,7 +32,9 @@
 #' @param carry.forward.terminal.depths Logical, retained for call compatibility.
 #'   Under either setting, terminal lineages are assigned only where they occur
 #'   in the fitted hierarchy. No out-of-hierarchy fallback is performed.
-#' @param sep Separator used in lineage labels. Defaults to \code{csts$sep} or
+#' @param sep Separator recorded with the result for call compatibility. Node
+#'   identity and feature lookup use the fitted metadata, not this string.
+#'   Defaults to \code{csts$sep} or
 #'   \code{"__"}.
 #' @param backend Matrix backend; passed to the internal matrix preparer.
 #'
@@ -71,6 +74,7 @@ transfer.dcsts <- function(X,
                            sep = NULL,
                            backend = c("auto", "dense", "sparse")) {
   validate.linf.csts(csts)
+  csts <- linf.ensure.nodes(csts)
   view <- match.arg(view)
   match.by <- match.arg(match.by)
   tie.method <- match.arg(tie.method)
@@ -99,7 +103,9 @@ transfer.dcsts <- function(X,
     stop("transfer.dcsts: feature.labels must have length ncol(X)")
   }
 
-  levels <- resolve.linf.lineage.labels(csts, kind = "label", view = view)
+  resolved.view <- resolve.linf.landmark.view(csts, view)
+  levels <- csts[[paste0("node.ids.", resolved.view)]]
+  nodes <- csts[[paste0("nodes.", resolved.view)]]
   max.depth <- length(levels)
   if (!max.depth) stop("transfer.dcsts: csts does not contain fitted levels")
   if (is.null(depth)) depth <- seq_len(max.depth)
@@ -122,10 +128,10 @@ transfer.dcsts <- function(X,
     feature.labels = as.character(feature.labels)
   )
   X.aligned <- linf.align.transfer.matrix(X, query.features, ref.features, backend = backend)
-  # Alignment uses the requested identity; tree nodes use fitted display labels.
+  # Alignment and node scoring use feature positions; labels are presentation.
   colnames(X.aligned) <- csts$feature.labels
 
-  tree <- linf.dcst.transfer.tree(levels, max.depth = max.depth, sep = sep)
+  tree <- linf.dcst.transfer.tree(levels, nodes, max.depth = max.depth, sep = sep)
   assigned.raw <- vapply(
     seq_len(nrow(X.aligned)),
     function(i) {
@@ -145,6 +151,9 @@ transfer.dcsts <- function(X,
     matrix(assigned.raw, ncol = 1L)
   } else {
     t(assigned.raw)
+  }
+  for (d in seq_len(max.depth)) {
+    assignments[, d] <- nodes[[d]]$lineage.label[match(assignments[, d], nodes[[d]]$node.id)]
   }
   rownames(assignments) <- rownames(X)
   colnames(assignments) <- paste0("depth", seq_len(max.depth))
@@ -179,13 +188,15 @@ linf.align.transfer.matrix <- function(X, query.features, ref.features, backend)
   out
 }
 
-linf.dcst.transfer.tree <- function(levels, max.depth, sep) {
+linf.dcst.transfer.tree <- function(levels, nodes, max.depth, sep) {
   tree <- vector("list", max.depth)
   support <- vector("list", max.depth)
 
   level1 <- as.character(levels[[1L]])
   level1 <- level1[!is.na(level1) & nzchar(level1)]
-  root.counts <- sort(table(level1), decreasing = TRUE)
+  root.counts <- table(level1)
+  root.labels <- nodes[[1L]]$lineage.label[match(names(root.counts), nodes[[1L]]$node.id)]
+  root.counts <- root.counts[order(-as.numeric(root.counts), root.labels)]
   tree[[1L]] <- list("__ROOT__" = names(root.counts))
   support[[1L]] <- list("__ROOT__" = as.numeric(root.counts))
   names(support[[1L]][["__ROOT__"]]) <- names(root.counts)
@@ -216,7 +227,7 @@ linf.dcst.transfer.tree <- function(levels, max.depth, sep) {
     }
   }
 
-  list(children = tree, support = support, sep = sep)
+  list(children = tree, support = support, nodes = nodes, sep = sep)
 }
 
 linf.transfer.one.sample <- function(sample.values,
@@ -226,22 +237,11 @@ linf.transfer.one.sample <- function(sample.values,
                                      sep) {
   out <- rep(NA_character_, max.depth)
   parent.key <- "__ROOT__"
-  parent.feature <- ""
-
-  child.feature <- function(label, depth) {
-    if (depth == 1L) return(label)
-    if (identical(label, parent.key)) return(parent.feature)
-    prefix <- paste0(parent.key, sep)
-    if (!startsWith(label, prefix)) return("")
-    substring(label, nchar(prefix) + 1L)
-  }
-
-  child.score <- function(label, depth) {
-    component <- child.feature(label, depth)
-    if (!nzchar(component)) return(0)
-    val <- unname(sample.values[component])
-    if (!length(val) || is.na(val)) return(0)
-    as.numeric(val[[1L]])
+  child.score <- function(key, depth) {
+    nodes <- tree$nodes[[depth]]
+    node <- match(key, nodes$node.id)
+    if (nodes$is.rare[[node]]) return(0)
+    as.numeric(sample.values[[nodes$feature.index[[node]]]])
   }
 
   for (d in seq_len(max.depth)) {
@@ -262,7 +262,10 @@ linf.transfer.one.sample <- function(sample.values,
         supp <- tree$support[[d]][[parent.key]][top]
         supp[is.na(supp)] <- 0
         top <- top[supp == max(supp)]
-        if (length(top) > 1L) top <- sort(top)
+        if (length(top) > 1L) {
+          labels <- tree$nodes[[d]]$lineage.label[match(top, tree$nodes[[d]]$node.id)]
+          top <- top[order(labels)]
+        }
       } else if (tie.method == "first") {
         top <- top[[1L]]
       } else if (tie.method == "random") {
@@ -274,7 +277,6 @@ linf.transfer.one.sample <- function(sample.values,
 
     chosen <- top[[1L]]
     out[[d]] <- chosen
-    parent.feature <- child.feature(chosen, d)
     parent.key <- chosen
   }
 

@@ -12,7 +12,13 @@
 \item{...}{Unused.}
 }
 \value{
-Data frame with depth-wise statistics
+Data frame with one row per stored depth. \code{input.samples},
+\code{assigned.samples}, \code{unassigned.samples} and \code{rare.samples}
+expose the denominators. \code{n.lineages} includes synthetic rare groups;
+\code{retained.lineages} excludes them. For compatibility,
+\code{total.samples} remains an alias of \code{assigned.samples}.
+Size statistics include rare groups and are \code{NA} when no assignments
+exist; valid empty fits do not produce warnings.
 }
 \description{
 Summarize dCST hierarchy statistics

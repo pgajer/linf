@@ -65,7 +65,7 @@ repo-hygiene:
 
 .PHONY: readme audit-guides vignette-previews
 readme:
-	Rscript -e 'rmarkdown::render("README.Rmd", quiet = TRUE)'
+	Rscript -e 'pkgload::load_all(".", quiet = TRUE); rmarkdown::render("README.Rmd", quiet = TRUE)'
 
 audit-guides:
 	Rscript tools/audit-guides.R

@@ -51,6 +51,45 @@ and [vaginal microbiome tutorial](linf-vaginal.html).
 | Assign new samples to an existing hierarchy | `transfer.dcsts()` | You need frozen-reference assignments, without learning new states. |
 | Prepare coordinate charts or readable names | `linf.hypercube.embedding()`, `linf.feature.labels()` | You need a representation for display or further analysis. |
 
+## A small workflow, with stopping points
+
+These six samples have stable IDs that differ from the display names. Two
+depth-1 groups have support at least two. One parent can be split into two
+supported children.
+
+```{r first-workflow}
+X <- rbind(
+  s1 = c(10, 8, 1), s2 = c(9, 7, 2),
+  s3 = c(10, 1, 8), s4 = c(9, 2, 7),
+  s5 = c(1, 10, 2), s6 = c(2, 9, 1)
+)
+colnames(X) <- c("asv_1", "asv_2", "asv_3")
+labels <- c("Taxon A", "Taxon B", "Taxon C")
+M <- normalize.linf(X)
+dominant <- linf.dominant.features(M, feature.labels = labels)
+dominant$id
+
+fit1 <- linf.csts(M, feature.labels = labels, n0 = 2,
+                  low.freq.policy = "pure")
+fit2 <- refine.linf.csts(M, fit1, n0 = 2, refinement.factor = 2,
+                         low.freq.policy = "pure", verbose = FALSE)
+accounting <- summary(fit2)
+fields <- c("depth", "n.lineages", "input.samples",
+            "assigned.samples", "unassigned.samples", "rare.samples")
+knitr::kable(accounting[, fields],
+             col.names = c("Depth", "Groups", "Input", "Assigned", "Unassigned", "Rare"))
+```
+
+Stop at `M` for normalized profiles or at `dominant` for sample-level maximum
+features. `fit1` adds the support threshold; `fit2` adds a level of subdivision.
+The two registered methods work through these objects: `print(fit2)` displays
+counts at each active depth, while `summary(fit2)` returns a data frame of
+lineage counts and sizes. The table accounts for all six samples at both depths: two groups become
+three after refinement. Summaries include separate input, assigned, unassigned
+and rare sample counts. Size statistics include rare groups and are `NA` when
+no samples are assigned, without warnings. For compatibility, `total.samples`
+continues to mean assigned samples; use `input.samples` for the full denominator.
+
 ## Function catalog
 
 Each explicit export appears once in the catalog below. Use `help("function.name",
@@ -131,9 +170,11 @@ Such a row still has a dominant feature. Only exact-zero rows receive `NA`
 from `linf.dominant.features()`.
 
 The core matrix functions reject missing (`NA`, `NaN`), infinite and negative
-entries and empty matrices; they do not impute missing values. Supply valid
-finite nonnegative counts to `filter.asv()` as well, rather than relying on
-that helper to clean invalid values.
+entries and empty matrices; they do not impute missing values. `filter.asv()` also validates finite nonnegative counts and threshold ranges.
+Fractional count-like values are accepted. Empty filtering results keep every
+documented field and indices that correspond to the returned matrices.
+With `min.lib = 0`, zero-total rows count toward prevalence but have no present
+features under a relative threshold; they are removed before returning `rel`.
 
 Dominant-feature assignment and refinement depend on within-row rankings.
 Positive row scaling preserves those rankings. L-infinity scaling is useful
@@ -156,40 +197,7 @@ depth-1 fitting and landmark selection, not refinement. Landmark `"first"`
 selects the first tied sample in matrix row order. Frozen transfer has its own
 default, `"support"`, described below.
 
-## A small workflow, with stopping points
-
-These six samples have stable IDs that differ from the display names. Two
-depth-1 groups have support at least two. One parent can be split into two
-supported children.
-
-```{r first-workflow}
-X <- rbind(
-  s1 = c(10, 8, 1), s2 = c(9, 7, 2),
-  s3 = c(10, 1, 8), s4 = c(9, 2, 7),
-  s5 = c(1, 10, 2), s6 = c(2, 9, 1)
-)
-colnames(X) <- c("asv_1", "asv_2", "asv_3")
-labels <- c("Taxon A", "Taxon B", "Taxon C")
-M <- normalize.linf(X)
-dominant <- linf.dominant.features(M, feature.labels = labels)
-dominant$id
-
-fit1 <- linf.csts(M, feature.labels = labels, n0 = 2,
-                  low.freq.policy = "pure")
-fit2 <- refine.linf.csts(M, fit1, n0 = 2, refinement.factor = 2,
-                         low.freq.policy = "pure", verbose = FALSE)
-knitr::kable(summary(fit2))
-```
-
-Stop at `M` for normalized profiles or at `dominant` for sample-level maximum
-features. `fit1` adds the support threshold; `fit2` adds a level of subdivision.
-The two registered methods work through these objects: `print(fit2)` displays
-counts at each active depth, while `summary(fit2)` returns a data frame of
-lineage counts and sizes. These summaries include rare buckets but omit `NA`
-assignments, so check missing assignments separately with
-`table(fit2$lineage.label, useNA = "ifany")`.
-
-### What a dCST hierarchy stores
+## What a dCST hierarchy stores
 
 A **dominant feature** is one sample's largest feature. Samples sharing it form
 a provisional **dominance sample set**. A set retained at support `n0` becomes
@@ -239,9 +247,14 @@ rare buckets at deeper levels are stored synthetic categories, not features.
 Selection and child fitting use the active membership. The saved policy views
 are representations of that fitted history, not two independently refitted
 analyses. Choose the active policy before refining and keep `low.freq.policy`,
-`rare.label` and `sep` consistent across calls. Refinement recovers feature IDs
-from successive fitted transitions, including IDs containing `__`. Do not
-recover IDs by splitting display labels or concatenated lineage strings.
+`rare.label` and `sep` consistent across calls. Fitted objects store explicit feature paths and node keys, including IDs
+containing `__`. A real `A__B` feature and the refined path `A` then `B` are
+different nodes. When their readable strings collide, returned IDs/labels
+receive a `[node ...]` suffix; select the returned `lineage.id` when refining.
+A real feature named `RARE_DOMINANT` is distinct from a synthetic rare node.
+Synthetic or undefined parents stay terminal in their own policy view.
+Unambiguous older fits are upgraded on use; ambiguous legacy fits must be
+rebuilt from their matrices. Never split displayed strings to recover features.
 
 ### Landmarks are selected observations
 
@@ -270,9 +283,8 @@ absorption the target need not be the sample's true maximum. These summaries
 alone do not establish whole-community typicality or biological distinctness.
 
 Inspect `landmarks$lineages$landmarks.computable`: rare categories have no unique
-target and are skipped. Target IDs are recovered from successive fitted levels,
-so IDs containing `__` remain intact and cannot be confused with a suffix
-feature. Terminal lineages retain their last feature at later stored depths.
+target and are skipped. Target IDs come from explicit node paths, so separators and colliding
+readable paths cannot change the feature selected. Terminal lineages retain their last feature at later stored depths.
 Keep stable IDs and display labels separate; neither display labels nor
 concatenated lineage strings should be split to infer feature identities.
 

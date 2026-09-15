@@ -29,64 +29,6 @@ resolve.linf.landmark.view <- function(csts,
   view
 }
 
-resolve.linf.landmark.leaf <- function(id.levels, depth, member, sep) {
-  leaf <- as.character(id.levels[[1L]][[member]])
-  if (depth == 1L) return(leaf)
-
-  for (d in 2:depth) {
-    parent <- as.character(id.levels[[d - 1L]][[member]])
-    child <- as.character(id.levels[[d]][[member]])
-    if (is.na(parent) || is.na(child)) return(NA_character_)
-    # A terminal lineage keeps its most recently added feature.
-    if (identical(child, parent)) next
-    prefix <- paste0(parent, sep)
-    if (!startsWith(child, prefix)) return(NA_character_)
-    # Remove the whole fitted parent, preserving separators inside the ID.
-    leaf <- substring(child, nchar(prefix) + 1L)
-  }
-  leaf
-}
-
-resolve.linf.landmark.feature <- function(leaf.id,
-                                          feature.ids,
-                                          feature.labels,
-                                          rare.label) {
-  is.rare <- !is.na(leaf.id) && identical(leaf.id, rare.label)
-
-  if (is.na(leaf.id) || is.rare) {
-    return(list(
-      computable = FALSE,
-      is.rare = is.rare,
-      index = NA_integer_,
-      feature.id = NA_character_,
-      feature.label = NA_character_
-    ))
-  }
-
-  idx <- match(leaf.id, feature.ids)
-  if (is.na(idx)) {
-    idx <- match(leaf.id, feature.labels)
-  }
-
-  if (is.na(idx)) {
-    return(list(
-      computable = FALSE,
-      is.rare = FALSE,
-      index = NA_integer_,
-      feature.id = NA_character_,
-      feature.label = NA_character_
-    ))
-  }
-
-  list(
-    computable = TRUE,
-    is.rare = FALSE,
-    index = idx,
-    feature.id = feature.ids[[idx]],
-    feature.label = feature.labels[[idx]]
-  )
-}
-
 choose.linf.landmark.index <- function(scores,
                                        tie.method = c("first", "random", "error"),
                                        minimize = FALSE) {
@@ -138,8 +80,8 @@ empty.linf.landmark.rows <- function() {
 #' \code{"linf.csts"} object at a chosen depth and view.
 #'
 #' Landmark types are defined with respect to the leaf feature of the dCST path:
-#' the last feature ID in the lineage ID path.
-#' Lineages whose leaf token is \code{rare.label} are reported but skipped for
+#' the last observed feature in the stored node path.
+#' Synthetic rare nodes are reported but skipped for
 #' landmark computation because they do not correspond to a unique target
 #' feature.
 #'
@@ -151,8 +93,8 @@ empty.linf.landmark.rows <- function() {
 #' maximum, not fractions of total abundance. Depth-1 pure dominant values can
 #' all equal one, leaving tied selections.
 #'
-#' Target feature IDs are recovered from successive fitted hierarchy levels,
-#' preserving separators inside IDs. Terminal lineages retain their last
+#' Target features come from explicit node paths, preserving separators inside
+#' IDs and separating literal feature names from concatenated paths. Terminal lineages retain their last
 #' feature at later stored depths. Inspect \code{lineages$landmarks.computable}
 #' to identify synthetic rare categories without a target feature.
 #'
@@ -208,6 +150,7 @@ linf.landmarks <- function(M,
                            tie.method = c("first", "random", "error"),
                            backend = c("auto", "dense", "sparse")) {
   validate.linf.csts(csts)
+  csts <- linf.ensure.nodes(csts)
 
   view <- match.arg(view)
   tie.method <- match.arg(tie.method)
@@ -267,12 +210,14 @@ linf.landmarks <- function(M,
   for (lineage in unique.lineages) {
     members <- which(lineage.ids == lineage)
     lineage.label <- lineage.labels[members[1L]]
-    leaf.id <- resolve.linf.landmark.leaf(id.levels, depth, members[1L], sep)
-    target <- resolve.linf.landmark.feature(
-      leaf.id,
-      feature.ids = meta$feature.ids,
-      feature.labels = meta$feature.labels,
-      rare.label = rare.label
+    nodes <- csts[[paste0("nodes.", resolved.view)]][[depth]]
+    node <- nodes[match(lineage, nodes$lineage.id), , drop = FALSE]
+    target <- list(
+      computable = !node$is.rare,
+      is.rare = node$is.rare,
+      index = node$feature.index,
+      feature.id = if (node$is.rare) NA_character_ else meta$feature.ids[[node$feature.index]],
+      feature.label = if (node$is.rare) NA_character_ else meta$feature.labels[[node$feature.index]]
     )
 
     lineages <- rbind(lineages, data.frame(

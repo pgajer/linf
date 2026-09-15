@@ -10,9 +10,11 @@
 #' defined by either \code{min.count} (counts) or \code{min.rel} (relative).
 #' After feature filtering, zero-total samples are dropped and a row-normalized
 #' relative-abundance matrix is returned alongside the filtered counts.
+#' Fractional count-like values are accepted, but entries must be finite and
+#' nonnegative. Thresholds are validated even when overridden by another rule.
 #'
 #' @param S.counts Numeric matrix (samples x features) of nonnegative counts.
-#' @param min.lib Integer. Minimum library size (row sum of counts) to keep a sample. Default: 1000.
+#' @param min.lib Integer >= 0. Minimum library size (row sum of counts) to keep a sample. Default: 1000.
 #' @param prev.prop Numeric in (0,1]. Minimum fraction of samples where a feature must be present.
 #'   Default: 0.05.
 #' @param min.count Integer (>=1) or NULL. Reads to call "present" (ignored if \code{min.rel} set). Default: 2.
@@ -25,7 +27,15 @@
 #' post-sample-filter matrix using either a count or relative rule. A feature is
 #' retained if prevalence \eqn{\ge \lceil \text{prev.prop} \times n_{\text{samples}} \rceil}.
 #' After feature filtering, samples with zero remaining counts are dropped and
-#' the relative matrix \code{rel} is row-normalized.
+#' the relative matrix \code{rel} is row-normalized. Zero-total rows have no
+#' present features under a relative threshold, and are removed at the final
+#' sample-filtering stage. They still count in the prevalence denominator if
+#' retained by \code{min.lib = 0}.
+#'
+#' Empty results retain all documented fields. If no samples survive the initial
+#' filter, no features are retained and the returned matrices are 0 by 0.
+#' Otherwise, features retained by prevalence can remain as columns of a
+#' zero-row result; the returned indices always describe the returned matrices.
 #'
 #' @return A list with elements:
 #' \describe{
@@ -56,12 +66,35 @@ filter.asv <- function(S.counts,
                        min.feat.total = NULL,
                        verbose        = TRUE) {
 
-  stopifnot(is.matrix(S.counts) || is.data.frame(S.counts))
+  if (!(is.matrix(S.counts) || is.data.frame(S.counts)) ||
+      (is.data.frame(S.counts) && !all(vapply(S.counts, is.numeric, logical(1))))) {
+    stop("filter.asv: S.counts must be a numeric matrix or numeric data frame")
+  }
   S.counts <- as.matrix(S.counts)
-  storage.mode(S.counts) <- "numeric"
+  if (!is.numeric(S.counts) || any(!is.finite(S.counts)) || any(S.counts < 0)) {
+    stop("filter.asv: counts must be numeric, finite and nonnegative")
+  }
+  scalar <- function(x, name, lower, upper = Inf, integer = FALSE,
+                     lower.open = FALSE, upper.open = FALSE) {
+    if (!is.numeric(x) || length(x) != 1L || !is.finite(x) ||
+        (if (lower.open) x <= lower else x < lower) ||
+        (if (upper.open) x >= upper else x > upper) ||
+        (integer && x %% 1 != 0)) {
+      stop("filter.asv: invalid ", name, "; see help('filter.asv') for its scalar range")
+    }
+  }
+  scalar(min.lib, "min.lib", 0, integer = TRUE)
+  scalar(prev.prop, "prev.prop", 0, 1, lower.open = TRUE)
+  if (!is.null(min.count)) scalar(min.count, "min.count", 1, integer = TRUE)
+  if (!is.null(min.rel)) scalar(min.rel, "min.rel", 0, 1, lower.open = TRUE, upper.open = TRUE)
+  if (!is.null(min.feat.total)) scalar(min.feat.total, "min.feat.total", 0, integer = TRUE)
+  if (!is.logical(verbose) || length(verbose) != 1L || is.na(verbose)) {
+    stop("filter.asv: verbose must be TRUE or FALSE")
+  }
 
   # --- sample filter on raw counts ---
   libsize <- rowSums(S.counts)
+  if (any(!is.finite(libsize))) stop("filter.asv: library totals exceed the finite numeric range")
   keep.samp <- libsize >= min.lib
   if (verbose) message("Samples kept: ", sum(keep.samp), " / ", nrow(S.counts),
                        "  (min.lib = ", min.lib, ")")
@@ -69,22 +102,21 @@ filter.asv <- function(S.counts,
 
   if (nrow(S.counts) == 0L || ncol(S.counts) == 0L) {
     warning("No data left after sample filtering.")
-    return(list(counts = S.counts, rel = S.counts,
-                kept.sample.idx = integer(0), kept.feature.idx = integer(0),
-                prevalence = numeric(0)))
   }
 
   # --- prevalence rule ---
   n <- nrow(S.counts)
   if (!is.null(min.rel)) {
     rs <- rowSums(S.counts)
-    present.mat <- sweep(S.counts, 1, rs, "/") >= min.rel
+    present.mat <- matrix(FALSE, nrow(S.counts), ncol(S.counts), dimnames = dimnames(S.counts))
+    positive <- rs > 0
+    present.mat[positive, ] <- S.counts[positive, , drop = FALSE] / rs[positive] >= min.rel
   } else {
     present.mat <- S.counts >= (min.count %||% 1)
   }
   prev <- colSums(present.mat)
   prev.thld <- ceiling(prev.prop * n)
-  keep.feat <- prev >= prev.thld
+  keep.feat <- n > 0 & prev >= prev.thld
 
   if (!is.null(min.feat.total)) {
     keep.feat <- keep.feat & (colSums(S.counts) >= min.feat.total)
@@ -106,7 +138,8 @@ filter.asv <- function(S.counts,
   S.counts <- S.counts[keep.samp2, , drop = FALSE]
 
   rs2 <- rowSums(S.counts)
-  S.rel <- sweep(S.counts, 1, rs2, "/")
+  S.rel <- S.counts
+  if (length(rs2)) S.rel <- S.counts / rs2
 
   if (nrow(S.rel) > 0) {
     s <- rowSums(S.rel)

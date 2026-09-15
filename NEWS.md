@@ -1,8 +1,28 @@
 # linf 0.3.1 (unreleased)
 
+- Fitted hierarchies now store explicit node paths independently of displayed
+  lineage strings. Literal separator-containing feature IDs and refined paths
+  remain distinct, including real features sharing the rare-category name.
+  Only colliding readable IDs/labels gain a node suffix. Unambiguous older fits
+  upgrade on use; ambiguous legacy fits require rebuilding from their matrix.
+  Synthetic parents remain terminal within their own stored policy view.
+- Count filtering validates data and scalar thresholds, handles zero-total rows
+  under relative prevalence, and preserves fields and indices in empty results.
+  Fractional nonnegative count-like values remain supported.
+- Hierarchy summaries include input, assigned, unassigned and rare sample counts.
+  Undefined size statistics are NA without warnings; total.samples retains its
+  historical assigned-sample meaning. Printing bounds the group listing and
+  explains empty and all-rare fits.
+- Package help is visible in the installed topic index, and the guide audit can
+  verify a built installation with --library=<path>. Remove the broken website
+  PDF link and distinguish released from development documentation.
+- The README computes and explains a first result near the opening. The function
+  guide presents its small workflow earlier; the gut tutorial uses readable
+  taxon labels and unclipped count annotations, retaining its pure policy.
+
 - Landmark lookup now preserves complete feature IDs containing the lineage
   separator, including suffix collisions, refined and terminal lineages, and
-  custom rare labels. It recovers the target from fitted hierarchy transitions.
+  custom rare labels. It reads the target from explicit node metadata.
 - Add installed task-oriented function and example-dataset guides, with
   executable workflows, catalog coverage checks and package-help navigation.
   Clarify normalization exceptions, fitting versus transfer, landmark scale,
@@ -19,7 +39,7 @@
 - Invalid feature-metadata lengths and non-finite normalization tolerances are
   rejected explicitly. Normalization documentation now distinguishes unscaled
   small rows, exact-zero rows, and downstream absorption.
-- Refinement and transfer recover feature identities from fitted transitions,
+- Refinement and transfer use explicit fitted feature paths,
   so taxonomy IDs or display labels containing `__` are not split apart.
 - Sparse matrix preparation avoids deprecated direct triangular-to-general
   coercion. The DESCRIPTION citation now includes authors and year.

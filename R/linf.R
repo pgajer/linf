@@ -269,6 +269,22 @@ linf.active.low.freq.view <- function(low.freq.policy) {
 #'     \item \code{landmarks} (if \code{return.landmarks = TRUE})
 #'   }
 #'
+#' @details
+#' Fitted objects store explicit feature paths and node metadata in
+#' \code{nodes} and \code{node.ids}, with \code{.pure} and \code{.absorb}
+#' variants. A node path contains original column indices; zero marks a
+#' synthetic rare component. Node keys are local to the fitted feature mapping.
+#' Metadata records parent keys, leaf-feature index, rare status and whether
+#' the node was carried unchanged from the preceding stored level.
+#'
+#' Readable lineage IDs and labels are preserved when unambiguous. If different
+#' paths produce the same string (for example, feature \code{A__B} and path
+#' \code{A} then \code{B}), colliding strings receive a \code{[node ...]}
+#' suffix. Use the returned IDs for explicit refinement; never split them to
+#' recover features. Real features named like \code{rare.label} remain distinct
+#' from synthetic rare groups. Consumers upgrade unambiguous older objects on
+#' use and reject ambiguous legacy hierarchies with a rebuild message.
+#'
 #' @examples
 #' X <- rbind(
 #'   s1 = c(A = 10, B = 2, C = 1),
@@ -302,10 +318,10 @@ linf.csts <- function(S,
     X <- prep$X
     backend <- prep$backend
 
-    if (!is.numeric(n0) || length(n0) != 1L || n0 < 1 || n0 %% 1 != 0) {
+    if (!is.numeric(n0) || length(n0) != 1L || !is.finite(n0) || n0 < 1 || n0 %% 1 != 0) {
         stop("linf.csts: n0 must be integer >= 1")
     }
-    if (!is.character(rare.label) || length(rare.label) != 1L || !nzchar(rare.label)) {
+    if (!is.character(rare.label) || length(rare.label) != 1L || is.na(rare.label) || !nzchar(rare.label)) {
         stop("linf.csts: rare.label must be a non-empty character scalar")
     }
 
@@ -487,6 +503,14 @@ linf.csts <- function(S,
     out$lineage.labels.absorb <- list(level1 = out$lineage.label.absorb)
     out$depth <- 1L
 
+    for (view in c("pure", "absorb")) {
+        indices <- out[[paste0("depth1.feature.index.", view)]]
+        paths <- lapply(indices, function(i) {
+            if (!is.na(i)) as.integer(i) else if (view == "pure") 0L else integer()
+        })
+        out <- linf.store.node.level(out, view, paths, 1L)
+    }
+    out <- linf.activate.nodes(out)
     class(out) <- "linf.csts"
 
     if (isTRUE(return.landmarks)) {
@@ -580,9 +604,9 @@ validate.linf.csts <- function(obj) {
 #'
 #' @description
 #' Selects leaf dominance-lineages and refines them by dropping the dominant
-#' feature(s) recovered from successive fitted lineage transitions and re-applying
+#' feature(s) stored in explicit node paths and re-applying
 #' \code{\link{linf.csts}} to the remaining features. The resulting child
-#' labels are appended to the parent label using \code{sep}.
+#' labels are joined using \code{sep}; colliding readable paths receive a node suffix.
 #'
 #' Low-support child lineages are handled by \code{low.freq.policy}. When
 #' \code{low.freq.policy = "pure"}, rare buckets at depth >= 2 become
@@ -618,7 +642,10 @@ validate.linf.csts <- function(obj) {
 #' Every call appends a stored level; unselected parents and parents without
 #' retained children keep their labels there. Child fits use first-column tie
 #' handling; the parent fit's random-tie setting is not inherited. Keep policy,
-#' rare label and separator consistent across repeated refinements.
+#' rare label and separator consistent across repeated refinements. Stored
+#' synthetic or undefined parents remain terminal in their own policy view,
+#' even when the other view is refined. A real feature whose ID equals the
+#' rare label is not a synthetic parent and can be refined.
 #'
 #' @examples
 #' M <- rbind(
@@ -653,6 +680,7 @@ refine.linf.csts <- function(M,
                              backend = c("auto", "dense", "sparse")) {
 
     validate.linf.csts(csts)
+    csts <- linf.ensure.nodes(csts)
 
     low.freq.policy <- linf.normalize.low.freq.policy(low.freq.policy)
     if (missing(backend)) {
@@ -663,40 +691,34 @@ refine.linf.csts <- function(M,
     backend <- prep$backend
     linf.validate.matrix(M, backend = backend, fun.name = "refine.linf.csts")
 
-    if (!is.numeric(n0) || length(n0) != 1L || n0 < 1 || n0 %% 1 != 0) {
+    if (!is.numeric(n0) || length(n0) != 1L || !is.finite(n0) || n0 < 1 || n0 %% 1 != 0) {
         stop("refine.linf.csts: n0 must be integer >= 1")
     }
     if (!is.numeric(refinement.factor) || length(refinement.factor) != 1L ||
         !is.finite(refinement.factor) || refinement.factor <= 0) {
         stop("refine.linf.csts: refinement.factor must be a finite numeric > 0")
     }
-    if (!is.character(sep) || length(sep) != 1L || !nzchar(sep)) {
+    if (!is.character(sep) || length(sep) != 1L || is.na(sep) || !nzchar(sep)) {
         stop("refine.linf.csts: sep must be a non-empty character scalar")
     }
-    if (!is.character(rare.label) || length(rare.label) != 1L || !nzchar(rare.label)) {
+    if (!is.character(rare.label) || length(rare.label) != 1L || is.na(rare.label) || !nzchar(rare.label)) {
         stop("refine.linf.csts: rare.label must be a non-empty character scalar")
     }
 
     depth <- csts$depth + 1L
-    parent.ids <- csts$lineage.ids[[depth - 1L]]
-    parent.ids.pure <- csts$lineage.ids.pure[[depth - 1L]]
-    parent.ids.absorb <- csts$lineage.ids.absorb[[depth - 1L]]
-    parent.labels <- csts$lineage.labels[[depth - 1L]]
-
-    parent.labels.pure <- csts$lineage.labels.pure[[depth - 1L]]
-    parent.labels.absorb <- csts$lineage.labels.absorb[[depth - 1L]]
-
-    refined.ids.pure <- parent.ids.pure
-    refined.ids.absorb <- parent.ids.absorb
-    refined.labels.pure <- parent.labels.pure
-    refined.labels.absorb <- parent.labels.absorb
+    parent.ids <- csts$lineage.id
+    active.nodes <- csts$nodes[[depth - 1L]]
+    active.paths <- linf.node.paths(csts, csts$low.freq.policy, depth - 1L)
+    paths.pure <- linf.node.paths(csts, "pure", depth - 1L)
+    paths.absorb <- linf.node.paths(csts, "absorb", depth - 1L)
+    rare.ids <- active.nodes$lineage.id[active.nodes$is.rare]
 
     lineage.sizes <- sort(table(parent.ids), decreasing = TRUE)
 
     threshold <- refinement.factor * n0
     if (is.null(lineages.to.refine)) {
         lineages.to.refine <- names(lineage.sizes[lineage.sizes >= threshold])
-        lineages.to.refine <- setdiff(lineages.to.refine, rare.label)
+        lineages.to.refine <- setdiff(lineages.to.refine, rare.ids)
         selection.mode <- "automatic"
     } else {
         if (!is.character(lineages.to.refine) || anyNA(lineages.to.refine) ||
@@ -711,7 +733,7 @@ refine.linf.csts <- function(M,
                 paste(unknown, collapse = ", ")
             )
         }
-        if (rare.label %in% lineages.to.refine) {
+        if (any(lineages.to.refine %in% rare.ids)) {
             stop("refine.linf.csts: the synthetic rare lineage cannot be refined")
         }
         selection.mode <- "explicit"
@@ -738,26 +760,8 @@ refine.linf.csts <- function(M,
 
     for (lineage in lineages.to.refine) {
         idx <- which(parent.ids == lineage)
-        parent.id.pure <- parent.ids.pure[idx[1L]]
-        parent.id.absorb <- parent.ids.absorb[idx[1L]]
-        parent.label.pure <- parent.labels.pure[idx[1L]]
-        parent.label.absorb <- parent.labels.absorb[idx[1L]]
-
-        # Recover one feature per fitted transition, without splitting IDs that
-        # themselves contain the separator (as taxonomy strings often do).
-        path <- vapply(csts$lineage.ids, function(level) level[[idx[1L]]], character(1))
-        parent.features <- path[[1L]]
-        if (length(path) > 1L) {
-            for (d in 2:length(path)) {
-                if (identical(path[[d]], path[[d - 1L]])) next
-                prefix <- paste0(path[[d - 1L]], csts$sep %||% sep)
-                if (startsWith(path[[d]], prefix)) {
-                    parent.features <- c(parent.features, substring(path[[d]], nchar(prefix) + 1L))
-                }
-            }
-        }
-        drop.idx <- match(parent.features, csts$feature.ids)
-        drop.idx <- drop.idx[!is.na(drop.idx)]
+        drop.idx <- active.paths[[idx[1L]]]
+        drop.idx <- drop.idx[drop.idx > 0L]
         keep.idx <- setdiff(seq_len(ncol(M)), drop.idx)
 
         ## If no parent features match columns (e.g., the lineage is a rare
@@ -782,46 +786,29 @@ refine.linf.csts <- function(M,
                              rare.label = rare.label,
                              backend = backend)
 
-        sub.ids.pure <- sub.csts$lineage.id.pure
-        sub.ids.absorb <- sub.csts$lineage.id.absorb
-        sub.labels.pure <- sub.csts$lineage.label.pure
-        sub.labels.absorb <- sub.csts$lineage.label.absorb
-
-        ## If refinement yields no retained child lineages, skip.
-        if (all(sub.labels.pure == rare.label)) next
-
-        refined.ids.pure[idx] <- paste(parent.id.pure, sub.ids.pure, sep = sep)
-        refined.ids.absorb[idx] <- paste(parent.id.absorb, sub.ids.absorb, sep = sep)
-        refined.labels.pure[idx] <- paste(parent.label.pure, sub.labels.pure, sep = sep)
-        refined.labels.absorb[idx] <- paste(parent.label.absorb, sub.labels.absorb, sep = sep)
+        if (!length(sub.csts$retained.feature.indices)) next
+        for (j in seq_along(idx)) {
+            row <- idx[[j]]
+            # A stored synthetic/undefined parent remains terminal in its view.
+            for (view in c("pure", "absorb")) {
+                paths <- if (view == "pure") paths.pure else paths.absorb
+                parent <- paths[[row]]
+                if (!length(parent) || utils::tail(parent, 1L) == 0L) next
+                child <- sub.csts[[paste0("depth1.feature.index.", view)]][[j]]
+                token <- if (is.na(child)) 0L else as.integer(keep.idx[[child]])
+                paths[[row]] <- c(parent, token)
+                if (view == "pure") paths.pure <- paths else paths.absorb <- paths
+            }
+        }
     }
 
-    ## Update dCST object (store both views; active view chosen by low.freq.policy)
-    csts$lineage.ids[[depth]] <- if (low.freq.policy == "pure") refined.ids.pure else refined.ids.absorb
-    csts$lineage.ids.pure[[depth]] <- refined.ids.pure
-    csts$lineage.ids.absorb[[depth]] <- refined.ids.absorb
-    csts$lineage.labels.pure[[depth]] <- refined.labels.pure
-    csts$lineage.labels.absorb[[depth]] <- refined.labels.absorb
-
-    if (low.freq.policy == "pure") {
-        refined.labels <- refined.labels.pure
-    } else {
-        refined.labels <- refined.labels.absorb
-    }
-
-    csts$lineage.labels[[depth]] <- refined.labels
     csts$depth <- depth
     csts$sep <- sep
-
-    csts$lineage.id.pure <- refined.ids.pure
-    csts$lineage.id.absorb <- refined.ids.absorb
-    csts$lineage.id <- csts$lineage.ids[[depth]]
-    csts$lineage.label.pure <- refined.labels.pure
-    csts$lineage.label.absorb <- refined.labels.absorb
-    csts$lineage.label <- refined.labels
-
     csts$low.freq.policy <- low.freq.policy
     csts$rare.label <- rare.label
+    csts <- linf.store.node.level(csts, "pure", paths.pure, depth, sep)
+    csts <- linf.store.node.level(csts, "absorb", paths.absorb, depth, sep)
+    csts <- linf.activate.nodes(csts)
     csts$matrix.backend <- backend
     csts$landmarks <- NULL
 
@@ -859,6 +846,7 @@ refine.linf.csts <- function(M,
 dcst.view <- function(csts, view = c("absorb", "pure")) {
 
   validate.linf.csts(csts)
+  csts <- linf.ensure.nodes(csts)
   view <- match.arg(view)
 
   lineage.label <- csts[[paste0("lineage.label.", view)]]
@@ -881,6 +869,7 @@ dcst.view <- function(csts, view = c("absorb", "pure")) {
   csts$lineage.ids <- lineage.ids
   csts$lineage.labels <- lineage.labels
   csts$low.freq.policy <- view
+  csts <- linf.activate.nodes(csts)
 
   csts$landmarks <- NULL
   class(csts) <- "linf.csts"
@@ -891,7 +880,9 @@ dcst.view <- function(csts, view = c("absorb", "pure")) {
 #'
 #' @param x A \code{"linf.csts"} object.
 #' @param ... Unused.
-#' @return The input object, invisibly.
+#' @return The input object, invisibly. Printing shows sample accounting and up
+#'   to ten groups per depth. Use \code{table(x$lineage.labels[[d]],
+#'   useNA = "ifany")} for the complete counts at depth \code{d}.
 #' @examples
 #' M <- rbind(
 #'   s1 = c(A = 1.0, B = 0.2),
@@ -904,37 +895,42 @@ print.linf.csts <- function(x, ...) {
 
   validate.linf.csts(x)
 
-  levels <- x$lineage.labels
-  max.depth <- x$depth
-
-  cat("\n================================================================================\n")
+  original <- x
+  x <- linf.ensure.nodes(x)
+  stats <- summary(x)
   cat("Dominant Community State Type Hierarchy\n")
-  cat("================================================================================\n")
-  cat("Total samples: ", length(x$lineage.label), "\n")
-  cat("Max depth:     ", max.depth, "\n")
-
-  cat("Low-freq policy: ", x$low.freq.policy,
-      " (rare.label: ", x$rare.label, ")\n", sep = "")
-
-  cat("--------------------------------------------------------------------------------\n\n")
-
-  for (d in seq_along(levels)) {
-    cat("Depth", d, "\n")
-    tab <- sort(table(levels[[d]]), decreasing = TRUE)
-    for (nm in names(tab)) {
-      cat("  ", nm, ": ", tab[[nm]], "\n", sep = "")
+  cat("Total samples:", length(x$lineage.label), " | Depth:", x$depth,
+      " | Policy:", x$low.freq.policy, "\n")
+  for (d in seq_len(x$depth)) {
+    cat("\nDepth", d, "-", stats$assigned.samples[d], "assigned,",
+        stats$unassigned.samples[d], "unassigned,", stats$rare.samples[d], "rare\n")
+    tab <- sort(table(x$lineage.labels[[d]]), decreasing = TRUE)
+    if (!length(tab)) {
+      cat("  No assigned lineages at this depth.\n")
+    } else {
+      if (stats$retained.lineages[d] == 0L) cat("  No retained lineages; all assignments are synthetic rare groups.\n")
+      for (nm in utils::head(names(tab), 10L)) cat("  ", nm, ": ", tab[[nm]], "\n", sep = "")
+      if (length(tab) > 10L) {
+        cat(sprintf("  ... %d more lineages. Use table(x$lineage.labels[[%d]], useNA = 'ifany') for all counts.\n",
+                    length(tab) - 10L, d))
+      }
     }
-    cat("\n")
   }
 
-  invisible(x)
+  invisible(original)
 }
 
 #' Summarize dCST hierarchy statistics
 #'
 #' @param object A \code{"linf.csts"} object.
 #' @param ... Unused.
-#' @return Data frame with depth-wise statistics
+#' @return Data frame with one row per stored depth. \code{input.samples},
+#'   \code{assigned.samples}, \code{unassigned.samples} and \code{rare.samples}
+#'   expose the denominators. \code{n.lineages} includes synthetic rare groups;
+#'   \code{retained.lineages} excludes them. For compatibility,
+#'   \code{total.samples} remains an alias of \code{assigned.samples}.
+#'   Size statistics include rare groups and are \code{NA} when no assignments
+#'   exist; valid empty fits do not produce warnings.
 #' @examples
 #' M <- rbind(
 #'   s1 = c(A = 1.0, B = 0.2),
@@ -948,32 +944,27 @@ summary.linf.csts <- function(object, ...) {
 
   validate.linf.csts(object)
 
-  levels <- object$lineage.labels
-
-  out <- data.frame(
-    depth = integer(0),
-    n.lineages = integer(0),
-    total.samples = integer(0),
-    mean.size = numeric(0),
-    median.size = numeric(0),
-    min.size = numeric(0),
-    max.size = numeric(0)
-  )
-
-  for (d in seq_along(levels)) {
-    lbl <- levels[[d]]
-    tab <- table(lbl)
-
-    out <- rbind(out, data.frame(
-      depth = d,
+  object <- linf.ensure.nodes(object)
+  rows <- lapply(seq_len(object$depth), function(d) {
+    keys <- object$node.ids[[d]]
+    nodes <- object$nodes[[d]]
+    tab <- table(keys)
+    assigned <- sum(!is.na(keys))
+    rare <- sum(keys %in% nodes$node.id[nodes$is.rare])
+    data.frame(
+      depth = as.integer(d),
       n.lineages = length(tab),
-      total.samples = sum(tab),
-      mean.size = mean(tab),
-      median.size = stats::median(tab),
-      min.size = min(tab),
-      max.size = max(tab)
-    ))
-  }
-
-  out
+      total.samples = assigned,
+      mean.size = if (length(tab)) mean(tab) else NA_real_,
+      median.size = if (length(tab)) stats::median(tab) else NA_real_,
+      min.size = if (length(tab)) min(tab) else NA_real_,
+      max.size = if (length(tab)) max(tab) else NA_real_,
+      input.samples = length(keys),
+      assigned.samples = assigned,
+      unassigned.samples = sum(is.na(keys)),
+      rare.samples = rare,
+      retained.lineages = sum(!nodes$is.rare)
+    )
+  })
+  do.call(rbind, rows)
 }

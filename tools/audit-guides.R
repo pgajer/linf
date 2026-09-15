@@ -42,7 +42,7 @@ data.catalog <- sub("^\\| `([^`]+)`.*$", "\\1",
                     grep("^\\| `[^`]+` \\|", datasets, value = TRUE))
 stopifnot(!anyDuplicated(data.catalog), setequal(data.catalog, data.names),
           length(data.names) == 5L,
-          all(c(exports, methods, data.names, "linf-package") %in% aliases))
+          all(c(exports, methods, data.names, "linf", "linf-package") %in% aliases))
 for (source in c("vignettes/function-guide.Rmd", "vignettes/example-datasets.Rmd")) {
   text <- readLines(source, warn = FALSE)
   stopifnot(any(grepl("%\\VignetteIndexEntry{", text, fixed = TRUE)),
@@ -56,3 +56,31 @@ for (source in c("vignettes/function-guide.Rmd", "vignettes/example-datasets.Rmd
 cat(sprintf("Catalog verified: %d explicit functions, %d registered methods (%d overlapping exports), %d datasets.\n",
             length(exports), length(methods), length(intersect(exports, methods)), length(data.names)))
 cat("Source definitions, help aliases, vignette metadata and local guide links verified.\n")
+
+# Alias presence alone does not make the overview discoverable in installed help.
+package.rd <- readLines("man/linf-package.Rd", warn = FALSE)
+stopifnot(!any(grepl("\\keyword{internal}", package.rd, fixed = TRUE)))
+args <- commandArgs(trailingOnly = TRUE)
+if (length(args)) {
+  stopifnot(length(args) == 1L, startsWith(args, "--library="))
+  lib <- sub("^--library=", "", args)
+  package <- find.package("linf", lib.loc = lib)
+  stopifnot(length(utils::help("linf", package = "linf", lib.loc = lib)) == 1L,
+            length(utils::help("linf-package", package = "linf", lib.loc = lib)) == 1L)
+  index <- readLines(file.path(package, "html", "00Index.html"), warn = FALSE)
+  stopifnot(any(grepl("linf-package.html", index, fixed = TRUE)))
+  items <- utils::vignette(package = "linf", lib.loc = lib)$results[, "Item"]
+  expected <- c("function-guide", "example-datasets", "linf-intro", "linf-vaginal")
+  stopifnot(setequal(items, expected))
+  for (item in expected) {
+    html <- file.path(package, "doc", paste0(item, ".html"))
+    stopifnot(file.exists(html))
+    text <- readLines(html, warn = FALSE)
+    links <- regmatches(text, gregexpr('href="[^":]+[.]html(#[^"]*)?"', text))
+    links <- sub('^href="|"$', "", unlist(links))
+    links <- sub('"$', "", sub("#.*$", "", links))
+    local <- links[basename(links) %in% paste0(expected, ".html")]
+    stopifnot(all(file.exists(file.path(package, "doc", local))))
+  }
+  cat("Installed package overview, both aliases, four vignettes and local guide links verified.\n")
+}

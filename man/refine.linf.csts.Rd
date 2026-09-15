@@ -54,9 +54,9 @@ updated \code{lineage.label}. Policy-specific views are stored in
 }
 \description{
 Selects leaf dominance-lineages and refines them by dropping the dominant
-feature(s) recovered from successive fitted lineage transitions and re-applying
+feature(s) stored in explicit node paths and re-applying
 \code{\link{linf.csts}} to the remaining features. The resulting child
-labels are appended to the parent label using \code{sep}.
+labels are joined using \code{sep}; colliding readable paths receive a node suffix.
 
 Low-support child lineages are handled by \code{low.freq.policy}. When
 \code{low.freq.policy = "pure"}, rare buckets at depth >= 2 become
@@ -68,7 +68,10 @@ bypasses the automatic parent-support rule but not the child threshold.
 Every call appends a stored level; unselected parents and parents without
 retained children keep their labels there. Child fits use first-column tie
 handling; the parent fit's random-tie setting is not inherited. Keep policy,
-rare label and separator consistent across repeated refinements.
+rare label and separator consistent across repeated refinements. Stored
+synthetic or undefined parents remain terminal in their own policy view,
+even when the other view is refined. A real feature whose ID equals the
+rare label is not a synthetic parent and can be refined.
 }
 \examples{
 M <- rbind(

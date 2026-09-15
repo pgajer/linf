@@ -8,7 +8,7 @@ template:
 navbar:
   structure:
     left:  [reference, articles]
-    right: [pdf]
+    right: []
   components:
     articles:
       text: "Guides and articles"
@@ -23,9 +23,6 @@ navbar:
           href: articles/linf-vaginal.html
         - text: "Interactive embedding (website only)"
           href: articles/valencia-hypercube-embedding.html
-    pdf:
-      text: "Download PDF"
-      href: articles/linf-intro.pdf
 
 articles:
   - title: "Start here"

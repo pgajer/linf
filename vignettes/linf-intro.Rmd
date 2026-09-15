@@ -154,8 +154,10 @@ csts <- linf.csts(M, n0 = 30)
 sort(table(csts$lineage.label), decreasing = TRUE)
 ```
 
-The landscape is dominated by *Bacteroides* and *Escherichia-Shigella*, with
-*Prevotella*, *Faecalibacterium*, and several smaller dCSTs forming the tail.
+The largest retained groups are *Bacteroides* and *Escherichia-Shigella*.
+The figure below labels all seven retained groups and the separate rare bucket.
+This tutorial uses the pure policy; the README figure uses absorption, so its
+group counts differ even though both start with the same filtered samples.
 The `RARE_DOMINANT` bucket collects samples dominated by taxa too infrequent
 to form their own dCST at this threshold.
 
@@ -199,15 +201,22 @@ legend("topright", "50% dominance", col = "red", lty = 2, lwd = 2, bty = "n")
 
 ### dCST size distribution
 
-```{r dcst-barplot, fig.cap = "dCST size distribution at depth 1. Bacteroides and Escherichia-Shigella dominate; rare dCSTs in the tail are collapsed into RARE_DOMINANT."}
+```{r dcst-barplot, fig.cap = "Pure-policy depth-1 assignments for 763 filtered AGP samples: seven retained groups and 159 samples in the synthetic rare bucket. Counts describe the stratified demonstration subset, not population frequencies."}
 tab1 <- sort(table(csts$lineage.label), decreasing = TRUE)
-par(mar = c(10, 4, 3, 1))
-bp <- barplot(tab1,
-        col = ifelse(names(tab1) == "RARE_DOMINANT", "#e74c3c", "#3498db"),
-        las = 2, cex.names = 0.7,
-        ylab = "Number of samples",
-        main = "Gut dCST Size Distribution (depth 1)")
-text(bp, tab1 + 5, labels = tab1, cex = 0.7, pos = 3)
+# Use the last available taxonomy rank for display; keep full IDs in the fit.
+short_taxon <- function(id) {
+  if (id == "RARE_DOMINANT") return("Rare dominant")
+  ranks <- sub("^[a-z]__", "", strsplit(id, ";", fixed = TRUE)[[1L]])
+  ranks <- ranks[nzchar(ranks) & ranks != "__"]
+  tail(ranks, 1L)
+}
+names(tab1) <- make.unique(vapply(names(tab1), short_taxon, character(1)))
+par(mar = c(5, 10, 3, 2))
+bp <- barplot(rev(tab1), horiz = TRUE,
+              col = ifelse(rev(names(tab1)) == "Rare dominant", "#e74c3c", "#3498db"),
+              las = 1, cex.names = 0.8, xlim = c(0, max(tab1) * 1.18),
+              xlab = "Number of samples", main = "Gut dCST sizes (pure policy, depth 1)")
+text(rev(tab1), bp, labels = rev(tab1), pos = 4, cex = 0.8)
 ```
 
 

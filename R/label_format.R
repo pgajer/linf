@@ -133,6 +133,9 @@ resolve.linf.feature.meta <- function(X,
   if (length(ids) != ncol(X)) {
     stop("resolve.linf.feature.meta: feature.ids must have length ncol(X)")
   }
+  if (anyNA(ids) || any(!nzchar(as.character(ids)))) {
+    stop("resolve.linf.feature.meta: feature.ids must be nonmissing and nonempty")
+  }
   ids <- make.unique(as.character(ids), sep = "_")
 
   labels <- feature.labels
@@ -141,6 +144,9 @@ resolve.linf.feature.meta <- function(X,
   }
   if (length(labels) != length(ids)) {
     stop("resolve.linf.feature.meta: feature.labels must have the same length as feature.ids")
+  }
+  if (anyNA(labels) || any(!nzchar(as.character(labels)))) {
+    stop("resolve.linf.feature.meta: feature.labels must be nonmissing and nonempty")
   }
   labels <- make.unique(as.character(labels), sep = "_")
 

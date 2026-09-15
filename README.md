@@ -7,93 +7,92 @@
 [![DOI](https://zenodo.org/badge/DOI/10.48550/arXiv.2503.21543.svg)](https://doi.org/10.48550/arXiv.2503.21543)
 <!-- badges: end -->
 
-# linf — L∞ Normalization and Dominant Community State Types for Compositional Data
+# linf: dominant-feature groups for compositional data
 
-**linf** is a lightweight R package for analysing compositional data
-through L-infinity (L∞) normalization and Dominant Community State Types
-(dCSTs).
+**linf** scales each sample by its largest feature, preserves zeros, and
+groups samples by supported dominant and subdominant features. Supply a
+nonnegative matrix with **samples in rows and features in columns**.
+Stop after normalization, fit a hierarchy, or assign new samples to a
+reference you have already fitted.
 
-Classical centered log-ratio (CLR) and isometric log-ratio (ILR)
-coordinates are defined only for strictly positive compositions.
-Zero-containing observations lie on the boundary of the simplex and must
-first undergo pseudocount addition or zero replacement, which represents
-them as interior compositions. This is questionable when zeros represent
-true absence, especially when every sample contains structural zeros, as
-is common in microbiome feature tables: replacement then represents
-every sample as containing every feature in the analysed feature set.
-For vaginal 16S rRNA or metagenomic data, this would imply that every
-vaginal microbial community contains every phylotype included in the
-analysis, a biologically implausible assumption. L∞ normalization
-retains zeros: dividing each sample by its maximum places positive rows
-on the boundary of the unit L∞ ball at the default tolerance. Exact-zero
-rows remain zero; rows at or below a positive tolerance remain
-unchanged. The dominant feature defines **dominance sample sets**, with
-ties resolved by the selected rule.
+## A first result
 
-dCST construction is rank based. Depth-1 dCSTs partition samples by the
-rank-1 (most abundant) feature. Deeper dCSTs refine selected active
-lineages using remaining features. Support and absorption can affect
-which feature represents a group. The support threshold *n*₀ sets the
-minimum sample count required to retain a dominance sample set.
+After [installation](#installation), this small example shows what the
+support threshold changes. The seed makes the toy counts reproducible.
+
+``` r
+library(linf)
+set.seed(1)
+counts <- matrix(rpois(30, 5), nrow = 10,
+                 dimnames = list(paste0("s", 1:10), c("A", "B", "C")))
+M <- normalize.linf(counts)
+dominant <- linf.dominant.features(M)
+fit <- linf.csts(M, n0 = 4, low.freq.policy = "absorb")
+```
+
+| Feature | Provisional samples | Assigned after absorption |
+|:--------|--------------------:|--------------------------:|
+| A       |                   4 |                         6 |
+| B       |                   4 |                         4 |
+| C       |                   2 |                         0 |
+
+A and B each have four provisional samples and meet `n0 = 4`. C has two,
+so its samples are reassigned to the retained feature with greatest
+abundance: A finishes with six samples and B with four. Absorption does
+not mean A was those samples’ original maximum. `M` alone is sufficient
+when you only need normalized profiles; it has row maximum one here and
+preserves zeros.
 
 ## Installation
 
+The CRAN release is **0.3.0**; the source here is **0.3.1 in
+development**. The first example works with either. The two new
+navigation/dataset guides and the latest identity corrections are
+available in the development version.
+
 ``` r
-# From GitHub (development version)
+# Released package (two installed workflows)
+install.packages("linf")
+
+# Development package (four installed vignettes)
 # install.packages("devtools")
 devtools::install_github("pgajer/linf", build_vignettes = TRUE)
 ```
 
-or
+After installing the development package, read the rendered guides
+locally:
 
 ``` r
-# From CRAN
-install.packages("linf")
+help("linf", package = "linf")
+vignette("function-guide", package = "linf")
+vignette("example-datasets", package = "linf")
 ```
 
-## Features
+The [published website](https://pgajer.github.io/linf/) is updated
+separately and may lag the development source. Use installed help for
+the version you run.
 
-- **L∞ normalization** — `normalize.linf()`: row-wise division by
-  maximum, scaling rows above tolerance while preserving zeros and
-  smaller rows.
-- **Dominant-feature assignment** — `linf.dominant.features()`: rank-1
-  assignment per sample, returning indices, labels, and level sets.
-- **Truncated dCSTs** — `linf.csts()`: apply the support threshold *n*₀
-  and either group low-support samples together or absorb them into
-  retained states.
-- **Iterative refinement** — `refine.linf.csts()`: depth-2+ dCSTs via
-  successive rank decomposition, with automatic or explicit lineage
-  selection.
-- **Landmark profiles** — `linf.landmarks()`: observed rows selected by
-  endpoint max/min or proximity to the mean/median of the lineage target
-  feature; these are not averaged profiles.
-- **ASV filtering** — `filter.asv()`: library-size and prevalence
-  filtering for amplicon count matrices.
+## Choose the next step
 
-## Quick Start
+- **Prepare profiles:** `filter.asv()` filters counts;
+  `normalize.linf()` scales rows above tolerance while leaving zero and
+  below-tolerance rows unchanged.
+- **Fit groups:** `linf.dominant.features()` names each maximum;
+  `linf.csts()` adds a support threshold; `refine.linf.csts()`
+  subdivides selected groups.
+- **Inspect results:** `summary()` accounts for assigned, rare and
+  unassigned samples. `linf.landmarks()` selects observed rows by a
+  target feature’s value, including rows closest to its mean or median;
+  it does not average profiles.
+- **Reuse a fit:** `transfer.dcsts()` assigns query samples to a frozen
+  hierarchy.
 
-``` r
-library(linf)
-
-set.seed(1)
-
-# toy counts (samples × features)
-S.counts <- matrix(rpois(10 * 3, 5), nrow = 10, ncol = 3,
-                   dimnames = list(paste0("s", 1:10), c("A", "B", "C")))
-
-# L∞ relatives (nonzero rows have max 1; zeros remain zero)
-Z <- normalize.linf(S.counts)
-apply(Z, 1, max)
-#> returns 1 for nonzero rows, 0 for all-zero rows
-
-# Dominant-feature assignments: indices + labels
-dominant.features <- linf.dominant.features(Z)
-table(dominant.features$label, useNA = "ifany")
-
-# Absorb-policy dCSTs: reassign low-support samples among retained states
-res <- linf.csts(Z, n0 = 4, low.freq.policy = "absorb")
-table(res$lineage.label, useNA = "ifany")
-```
+L-infinity normalization is neither unit-sum normalization nor a
+log-ratio transform. It leaves zeros intact. Interpret grouping with the
+chosen feature set, support thresholds, low-support policy and tie rule;
+deeper is not necessarily better. The [function guide
+source](vignettes/function-guide.Rmd) explains those choices and gives
+an executable workflow with stopping points.
 
 ## Gut Microbiome Demonstration
 
@@ -122,21 +121,24 @@ largest are *Bacteroides* (239 samples), *Escherichia-Shigella* (134),
 and *Staphylococcus* (102). In total, 159 samples from low-support
 provisional dominance sample sets are absorbed into retained states.
 
-See `vignette("linf-intro")` for a reproducible demonstration using the
-bundled data.
+See `vignette("linf-intro", package = "linf")` for a reproducible
+demonstration using the bundled data.
 
 ## Vignettes
 
-The package ships with four installed vignettes:
+The development package includes four installed vignettes. The first two
+links open maintained sources on GitHub; the commands open rendered
+installed guides. CRAN 0.3.0 contains the two longer workflows only:
 
 - [Finding your way around linf](vignettes/function-guide.Rmd) —
   task-oriented function catalog, matrix conventions, policies,
   landmarks and frozen-reference transfer. Open locally with
-  `vignette("function-guide")`.
+  `vignette("function-guide", package = "linf")`.
 - [Example datasets and reproducible
   workflows](vignettes/example-datasets.Rmd) — choose among the five
   bundled objects, align metadata, inspect edge cases and try a separate
-  reference/query example. Open with `vignette("example-datasets")`.
+  reference/query example. Open with
+  `vignette("example-datasets", package = "linf")`.
 - [Dominant Community State Types: From Normalization to a Gut
   Demonstration](https://pgajer.github.io/linf/articles/linf-intro.html)
   — normalization, dCST construction and descriptive exploration of the
