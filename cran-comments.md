@@ -36,8 +36,22 @@ Suggests and Enhances (checked 2026-09-14).
 
 ## Current platform checks
 
-Fresh GitHub Actions checks will run when these changes are pushed to main.
-Results below are historical and do not certify the new node representation.
+Checked implementation commit: f537826 (2026-09-15).
+
+* GitHub Actions: R 4.6.1 on Ubuntu, Windows and macOS; R 4.5.3 on Ubuntu;
+  R-devel 2026-09-14 r90539 on Ubuntu. All five report Status: OK, with
+  0 errors, 0 warnings, 0 NOTEs and 628 passing assertions.
+* These jobs use `--as-cran --no-manual`, with incoming checks disabled.
+  The full local check above additionally covers incoming checks and manuals.
+* The pkgdown workflow builds the website successfully. Its deployment step
+  is skipped on push; no website publication was performed.
+
+Workflow evidence:
+https://github.com/pgajer/linf/actions/runs/34992320125
+https://github.com/pgajer/linf/actions/runs/34992320081
+
+The following R-hub and Win-builder results are historical; those services
+have not checked the new node representation.
 
 ## Earlier platform checks (2026-09-15)
 
