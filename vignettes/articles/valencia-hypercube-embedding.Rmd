@@ -247,8 +247,8 @@ if (identical(Sys.getenv("LINF_RUN_GRIP"), "true")) {
   optimize <- getExportedValue("grip", "edge.kk")
   graph <- graphs[["Li"]]
   layout.result <- optimize(coords = embeddings[["Li"]], edges = graph$edges,
-                             n = nrow(X4), edge_weights = graph$weights, dim = 3L,
-                             max_iter = 20L, density_mix_schedule = 1, return_trace = FALSE,
+                             n = nrow(X4), edge.weights = graph$weights, dim = 3L,
+                             max.iter = 20L, density.mix.schedule = 1, return.trace = FALSE,
                              diagnostics = TRUE, seed = 1L)
   print(layout.result$metadata$stage_summaries)
   layout.coords <- as.matrix(layout.result$coords)
