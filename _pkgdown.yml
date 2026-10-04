@@ -46,7 +46,7 @@ reference:
   - title: "Prepare and assign"
     contents: [filter.asv, normalize.linf, linf.dominant.features]
   - title: "Fit and inspect"
-    contents: [linf.csts, linf.udcsts, refine.linf.csts, dcst.view, linf.landmarks,
+    contents: [linf.csts, linf.udcsts, linf.udcst.graph, refine.linf.csts, dcst.view, linf.landmarks,
                linf.dcst.landmark.pipeline, print.linf.csts, summary.linf.csts]
   - title: "Reuse and display"
     contents: [transfer.dcsts, linf.hypercube.embedding, linf.feature.labels]

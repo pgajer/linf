@@ -60,7 +60,6 @@ keys, or swipe within it, to read every column without breaking function or data
 | [Express abundance relative to each sample's largest feature](#a-small-workflow-with-stopping-points) | `normalize.linf()` | You need scaled profiles, without grouping samples. |
 | [Name the largest feature in each sample](#a-small-workflow-with-stopping-points) | `linf.dominant.features()` | You need individual assignments, without a support threshold. |
 | [Retain supported dominance groups](#what-a-dcst-hierarchy-stores) | `linf.csts()` | A depth-1 dCST partition answers your question. |
-| `linf.udcsts()` | Pool top-feature orders into unordered sets before applying support. | Nonnegative samples-by-features matrix and a level. | Pure set IDs and frequencies, assignments, and a sample mask; pure, absorb or filter policy. |
 | [Subdivide selected groups by remaining features](#refinement-choices) | `refine.linf.csts()` | The chosen depth is sufficient; deeper is not automatically better. |
 | [Inspect stored low-support policies or select representatives](#landmarks-are-selected-observations) | `dcst.view()`, `summary()`, `linf.landmarks()` | You need a descriptive summary of the fitted samples. |
 | [Assign new samples to an existing hierarchy](#transfer-to-a-frozen-reference) | `transfer.dcsts()` | You need frozen-reference assignments, without learning new states. |
@@ -112,7 +111,7 @@ continues to mean assigned samples; use `input.samples` for the full denominator
 On narrow screens, focus a table and scroll horizontally to read all columns.
 Function names remain intact for copying.
 
-This guide describes the 0.3.1 interface: **12 explicit function exports,
+This guide describes the 0.3.1 interface: **13 explicit function exports,
 two registered S3 methods, and five bundled datasets**. S3 methods are selected
 by R when you call `print()` or `summary()` on a fitted object. Neither method
 is also an explicit function export, so there is no overlap in these counts.
@@ -140,6 +139,8 @@ package = "linf")` for complete arguments and examples, for example
 | Function | Purpose | Expected input | Principal result |
 |---|---|---|---|
 | `linf.csts()` | Retain dominance sample sets with support at least `n0`. | Samples-by-features matrix, usually L-infinity normalized. | Class `linf.csts`, with active, pure and absorb hierarchies. |
+| `linf.udcsts()` | Pool top-feature orders into unordered sets before applying support. | Nonnegative samples-by-features matrix and a level. | Pure set IDs and frequencies, assignments, and a sample mask; pure, absorb or filter policy. |
+| `linf.udcst.graph()` | Construct pair-state graphs supported by observed triples. | Matrix or matching pure pair/triple fits; coverage or support selection. | Nodes, unit edges, full incidence, witness similarities, faces, sample membership and components. |
 | `refine.linf.csts()` | Add one hierarchy level within selected active leaf lineages. | Fitted object and its matrix in the original row/column order. | Updated `linf.csts`; previous levels and feature metadata retained. |
 | `dcst.view()` | Activate a stored policy without recomputing it. | Fitted object; `view = "pure"` or `"absorb"`. | Copy with active assignments switched and attached landmarks cleared. |
 | `linf.landmarks()` | Select observed samples by the lineage's leaf-feature value. | Fitted object, aligned matrix, depth and view. | `lineages` metadata and `landmarks` selection table, with row indices/names. |
@@ -516,3 +517,25 @@ in [Hmisc's documentation](https://hbiostat.org/r/hmisc/) and
 adapted to these few workflows. Maintainers can run `make audit-guides` to check
 the catalog against `NAMESPACE`, registered methods, help aliases and bundled
 data; vignette builds execute the examples independently.
+
+## Triple-supported pair-state graphs
+
+`linf.udcst.graph()` constructs pure level-two state graphs. Both endpoint pair
+configurations must occur within their common leading triple. Counts always use
+the full input sample set, including pair states excluded by the coverage rule.
+
+```{r triple-graph}
+G <- rbind(c(A=6, B=3, C=1), c(A=6, B=1, C=3), c(A=1, B=6, C=3))
+graph <- linf.udcst.graph(G, coverage=60, min.support=1)
+graph$nodes
+graph$edges[, c("pair.a", "pair.b", "triple", "min.support", "length")]
+graph$faces
+```
+
+Coverage retains tied frequency groups together, so actual coverage can exceed
+the target. `adjacency="shared_feature"` provides a comparison without requiring
+both observed configurations. Increasing `min.support` removes edges while
+preserving isolated vertices. Each edge has unit path length; support and
+Jaccard similarities are separate attributes. A filled face requires all three
+pairs within a single witness triple. The function does not embed or repair the
+graph; use an embedding package on within-component graph distances.

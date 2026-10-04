@@ -1,5 +1,8 @@
 # linf 0.3.1 (unreleased)
 
+* Add `linf.udcst.graph()` for observed-triple pair-state graphs, full-reference incidence and similarities, witnessed faces, and sample membership. Unit edge lengths and disconnected components are explicit.
+
+
 * Add `linf.udcsts()` for unordered top-feature sets with support filtering
   after pooling dominance orders. Pure, symmetric set-based absorb, and filter
   policies retain original memberships; dense and sparse inputs agree. The
