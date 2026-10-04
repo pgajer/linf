@@ -11,6 +11,8 @@
 #'     \code{\link{normalize.linf}} scales rows above tolerance.}
 #'   \item{Assign and fit}{\code{\link{linf.dominant.features}} identifies
 #'     individual maxima; \code{\link{linf.csts}} applies a support threshold.}
+#'   \item{Ignore dominance order}{\code{\link{linf.udcsts}} pools top-feature
+#'     sets before retaining, absorbing, or filtering low-support samples.}
 #'   \item{Refine and inspect}{\code{\link{refine.linf.csts}} adds a level;
 #'     \code{\link{dcst.view}} activates a stored policy. Use \code{print()}
 #'     and \code{summary()} on fitted objects and \code{\link{linf.landmarks}}

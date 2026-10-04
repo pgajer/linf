@@ -1,5 +1,13 @@
 # linf 0.3.1 (unreleased)
 
+* Add `linf.udcsts()` for unordered top-feature sets with support filtering
+  after pooling dominance orders. Pure, symmetric set-based absorb, and filter
+  policies retain original memberships; dense and sparse inputs agree. The
+  frequency table includes tied-size cumulative coverage.
+* Use dot-delimited names for the new udCST helpers and the remaining seven
+  underscore-delimited local variables in feature-label formatting. Existing
+  public function names, dataset names, and option values are unchanged.
+
 * Complete craftsmanship iteration 3: add task links and scoped, keyboard-
   scrollable guide tables; expose installed provenance, input manifests and
   measured resource-use notes.

@@ -43,6 +43,38 @@ not mean A was those samples’ original maximum. `M` alone is sufficient
 when you only need normalized profiles; it has row maximum one here and
 preserves zeros.
 
+## Unordered dominance sets (development version)
+
+Use `linf.udcsts()` when the identities of the top features matter but
+their order does not. Opposite orders pool before the minimum support is
+applied:
+
+``` r
+U <- rbind(c(A = 9, B = 5, C = 1), c(A = 8, B = 4, C = 1),
+           c(A = 4, B = 9, C = 1), c(A = 3, B = 8, C = 1),
+           c(A = 1, B = 3, C = 9))
+unordered <- linf.udcsts(U, level = 2, n0 = 3, low.freq.policy = "filter")
+unordered$frequency.table
+#>    ID freq cumm.pct
+#> 1 1,2    4       80
+#> 2 2,3    1      100
+U[unordered$keep, , drop = FALSE]
+#>      A B C
+#> [1,] 9 5 1
+#> [2,] 8 4 1
+#> [3,] 4 9 1
+#> [4,] 3 8 1
+```
+
+The four `{A, B}` rows remain; the one `{B, C}` row is excluded without
+reassignment. `ID` identifies a set by original column indices, `freq`
+is its pure frequency, and `cumm.pct` is the percentage of all input
+rows in states at least that frequent, including ties. Original
+memberships remain in `pure.id`. The alternative `"pure"` policy keeps
+rare rows flagged as such; `"absorb"` uses maximum combined retained-set
+abundance, a different rule from ordered parent-local dCST absorption.
+See `?linf.udcsts` for details.
+
 ## Installation
 
 The CRAN release is **0.3.0**; the source here is **0.3.1 in

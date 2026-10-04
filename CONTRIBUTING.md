@@ -12,6 +12,7 @@ preserve equivalence of dense and sparse paths, including tie behavior.
 | Filtering and normalization | `R/filter_asv.R`, `R/normalize.R` |
 | Dominant feature assignment and display metadata | `R/dominant_features.R`, `R/label_format.R` |
 | Depth-1 fits, refinement and validation | `R/fit.R`, `R/refine.R`, `R/validate_fit.R`, `R/fit_contracts.R` |
+| Unordered dominance sets and support filtering | `R/udcsts.R` |
 | Node identity and policy views | `R/lineage_nodes.R`, `R/policy_helpers.R`, `R/policy_views.R` |
 | Printed summaries | `R/csts_methods.R` |
 | Landmarks, frozen transfer, embedding | `R/landmarks.R`, `R/transfer_dcsts.R`, `R/hypercube_embedding.R` |

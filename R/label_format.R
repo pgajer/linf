@@ -59,24 +59,24 @@ linf.feature.labels <- function(feature.ids,
   tax <- as.character(taxonomy)
 
   base <- trimws(gsub("_+", " ", tax))
-  missing_tax <- is.na(base) | !nzchar(base)
+  missing.tax <- is.na(base) | !nzchar(base)
   if (isTRUE(fallback.to.id)) {
-    base[missing_tax] <- ids[missing_tax]
+    base[missing.tax] <- ids[missing.tax]
   }
 
   if (!is.null(aliases)) {
     if (is.null(names(aliases)) || any(!nzchar(names(aliases)))) {
       stop("linf.feature.labels: aliases must be a named character vector")
     }
-    alias_lookup <- aliases
-    original_tax <- as.character(taxonomy)
+    alias.lookup <- aliases
+    original.tax <- as.character(taxonomy)
     for (ii in seq_along(base)) {
-      key_orig <- original_tax[[ii]]
-      key_norm <- base[[ii]]
-      if (!is.na(key_orig) && key_orig %in% names(alias_lookup)) {
-        base[[ii]] <- alias_lookup[[key_orig]]
-      } else if (!is.na(key_norm) && key_norm %in% names(alias_lookup)) {
-        base[[ii]] <- alias_lookup[[key_norm]]
+      key.orig <- original.tax[[ii]]
+      key.norm <- base[[ii]]
+      if (!is.na(key.orig) && key.orig %in% names(alias.lookup)) {
+        base[[ii]] <- alias.lookup[[key.orig]]
+      } else if (!is.na(key.norm) && key.norm %in% names(alias.lookup)) {
+        base[[ii]] <- alias.lookup[[key.norm]]
       }
     }
   }
@@ -98,19 +98,19 @@ linf.feature.labels <- function(feature.ids,
 
   counts <- table(base)
   display <- base
-  duplicated_taxa <- names(counts[counts > 1L])
+  duplicated.taxa <- names(counts[counts > 1L])
 
-  if (length(duplicated_taxa)) {
+  if (length(duplicated.taxa)) {
     if (duplicate.index == "global") {
       extracted <- sub("^.*?(\\d+)$", "\\1", ids)
-      has_numeric_suffix <- grepl("\\d+$", ids)
-      extracted[!has_numeric_suffix] <- as.character(seq_along(ids))[!has_numeric_suffix]
-      for (taxon in duplicated_taxa) {
+      has.numeric.suffix <- grepl("\\d+$", ids)
+      extracted[!has.numeric.suffix] <- as.character(seq_along(ids))[!has.numeric.suffix]
+      for (taxon in duplicated.taxa) {
         idx <- which(base == taxon)
         display[idx] <- paste(base[idx], extracted[idx])
       }
     } else if (duplicate.index == "within_taxon") {
-      for (taxon in duplicated_taxa) {
+      for (taxon in duplicated.taxa) {
         idx <- which(base == taxon)
         display[idx] <- paste(base[idx], seq_along(idx))
       }

@@ -60,6 +60,7 @@ keys, or swipe within it, to read every column without breaking function or data
 | [Express abundance relative to each sample's largest feature](#a-small-workflow-with-stopping-points) | `normalize.linf()` | You need scaled profiles, without grouping samples. |
 | [Name the largest feature in each sample](#a-small-workflow-with-stopping-points) | `linf.dominant.features()` | You need individual assignments, without a support threshold. |
 | [Retain supported dominance groups](#what-a-dcst-hierarchy-stores) | `linf.csts()` | A depth-1 dCST partition answers your question. |
+| `linf.udcsts()` | Pool top-feature orders into unordered sets before applying support. | Nonnegative samples-by-features matrix and a level. | Pure set IDs and frequencies, assignments, and a sample mask; pure, absorb or filter policy. |
 | [Subdivide selected groups by remaining features](#refinement-choices) | `refine.linf.csts()` | The chosen depth is sufficient; deeper is not automatically better. |
 | [Inspect stored low-support policies or select representatives](#landmarks-are-selected-observations) | `dcst.view()`, `summary()`, `linf.landmarks()` | You need a descriptive summary of the fitted samples. |
 | [Assign new samples to an existing hierarchy](#transfer-to-a-frozen-reference) | `transfer.dcsts()` | You need frozen-reference assignments, without learning new states. |
@@ -111,7 +112,7 @@ continues to mean assigned samples; use `input.samples` for the full denominator
 On narrow screens, focus a table and scroll horizontally to read all columns.
 Function names remain intact for copying.
 
-This guide describes the 0.3.1 interface: **11 explicit function exports,
+This guide describes the 0.3.1 interface: **12 explicit function exports,
 two registered S3 methods, and five bundled datasets**. S3 methods are selected
 by R when you call `print()` or `summary()` on a fitted object. Neither method
 is also an explicit function export, so there is no overlap in these counts.
@@ -188,6 +189,45 @@ is omitted. Explicit `"dense"` and `"sparse"` choose a conversion path.
 Sparse output is numeric compressed-column storage. Embeddings always return
 dense coordinates. `filter.asv()` is a separate dense count-filtering interface;
 it does not accept a sparse `Matrix` object directly.
+
+### Unordered dominance sets
+
+`linf.udcsts()` groups rows by their highest-abundance feature sets, ignoring
+order. At level 1, its pure membership agrees with dominant-feature grouping.
+At level 2, `(A, B)` and `(B, A)` pool **before** applying `n0`. Calls at different
+levels are separate partitions, not necessarily a refinement hierarchy.
+
+```{r unordered-states}
+U <- rbind(c(A = 9, B = 5, C = 1), c(A = 8, B = 4, C = 1),
+           c(A = 4, B = 9, C = 1), c(A = 3, B = 8, C = 1),
+           c(A = 1, B = 3, C = 9))
+unordered <- linf.udcsts(U, level = 2, n0 = 3, low.freq.policy = "filter")
+unordered$frequency.table
+U[unordered$keep, , drop = FALSE]
+unordered$feature.labels[unordered$feature.sets[1, ]]
+```
+
+Four rows belong to the pure set `{A, B}` and remain; the single `{B, C}` row
+is filtered. `pure.id` always retains every row's original set. `ID` uses
+original column indices, `freq` counts rows before filtering, and `cumm.pct`
+is the percentage of **all input rows** in states with at least the current
+row's frequency. Equal-size states have equal cumulative percentages.
+
+The `"pure"` policy marks small states as rare while keeping their rows;
+`"filter"` excludes them through `keep` without reassignment. Both use missing
+active assignments for those rows and retain their original `pure.id`.
+`"absorb"` assigns a rare row to the retained set with greatest combined
+feature abundance. This set-based rule differs from ordered parent-local
+dCST absorption. Numerical tuple order resolves tied candidate scores.
+Absorption errors when no state survives; filtering may legitimately keep no
+rows. Subset all metadata with the same mask.
+
+This constructor always uses original-column ties, rejects all-zero rows,
+and reports `positive.features` so that sets containing zero-valued ranks can
+be identified. It accepts counts or proportions without normalization.
+The output is not a `linf.csts` hierarchy and is not an input for its refinement,
+landmark, policy-view or frozen-transfer functions. See `?linf.udcsts` for the
+full result fields and sparse-input behavior.
 
 ### Filtering, scaling and grouping answer different questions
 
