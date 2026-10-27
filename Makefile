@@ -84,3 +84,7 @@ audit-data:
 .PHONY: audit-corner-geometry
 audit-corner-geometry:
 	Rscript tools/audit-corner-geometry.R
+
+.PHONY: state-graphs-vignette
+state-graphs-vignette:
+	Rscript tools/audit-state-graphs.R

@@ -39,6 +39,10 @@ For the geometry behind this normalization, see the interactive vignette
 which derives the departure-angle formulas and tests them in full abundance space
 using this same bundled dataset.
 
+For unordered top-2/top-3 memberships, coverage, and the distinction between
+taxon graphs and pair-state graphs, see
+[From leading taxa to a 2-CST graph](https://pgajer.github.io/linf/articles/leading-taxa-state-graphs.html).
+
 ## The Valencia 2k dataset
 
 The `valencia2k` dataset is a stratified subsample of 2,000 vaginal samples from

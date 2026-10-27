@@ -21,6 +21,8 @@ navbar:
           href: articles/linf-intro.html
         - text: "Vaginal microbiome workflow"
           href: articles/linf-vaginal.html
+        - text: "From leading taxa to a 2-CST graph"
+          href: articles/leading-taxa-state-graphs.html
         - text: "Simplex corners and max normalization"
           href: articles/simplex-corner-geometry.html
         - text: "Interactive embedding (website only)"
@@ -42,6 +44,7 @@ articles:
     contents:
       - articles/valencia-hypercube-embedding
       - articles/simplex-corner-geometry
+      - articles/leading-taxa-state-graphs
 
 reference:
   - title: "Package overview"

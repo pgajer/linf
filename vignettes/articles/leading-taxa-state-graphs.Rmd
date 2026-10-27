@@ -1,0 +1,282 @@
+---
+title: "From leading taxa to a 2-CST graph"
+author: "Pawel Gajer"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse=TRUE,comment='#>',fig.width=8,fig.height=4.8,dpi=120)
+options(rgl.useNULL=TRUE)
+library(linf)
+stopifnot(requireNamespace('ivue',quietly=TRUE))
+label.set<-function(ids,fit) vapply(strsplit(ids,',',fixed=TRUE),function(j)
+  paste(fit$feature.labels[as.integer(j)],collapse=' + '),character(1))
+```
+
+<style>
+.figure {display:block;width:100%;max-width:100%}
+.figure > .caption {display:block;max-width:100%}
+.figure img {max-width:100%;height:auto}
+</style>
+
+## Start with the meaning of a state
+
+A **pure unordered top-2 state** groups observations with the same two leading
+features, regardless of which is first. Here “pure” means the original rank-based
+assignment, not that only two taxa are present. A pure top-3 state uses three
+leading features. Neither is a VALENCIA classifier label.
+
+The same memberships support two different graphs:
+
+| Graph | Vertex | Edge |
+|:--|:--|:--|
+| Taxon graph, as used for the VME feature display | A taxon | A selected pair state containing its two endpoint taxa |
+| Pair-state graph from `linf.udcst.graph()` | A pure pair state | Two overlapping pair states, optionally requiring observed support from their common leading triple |
+
+An edge's sample count in the first graph is not the same quantity as its
+support in the second. We will build both from inspectable synthetic rows,
+then repeat the counting on bundled vaginal microbiome data. These graphs
+summarize membership; they do not establish ecological interaction or temporal
+transitions.
+
+## Twelve observations you can inspect
+
+The four columns A–D stand for taxa. Entries are arbitrary nonnegative
+abundances; their scale within a row does not change the ranking. All rows
+have at least three positive entries.
+
+```{r toy-data}
+X<-rbind(c(6,3,1,0),c(3,6,1,0),c(7,2,1,0),c(2,7,1,0),c(6,3,0,1),
+         c(6,1,3,0),c(3,1,6,0),c(6,0,3,1),c(0,6,3,1),c(0,3,6,1),
+         c(6,1,0,3),c(1,0,6,3))
+colnames(X)<-LETTERS[1:4];rownames(X)<-paste0('s',seq_len(nrow(X)))
+pair<-linf.udcsts(X,level=2,n0=1,low.freq.policy='pure')
+triple<-linf.udcsts(X,level=3,n0=1,low.freq.policy='pure')
+knitr::kable(data.frame(Sample=rownames(X),X,
+  Pair=label.set(pair$pure.id,pair),Triple=label.set(triple$pure.id,triple)),row.names=FALSE)
+stopifnot(identical(pair$pure.id,linf.udcsts(normalize.linf(X),2,1,'pure')$pure.id))
+```
+
+For example, s1 and s2 have opposite dominance orders but belong to the same
+A + B pair state. Multiplying a row by a positive constant, including L1 or
+max normalization, leaves these rank-based memberships unchanged.
+
+Exact abundance ties use original column order. IDs such as `1,2` refer to
+column indices and must travel with their feature dictionary. A row with
+fewer than two or three positive features still receives a complete set,
+with zero-valued ranks resolved by that tie rule. Check `positive.features`
+before interpreting such a label as evidence that every named taxon is present.
+
+## Coverage selects whole states, not abundance within a sample
+
+Suppose we request 60% coverage. We order pure pair states by their number of
+observations, then retain complete frequency tiers until reaching at least
+60% of all input rows. Equal-frequency states are retained together, so the
+achieved coverage can overshoot the request.
+
+```{r coverage}
+g60<-linf.udcst.graph(X,coverage=60)
+ft<-pair$frequency.table
+knitr::kable(data.frame(State=label.set(ft$ID,pair),n=ft$freq,
+  Percent=100*ft$freq/nrow(X),Cumulative_tier_percent=ft$cumm.pct,
+  Selected=ft$ID %in% g60$nodes$ID),digits=2,row.names=FALSE)
+```
+
+A + B contains five observations and A + C contains three. Together they
+cover **8/12 = 66.67%**. This says nothing about whether A and B together
+account for 60% of s1's abundance. It also does not change any coordinates.
+
+```{r coverage-tiers, fig.cap="Coverage changes in whole frequency tiers. The 90% request retains both singleton states and reaches 100%."}
+requested<-c(40,60,80,90,100)
+coverage.table<-do.call(rbind,lapply(requested,function(q) {
+  g<-linf.udcst.graph(X,coverage=q)
+  data.frame(Request=q,Achieved=g$metadata$coverage,States=nrow(g$nodes))
+}))
+plot(coverage.table$Request,coverage.table$Achieved,type='b',pch=16,lwd=2,
+  xlim=c(35,100),ylim=c(35,100),col='#0072B2',xlab='Requested coverage (%)',
+  ylab='Achieved coverage (%)')
+abline(0,1,lty=2,col='gray55')
+knitr::kable(coverage.table,digits=2,row.names=FALSE)
+stopifnot(g60$metadata$selected.n==8L,all(coverage.table$Achieved>=requested))
+```
+
+## Filtering and absorption are additional decisions
+
+Coverage by itself selects states. It does not assign every remaining sample
+to them. `linf.udcsts()` offers three explicit rare-state policies at a
+minimum frequency `n0`: preserve pure membership and mark rare rows, filter
+those rows through a mask, or absorb them into retained sets.
+
+The following uses the frequency cutoff selected by the 60% request.
+Under **linf's unordered absorption rule**, a rare row is assigned to the
+retained pair with the largest sum of its feature abundances. Ties use the
+lexicographic order of numerical column-index tuples. This is not a
+nearest-neighbor rule and is not a reproduction of VME's multi-stage
+reference-based assignment procedure.
+
+```{r absorption}
+absorbed<-linf.udcsts(X,2,g60$metadata$n0,'absorb')
+filtered<-linf.udcsts(X,2,g60$metadata$n0,'filter')
+assignment.table<-data.frame(Sample=rownames(X),Pure=label.set(pair$pure.id,pair),
+  Assigned=label.set(absorbed$assignment,absorbed),Status=absorbed$status)
+knitr::kable(assignment.table,row.names=FALSE)
+stopifnot(sum(filtered$keep)==8L,all(absorbed$keep),
+  identical(absorbed$pure.id,pair$pure.id),sum(absorbed$status=='absorbed')==4L)
+```
+
+All twelve rows now have an active assignment, but **pure core coverage is
+still 66.67%**. For s9, the original leading pair is B + C and A is absent;
+its active assignment is nevertheless A + B because that retained pair wins
+the specified score. Keeping both columns prevents the merged label from
+being mistaken for the original leading pair. Neither operation modifies X.
+
+## A taxon graph and its vertex statistics
+
+For the VME-style representation, use taxa as vertices and selected pure
+pair states as edges. We draw the retained family on a circle to make the
+connectivity visible. This is a schematic, not an abundance embedding.
+
+```{r taxon-summary}
+taxon.stats<-function(fit,ids,assignment=fit$pure.id) {
+  sets<-fit$feature.sets[match(ids,fit$pure.id),,drop=FALSE]
+  taxa<-sort(unique(as.vector(sets)))
+  do.call(rbind,lapply(taxa,function(j) {
+    incident<-ids[rowSums(sets==j)>0]
+    members<-which(assignment %in% incident)
+    data.frame(Vertex=fit$feature.labels[j],Degree=length(incident),
+      n=length(unique(members)),Percent=100*length(unique(members))/length(assignment))
+  }))
+}
+vertex.table<-taxon.stats(pair,g60$nodes$ID)
+knitr::kable(vertex.table,digits=2,row.names=FALSE)
+stopifnot(vertex.table$n[vertex.table$Vertex=='A']==8L,
+          vertex.table$Degree[vertex.table$Vertex=='A']==2L)
+```
+
+A has degree two and an incident-state union of eight observations. B has
+five and C has three. A row can contribute to two endpoint vertices, so
+**vertex percentages need not sum to 100%**. The denominator remains all
+12 input observations. The table describes the selected graph as a whole;
+clicking a vertex would not redefine these quantities.
+
+For exclusive state assignments, incident-state counts can be summed without
+double counting within one vertex. Explicit row unions also work when future
+membership definitions overlap. Repeating the table with active absorbed
+assignments answers a different question and must be labeled accordingly.
+
+```{r toy-taxon-graph, echo=FALSE}
+sets<-pair$feature.sets[match(g60$nodes$ID,pair$pure.id),,drop=FALSE]
+taxa<-sort(unique(as.vector(sets))); a<-2*pi*seq_along(taxa)/length(taxa)
+xy<-cbind(cos(a),sin(a),0)
+edges<-matrix(match(sets,taxa),ncol=2)
+ivue::plot3D.plain(xy,col='#C94845',point.type='sphere',sphere.radius=.065,
+  axes=FALSE,xlab='',ylab='',zlab='',aspect='equal',height=410L,controls=FALSE,
+  camera=ivue::camera.zup(elevation=70,turn=0,zoom=.85),
+  layers=list(ivue::layer3D.edges(edges,col='#6C9AAF',width=2+4*g60$nodes$freq/max(g60$nodes$freq)),
+    ivue::layer3D.labels(seq_along(taxa),colnames(X)[taxa],offset=c(0,.18,0))),
+  description='Taxon graph at 60% requested coverage. Edges are A + B (5 observations) and A + C (3). Positions are schematic.')
+```
+
+## A pair-state graph needs different evidence
+
+Now each vertex is a pair state. Two vertices such as A + B and A + C share
+A; their unique common triple is A + B + C. Under `adjacency='observed_triple'`,
+an edge is admitted only if **both** pair configurations occur among rows
+whose pure top-3 set is that triple.
+
+Write $I(P,T)$ for the number of rows with pure pair P and pure triple T.
+With `min.support=1`, both $I(P,T)\geq1$ and $I(Q,T)\geq1$ are required.
+Merely sharing a feature is the weaker alternative `adjacency='shared_feature'`.
+
+```{r pair-graph}
+g.all<-linf.udcst.graph(X,coverage=100)
+candidate<-g.all$candidate.edges
+knitr::kable(data.frame(`Pair A`=label.set(candidate$pair.a,pair),
+  `Pair B`=label.set(candidate$pair.b,pair),Triple=label.set(candidate$triple,triple),
+  `Support A`=candidate$i.a,`Support B`=candidate$i.b,
+  Admitted=candidate$min.support>=1,check.names=FALSE),row.names=FALSE)
+```
+
+A + B and B + C share B, but the B + C observations have leading triple
+B + C + D, not A + B + C. That edge therefore fails the observed-triple rule.
+The full pair and triple frequencies remain the marginals even after graph
+selection; selecting vertices does not renormalize them.
+
+```{r pair-state-graph, echo=FALSE}
+a<-2*pi*seq_len(nrow(g.all$nodes))/nrow(g.all$nodes)
+xyz<-cbind(cos(a),sin(a),0)
+ivue::plot3D.plain(xyz,col='#0072B2',point.type='sphere',sphere.radius=.065,
+  axes=FALSE,xlab='',ylab='',zlab='',aspect='equal',height=430L,controls=FALSE,
+  camera=ivue::camera.zup(elevation=70,turn=0,zoom=.95),
+  layers=list(ivue::layer3D.edges(as.matrix(g.all$edges[,c('from','to')]),col='#6C9AAF',width=3),
+    ivue::layer3D.labels(seq_len(nrow(xyz)),g.all$nodes$label,offset=c(0,.18,0))),
+  description='Pair-state graph at 100% coverage with observed-triple support. Vertices are pair states, not taxa; isolates are retained.')
+```
+
+A witnessed triangular face requires all three pair configurations within
+one common triple. A triangle assembled from different witnesses is not such
+a face. This example has no witnessed faces. Edge `length` is one; support
+and Jaccard columns are evidence attributes, not distances to pass unchanged
+as path lengths. Neither graph proves a transition between communities.
+
+## The same bookkeeping on valencia2k
+
+We now use all 2,000 bundled observations and 178 taxon features. Each row
+counts once; these are observation frequencies, not participant frequencies
+or population prevalence. The data were stratified for teaching; see the
+[dataset guide](https://pgajer.github.io/linf/articles/example-datasets.html).
+
+```{r bundled}
+data(valencia2k,package='linf')
+P<-valencia2k$rel
+p2<-linf.udcsts(P,2,1,'pure');p3<-linf.udcsts(P,3,1,'pure')
+rows.with.zero.ranks<-sum(p3$positive.features<3)
+tied.second<-sum(apply(P,1,function(x) {v<-sort(x,decreasing=TRUE);v[2]==v[3]}))
+real.graphs<-lapply(c(60,80,90,100),function(q) linf.udcst.graph(pair.fit=p2,triple.fit=p3,coverage=q))
+summary.table<-do.call(rbind,lapply(real.graphs,function(g) data.frame(
+  Requested=g$metadata$requested.coverage,Achieved=g$metadata$coverage,
+  Pair_states=nrow(g$nodes),Supported_edges=nrow(g$edges),
+  Components=g$metadata$components,Isolates=g$metadata$isolates)))
+knitr::kable(summary.table,digits=2,row.names=FALSE)
+```
+
+There are **`r rows.with.zero.ranks` rows with fewer than three positive taxa**
+and **`r tied.second` ties across the second/third rank boundary**, including
+zero ties. We retain the package's documented deterministic assignments and
+report these counts rather than interpreting tie-broken ranks as certain.
+
+```{r bundled-vertices}
+g90<-real.graphs[[3]]
+vertices90<-taxon.stats(p2,g90$nodes$ID)
+vertices90<-vertices90[order(-vertices90$n,vertices90$Vertex),]
+knitr::kable(head(vertices90,12),digits=2,row.names=FALSE)
+stopifnot(sum(p2$frequency.table$freq)==nrow(P),sum(p3$frequency.table$freq)==nrow(P),
+  all(vapply(real.graphs,function(g) g$metadata$reference.n==nrow(P),logical(1))),
+  all(vertices90$n<=nrow(P)),nrow(g.all$faces)==0L)
+```
+
+This table describes **taxon vertices** in the selected pure pair-state
+family at 90% requested coverage. The preceding table's `Pair_states` and
+`Supported_edges` instead describe the pair-state graph. Using distinct
+column names helps keep these representations separate.
+
+## A practical reporting convention
+
+Report the input population and counting unit, pure versus active assignment,
+requested and achieved pure coverage, and which graph representation is shown.
+Retain pure pair and triple IDs alongside any absorbed label. For vertex
+unions, keep the denominator fixed and state whether assignments are pure or
+absorbed. Describe the tie rule and retain the feature dictionary.
+
+For VME datasets with reference-specific rank-3 or nearest-neighbor assignment
+stages, the dataset's own construction record is authoritative. The generic
+linf absorption example here must not be substituted silently for those rules.
+
+This website article needs linf and ivue/rgl. Run `make state-graphs-vignette`
+in the linf source checkout to render it and verify its counts. No private
+VME dataset is needed, and no fitting, merging, or classifier is invoked
+implicitly when the colors or drawing positions change.
