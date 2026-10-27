@@ -80,3 +80,7 @@ audit-embedding-article:
 .PHONY: audit-data
 audit-data:
 	Rscript tools/audit-data.R
+
+.PHONY: audit-corner-geometry
+audit-corner-geometry:
+	Rscript tools/audit-corner-geometry.R

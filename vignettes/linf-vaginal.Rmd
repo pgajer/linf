@@ -34,6 +34,11 @@ samples. It is a descriptive comparison, not held-out validation. See the
 Data Analysis using $L^\infty$-normalization with Applications to Vaginal
 Microbiome. arXiv:2503.21543.
 
+For the geometry behind this normalization, see the interactive vignette
+[Simplex corners and max normalization](https://pgajer.github.io/linf/articles/simplex-corner-geometry.html),
+which derives the departure-angle formulas and tests them in full abundance space
+using this same bundled dataset.
+
 ## The Valencia 2k dataset
 
 The `valencia2k` dataset is a stratified subsample of 2,000 vaginal samples from

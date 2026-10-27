@@ -1,0 +1,588 @@
+---
+title: "Why compositional arms crowd near a simplex corner"
+author: "Pawel Gajer"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    self_contained: true
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", fig.width = 8,
+                     fig.height = 4.5, dpi = 120)
+options(rgl.useNULL = TRUE)
+library(linf)
+if (!requireNamespace("ivue", quietly = TRUE) ||
+    !requireNamespace("rgl", quietly = TRUE)) {
+  stop("This interactive article requires ivue and rgl. See the reproduction section.")
+}
+angle.degrees <- function(cosine) acos(pmax(-1, pmin(1, cosine))) * 180 / pi
+unit.rows <- function(x) x / sqrt(rowSums(x * x))
+cols <- c(L1 = "#0072B2", Max = "#A23B8F")
+```
+
+<style>
+/* Give responsive WebGL scenes the article width, independent of caption length. */
+.figure { display: block; width: 100%; max-width: 100%; }
+.figure > .caption { display: block; max-width: 100%; }
+.figure img { max-width: 100%; height: auto; }
+</style>
+
+## The question: why do different arms approach the same corner?
+
+Samples dominated by one taxon can form several arms, distinguished by their
+secondary taxa. In an L1-normalized representation those arms can point in
+similar directions as they leave the dominant taxon's vertex. Max normalization
+can separate those directions. **This difference can exist in the original
+abundance space, before any dimension reduction.**
+
+We first derive the effect, then measure it using the bundled `valencia2k`
+vaginal microbiome data. The interactive views use `ivue`; the numerical tests
+use all taxon coordinates. A final section relates the example to a larger,
+previously measured VME dataset. No clustering or MDS fitting is needed here.
+
+The useful distinction is between **direction**, **distance from the corner**,
+and **what survives a three-dimensional display**. More widely separated
+directions do not automatically mean better biological groups.
+
+## Two normalizations of the same composition
+
+For a nonnegative abundance vector $x$ with positive total, define
+
+\[
+p=\frac{x}{\sum_j x_j},\qquad q=\frac{x}{\max_j x_j}
+  =\frac{p}{\max_j p_j}.
+\]
+
+The first lies on the ordinary simplex, $p_j\geq0$, $\sum_jp_j=1$.
+The second lies on $\{q\geq0:\max_jq_j=1\}$, the nonnegative part of the
+L-infinity unit sphere: a union of cube faces, rather than a single flat
+simplex. This is the surface called the *L-infinity simplex* in
+[Gajer and Ravel (2025)](https://doi.org/10.48550/arXiv.2503.21543).
+
+Both transformations preserve within-sample ratios, zero coordinates and
+abundance rankings. They discard overall abundance scale. For positive rows,
+$p=q/\sum_jq_j$ recovers the L1 composition. Their Euclidean geometries differ,
+even though they encode the same compositional information.
+
+Write Li for *Lactobacillus iners*, put its coordinate first, and let
+$e_{\mathrm{Li}}=(1,0,\ldots,0)$ denote pure Li. On the face where Li is a largest
+taxon, max normalization fixes $q_{\mathrm{Li}}=1$. The other coordinates are
+abundance ratios to Li; they are **not** whole-sample percentages.
+
+An all-zero row has no composition or dominant-taxon direction. A pure-Li row
+has no departure direction. Neither is assigned a zero angle in this article.
+
+## The simplest example: 60 degrees becomes 90 degrees
+
+Consider two mixtures, each with non-Li mass $t$, carried by different taxa:
+
+\[
+p_A=(1-t,t,0),\qquad p_B=(1-t,0,t),\qquad 0<t\leq\tfrac12.
+\]
+
+Their departures from pure Li are $t(-1,1,0)$ and $t(-1,0,1)$.
+The common decrease in Li contributes $t^2$ to their dot product, although
+none of the secondary abundance is shared. Each departure has length
+$t\sqrt2$, so $\cos\theta_1=1/2$ and $\theta_1=60^\circ$.
+
+Max normalization gives $q_A=(1,r,0)$ and $q_B=(1,0,r)$, with
+$r=t/(1-t)$. The departures $(0,r,0)$ and $(0,0,r)$ are orthogonal:
+$\theta_{\max}=90^\circ$.
+
+```{r ideal-arms}
+t <- seq(0, 0.5, length.out = 25)
+arm.L1 <- rbind(cbind(1-t, t, 0), cbind(1-t, 0, t))
+arm.max <- normalize.linf(arm.L1)
+arm.colors <- rep(c("#0072B2", "#D55E00"), each = length(t))
+arm.edges <- rbind(cbind(1:24, 2:25), cbind(26:49, 27:50))
+arm.view <- function(x, description, maximum = FALSE) {
+  boundary <- if (maximum) rbind(c(1,0,0),c(1,1,0),c(1,1,1),c(1,0,1)) else diag(3)
+  triangles <- if (maximum) rbind(c(51,52,53),c(51,53,54)) else matrix(51:53,1,3)
+  ivue::plot3D.plain(rbind(x,boundary), col = c(arm.colors,rep("#888888",nrow(boundary))), point.type = "sphere",
+    sphere.radius = 0.012, axes = FALSE,
+    xlab = "", ylab = "", zlab = "",
+    aspect = "equal", limits = cbind(rep(0, 3), rep(1, 3)),
+    camera = ivue::camera.zup(elevation = 20, turn = -125, zoom = 0.9),
+    layers = list(ivue::layer3D.mesh(triangles, alpha = 0.12, edge.alpha = 0.6),
+                  ivue::layer3D.edges(arm.edges, col = rep(c("#0072B2", "#D55E00"), each = 24), width = 3),
+                  ivue::layer3D.labels(50 + seq_len(nrow(boundary)),
+                    if (maximum) c("Pure Li", "Li = A", "Li = A = B", "Li = B")
+                    else c("Pure Li", "Pure A", "Pure B"),
+                    offset = c(0, 0.04, 0.04))),
+    height = 430L, description = description)
+}
+```
+
+### L1: both arms lose Li as they leave the vertex
+
+```{r ideal-l1, echo=FALSE}
+arm.view(arm.L1, "Two exact L1-normalized arms meet at pure Li at 60 degrees.")
+```
+
+### Max: Li remains one, leaving perpendicular directions
+
+```{r ideal-max, echo=FALSE}
+arm.view(arm.max, "The same mixtures after max normalization meet at 90 degrees.", maximum = TRUE)
+```
+
+Rotate each view or use its rotation and reset buttons. These are **exact
+three-coordinate examples**, with equal axis scales and identical coordinate
+limits. The pale surfaces show the L1 simplex and the Li-maximal cube face;
+gray points mark their corners. In the max-normalized view, equality labels
+mean that the named coordinates are all one and unnamed coordinates are zero.
+No embedding or fitted projection is involved. The blue and orange
+points represent the same mixtures in both views. The arms continue to share
+pure Li; normalization does not create a gap there.
+
+## More secondary taxa: deriving the corner effect
+
+Let $p=(1-s,u)$ and $p'=(1-s,v)$. Suppose $u$ and $v$ each spread mass $s$
+equally among $k$ taxa, and their supports are disjoint. Then
+
+\[
+a=p-e_{\mathrm{Li}}=(-s,u),\qquad b=p'-e_{\mathrm{Li}}=(-s,v),
+\]
+\[
+a^\mathsf Tb=s^2,\qquad
+\|a\|_2^2=\|b\|_2^2=s^2+k(s/k)^2=s^2(1+1/k),
+\]
+\[
+\boxed{\cos\theta_1=\frac{k}{k+1}.}
+\]
+
+The non-Li totals may differ between the samples: their scale factors still
+cancel from the angle. If Li is maximal in both, the max-normalized departures
+have zero Li coordinate and disjoint remaining support, so their angle is
+still $90^\circ$. Li maximal is essential for this last statement; in the
+equal-secondary example it requires $1-s\geq s/k$.
+
+As secondary mass is spread more evenly across more taxa, the common loss of
+Li dominates the L1 direction. Increasing the number of columns by adding
+zeros does **not** change either pair angle.
+
+```{r ideal-curve, fig.cap="Exact angles for disjoint equal-secondary mixtures. k counts equally abundant secondary taxa per sample, not the number of columns in the dataset."}
+k <- 1:100
+plot(k, angle.degrees(k/(k+1)), type = "l", log = "x", ylim = c(0, 95),
+     lwd = 3, col = cols["L1"], xlab = "Secondary taxa per mixture (k)",
+     ylab = "Euclidean departure angle (degrees)")
+abline(h = 90, col = cols["Max"], lwd = 3, lty = 2)
+legend("bottomleft", c("L1", "Max (Li maximal)"), col = cols, lty = c(1,2), lwd = 3, bty = "n")
+knitr::kable(data.frame(k = c(1,2,5,10,100),
+  L1_degrees = round(angle.degrees(c(1,2,5,10,100)/(c(1,2,5,10,100)+1)),2),
+  Max_degrees = 90))
+```
+
+## Real mixtures: effective diversity and overlapping taxa
+
+For a nonpure composition let $s=\sum_{j\ne{\mathrm{Li}}}p_j$ and
+$w_j=p_j/s$ for the non-Li taxa. These fractions sum to one. Define
+
+\[
+K=\frac{1}{\sum_jw_j^2}.
+\]
+
+This inverse-Simpson effective number equals $k$ for $k$ equally abundant
+secondary taxa. Fractions $(0.7,0.1,0.1,0.1)$ have $K=1/0.52\approx1.92$,
+although four taxa are present. Tiny abundances contribute little to $K$.
+
+For two samples define the non-Li cosine overlap
+$c=w_a^\mathsf Tw_b/(\|w_a\|_2\|w_b\|_2)$. It lies between zero
+(disjoint support) and one (identical secondary proportions). The exact identities are
+
+\[
+\cos\theta_1=
+\frac{1+c/\sqrt{K_aK_b}}{\sqrt{(1+1/K_a)(1+1/K_b)}},
+\qquad \cos\theta_{\max}=c\quad\text{if Li is maximal in both.}
+\]
+
+To obtain the first identity, write the departures as $s_a(-1,w_a)$ and
+$s_b(-1,w_b)$, cancel $s_as_b$, and substitute
+$\|w_a\|_2^2=1/K_a$ and
+$w_a^\mathsf Tw_b=c/\sqrt{K_aK_b}$.
+Max normalization removes the shared decreasing-Li coordinate. It does not
+remove overlap among secondary taxa. If the two secondary compositions are
+identical, both departure angles are zero.
+
+With $m$ non-Li coordinates, the symmetry axis of the L1 corner is
+$h=(-1,1/m,\ldots,1/m)$. The angle $\alpha$ of a departure to this axis obeys
+
+\[
+\cos\alpha=\sqrt{\frac{1+1/m}{1+1/K}}.
+\]
+
+This follows from $(-1,w)^\mathsf Th=1+1/m$ and
+$\|h\|_2^2=1+1/m$. It connects effective secondary diversity to closeness
+to the axis. It is a geometric identity, not an independent biological
+correlation. Adding zero columns changes the nominal symmetry axis, even
+though it leaves pair angles unchanged.
+
+## A reproducible vaginal microbiome calculation
+
+We use `valencia2k`: 2,000 observations and 178 taxon features, already included
+in `linf`. Its source is the VALENCIA training collection
+([France et al., 2020](https://doi.org/10.1186/s40168-020-00934-6)).
+The subset was stratified by supplied sub-CST labels; it is a teaching dataset,
+not an independent classifier validation or population-prevalence sample.
+See the [dataset guide](https://pgajer.github.io/linf/articles/example-datasets.html) for provenance.
+
+We keep all taxon coordinates, select nonpure Li-maximal observations (ties
+allowed), and describe each by its most abundant non-Li taxon. These are
+**original leading-pair groups, not VALENCIA labels or merged VME groups**.
+For tied secondary maxima, the first column supplies a reproducible display
+label; we report how many such ties occur. Every retained observation has
+unit weight. Repeated observations are not independent participants.
+
+```{r measured-data}
+data(valencia2k, package = "linf")
+P0 <- valencia2k$rel
+stopifnot(all(is.finite(P0)), all(P0 >= 0), all(rowSums(P0) > 0))
+P0 <- P0 / rowSums(P0)
+li <- match("Lactobacillus_iners", colnames(P0))
+stopifnot(!is.na(li))
+secondary.mass <- rowSums(P0[, -li, drop = FALSE])
+keep <- P0[, li] >= apply(P0, 1, max) & secondary.mass > 0
+P <- P0[keep, , drop = FALSE]
+s <- secondary.mass[keep] # Sum remaining coordinates to avoid subtractive cancellation.
+W <- P[, -li, drop = FALSE] / s
+K <- 1 / rowSums(W * W)
+partner <- colnames(W)[max.col(W, ties.method = "first")]
+secondary.ties <- rowSums(W == apply(W, 1, max)) > 1
+sizes <- sort(table(partner), decreasing = TRUE)
+major <- names(sizes)[seq_len(min(6, length(sizes)))]
+selected <- which(partner %in% major)
+knitr::kable(data.frame(Measure = c("Input observations", "Li-maximal, nonpure",
+  "Tied secondary maxima", "Observations in six largest groups"),
+  n = c(nrow(P0), nrow(P), sum(secondary.ties), length(selected))))
+knitr::kable(data.frame(Partner = major, n = as.integer(sizes[major]),
+  Median_effective_secondary_taxa = round(vapply(major,
+    function(g) median(K[partner == g]), numeric(1)), 2)), row.names = FALSE,
+  col.names = c("Secondary taxon", "Observations", "Median effective non-Li taxa"))
+```
+
+Among all `r nrow(P)` nonpure Li-maximal observations, the median effective
+number of non-Li taxa is **`r round(median(K),2)`**, with the middle half between
+`r round(quantile(K,0.25),2)` and `r round(quantile(K,0.75),2)`.
+There are `r sum(duplicated(P))` exactly repeated abundance profiles in this
+subset. Its 177 possible secondary coordinates should not be confused with
+177 effectively represented taxa per sample.
+
+```{r effective-diversity, fig.cap="Effective secondary diversity and the corresponding full-space angle to the L1 corner axis. Each point/ECDF observation is one retained observation; the right-hand relationship follows exactly from the formula."}
+m <- ncol(W)
+alpha <- angle.degrees(sqrt((1 + 1/m)/(1 + 1/K)))
+par(mfrow = c(1,2))
+plot(ecdf(K), xlab = "Effective non-Li taxa (K)", ylab = "Fraction at or below K",
+     main = "Secondary diversity", col = cols["L1"], do.points = FALSE)
+plot(K, alpha, pch = 16, cex = 0.5, col = cols["L1"],
+     xlab = "Effective non-Li taxa (K)", ylab = "Angle to corner axis (degrees)")
+par(mfrow = c(1,1))
+```
+
+### Paired angle comparison, without a 3D embedding
+
+We enumerate **every cross-group observation pair** among the six largest
+groups. Each pair has equal weight in the pooled comparison. Large group
+pairs therefore contribute more than small ones; the per-group-pair table
+below exposes that weighting. Angles are computed from direct dot products
+and checked against the identities, using the same pairs in both normalizations.
+
+```{r measured-angles}
+# Column order here is Li, then all other features. Using -s is stable near pure Li.
+D1 <- cbind(-s, P[, -li, drop = FALSE])
+Q <- normalize.linf(P)
+Dm <- cbind(Q[, li] - 1, Q[, -li, drop = FALSE])
+U1 <- unit.rows(D1)
+Um <- unit.rows(Dm)
+pairs <- t(combn(selected, 2))
+pairs <- pairs[partner[pairs[,1]] != partner[pairs[,2]], , drop = FALSE]
+a <- pairs[,1]; b <- pairs[,2]
+# Matrix products avoid allocating a pairs-by-taxa working array.
+cos1 <- tcrossprod(U1)[pairs]
+cosm <- tcrossprod(Um)[pairs]
+overlap <- tcrossprod(unit.rows(W))[pairs]
+predicted <- (1 + overlap / sqrt(K[a]*K[b])) /
+             sqrt((1 + 1/K[a])*(1 + 1/K[b]))
+stopifnot(max(abs(cos1 - predicted)) < 1e-12,
+          max(abs(cosm - overlap)) < 1e-12)
+angles <- data.frame(L1 = angle.degrees(cos1), Max = angle.degrees(cosm))
+# Canonicalize labels independently of observation row order.
+pair.group <- vapply(seq_along(a), function(i)
+  paste(sort(c(partner[a[i]], partner[b[i]])), collapse = " / "), character(1))
+pair.summary <- do.call(rbind, lapply(split(seq_along(a), pair.group), function(ii)
+  data.frame(n = length(ii), L1 = median(angles$L1[ii]), Max = median(angles$Max[ii]))))
+knitr::kable(pair.summary, digits = 2,
+             col.names = c("Pairs", "Median L1 angle", "Median max angle"))
+```
+
+Across `r format(nrow(angles), big.mark=',')` pairs, the medians are
+**`r round(median(angles$L1),2)` degrees for L1** and
+**`r round(median(angles$Max),2)` degrees for max normalization**.
+The median paired change is `r round(median(angles$Max - angles$L1),2)` degrees;
+this is not generally the difference of the two marginal medians.
+`r round(100*mean(angles$Max > angles$L1 + 1e-8),2)`% of these pairs have a
+larger max-normalized angle. This is a descriptive measurement, not a test
+based on independent biological replicates.
+
+```{r angle-distribution, fig.cap="Full 178-coordinate Euclidean angles at pure Li for the identical cross-group pairs. The curves describe observation-pair variation, not confidence intervals."}
+plot(ecdf(angles$L1), xlim = c(0,100), col = cols["L1"], lwd = 2,
+     do.points = FALSE, main = "Directions from pure Li",
+     xlab = "Departure angle (degrees)", ylab = "Fraction of pairs at or below angle")
+lines(ecdf(angles$Max), col = cols["Max"], lwd = 2, do.points = FALSE)
+legend("topleft", c("L1", "Max"), col = cols, lwd = 2, bty = "n")
+```
+
+### Two real samples in an exact three-dimensional view
+
+For two samples, all four departure vectors lie in the span of the Li axis
+and their two secondary-composition vectors. That span has at most three
+dimensions. We can therefore illustrate the paired normalization change
+**exactly**, without an embedding approximation.
+
+The example below deterministically chooses the cross-group pair closest to
+the two pooled median angles, after scaling each deviation by its interquartile
+range. It is an illustrative pair, not an additional independent result.
+Directions are unit length to isolate angles; their radii in abundance space
+are considered later.
+
+```{r exact-observed-pair}
+representative <- which.min(((angles$L1-median(angles$L1))/IQR(angles$L1))^2 +
+                           ((angles$Max-median(angles$Max))/IQR(angles$Max))^2)
+ia <- a[representative]; ib <- b[representative]
+span <- rbind(c(1, rep(0,ncol(W))), c(0,W[ia,]), c(0,W[ib,]))
+exact.basis <- qr.Q(qr(t(span)))
+four <- rbind(U1[ia,], U1[ib,], Um[ia,], Um[ib,])
+exact.coords <- rbind(0, four %*% exact.basis)
+stopifnot(max(abs(tcrossprod(four) - tcrossprod(exact.coords[-1,]))) < 1e-12)
+exact.groups <- factor(c("Origin", "L1", "L1", "Max", "Max"),
+                       levels = c("Origin", "L1", "Max"))
+exact.scale <- ivue::color.scale.groups(exact.groups,
+  colors = c(Origin = "#222222", cols))
+knitr::kable(data.frame(Sample = c("A","B"),
+  Bundled_ID = valencia2k$cst$sample_id[which(keep)[c(ia,ib)]],
+  Secondary_taxon = partner[c(ia,ib)], Li_fraction = P[c(ia,ib),li],
+  Effective_secondary_taxa = K[c(ia,ib)]), digits = 3, row.names = FALSE,
+  col.names = c("Sample", "Bundled ID", "Secondary taxon", "Li fraction", "Effective non-Li taxa"))
+```
+
+This pair has an L1 departure angle of **`r round(angles$L1[representative],2)`°**
+and a max-normalized departure angle of **`r round(angles$Max[representative],2)`°**.
+Blue rays are L1 departures; purple rays are max-normalized departures.
+A and B identify the same two observations under both normalizations.
+The plotted orthonormal basis preserves all lengths and angles between these
+four unit directions. The view uses arbitrary basis coordinates, not three
+selected taxa.
+
+```{r exact-observed-widget, echo=FALSE}
+ivue::plot3D.groups(exact.coords, exact.groups, scale = exact.scale,
+  point.type = "sphere", sphere.radius = 0.018, legend.title = "Normalization",
+  legend.width = 150, axes = FALSE, aspect = "equal", height = 470L,
+  camera = ivue::camera.zup(elevation = 20, turn = -125, zoom = 0.7),
+  layers = list(ivue::layer3D.edges(cbind(rep(1,4),2:5),
+                   col = rep(unname(cols), each=2), width=4),
+                ivue::layer3D.labels(1:5, c("Pure Li", "A: L1", "B: L1", "A: max", "B: max"),
+                   offset = c(0,0,0.06))),
+  description = "An exact orthonormal representation of four unit departures for the same two real observations; blue L1 rays and purple max-normalized rays.")
+```
+
+### A broader 3D view, with measurable projection error
+
+Here every departure is first divided by its Euclidean length, so radius
+cannot dominate the illustration. We use **one shared linear projection**
+for both normalizations: the three leading right singular vectors of the
+combined unit-direction matrix, without centering. Pure Li remains the origin.
+This is a display of directions, not abundance positions, not MDS, and not
+a call to `linf.hypercube.embedding()`.
+
+Color identifies the secondary taxon and is identical in both widgets. The
+mathematical reference origin is black. The tables and angle curves above use
+all 178 coordinates; **angles read off these projected widgets are approximate**.
+The reported retained squared length and angular errors quantify that limitation.
+
+```{r direction-projections}
+A <- U1[selected, , drop = FALSE]
+B <- Um[selected, , drop = FALSE]
+basis <- svd(rbind(A, B), nu = 0, nv = 3)$v
+ZA <- A %*% basis; ZB <- B %*% basis
+rownames(ZA) <- rownames(ZB) <- NULL
+# The same retained projection for both sets, with no post-projection rescaling.
+projection.check <- function(Z, U) {
+  ix <- match(a, selected); iy <- match(b, selected)
+  pair.index <- cbind(ix, iy)
+  projected <- angle.degrees(tcrossprod(unit.rows(Z))[pair.index])
+  original <- angle.degrees(tcrossprod(U)[pair.index])
+  c(Retained_squared_length_percent = 100*sum(Z*Z)/sum(U*U),
+    Median_absolute_angle_error_degrees = median(abs(projected-original)),
+    P95_absolute_angle_error_degrees = unname(quantile(abs(projected-original),0.95)))
+}
+knitr::kable(rbind(L1 = projection.check(ZA, A), Max = projection.check(ZB, B)), digits = 2,
+  col.names = c("Squared length retained (%)", "Median angle error (degrees)", "95th percentile error (degrees)"))
+palette <- setNames(c("#0072B2", "#D55E00", "#009E73", "#CC79A7", "#E69F00", "#56B4E9"), major)
+groups <- factor(c("Pure Li origin", partner[selected]), levels = c("Pure Li origin", major))
+scale <- ivue::color.scale.groups(groups, colors = c("Pure Li origin" = "#222222", palette))
+lims <- t(apply(rbind(0, ZA, ZB), 2, range))
+lims[,1] <- lims[,1] - 0.08; lims[,2] <- lims[,2] + 0.08
+direction.view <- function(Z, description) {
+  ivue::plot3D.groups(rbind(c(0,0,0), Z), groups, scale = scale,
+    point.size = 5, alpha = 0.8, legend.title = "Secondary taxon",
+    legend.width = 210, height = 470L,
+    axes = TRUE, xlab = "Shared projection 1", ylab = "Shared projection 2", zlab = "Shared projection 3",
+    aspect = "equal", limits = lims,
+    camera = ivue::camera.zup(elevation = 20, turn = -125, zoom = 0.7),
+    layers = list(ivue::layer3D.labels(1, "Pure Li origin", offset = c(0,0,0.06))),
+    description = description)
+}
+```
+
+In this shared projection, the median absolute angular error is
+**`r round(projection.check(ZA,A)[2],1)`° for L1** and
+**`r round(projection.check(ZB,B)[2],1)`° for max normalization**.
+In particular, the max-normalized view retains only
+`r round(projection.check(ZB,B)[1],1)`% of the squared directional length.
+These errors are substantial: use the clouds to explore group overlap, not
+to measure the opening angles. The exact two-sample view and full-space
+calculations above avoid this projection limitation.
+
+#### L1-normalized departure directions
+
+```{r observed-l1, echo=FALSE}
+direction.view(ZA, "Common three-dimensional projection of L1 unit departures from pure Li.")
+```
+
+#### Max-normalized departure directions
+
+```{r observed-max, echo=FALSE}
+direction.view(ZB, "The same projection and observations after max normalization, colored by the same secondary taxa.")
+```
+
+The projection is an aid to exploration, not the evidence for the angle result.
+Six orthogonal directions cannot all remain orthogonal in three dimensions.
+An MDS fit has the same dimensional obstacle, although its objective and errors
+would differ from this linear projection. This is why normalization geometry
+belongs here, while MDS fidelity is a separate question for `grip`.
+
+## Separation in direction is not distance from pure Li
+
+For a Li-maximal profile with non-Li mass $s$ and effective number $K$,
+
+\[
+r_1=s\sqrt{1+1/K},\qquad
+r_{\max}=\frac{s}{(1-s)\sqrt K},\qquad
+\frac{r_{\max}}{r_1}=\frac{1}{(1-s)\sqrt{K+1}}.
+\]
+
+Both radii tend to zero as $s\to0$, even when directions differ greatly.
+Max normalization can actually shorten the distance to the vertex. For the
+simple two-arm example at the same $t$, the distance *between* arms instead
+increases by the factor $1/(1-t)$: it is about 1.11 at 90% Li and 1.67 at 60% Li.
+These are different comparisons.
+
+```{r radial-check, fig.cap="Distances to pure Li for observations with at least 90% Li. Each observation is paired across normalizations. Larger angular separation need not mean a larger radius."}
+r1 <- sqrt(rowSums(D1*D1)); rm <- sqrt(rowSums(Dm*Dm))
+stopifnot(max(abs(r1 - s*sqrt(1+1/K))) < 1e-12,
+          max(abs(rm - s/(P[,li]*sqrt(K)))) < 1e-12)
+near <- P[,li] >= 0.9
+plot(r1[near], rm[near], pch = 16, cex = 0.7, col = "#555555",
+     xlab = "L1 distance to pure Li", ylab = "Max-normalized distance to pure Li")
+abline(0, 1, col = "#999999", lty = 2)
+knitr::kable(data.frame(Subset = "Li at least 90%, nonpure", n = sum(near),
+  Median_L1_radius = median(r1[near]), Median_max_radius = median(rm[near])), digits = 4)
+```
+
+These distances are dimensionless, in their respective normalized coordinates.
+An embedding may further alter their apparent size.
+
+## Relation to the earlier VME calculation
+
+The motivating observation came from the comb-V3V4-tx VME population: 24,465
+records, with the six Li-incident merged groups at 60% largest-2-CST coverage.
+The October 26, 2026 calculation used the full 1,159-taxon abundance space.
+The selected union contained 14,040 records representing 13,987 distinct
+compositions. One pure-Li composition, representing 42 records, had undefined
+departure angle and was excluded from angular summaries.
+
+| Subset of that six-group union | Distinct nonpure compositions | Median L1 angle | Median max angle |
+|:--|--:|--:|--:|
+| All | 13,986 | 47.21° | 89.16° |
+| Li maximal (ties allowed) | 8,497 | 43.99° | 88.64° |
+| Li at least 90% | 2,752 | 42.73° | 88.62° |
+
+Each row used 10,000 unique composition pairs sampled without replacement
+within each of 15 group pairs (seed 20261026), giving 150,000 comparisons and
+equal weight to each group pair. The groups were Li with *L. crispatus*,
+*G. vaginalis*, *L. jensenii*, *L. mulieris*, *L. gasseri*, and *L. reuteri*.
+Merged membership need not identify the leading pair in every sample.
+
+In the Li-maximal subset, median effective non-Li diversity was 2.98
+(interquartile range 1.75–5.61); median angle to the L1 symmetry axis was 30.03°.
+Weighting group comparisons by the number of possible pairs gave medians
+42.26° and 88.44°. The angular difference therefore did not depend on
+weighting every group pair equally. The non-Li cosine overlap had median
+0.0238, so disjoint-support geometry was informative without being exact.
+
+**These are preserved results from a separate, restricted-data analysis.**
+They are not recomputed by this vignette, and the underlying VME records are
+not included in `linf`. The analysis script, input checksums and saved outputs
+remain with that research dataset. The bundled calculation above is a fully
+executable illustration of the same diagnostics, with different observations,
+taxa, group definitions and weighting; it is not a numerical reproduction or
+independent biological validation of the VME result. Neither analysis provides
+participant-level uncertainty estimates or changes the source assignments.
+
+## When max normalization is useful—and what it does not establish
+
+Within a dominant-taxon face, max normalization holds the dominant coordinate
+fixed and exposes variation in the ratios of secondary taxa to it. That is
+useful when the question concerns different directions away from a dominant
+community. It handles zero coordinates without adding pseudocounts.
+
+The choice still depends on the question. Whole-sample percentages remain
+most directly read from L1 compositions. Max-normalized coordinates need to
+be relabeled as ratios, and changing the dominant taxon moves a point between
+cube faces. The map is continuous for positive rows but has a change of
+formula at dominance ties. Small secondary masses can have unstable estimated
+directions under measurement noise, even when the geometric formulas are exact.
+
+Normalization and distance are separate choices. This vignette measures
+**Euclidean inner-product angles** under both normalizations. The L-infinity
+distance $\|q-q'\|_\infty=\max_j|q_j-q'_j|$ has no canonical inner-product
+angle. A max-normalized L-infinity-distance MDS plot would add a distance
+choice and a fitted approximation; its screen angles cannot substitute for
+the calculations above.
+
+Angular separation does not prove ecological independence, temporal
+transitions, cluster validity, or that max normalization is universally
+preferable. It explains a specific and measurable geometric consequence of
+the sum constraint.
+
+## Reproduce or adapt this example
+
+This interactive vignette is a website article, following `linf`'s existing
+separation between lightweight installed guides and optional interactive
+exploration. It needs `linf`, `ivue`, `rgl`, `knitr`, and `rmarkdown`. Install
+`ivue` using the instructions in its
+[repository](https://github.com/pgajer/ivue). In a clone of `linf`, render with:
+
+```{r render-command, eval=FALSE}
+rmarkdown::render("vignettes/articles/simplex-corner-geometry.Rmd")
+```
+
+For a source-checkout audit, `make audit-corner-geometry` renders a preview
+under `build/corner-geometry/` and verifies the geometric identities, exact
+two-sample representation and paired comparisons. This check runs on demand.
+
+The numerical example uses bundled data, enumerates all compared pairs, and
+has no random fitting step. To adapt it to another nonnegative abundance
+matrix, replace `P0`, choose the reference column, and state the sampling unit,
+dominance rule, group definitions, tie handling and pair weighting. Start by
+checking the identities in the full space before fitting any low-dimensional
+view. For a large collection, sample pairs with a recorded seed instead of
+constructing all pairwise matrices.
+
+```{r runtime}
+data.frame(Package = c("linf", "ivue", "rgl"),
+           Version = vapply(c("linf", "ivue", "rgl"),
+                            function(p) as.character(utils::packageVersion(p)), character(1)))
+R.version.string
+```
