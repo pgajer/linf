@@ -112,7 +112,7 @@ arm.view <- function(x, description, maximum = FALSE) {
                     if (maximum) c("Pure Li", "Li = A", "Li = A = B", "Li = B")
                     else c("Pure Li", "Pure A", "Pure B"),
                     offset = c(0, 0.04, 0.04))),
-    height = 430L, description = description)
+    height = 430L, controls = FALSE, description = description)
 }
 ```
 
@@ -128,7 +128,7 @@ arm.view(arm.L1, "Two exact L1-normalized arms meet at pure Li at 60 degrees.")
 arm.view(arm.max, "The same mixtures after max normalization meet at 90 degrees.", maximum = TRUE)
 ```
 
-Rotate each view or use its rotation and reset buttons. These are **exact
+Drag with the mouse to rotate each view; scroll to zoom. These are **exact
 three-coordinate examples**, with equal axis scales and identical coordinate
 limits. The pale surfaces show the L1 simplex and the Li-maximal cube face;
 gray points mark their corners. In the max-normalized view, equality labels
@@ -377,7 +377,7 @@ selected taxa.
 ```{r exact-observed-widget, echo=FALSE}
 ivue::plot3D.groups(exact.coords, exact.groups, scale = exact.scale,
   point.type = "sphere", sphere.radius = 0.018, legend.title = "Normalization",
-  legend.width = 150, axes = FALSE, aspect = "equal", height = 470L,
+  legend.width = 150, axes = FALSE, aspect = "equal", height = 470L, controls = FALSE,
   camera = ivue::camera.zup(elevation = 20, turn = -125, zoom = 0.7),
   layers = list(ivue::layer3D.edges(cbind(rep(1,4),2:5),
                    col = rep(unname(cols), each=2), width=4),
@@ -426,7 +426,7 @@ lims[,1] <- lims[,1] - 0.08; lims[,2] <- lims[,2] + 0.08
 direction.view <- function(Z, description) {
   ivue::plot3D.groups(rbind(c(0,0,0), Z), groups, scale = scale,
     point.size = 5, alpha = 0.8, legend.title = "Secondary taxon",
-    legend.width = 210, height = 470L,
+    legend.width = 210, height = 470L, controls = FALSE,
     axes = TRUE, xlab = "Shared projection 1", ylab = "Shared projection 2", zlab = "Shared projection 3",
     aspect = "equal", limits = lims,
     camera = ivue::camera.zup(elevation = 20, turn = -125, zoom = 0.7),
