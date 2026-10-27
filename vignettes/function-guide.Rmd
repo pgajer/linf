@@ -26,6 +26,12 @@ vignette: >
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 library(linf)
+article_url <- function(name) {
+  prefix <- if (identical(Sys.getenv("IN_PKGDOWN"), "true")) "" else
+    if (isTRUE(getOption("linf.local.preview"))) "../articles/" else
+      "https://pgajer.github.io/linf/articles/"
+  paste0(prefix, name, ".html")
+}
 # Keep table rendering separate from the runnable analysis code.
 knitr::opts_chunk$set(render = function(x, options) {
   rendered <- knitr::knit_print(x, options = options)
@@ -66,6 +72,19 @@ keys, or swipe within it, to read every column without breaking function or data
 | [Prepare coordinate charts or readable names](#embeddings-and-display-labels) | `linf.hypercube.embedding()`, `linf.feature.labels()` | You need a representation for display or further analysis. |
 
 </div>
+
+## Explore geometry and state graphs
+
+These interactive website articles complement the function-oriented workflow:
+
+| Your question | Worked example |
+|---|---|
+| Why do compositional arms crowd near a dominant-feature corner? | [Simplex corners and max normalization](`r article_url("simplex-corner-geometry")`): exact geometry, original-space angles, and the effect of normalization. |
+| What do pure top-2/top-3 states, coverage and graph membership mean? | [From leading taxa to a 2-CST graph](`r article_url("leading-taxa-state-graphs")`): counts, retained groups, reassignment and graph interpretation. |
+
+The unordered leading-feature sets in the state-graph article are distinct
+from the ordered dCST hierarchy below. Neither grouping nor a 3D display by
+itself establishes biological or clinical meaning.
 
 ## A small workflow, with stopping points
 
