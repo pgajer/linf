@@ -425,7 +425,8 @@ lims <- t(apply(rbind(0, ZA, ZB), 2, range))
 lims[,1] <- lims[,1] - 0.08; lims[,2] <- lims[,2] + 0.08
 direction.view <- function(Z, description) {
   ivue::plot3D.groups(rbind(c(0,0,0), Z), groups, scale = scale,
-    point.size = 5, alpha = 0.8, legend.title = "Secondary taxon",
+    point.type = "sphere", sphere.radius = 0.015, alpha = 1,
+    legend.title = "Secondary taxon",
     legend.width = 210, height = 470L, controls = FALSE,
     axes = TRUE, xlab = "Shared projection 1", ylab = "Shared projection 2", zlab = "Shared projection 3",
     aspect = "equal", limits = lims,
