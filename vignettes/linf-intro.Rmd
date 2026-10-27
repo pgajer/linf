@@ -316,3 +316,17 @@ remaining features. The support threshold, refinement selection, low-support
 policy and tie handling determine the stored hierarchy. Its descriptive
 patterns apply to this selected dataset; they do not establish population
 associations or clinical utility.
+
+
+## Choose the next step
+
+| Your next question | Guide |
+|:--|:--|
+| Why do compositional arms crowd near a simplex corner? | [Simplex corners and max normalization](https://pgajer.github.io/linf/articles/simplex-corner-geometry.html) |
+| How do pure top-2/top-3 states, coverage and graph membership relate? | [From leading taxa to a 2-CST graph](https://pgajer.github.io/linf/articles/leading-taxa-state-graphs.html) |
+| How much of the chosen distance geometry survives a 3D fit? | [Embedding fidelity in grip](https://pgajer.github.io/grip/articles/embedding-fidelity.html) |
+
+These interactive website articles complement the quick-start workflow above.
+The state-graph article explains unordered leading-feature sets, which are
+separate from the ordered dCST hierarchy constructed here. Their optional
+visualization dependencies are not required for this introductory vignette.
