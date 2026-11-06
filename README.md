@@ -43,7 +43,7 @@ not mean A was those samples’ original maximum. `M` alone is sufficient
 when you only need normalized profiles; it has row maximum one here and
 preserves zeros.
 
-## Unordered dominance sets (development version)
+## Unordered dominance sets
 
 Use `linf.udcsts()` when the identities of the top features matter but
 their order does not. Opposite orders pool before the minimum support is
@@ -84,22 +84,16 @@ separate display attributes. Disconnected components are preserved. See
 
 ## Installation
 
-The CRAN release is **0.3.0**; the source here is **0.3.1 in
-development**. The first example works with either. The two new
-navigation/dataset guides and the latest identity corrections are
-available in the development version.
+Install the released package from CRAN:
 
 ``` r
-# Released package (two installed workflows)
 install.packages("linf")
-
-# Development package (four installed vignettes)
-# install.packages("devtools")
-devtools::install_github("pgajer/linf", build_vignettes = TRUE)
 ```
 
-After installing the development package, read the rendered guides
-locally:
+The unordered-set and pair-state graph functions require **linf 0.4.0 or
+later**. Check your installed version with `packageVersion("linf")`.
+Version 0.4.0 includes four installed vignettes; open the function and
+dataset guides with:
 
 ``` r
 help("linf", package = "linf")
@@ -108,8 +102,8 @@ vignette("example-datasets", package = "linf")
 ```
 
 The [published website](https://pgajer.github.io/linf/) is updated
-separately and may lag the development source. Use installed help for
-the version you run.
+separately and may lag the package source. Use installed help for the
+version you run.
 
 ## Choose the next step
 
@@ -165,9 +159,9 @@ demonstration using the bundled data.
 
 ## Vignettes
 
-The development package includes four installed vignettes. The first two
-links open maintained sources on GitHub; the commands open rendered
-installed guides. CRAN 0.3.0 contains the two longer workflows only:
+Version 0.4.0 includes four installed vignettes. The first two links
+open maintained sources on GitHub; the commands open rendered installed
+guides:
 
 - [Finding your way around linf](vignettes/function-guide.Rmd) —
   task-oriented function catalog, matrix conventions, policies,

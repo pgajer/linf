@@ -19,6 +19,18 @@ knitr::opts_chunk$set(
   fig.height = 5
 )
 library(linf)
+article_link <- function(name, title) {
+  if (identical(Sys.getenv("IN_PKGDOWN"), "true")) {
+    url <- paste0(name, ".html")
+  } else if (isTRUE(getOption("linf.local.preview"))) {
+    url <- paste0("../articles/", name, ".html")
+  } else {
+    url <- paste0("https://github.com/pgajer/linf/blob/main/vignettes/articles/",
+                  name, ".Rmd")
+    title <- paste0(title, " (article source)")
+  }
+  sprintf("[%s](%s)", title, url)
+}
 ```
 
 The `linf` package implements L-infinity normalization and Dominant Community
@@ -322,11 +334,11 @@ associations or clinical utility.
 
 | Your next question | Guide |
 |:--|:--|
-| Why do compositional arms crowd near a simplex corner? | [Simplex corners and max normalization](https://pgajer.github.io/linf/articles/simplex-corner-geometry.html) |
-| How do pure top-2/top-3 states, coverage and graph membership relate? | [From leading taxa to a 2-CST graph](https://pgajer.github.io/linf/articles/leading-taxa-state-graphs.html) |
+| Why do compositional arms crowd near a simplex corner? | `r article_link("simplex-corner-geometry", "Simplex corners and max normalization")` |
+| How do pure top-2/top-3 states, coverage and graph membership relate? | `r article_link("leading-taxa-state-graphs", "From leading taxa to a 2-CST graph")` |
 | How much of the chosen distance geometry survives a 3D fit? | [Embedding fidelity in grip](https://pgajer.github.io/grip/articles/embedding-fidelity.html) |
 
-These interactive website articles complement the quick-start workflow above.
+These companion articles complement the quick-start workflow above.
 The state-graph article explains unordered leading-feature sets, which are
 separate from the ordered dCST hierarchy constructed here. Their optional
 visualization dependencies are not required for this introductory vignette.

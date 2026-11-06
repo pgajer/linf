@@ -566,12 +566,15 @@ exploration. It needs `linf`, `ivue`, `rgl`, `knitr`, and `rmarkdown`. Install
 [repository](https://github.com/pgajer/ivue). In a clone of `linf`, render with:
 
 ```{r render-command, eval=FALSE}
-rmarkdown::render("vignettes/articles/simplex-corner-geometry.Rmd")
+source("tools/qa-paths.R")
+rmarkdown::render("vignettes/articles/simplex-corner-geometry.Rmd",
+                  output_dir = qa_dir("articles", "corner-geometry"))
 ```
 
 For a source-checkout audit, `make audit-corner-geometry` renders a preview
-under `build/corner-geometry/` and verifies the geometric identities, exact
-two-sample representation and paired comparisons. This check runs on demand.
+under `articles/corner-geometry/` in the configured QA directory and verifies
+the geometric identities, exact two-sample representation and paired comparisons.
+This check runs on demand.
 
 The numerical example uses bundled data, enumerates all compared pairs, and
 has no random fitting step. To adapt it to another nonnegative abundance

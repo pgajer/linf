@@ -1,98 +1,81 @@
-# linf 0.3.1 (unreleased)
+# linf 0.4.0
 
-* Add `linf.udcst.graph()` for observed-triple pair-state graphs, full-reference incidence and similarities, witnessed faces, and sample membership. Unit edge lengths and disconnected components are explicit.
+## New functionality
 
+* Add `linf.udcsts()` for unordered top-feature sets. Opposite dominance orders
+  pool before support filtering. Pure, symmetric set-based absorption, and
+  filtering policies preserve original memberships; dense and sparse inputs
+  agree. Frequency tables report cumulative coverage including frequency ties.
+* Add `linf.udcst.graph()` for pair-state graphs supported by observed leading
+  triples, with full-reference incidence counts, similarities, witnessed faces
+  and sample membership. Edges have unit length; disconnected components and
+  isolated states are preserved.
+* Frozen transfer now returns lineage-ID matrices, a feature-match table and
+  per-query stopping and tie diagnostics alongside its existing label matrices.
+* Fitted objects record per-depth settings and refinement selections. Earlier
+  settings that were not saved are marked unavailable when older fits are used.
 
-* Add `linf.udcsts()` for unordered top-feature sets with support filtering
-  after pooling dominance orders. Pure, symmetric set-based absorb, and filter
-  policies retain original memberships; dense and sparse inputs agree. The
-  frequency table includes tied-size cumulative coverage.
-* Use dot-delimited names for the new udCST helpers and the remaining seven
-  underscore-delimited local variables in feature-label formatting. Existing
-  public function names, dataset names, and option values are unchanged.
+## Correctness and compatibility
 
-* Complete craftsmanship iteration 3: add task links and scoped, keyboard-
-  scrollable guide tables; expose installed provenance, input manifests and
-  measured resource-use notes.
-* Pin the public VALENCIA preparation recipe and verify the complete 2,000-row
-  sampling map. `valencia2k$cst` adds `source_row`; existing IDs, ordering,
-  abundances and read totals are unchanged. Merged assets now record generator
-  versions and refresh older tied assignments (2 at depth 2; 10 at depth 3).
-* Organize fitting, refinement, validation and presentation in focused source
-  files without changing public interfaces. Transfer prepares candidate indices
-  once and counts observed pairs; landmarks assemble rows once. Complete
-  benchmark results remain identical to the previous implementation.
-* Update the optional embedding example to the supported `grip::edge.kk()` API
-  and retain optimizer diagnostics. The optimizer remains opt-in.
-
-
-- Matrix consumers validate fitted dimensions and, for new fits, original
-  input dimnames independently of custom feature IDs. Named axis reorderings
-  fail explicitly; unnamed axes and legacy fits retain positional matching.
-  Transfer rejects duplicate, missing or empty keys in the selected matching
-  vector while allowing repeated display labels when matching by stable IDs.
-- Hypercube calculations avoid overflowing reference ratios and preserve small
-  positive radii. Automatic scaling includes extreme norms; a new optional
-  `log.lambda` argument and result attribute allow reuse of scales beyond the
-  ordinary numeric range. The `lambda` attribute is NA for those scales.
-  Inputs with fewer than two features receive a direct error.
-- Transfer adds lineage-ID matrices, a feature-match table and per-query
-  stopping/tie diagnostics while preserving the original label matrices.
-  Fitted objects record per-depth settings and selection history; earlier
-  unsaved history is marked unavailable when legacy fits are refined.
-- The website embedding article shows native component coordinates first,
-  preserves all seven CST categories in hover text without symbol warnings,
-  includes a static preview, and fixes its optional graph to use the union of
-  nearest-neighbor relations including cutoff ties. Connectivity is reported;
-  grip optimization is an explicitly enabled, separate experiment.
-- The gut tutorial compares support thresholds under both policies on the
-  same filtered samples. Replace the unsupported primer-cross-reactivity
-  attribution with a cited discussion of AGP sample handling and the limits
-  of attributing causes from this bundled subset.
-
-- Fitted hierarchies now store explicit node paths independently of displayed
-  lineage strings. Literal separator-containing feature IDs and refined paths
-  remain distinct, including real features sharing the rare-category name.
-  Only colliding readable IDs/labels gain a node suffix. Unambiguous older fits
-  upgrade on use; ambiguous legacy fits require rebuilding from their matrix.
-  Synthetic parents remain terminal within their own stored policy view.
-- Count filtering validates data and scalar thresholds, handles zero-total rows
-  under relative prevalence, and preserves fields and indices in empty results.
+* Preserve stable feature identity independently of displayed lineage paths
+  during fitting, refinement, transfer and landmark lookup. Feature IDs and
+  labels containing `__`, suffix collisions, and real features sharing a rare
+  category's label remain distinct. Only colliding readable lineage names gain
+  a node suffix. Unambiguous older fits upgrade on use; ambiguous legacy fits
+  must be rebuilt from their input matrix. Synthetic rare parents remain
+  terminal in their stored policy view.
+* Validate matrix dimensions and, for new fits, original input dimnames
+  independently of custom feature IDs. Named axis reorderings fail explicitly;
+  unnamed axes and legacy fits retain positional matching.
+* Correct frozen transfer when stable feature IDs differ from display labels,
+  including reordered query columns and refined hierarchies. Unnamed queries
+  use the same synthetic IDs as fitting. Reject duplicate, missing or empty
+  matching keys while allowing repeated display labels when matching by ID.
+* Return `NA` when no realized child has positive query abundance. Transfer
+  no longer invents an unretained depth-1 state; `carry.forward.terminal.depths`
+  does not permit assignments outside the fitted hierarchy.
+* Make dense and sparse absorption agree on positive ties, including seeded
+  random ties. With no positive retained value, the fallback remains the state
+  with greatest reference support.
+* Stabilize hypercube calculations for extreme finite values and small positive
+  radii. The optional trailing `log.lambda` argument and returned attribute
+  allow reuse of scales outside the ordinary numeric range; `lambda` is `NA`
+  for those scales. Inputs with fewer than two features fail explicitly.
+* Validate count-filtering data and scalar thresholds, handle zero-total rows
+  under relative prevalence, and preserve fields and indices in empty results.
   Fractional nonnegative count-like values remain supported.
-- Hierarchy summaries include input, assigned, unassigned and rare sample counts.
-  Undefined size statistics are NA without warnings; total.samples retains its
-  historical assigned-sample meaning. Printing bounds the group listing and
-  explains empty and all-rare fits.
-- Package help is visible in the installed topic index, and the guide audit can
-  verify a built installation with --library=<path>. Remove the broken website
-  PDF link and distinguish released from development documentation.
-- The README computes and explains a first result near the opening. The function
-  guide presents its small workflow earlier; the gut tutorial uses readable
-  taxon labels and unclipped count annotations, retaining its pure policy.
+* Report input, assigned, unassigned and rare sample counts in summaries.
+  Undefined size statistics are `NA` without warnings; `total.samples` retains
+  its historical assigned-sample meaning. Printing bounds the group listing
+  and explains empty and all-rare fits.
+* Reject invalid feature-metadata lengths and non-finite normalization
+  tolerances. Sparse preparation avoids deprecated triangular-matrix coercion.
 
-- Landmark lookup now preserves complete feature IDs containing the lineage
-  separator, including suffix collisions, refined and terminal lineages, and
-  custom rare labels. It reads the target from explicit node metadata.
-- Add installed task-oriented function and example-dataset guides, with
-  executable workflows, catalog coverage checks and package-help navigation.
-  Clarify normalization exceptions, fitting versus transfer, landmark scale,
-  and the limits of comparisons using bundled source-training data.
-- Frozen transfer now correctly matches stable feature IDs that differ from
-  display labels, including reordered columns and refined hierarchies.
-  Unnamed query matrices use the same synthetic IDs as hierarchy fitting.
-- Transfer returns `NA` when no realized child has positive feature abundance;
-  it no longer invents an unretained depth-1 state. The existing
-  `carry.forward.terminal.depths` argument cannot enable an out-of-tree fallback.
-- Dense and sparse absorption use the same original-column ordering for
-  positive ties, including seeded random ties. With no positive retained value,
-  the fallback remains the state with greatest reference support.
-- Invalid feature-metadata lengths and non-finite normalization tolerances are
-  rejected explicitly. Normalization documentation now distinguishes unscaled
-  small rows, exact-zero rows, and downstream absorption.
-- Refinement and transfer use explicit fitted feature paths,
-  so taxonomy IDs or display labels containing `__` are not split apart.
-- Sparse matrix preparation avoids deprecated direct triangular-to-general
-  coercion. The DESCRIPTION citation now includes authors and year.
+## Documentation, data and efficiency
+
+* Add installed function and example-dataset guides with executable workflows,
+  package-help navigation and keyboard-accessible tables. Clarify fitting
+  versus frozen transfer, observed landmarks versus averaged profiles,
+  normalization exceptions, and the limits of source-training-data comparisons.
+* Expand the tutorials and companion articles on simplex-corner geometry,
+  unordered states and graph interpretation. Installed guides link to available
+  article sources; website builds link to rendered articles.
+* Document the gut example's stratified sampling and limits on population
+  inference. Compare support thresholds under both policies on the same input
+  samples and cite AGP sample-handling evidence without attributing causes that
+  cannot be established from the bundled subset.
+* Pin the VALENCIA preparation recipe and install data provenance and checksums.
+  Add `valencia2k$cst$source_row`; existing IDs, ordering, abundances and read
+  totals are unchanged. Saved merged assignments record generator versions and
+  correct tied choices affecting two depth-2 and ten depth-3 assignments across
+  ten source rows. Their summaries are regenerated from those assignments.
+* Reduce repeated work in transfer and landmark construction. All 36 complete
+  benchmark results match the preceding implementation; measured timings and
+  whole-process memory use are documented with their workload limits.
+* The embedding article includes native coordinates, a static preview and
+  connectivity information. Its optional nearest-neighbor graph includes cutoff
+  ties, and its opt-in optimizer example uses the current `grip::edge.kk()` API
+  while retaining optimizer diagnostics.
 
 # linf 0.3.0
 

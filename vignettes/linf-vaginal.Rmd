@@ -10,6 +10,18 @@ vignette: >
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(collapse = TRUE, comment = "#>", fig.width = 7, fig.height = 5)
 library(linf)
+article_link <- function(name, title) {
+  if (identical(Sys.getenv("IN_PKGDOWN"), "true")) {
+    url <- paste0(name, ".html")
+  } else if (isTRUE(getOption("linf.local.preview"))) {
+    url <- paste0("../articles/", name, ".html")
+  } else {
+    url <- paste0("https://github.com/pgajer/linf/blob/main/vignettes/articles/",
+                  name, ".Rmd")
+    title <- paste0(title, " (article source)")
+  }
+  sprintf("[%s](%s)", title, url)
+}
 ```
 
 ## Introduction
@@ -34,14 +46,14 @@ samples. It is a descriptive comparison, not held-out validation. See the
 Data Analysis using $L^\infty$-normalization with Applications to Vaginal
 Microbiome. arXiv:2503.21543.
 
-For the geometry behind this normalization, see the interactive vignette
-[Simplex corners and max normalization](https://pgajer.github.io/linf/articles/simplex-corner-geometry.html),
+For the geometry behind this normalization, see the companion article
+`r article_link("simplex-corner-geometry", "Simplex corners and max normalization")`,
 which derives the departure-angle formulas and tests them in full abundance space
 using this same bundled dataset.
 
 For unordered top-2/top-3 memberships, coverage, and the distinction between
 taxon graphs and pair-state graphs, see
-[From leading taxa to a 2-CST graph](https://pgajer.github.io/linf/articles/leading-taxa-state-graphs.html).
+`r article_link("leading-taxa-state-graphs", "From leading taxa to a 2-CST graph")`.
 
 ## The Valencia 2k dataset
 

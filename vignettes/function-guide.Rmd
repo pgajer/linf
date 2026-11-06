@@ -26,11 +26,17 @@ vignette: >
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 library(linf)
-article_url <- function(name) {
-  prefix <- if (identical(Sys.getenv("IN_PKGDOWN"), "true")) "" else
-    if (isTRUE(getOption("linf.local.preview"))) "../articles/" else
-      "https://pgajer.github.io/linf/articles/"
-  paste0(prefix, name, ".html")
+article_link <- function(name, title) {
+  if (identical(Sys.getenv("IN_PKGDOWN"), "true")) {
+    url <- paste0(name, ".html")
+  } else if (isTRUE(getOption("linf.local.preview"))) {
+    url <- paste0("../articles/", name, ".html")
+  } else {
+    url <- paste0("https://github.com/pgajer/linf/blob/main/vignettes/articles/",
+                  name, ".Rmd")
+    title <- paste0(title, " (article source)")
+  }
+  sprintf("[%s](%s)", title, url)
 }
 # Keep table rendering separate from the runnable analysis code.
 knitr::opts_chunk$set(render = function(x, options) {
@@ -79,8 +85,8 @@ These interactive website articles complement the function-oriented workflow:
 
 | Your question | Worked example |
 |---|---|
-| Why do compositional arms crowd near a dominant-feature corner? | [Simplex corners and max normalization](`r article_url("simplex-corner-geometry")`): exact geometry, original-space angles, and the effect of normalization. |
-| What do pure top-2/top-3 states, coverage and graph membership mean? | [From leading taxa to a 2-CST graph](`r article_url("leading-taxa-state-graphs")`): counts, retained groups, reassignment and graph interpretation. |
+| Why do compositional arms crowd near a dominant-feature corner? | `r article_link("simplex-corner-geometry", "Simplex corners and max normalization")`: exact geometry, original-space angles, and the effect of normalization. |
+| What do pure top-2/top-3 states, coverage and graph membership mean? | `r article_link("leading-taxa-state-graphs", "From leading taxa to a 2-CST graph")`: counts, retained groups, reassignment and graph interpretation. |
 
 The unordered leading-feature sets in the state-graph article are distinct
 from the ordered dCST hierarchy below. Neither grouping nor a 3D display by
@@ -130,7 +136,7 @@ continues to mean assigned samples; use `input.samples` for the full denominator
 On narrow screens, focus a table and scroll horizontally to read all columns.
 Function names remain intact for copying.
 
-This guide describes the 0.3.1 interface: **13 explicit function exports,
+This guide describes the 0.4.0 interface: **13 explicit function exports,
 two registered S3 methods, and five bundled datasets**. S3 methods are selected
 by R when you call `print()` or `summary()` on a fitted object. Neither method
 is also an explicit function export, so there is no overlap in these counts.
