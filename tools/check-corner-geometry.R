@@ -1,4 +1,4 @@
-# Run on demand from the package root: make audit-corner-geometry
+# Run on demand from the package root: make check-corner-geometry
 # Optional IVUE_SOURCE loads an authoritative local checkout instead of installed ivue.
 options(rgl.useNULL = TRUE)
 pkgload::load_all('.', quiet = TRUE)

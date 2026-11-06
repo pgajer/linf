@@ -1,4 +1,4 @@
-# Run from the package root: make audit-guides
+# Run from the package root: make check-guides
 # Check maintained catalogs, source definitions and installed help coverage.
 ns <- readLines("NAMESPACE", warn = FALSE)
 exports <- sub("^export[(](.*)[)]$", "\\1", grep("^export[(]", ns, value = TRUE))

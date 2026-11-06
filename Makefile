@@ -13,7 +13,7 @@ CHECKDIR := $(QA_DIR)/checks
 TARBALL := $(BUILDDIR)/$(PKGNAME)_$(VERSION).tar.gz
 LOGDIR := $(QA_DIR)/logs
 
-.PHONY: qa-path audit-installed-guides site audit-site
+.PHONY: qa-path check-installed-guides site check-site
 clean:
 	rm -rf "$(CHECKDIR)/$(PKGNAME).Rcheck"
 	rm -f "$(TARBALL)"
@@ -34,7 +34,7 @@ document: attrs
 
 build: repo-hygiene clean document
 	@mkdir -p "$(LOGDIR)" "$(BUILDDIR)"
-	@Rscript tools/audit-guides.R
+	@Rscript tools/check-guides.R
 	@echo "Building package..."
 	@cd "$(BUILDDIR)" && R CMD build "$(CURDIR)" > "$(LOGDIR)/$(PKGNAME)_build.log" 2>&1
 	@echo "Package built successfully (log: $(LOGDIR)/$(PKGNAME)_build.log)"
@@ -80,37 +80,37 @@ winbuilder-oldrelease: build
 repo-hygiene:
 	python3 tools/check-no-manuscripts.py
 
-.PHONY: readme audit-guides vignette-previews
+.PHONY: readme check-guides vignette-previews
 readme:
 	Rscript tools/render-readme.R
 
-audit-guides:
-	Rscript tools/audit-guides.R
+check-guides:
+	Rscript tools/check-guides.R
 
-audit-installed-guides:
-	Rscript tools/audit-guides.R --library="$(CHECKDIR)/$(PKGNAME).Rcheck"
+check-installed-guides:
+	Rscript tools/check-guides.R --library="$(CHECKDIR)/$(PKGNAME).Rcheck"
 
 site:
 	Rscript tools/build-site.R
 
-audit-site:
-	python3 tools/audit-guide-html.py "$(QA_DIR)/site/articles"
+check-site:
+	python3 tools/check-guide-html.py "$(QA_DIR)/site/articles"
 
-vignette-previews: audit-guides
+vignette-previews: check-guides
 	Rscript tools/render-vignette-previews.R
 
-.PHONY: audit-embedding-article
-audit-embedding-article:
-	Rscript tools/audit-embedding-article.R
+.PHONY: check-embedding-article
+check-embedding-article:
+	Rscript tools/check-embedding-article.R
 
-.PHONY: audit-data
-audit-data:
-	Rscript tools/audit-data.R
+.PHONY: check-data
+check-data:
+	Rscript tools/check-data.R
 
-.PHONY: audit-corner-geometry
-audit-corner-geometry:
-	Rscript tools/audit-corner-geometry.R
+.PHONY: check-corner-geometry
+check-corner-geometry:
+	Rscript tools/check-corner-geometry.R
 
 .PHONY: state-graphs-vignette
 state-graphs-vignette:
-	Rscript tools/audit-state-graphs.R
+	Rscript tools/check-state-graphs.R

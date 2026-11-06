@@ -4,7 +4,8 @@ Run these commands from the repository root. Use R >= 4.0 (the sampling
 algorithm used here is R's post-3.6 default), Python 3, and the package's
 normal build dependencies. Reproduction was verified with R-devel
 2026-06-24 r90190 and linf 0.3.1 on macOS arm64 on 15 September 2026.
-No private input paths are needed for the VALENCIA recipe.
+No private input paths are needed for the VALENCIA recipe. Generated files
+go under the QA directory printed by `make qa-path`.
 
 ## VALENCIA: public CSVs to prepared matrices
 
@@ -15,8 +16,9 @@ inputs byte for byte. [The installed manifest](../inst/DATA_MANIFEST.csv)
 records URLs, SHA-256 and MD5 checksums for source and prepared files.
 
 ```sh
-python3 data-raw/fetch_valencia.py build/valencia-raw
-Rscript data-raw/prepare_valencia.R build/valencia-raw build/valencia-prepared
+linf_data_work="$(make -s qa-path)/data-rebuild"
+python3 data-raw/fetch_valencia.py "$linf_data_work/valencia-raw"
+Rscript data-raw/prepare_valencia.R "$linf_data_work/valencia-raw" "$linf_data_work/valencia-prepared"
 ```
 
 The preparation keeps samples with at least 3,000 reads, retains taxa observed
@@ -33,9 +35,10 @@ Serialized RDS bytes can differ with R or compression-library versions.
 Build in a separate output directory, then compare before replacing data:
 
 ```sh
-LINF_VALENCIA_ROOT=build/valencia-prepared LINF_DATA_OUTPUT=build/rebuilt-data \
+linf_data_work="$(make -s qa-path)/data-rebuild"
+LINF_VALENCIA_ROOT="$linf_data_work/valencia-prepared" LINF_DATA_OUTPUT="$linf_data_work/rebuilt-data" \
   Rscript -e 'for (f in c("build_valencia2k.R", "build_valencia_linf_hypercube_1k.R", "build_valencia13k_merged_dcst_depths.R")) sys.source(file.path("data-raw", f), new.env())'
-Rscript tools/audit-data.R --rebuilt=build/rebuilt-data
+Rscript tools/check-data.R --rebuilt="$linf_data_work/rebuilt-data"
 ```
 
 The 2,000-sample builder saves the verified sampled source-row indices in
@@ -60,8 +63,9 @@ The exact prepared count, taxonomy and metadata inputs are shipped in
 network access:
 
 ```sh
-LINF_DATA_OUTPUT=build/rebuilt-data Rscript data-raw/build_agp_gut.R
-Rscript tools/audit-data.R --rebuilt=build/rebuilt-data
+linf_data_work="$(make -s qa-path)/data-rebuild"
+LINF_DATA_OUTPUT="$linf_data_work/rebuilt-data" Rscript data-raw/build_agp_gut.R
+Rscript tools/check-data.R --rebuilt="$linf_data_work/rebuilt-data"
 ```
 
 This reproducible boundary starts at prepared counts, not raw sequencing reads.

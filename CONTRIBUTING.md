@@ -1,5 +1,8 @@
 # Working on linf
 
+This guide is for people changing the package. It lists the maintained source
+files and the commands for checking changes.
+
 Use the task-oriented guide in `vignettes/function-guide.Rmd` to understand the
 public workflow. Keep stable feature identity separate from display labels and
 preserve equivalence of dense and sparse paths, including tie behavior.
@@ -25,7 +28,7 @@ preserve equivalence of dense and sparse paths, including tie behavior.
 `man/*.Rd` and `NAMESPACE` come from roxygen comments; edit the R sources.
 `README.md` comes from `README.Rmd`. Website and installed vignette HTML are
 build outputs. Bundled `data/*.rda` are versioned outputs: regenerate in a
-separate directory and compare with `tools/audit-data.R` before replacing them.
+separate directory and compare with `tools/check-data.R` before replacing them.
 Never add unpublished study/manuscript files to this public repository.
 
 ## Build and verify
@@ -33,11 +36,11 @@ Never add unpublished study/manuscript files to this public repository.
 ```sh
 make document
 make readme
-make audit-guides
-make audit-data
-make audit-embedding-article
+make check-guides
+make check-data
+make check-embedding-article
 make check-clean
-make audit-installed-guides
+make check-installed-guides
 ```
 
 Developer outputs live outside the source tree. Set a checkout's output root
@@ -51,17 +54,17 @@ directory and logs. It never removes archived releases outside that directory.
 
 `make check-clean` rebuilds a source archive and runs the full `--as-cran`
 check with user compiler overrides disabled. Supply `R_TIDYCMD` if HTML Tidy
-is not discoverable. `make audit-installed-guides` checks navigation in the
+is not discoverable. `make check-installed-guides` checks navigation in the
 installed package from that check.
 Use `testthat::test_local(filter = "...")` for a focused development check;
 keep regression files named after the behavior they exercise.
 
-Build the local site with `make site`, validate it with `make audit-site`, and
+Build the local site with `make site`, validate it with `make check-site`, and
 inspect the changed pages in a browser, including standalone installed HTML and narrow
 viewports. Ordinary article builds do not run the optional `grip` optimizer.
 Its opt-in requirements and diagnostics are documented in the article.
 The local site goes to `site/` under the QA root; `make vignette-previews`
-uses `vignettes/`, and article audits use `articles/`. `make readme` updates
+uses `vignettes/`, and article checks use `articles/`. `make readme` updates
 the tracked Markdown without leaving an HTML preview in the repository.
 The GitHub website workflow retains its disposable `docs/` build directory.
 

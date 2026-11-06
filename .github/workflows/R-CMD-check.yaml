@@ -49,10 +49,10 @@ jobs:
           needs: check
 
       - name: Check bundled data records
-        run: Rscript tools/audit-data.R
+        run: Rscript tools/check-data.R
 
       - name: Check guide coverage
-        run: Rscript tools/audit-guides.R
+        run: Rscript tools/check-guides.R
 
       - uses: r-lib/actions/check-r-package@v2
         with:

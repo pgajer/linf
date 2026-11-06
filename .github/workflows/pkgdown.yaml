@@ -34,14 +34,14 @@ jobs:
           needs: website
 
       - name: Check embedding article graphs and traces
-        run: Rscript tools/audit-embedding-article.R
+        run: Rscript tools/check-embedding-article.R
 
       - name: Build site
         run: pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
         shell: Rscript {0}
 
       - name: Check rendered guide navigation
-        run: python3 tools/audit-guide-html.py docs/articles
+        run: python3 tools/check-guide-html.py docs/articles
 
       - name: Include vignette sources linked from README
         run: |

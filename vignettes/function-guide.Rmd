@@ -539,7 +539,7 @@ convenience functions are not part of the current API.
 The organization follows the short purpose descriptions and help cross-references
 in [Hmisc's documentation](https://hbiostat.org/r/hmisc/) and
 [package overview](https://CRAN.R-project.org/package=Hmisc),
-adapted to these few workflows. Maintainers can run `make audit-guides` to check
+adapted to these few workflows. Maintainers can run `make check-guides` to check
 the catalog against `NAMESPACE`, registered methods, help aliases and bundled
 data; vignette builds execute the examples independently.
 

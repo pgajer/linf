@@ -571,7 +571,7 @@ rmarkdown::render("vignettes/articles/simplex-corner-geometry.Rmd",
                   output_dir = qa_dir("articles", "corner-geometry"))
 ```
 
-For a source-checkout audit, `make audit-corner-geometry` renders a preview
+To check this article from a source checkout, `make check-corner-geometry` renders a preview
 under `articles/corner-geometry/` in the configured QA directory and verifies
 the geometric identities, exact two-sample representation and paired comparisons.
 This check runs on demand.

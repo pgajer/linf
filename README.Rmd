@@ -13,17 +13,24 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 [![DOI](https://zenodo.org/badge/DOI/10.48550/arXiv.2503.21543.svg)](https://doi.org/10.48550/arXiv.2503.21543)
 <!-- badges: end -->
 
-# linf: dominant-feature groups for compositional data
+# linf: group samples by their most abundant features
 
-**linf** scales each sample by its largest feature, preserves zeros, and groups
-samples by supported dominant and subdominant features. Supply a nonnegative
-matrix with **samples in rows and features in columns**. Stop after normalization,
-fit a hierarchy, or assign new samples to a reference you have already fitted.
+**linf** works with nonnegative measurements, such as microbial counts or
+proportions. Supply a numeric matrix with **samples in rows and features in
+columns**. A feature is a measured quantity, such as the abundance of a type
+of bacterium.
 
-## A first result
+The package can rescale each sample by its largest value, group samples by
+which features are most abundant, and divide those groups into smaller groups.
+It can also assign new samples to groups you have already defined. The groups
+are called *dominant community state types* (dCSTs) in the package and methods
+paper.
 
-After [installation](#installation), this small example shows what the support
-threshold changes. The seed makes the toy counts reproducible.
+## A first example
+
+After [installation](#installation), try this example. `n0 = 4` means a group
+must initially contain at least four samples to be kept. `set.seed(1)` makes
+the randomly generated example data repeatable.
 
 ```{r first-result, message=FALSE}
 library(linf)
@@ -38,22 +45,29 @@ fit <- linf.csts(M, n0 = 4, low.freq.policy = "absorb")
 ```{r first-result-table, echo=FALSE}
 knitr::kable(data.frame(
   Feature = colnames(M),
-  `Provisional samples` = as.integer(table(factor(dominant$id, levels = colnames(M)))),
-  `Assigned after absorption` = as.integer(table(factor(fit$lineage.id, levels = colnames(M)))),
+  `Samples before reassignment` = as.integer(table(factor(dominant$id, levels = colnames(M)))),
+  `Samples after reassignment` = as.integer(table(factor(fit$lineage.id, levels = colnames(M)))),
   check.names = FALSE
 ))
 ```
 
-A and B each have four provisional samples and meet `n0 = 4`. C has two, so
-its samples are reassigned to the retained feature with greatest abundance:
-A finishes with six samples and B with four. Absorption does not mean A was
-those samples' original maximum. `M` alone is sufficient when you only need
-normalized profiles; it has row maximum one here and preserves zeros.
+Each sample is first assigned to its largest feature. When largest values are
+equal, the first column is used. This gives four samples to A, four to B, and
+two to C. Groups A and B meet the minimum size of four. Group C is too small,
+so each of its samples is reassigned to A or B, whichever has the larger value
+in that sample. Here, both go to A: the final groups contain six and four
+samples. The option `"absorb"` selects this reassignment rule. A was not the
+largest feature in the two reassigned samples; C was.
 
-## Unordered dominance sets
+`M` contains the rescaled values. Each sample's largest value is now one,
+and zeros stay zero. Use `M` directly if you only need rescaling, without groups.
 
-Use `linf.udcsts()` when the identities of the top features matter but their
-order does not. Opposite orders pool before the minimum support is applied:
+## Group by leading features, regardless of their order
+
+Use `linf.udcsts()` when samples should belong to the same group if they have
+the same leading features. For example, A followed by B and B followed by A
+both count towards one `{A, B}` group. The minimum group size is checked after
+combining them:
 
 ```{r unordered-result}
 U <- rbind(c(A = 9, B = 5, C = 1), c(A = 8, B = 4, C = 1),
@@ -64,19 +78,42 @@ unordered$frequency.table
 U[unordered$keep, , drop = FALSE]
 ```
 
-The four `{A, B}` rows remain; the one `{B, C}` row is excluded without
-reassignment. `ID` identifies a set by original column indices, `freq` is its
-pure frequency, and `cumm.pct` is the percentage of all input rows in states
-at least that frequent, including ties. Original memberships remain in
-`pure.id`. The alternative `"pure"` policy keeps rare rows flagged as such;
-`"absorb"` uses maximum combined retained-set abundance, a different rule
-from ordered parent-local dCST absorption. See `?linf.udcsts` for details.
+The four samples led by A and B remain. The single sample led by B and C is
+excluded because its group is smaller than three. It is not reassigned.
 
-Use `linf.udcst.graph()` to construct a graph of pure pair states supported by
-observed leading triples. It returns full-reference incidence counts, witness
-similarities, optional triangular faces and sample membership. Edge lengths are
-one; support and Jaccard values are separate display attributes. Disconnected
-components are preserved. See `?linf.udcst.graph` for details.
+The result includes:
+
+- `ID`: the original column numbers of the features in each group; `1,2` means
+  A and B here.
+- `freq`: the number of samples originally in that group, before any
+  reassignment or exclusion.
+- `cumm.pct`: the percentage of all input samples in this group and groups at
+  least as large. Groups with equal counts get the same percentage. Here the
+  four A/B samples account for 80% of the five input samples.
+- `pure.id`: the original group of each sample, kept even if it is later
+  reassigned or excluded.
+
+The `"filter"` option excludes samples from small groups, as above. The
+`"pure"` option keeps them but marks them as rare. The `"absorb"` option
+reassigns them to the kept group whose features have the largest combined
+abundance in that sample. This differs from `linf.csts()`, which uses one
+feature at a time and restricts each subdivision to its current group.
+See `?linf.udcsts` for details.
+
+## Connect groups in a network
+
+`linf.udcst.graph()` connects groups defined by their two leading features.
+By default, pairs such as `{A, B}` and `{A, C}` are linked only if both occur
+among samples whose three leading features are `{A, B, C}`. Sharing A alone
+is not enough.
+
+The result records the supporting sample counts, measures of how often each
+pair and its three-feature group occur together, and which group each sample
+belongs to. Counts use all input samples, even if you keep only some pairs in
+the network. It also reports triangles supported by the same three-feature
+group. Every link has length one; a larger sample count does not shorten it.
+Unconnected pairs and separate parts of the network are kept.
+See `?linf.udcst.graph` for details.
 
 ## Installation
 
@@ -86,9 +123,10 @@ Install the released package from CRAN:
 install.packages("linf")
 ```
 
-The unordered-set and pair-state graph functions require **linf 0.4.0 or later**.
+`linf.udcsts()` and `linf.udcst.graph()` require **linf 0.4.0 or later**.
 Check your installed version with `packageVersion("linf")`. Version 0.4.0
-includes four installed vignettes; open the function and dataset guides with:
+includes four guides, called *vignettes* in R. Open the function and example-data
+guides with:
 
 ```r
 help("linf", package = "linf")
@@ -97,72 +135,84 @@ vignette("example-datasets", package = "linf")
 ```
 
 The [published website](https://pgajer.github.io/linf/) is updated separately
-and may lag the package source. Use installed help for the version you run.
+and may describe an older version. Use the installed help for the version you run.
 
 ## Choose the next step
 
-- **Prepare profiles:** `filter.asv()` filters counts; `normalize.linf()` scales
-  rows above tolerance while leaving zero and below-tolerance rows unchanged.
-- **Fit groups:** `linf.dominant.features()` names each maximum; `linf.csts()`
-  adds a support threshold; `refine.linf.csts()` subdivides selected groups.
-- **Inspect results:** `summary()` accounts for assigned, rare and unassigned
-  samples. `linf.landmarks()` selects observed rows by a target feature's value,
-  including rows closest to its mean or median; it does not average profiles.
-- **Reuse a fit:** `transfer.dcsts()` assigns query samples to a frozen hierarchy.
+- **Prepare the data:** `filter.asv()` removes samples with too few total counts
+  and features that occur in too few samples. `normalize.linf()` divides each
+  sample's values by its largest value. Samples whose largest value is at or
+  below the chosen cutoff (`tol`) are left unchanged, including all-zero samples.
+- **Form groups:** `linf.dominant.features()` identifies each sample's largest
+  feature. `linf.csts()` forms groups with a minimum size;
+  `refine.linf.csts()` divides selected groups into smaller groups using their
+  next leading features.
+- **Inspect results:** `summary()` counts assigned, rare and unassigned samples.
+  `linf.landmarks()` selects representative samples from the observed data using
+  a chosen feature's value, for example the sample closest to its mean or median.
+  It returns actual samples, not averages of their measurements.
+- **Assign new samples:** `transfer.dcsts()` uses the groups defined by an earlier
+  call to `linf.csts()`, without changing their definitions.
 
-L-infinity normalization is neither unit-sum normalization nor a log-ratio
-transform. It leaves zeros intact. Interpret grouping with the chosen feature
-set, support thresholds, low-support policy and tie rule; deeper is not
-necessarily better. The [function guide source](vignettes/function-guide.Rmd)
-explains those choices and gives an executable workflow with stopping points.
+Scaling by the largest value is called *L-infinity normalization*. The values
+are not required to sum to one, and no logarithms are taken. Zeros stay zero.
+Grouping results depend on which features you include, the minimum group size,
+how small groups are handled, and how choices between equal values are made.
+Adding more levels gives finer groups, but does not necessarily make them more
+useful. The [function guide source](vignettes/function-guide.Rmd) explains these
+choices with runnable examples.
 
-## Gut Microbiome Demonstration
+## Gut microbiome example
 
-The figure below illustrates depth-1 dCSTs fitted under the absorb policy to a
-bundled set of 766 gut microbiome samples from the American Gut Project (AGP).
-After filtering, 763 samples and 307 taxa remain. With *n*₀ = 30, samples from
-provisional dominance sample sets below the support threshold are reassigned to
-the retained state for which they have the largest normalized abundance; no
-composite rare category is shown.
+The figure below shows the first level of grouping for 766 gut microbiome
+samples provided with the package, from the American Gut Project (AGP).
+Filtering leaves 763 samples and 307 microbial features. Groups initially
+containing fewer than 30 samples are too small to keep. Their samples are
+reassigned to the kept groups, using the largest value among the remaining
+defining features in each sample. The figure shows the resulting groups,
+without a separate rare-sample category.
 
-The subset was deliberately stratified to include every sample assigned to four
-selected uncommon dCSTs; the remaining slots are a seed-42 simple random sample
-from the eligible background. Phenotypes do not influence selection. The
-object is suitable for demonstrating the package workflow, but its phenotype
-frequencies, effect sizes, and p-values must not be interpreted as population
-estimates because inclusion probabilities differ by dCST.
+This subset includes every available sample assigned to four selected uncommon
+groups. The remaining places were filled by random selection from other
+eligible samples, using seed 42. Selection did not use participants' recorded
+traits. Because groups had different chances of being selected, do not use the
+observed trait frequencies, differences between groups, or statistical test
+results to draw conclusions about the broader population. These data are
+provided to demonstrate how to use the package.
 
-### dCST Size Distribution
+### Number of samples in each group
 
-<img src="man/figures/readme-dcst-barplot.png" alt="Barplot of absorb-policy depth-1 dCST sizes in 763 filtered AGP gut samples" width="700" />
+<img src="man/figures/readme-dcst-barplot.png" alt="Numbers of samples in seven groups after reassigning samples from small groups, using 763 filtered AGP gut samples" width="700" />
 
-The 763 filtered samples are assigned among seven retained dCSTs. The largest
-are *Bacteroides* (239 samples), *Escherichia-Shigella* (134), and
-*Staphylococcus* (102). In total, 159 samples from low-support provisional
-dominance sample sets are absorbed into retained states.
+The 763 samples are assigned to seven groups. The largest are *Bacteroides*
+(239 samples), *Escherichia-Shigella* (134), and *Staphylococcus* (102).
+In total, 159 samples were reassigned from groups below the minimum size.
 
-See `vignette("linf-intro", package = "linf")` for a reproducible demonstration using the bundled data.
+See `vignette("linf-intro", package = "linf")` for a reproducible example
+using these data.
 
-## Vignettes
+## Guides and worked examples
 
-Version 0.4.0 includes four installed vignettes. The first two links open
-maintained sources on GitHub; the commands open rendered installed guides:
+Version 0.4.0 includes four installed guides. The first two links below open
+their source files on GitHub; the R commands open the formatted guides locally.
 
 - [Finding your way around linf](vignettes/function-guide.Rmd)
-  — task-oriented function catalog, matrix conventions, policies, landmarks and
-  frozen-reference transfer. Open locally with `vignette("function-guide", package = "linf")`.
+  — choose functions, arrange your data, handle small groups, select
+  representative samples, and assign new samples to existing groups.
+  Open with `vignette("function-guide", package = "linf")`.
 - [Example datasets and reproducible workflows](vignettes/example-datasets.Rmd)
-  — choose among the five bundled objects, align metadata, inspect edge cases
-  and try a separate reference/query example. Open with `vignette("example-datasets", package = "linf")`.
-- [Dominant Community State Types: From Normalization to a Gut Demonstration](https://pgajer.github.io/linf/articles/linf-intro.html)
-  — normalization, dCST construction and descriptive exploration of the
-  stratified AGP gut subset.
-- [dCSTs for Vaginal Microbiome Data](https://pgajer.github.io/linf/articles/linf-vaginal.html)
-  — fitting and descriptive agreement with Valencia labels on samples from
-  the classifier's training source, not held-out validation.
+  — choose among the five example datasets, match sample information to data
+  rows, and try defining groups with one set of samples and assigning another
+  set to them. Open with `vignette("example-datasets", package = "linf")`.
+- [Gut microbiome example](https://pgajer.github.io/linf/articles/linf-intro.html)
+  — rescale the data, form groups, and explore the selected AGP gut samples.
+- [Vaginal microbiome example](https://pgajer.github.io/linf/articles/linf-vaginal.html)
+  — form groups and compare them with Valencia classifier labels. The samples
+  come from the same source dataset used to develop the classifier; agreement
+  here does not establish performance on independent samples.
 
-The [interactive embedding article](https://pgajer.github.io/linf/articles/valencia-hypercube-embedding.html)
-is website-only. It is not an installed vignette.
+The [interactive 3D visualization example](https://pgajer.github.io/linf/articles/valencia-hypercube-embedding.html)
+is available on the website only.
 
 ```r
 browseVignettes("linf")
@@ -197,5 +247,5 @@ If you use this package, please cite:
 ## License
 
 MIT © 2025 Pawel Gajer. See [LICENSE](LICENSE).
-Bundled-data sources and upstream terms are recorded in
-[bundled-data provenance](https://github.com/pgajer/linf/blob/main/inst/DATA_PROVENANCE.md).
+Sources and reuse conditions for the example data are recorded in
+[the data-source notes](https://github.com/pgajer/linf/blob/main/inst/DATA_PROVENANCE.md).
